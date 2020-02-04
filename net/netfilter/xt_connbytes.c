@@ -26,6 +26,7 @@ connbytes_mt(const struct sk_buff *skb, struct xt_action_param *par)
 	u_int64_t what = 0;	/* initialize to make gcc happy */
 	u_int64_t bytes = 0;
 	u_int64_t pkts = 0;
+	const struct nf_conn_acct *acct;
 	const struct nf_conn_counter *counters;
 
 	par->cvm_reserved |= SKB_CVM_RESERVED_1;
@@ -34,10 +35,11 @@ connbytes_mt(const struct sk_buff *skb, struct xt_action_param *par)
 	if (!ct)
 		return false;
 
-	counters = nf_conn_acct_find(ct);
-	if (!counters)
+	acct = nf_conn_acct_find(ct);
+	if (!acct)
 		return false;
 
+	counters = acct->counter;
 	switch (sinfo->what) {
 	case XT_CONNBYTES_PKTS:
 		switch (sinfo->direction) {
@@ -120,7 +122,7 @@ static int connbytes_mt_check(const struct xt_mtchk_param *par)
 	 * accounting is enabled, so complain in the hope that someone notices.
 	 */
 	if (!nf_ct_acct_enabled(par->net)) {
-		pr_warning("Forcing CT accounting to be enabled\n");
+		pr_warn("Forcing CT accounting to be enabled\n");
 		nf_ct_set_acct(par->net, true);
 	}
 

@@ -28,8 +28,7 @@ int fsl8250_handle_irq(struct uart_port *port)
 	unsigned char lsr, orig_lsr;
 	unsigned long flags;
 	unsigned int iir;
-	struct uart_8250_port *up =
-		container_of(port, struct uart_8250_port, port);
+	struct uart_8250_port *up = up_to_u8250p(port);
 
 	spin_lock_irqsave(&up->port.lock, flags);
 
@@ -40,11 +39,9 @@ int fsl8250_handle_irq(struct uart_port *port)
 	}
 
 	/* This is the WAR; if last event was BRK, then read and return */
-	spin_lock(&up->lsr_lock);
 	if (unlikely(up->lsr_saved_flags & UART_LSR_BI)) {
 		up->lsr_saved_flags &= ~UART_LSR_BI;
 		port->serial_in(port, UART_RX);
-		spin_unlock(&up->lsr_lock);
 		spin_unlock_irqrestore(&up->port.lock, flags);
 		return 1;
 	}
@@ -60,7 +57,7 @@ int fsl8250_handle_irq(struct uart_port *port)
 		serial8250_tx_chars(up);
 
 	up->lsr_saved_flags = orig_lsr;
-	spin_unlock(&up->lsr_lock);
 	spin_unlock_irqrestore(&up->port.lock, flags);
 	return 1;
 }
+EXPORT_SYMBOL_GPL(fsl8250_handle_irq);

@@ -37,7 +37,7 @@
  * Note: Using an auxdata lookup table should be considered a last resort when
  * converting a platform to use the DT.  Normally the automatically generated
  * device name will not matter, and drivers should obtain data from the device
- * node instead of from an anonymouns platform_data pointer.
+ * node instead of from an anonymous platform_data pointer.
  */
 struct of_dev_auxdata {
 	char *compatible;
@@ -50,27 +50,6 @@ struct of_dev_auxdata {
 #define OF_DEV_AUXDATA(_compat,_phys,_name,_pdata) \
 	{ .compatible = _compat, .phys_addr = _phys, .name = _name, \
 	  .platform_data = _pdata }
-
-/**
- * of_platform_driver - Legacy of-aware driver for platform devices.
- *
- * An of_platform_driver driver is attached to a basic platform_device on
- * the ibm ebus (ibmebus_bus_type).
- */
-struct of_platform_driver
-{
-	int	(*probe)(struct platform_device* dev,
-			 const struct of_device_id *match);
-	int	(*remove)(struct platform_device* dev);
-
-	int	(*suspend)(struct platform_device* dev, pm_message_t state);
-	int	(*resume)(struct platform_device* dev);
-	int	(*shutdown)(struct platform_device* dev);
-
-	struct device_driver	driver;
-};
-#define	to_of_platform_driver(drv) \
-	container_of(drv,struct of_platform_driver, driver)
 
 extern const struct of_device_id of_default_bus_match_table[];
 
@@ -93,6 +72,10 @@ extern int of_platform_populate(struct device_node *root,
 				const struct of_device_id *matches,
 				const struct of_dev_auxdata *lookup,
 				struct device *parent);
+extern int of_platform_default_populate(struct device_node *root,
+					const struct of_dev_auxdata *lookup,
+					struct device *parent);
+extern void of_platform_depopulate(struct device *parent);
 #else
 static inline int of_platform_populate(struct device_node *root,
 					const struct of_device_id *matches,
@@ -101,6 +84,19 @@ static inline int of_platform_populate(struct device_node *root,
 {
 	return -ENODEV;
 }
+static inline int of_platform_default_populate(struct device_node *root,
+					       const struct of_dev_auxdata *lookup,
+					       struct device *parent)
+{
+	return -ENODEV;
+}
+static inline void of_platform_depopulate(struct device *parent) { }
+#endif
+
+#if defined(CONFIG_OF_DYNAMIC) && defined(CONFIG_OF_ADDRESS)
+extern void of_platform_register_reconfig_notifier(void);
+#else
+static inline void of_platform_register_reconfig_notifier(void) { }
 #endif
 
 #endif	/* _LINUX_OF_PLATFORM_H */

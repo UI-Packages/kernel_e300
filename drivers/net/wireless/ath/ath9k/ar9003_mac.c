@@ -39,47 +39,47 @@ ar9003_set_txdesc(struct ath_hw *ah, void *ds, struct ath_tx_info *i)
 	      (i->qcu << AR_TxQcuNum_S) | desc_len;
 
 	checksum += val;
-	ACCESS_ONCE_RW(ads->info) = val;
+	ACCESS_ONCE(ads->info) = val;
 
 	checksum += i->link;
-	ACCESS_ONCE_RW(ads->link) = i->link;
+	ACCESS_ONCE(ads->link) = i->link;
 
 	checksum += i->buf_addr[0];
-	ACCESS_ONCE_RW(ads->data0) = i->buf_addr[0];
+	ACCESS_ONCE(ads->data0) = i->buf_addr[0];
 	checksum += i->buf_addr[1];
-	ACCESS_ONCE_RW(ads->data1) = i->buf_addr[1];
+	ACCESS_ONCE(ads->data1) = i->buf_addr[1];
 	checksum += i->buf_addr[2];
-	ACCESS_ONCE_RW(ads->data2) = i->buf_addr[2];
+	ACCESS_ONCE(ads->data2) = i->buf_addr[2];
 	checksum += i->buf_addr[3];
-	ACCESS_ONCE_RW(ads->data3) = i->buf_addr[3];
+	ACCESS_ONCE(ads->data3) = i->buf_addr[3];
 
 	checksum += (val = (i->buf_len[0] << AR_BufLen_S) & AR_BufLen);
-	ACCESS_ONCE_RW(ads->ctl3) = val;
+	ACCESS_ONCE(ads->ctl3) = val;
 	checksum += (val = (i->buf_len[1] << AR_BufLen_S) & AR_BufLen);
-	ACCESS_ONCE_RW(ads->ctl5) = val;
+	ACCESS_ONCE(ads->ctl5) = val;
 	checksum += (val = (i->buf_len[2] << AR_BufLen_S) & AR_BufLen);
-	ACCESS_ONCE_RW(ads->ctl7) = val;
+	ACCESS_ONCE(ads->ctl7) = val;
 	checksum += (val = (i->buf_len[3] << AR_BufLen_S) & AR_BufLen);
-	ACCESS_ONCE_RW(ads->ctl9) = val;
+	ACCESS_ONCE(ads->ctl9) = val;
 
 	checksum = (u16) (((checksum & 0xffff) + (checksum >> 16)) & 0xffff);
-	ACCESS_ONCE_RW(ads->ctl10) = checksum;
+	ACCESS_ONCE(ads->ctl10) = checksum;
 
 	if (i->is_first || i->is_last) {
-		ACCESS_ONCE_RW(ads->ctl13) = set11nTries(i->rates, 0)
+		ACCESS_ONCE(ads->ctl13) = set11nTries(i->rates, 0)
 			| set11nTries(i->rates, 1)
 			| set11nTries(i->rates, 2)
 			| set11nTries(i->rates, 3)
 			| (i->dur_update ? AR_DurUpdateEna : 0)
 			| SM(0, AR_BurstDur);
 
-		ACCESS_ONCE_RW(ads->ctl14) = set11nRate(i->rates, 0)
+		ACCESS_ONCE(ads->ctl14) = set11nRate(i->rates, 0)
 			| set11nRate(i->rates, 1)
 			| set11nRate(i->rates, 2)
 			| set11nRate(i->rates, 3);
 	} else {
-		ACCESS_ONCE_RW(ads->ctl13) = 0;
-		ACCESS_ONCE_RW(ads->ctl14) = 0;
+		ACCESS_ONCE(ads->ctl13) = 0;
+		ACCESS_ONCE(ads->ctl14) = 0;
 	}
 
 	ads->ctl20 = 0;
@@ -89,19 +89,19 @@ ar9003_set_txdesc(struct ath_hw *ah, void *ds, struct ath_tx_info *i)
 
 	ctl17 = SM(i->keytype, AR_EncrType);
 	if (!i->is_first) {
-		ACCESS_ONCE_RW(ads->ctl11) = 0;
-		ACCESS_ONCE_RW(ads->ctl12) = i->is_last ? 0 : AR_TxMore;
-		ACCESS_ONCE_RW(ads->ctl15) = 0;
-		ACCESS_ONCE_RW(ads->ctl16) = 0;
-		ACCESS_ONCE_RW(ads->ctl17) = ctl17;
-		ACCESS_ONCE_RW(ads->ctl18) = 0;
-		ACCESS_ONCE_RW(ads->ctl19) = 0;
+		ACCESS_ONCE(ads->ctl11) = 0;
+		ACCESS_ONCE(ads->ctl12) = i->is_last ? 0 : AR_TxMore;
+		ACCESS_ONCE(ads->ctl15) = 0;
+		ACCESS_ONCE(ads->ctl16) = 0;
+		ACCESS_ONCE(ads->ctl17) = ctl17;
+		ACCESS_ONCE(ads->ctl18) = 0;
+		ACCESS_ONCE(ads->ctl19) = 0;
 		return;
 	}
 
-	ACCESS_ONCE_RW(ads->ctl11) = (i->pkt_len & AR_FrameLen)
+	ACCESS_ONCE(ads->ctl11) = (i->pkt_len & AR_FrameLen)
 		| (i->flags & ATH9K_TXDESC_VMF ? AR_VirtMoreFrag : 0)
-		| SM(i->txpower, AR_XmitPower)
+		| SM(i->txpower[0], AR_XmitPower0)
 		| (i->flags & ATH9K_TXDESC_VEOL ? AR_VEOL : 0)
 		| (i->keyix != ATH9K_TXKEYIX_INVALID ? AR_DestIdxValid : 0)
 		| (i->flags & ATH9K_TXDESC_LOWRXCHAIN ? AR_LowRxChain : 0)
@@ -135,22 +135,26 @@ ar9003_set_txdesc(struct ath_hw *ah, void *ds, struct ath_tx_info *i)
 	val = (i->flags & ATH9K_TXDESC_PAPRD) >> ATH9K_TXDESC_PAPRD_S;
 	ctl12 |= SM(val, AR_PAPRDChainMask);
 
-	ACCESS_ONCE_RW(ads->ctl12) = ctl12;
-	ACCESS_ONCE_RW(ads->ctl17) = ctl17;
+	ACCESS_ONCE(ads->ctl12) = ctl12;
+	ACCESS_ONCE(ads->ctl17) = ctl17;
 
-	ACCESS_ONCE_RW(ads->ctl15) = set11nPktDurRTSCTS(i->rates, 0)
+	ACCESS_ONCE(ads->ctl15) = set11nPktDurRTSCTS(i->rates, 0)
 		| set11nPktDurRTSCTS(i->rates, 1);
 
-	ACCESS_ONCE_RW(ads->ctl16) = set11nPktDurRTSCTS(i->rates, 2)
+	ACCESS_ONCE(ads->ctl16) = set11nPktDurRTSCTS(i->rates, 2)
 		| set11nPktDurRTSCTS(i->rates, 3);
 
-	ACCESS_ONCE_RW(ads->ctl18) = set11nRateFlags(i->rates, 0)
+	ACCESS_ONCE(ads->ctl18) = set11nRateFlags(i->rates, 0)
 		| set11nRateFlags(i->rates, 1)
 		| set11nRateFlags(i->rates, 2)
 		| set11nRateFlags(i->rates, 3)
 		| SM(i->rtscts_rate, AR_RTSCTSRate);
 
-	ACCESS_ONCE_RW(ads->ctl19) = AR_Not_Sounding;
+	ACCESS_ONCE(ads->ctl19) = AR_Not_Sounding;
+
+	ACCESS_ONCE(ads->ctl20) = SM(i->txpower[1], AR_XmitPower1);
+	ACCESS_ONCE(ads->ctl21) = SM(i->txpower[2], AR_XmitPower2);
+	ACCESS_ONCE(ads->ctl22) = SM(i->txpower[3], AR_XmitPower3);
 }
 
 static u16 ar9003_calc_ptr_chksum(struct ar9003_txc *ads)
@@ -175,7 +179,8 @@ static void ar9003_hw_set_desc_link(void *ds, u32 ds_link)
 	ads->ctl10 |= ar9003_calc_ptr_chksum(ads);
 }
 
-static bool ar9003_hw_get_isr(struct ath_hw *ah, enum ath9k_int *masked)
+static bool ar9003_hw_get_isr(struct ath_hw *ah, enum ath9k_int *masked,
+			      u32 *sync_cause_p)
 {
 	u32 isr = 0;
 	u32 mask2 = 0;
@@ -310,7 +315,8 @@ static bool ar9003_hw_get_isr(struct ath_hw *ah, enum ath9k_int *masked)
 		ar9003_mci_get_isr(ah, masked);
 
 	if (sync_cause) {
-		ath9k_debug_sync_cause(common, sync_cause);
+		if (sync_cause_p)
+			*sync_cause_p = sync_cause;
 		fatal_int =
 			(sync_cause &
 			 (AR_INTR_SYNC_HOST1_FATAL | AR_INTR_SYNC_HOST1_PERR))
@@ -425,6 +431,24 @@ static int ar9003_hw_proc_txdesc(struct ath_hw *ah, void *ds,
 	return 0;
 }
 
+static int ar9003_hw_get_duration(struct ath_hw *ah, const void *ds, int index)
+{
+	const struct ar9003_txc *adc = ds;
+
+	switch (index) {
+	case 0:
+		return MS(ACCESS_ONCE(adc->ctl15), AR_PacketDur0);
+	case 1:
+		return MS(ACCESS_ONCE(adc->ctl15), AR_PacketDur1);
+	case 2:
+		return MS(ACCESS_ONCE(adc->ctl16), AR_PacketDur2);
+	case 3:
+		return MS(ACCESS_ONCE(adc->ctl16), AR_PacketDur3);
+	default:
+		return 0;
+	}
+}
+
 void ar9003_hw_attach_mac_ops(struct ath_hw *hw)
 {
 	struct ath_hw_ops *ops = ath9k_hw_ops(hw);
@@ -434,6 +458,7 @@ void ar9003_hw_attach_mac_ops(struct ath_hw *hw)
 	ops->get_isr = ar9003_hw_get_isr;
 	ops->set_txdesc = ar9003_set_txdesc;
 	ops->proc_txdesc = ar9003_hw_proc_txdesc;
+	ops->get_duration = ar9003_hw_get_duration;
 }
 
 void ath9k_hw_set_rx_bufsize(struct ath_hw *ah, u16 buf_size)
@@ -469,18 +494,19 @@ int ath9k_hw_process_rxdesc_edma(struct ath_hw *ah, struct ath_rx_status *rxs,
 
 	rxs->rs_status = 0;
 	rxs->rs_flags =  0;
+	rxs->flag =  0;
 
 	rxs->rs_datalen = rxsp->status2 & AR_DataLen;
 	rxs->rs_tstamp =  rxsp->status3;
 
 	/* XXX: Keycache */
 	rxs->rs_rssi = MS(rxsp->status5, AR_RxRSSICombined);
-	rxs->rs_rssi_ctl0 = MS(rxsp->status1, AR_RxRSSIAnt00);
-	rxs->rs_rssi_ctl1 = MS(rxsp->status1, AR_RxRSSIAnt01);
-	rxs->rs_rssi_ctl2 = MS(rxsp->status1, AR_RxRSSIAnt02);
-	rxs->rs_rssi_ext0 = MS(rxsp->status5, AR_RxRSSIAnt10);
-	rxs->rs_rssi_ext1 = MS(rxsp->status5, AR_RxRSSIAnt11);
-	rxs->rs_rssi_ext2 = MS(rxsp->status5, AR_RxRSSIAnt12);
+	rxs->rs_rssi_ctl[0] = MS(rxsp->status1, AR_RxRSSIAnt00);
+	rxs->rs_rssi_ctl[1] = MS(rxsp->status1, AR_RxRSSIAnt01);
+	rxs->rs_rssi_ctl[2] = MS(rxsp->status1, AR_RxRSSIAnt02);
+	rxs->rs_rssi_ext[0] = MS(rxsp->status5, AR_RxRSSIAnt10);
+	rxs->rs_rssi_ext[1] = MS(rxsp->status5, AR_RxRSSIAnt11);
+	rxs->rs_rssi_ext[2] = MS(rxsp->status5, AR_RxRSSIAnt12);
 
 	if (rxsp->status11 & AR_RxKeyIdxValid)
 		rxs->rs_keyix = MS(rxsp->status11, AR_KeyIdx);
@@ -490,11 +516,12 @@ int ath9k_hw_process_rxdesc_edma(struct ath_hw *ah, struct ath_rx_status *rxs,
 	rxs->rs_rate = MS(rxsp->status1, AR_RxRate);
 	rxs->rs_more = (rxsp->status2 & AR_RxMore) ? 1 : 0;
 
+	rxs->rs_firstaggr = (rxsp->status11 & AR_RxFirstAggr) ? 1 : 0;
 	rxs->rs_isaggr = (rxsp->status11 & AR_RxAggr) ? 1 : 0;
 	rxs->rs_moreaggr = (rxsp->status11 & AR_RxMoreAggr) ? 1 : 0;
 	rxs->rs_antenna = (MS(rxsp->status4, AR_RxAntenna) & 0x7);
-	rxs->rs_flags  = (rxsp->status4 & AR_GI) ? ATH9K_RX_GI : 0;
-	rxs->rs_flags  |= (rxsp->status4 & AR_2040) ? ATH9K_RX_2040 : 0;
+	rxs->flag  |= (rxsp->status4 & AR_GI) ? RX_FLAG_SHORT_GI : 0;
+	rxs->flag  |= (rxsp->status4 & AR_2040) ? RX_FLAG_40MHZ : 0;
 
 	rxs->evm0 = rxsp->status6;
 	rxs->evm1 = rxsp->status7;

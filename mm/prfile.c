@@ -1,11 +1,11 @@
 /*
- * Mainly for aufs which mmap(2) diffrent file and wants to print different path
- * in /proc/PID/maps.
+ * Mainly for aufs which mmap(2) different file and wants to print different
+ * path in /proc/PID/maps.
  * Call these functions via macros defined in linux/mm.h.
  *
  * See Documentation/filesystems/aufs/design/06mmap.txt
  *
- * Copyright (c) 2014 Junjro R. Okajima
+ * Copyright (c) 2014-2017 Junjro R. Okajima
  * Copyright (c) 2014 Ian Campbell
  */
 
@@ -19,12 +19,10 @@ static inline void prfile_trace(struct file *f, struct file *pr,
 {
 #ifdef PRFILE_TRACE
 	if (pr)
-		pr_info("%s:%d: %s, %p\n", func, line, func2,
-			f ? (char *)f->f_dentry->d_name.name : "(null)");
+		pr_info("%s:%d: %s, %pD2\n", func, line, func2, f);
 #endif
 }
 
-#ifdef CONFIG_MMU
 void vma_do_file_update_time(struct vm_area_struct *vma, const char func[],
 			     int line)
 {
@@ -64,7 +62,8 @@ void vma_do_fput(struct vm_area_struct *vma, const char func[], int line)
 	if (f && pr)
 		fput(pr);
 }
-#else
+
+#ifndef CONFIG_MMU
 struct file *vmr_do_pr_or_file(struct vm_region *region, const char func[],
 			       int line)
 {
@@ -83,4 +82,4 @@ void vmr_do_fput(struct vm_region *region, const char func[], int line)
 	if (f && pr)
 		fput(pr);
 }
-#endif /* CONFIG_MMU */
+#endif /* !CONFIG_MMU */

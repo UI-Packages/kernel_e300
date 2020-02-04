@@ -51,6 +51,8 @@
 #include <rdma/ib_pack.h>
 #include <rdma/rdma_cm.h>
 #include <rdma/iw_cm.h>
+#include <rdma/rdma_netlink.h>
+#include <rdma/iw_portmap.h>
 
 #define NES_SEND_FIRST_WRITE
 
@@ -130,6 +132,7 @@
 #define NES_DBG_IW_TX       0x00040000
 #define NES_DBG_SHUTDOWN    0x00080000
 #define NES_DBG_PAU         0x00100000
+#define NES_DBG_NLMSG       0x00200000
 #define NES_DBG_RSVD1       0x10000000
 #define NES_DBG_RSVD2       0x20000000
 #define NES_DBG_RSVD3       0x40000000
@@ -162,7 +165,7 @@ do { \
 #include "nes_hw.h"
 #include "nes_verbs.h"
 #include "nes_context.h"
-#include "nes_user.h"
+#include <rdma/nes-abi.h>
 #include "nes_cm.h"
 #include "nes_mgt.h"
 
@@ -177,17 +180,17 @@ extern unsigned int nes_debug_level;
 extern unsigned int wqm_quanta;
 extern struct list_head nes_adapter_list;
 
-extern atomic_unchecked_t cm_connects;
-extern atomic_unchecked_t cm_accepts;
-extern atomic_unchecked_t cm_disconnects;
-extern atomic_unchecked_t cm_closes;
-extern atomic_unchecked_t cm_connecteds;
-extern atomic_unchecked_t cm_connect_reqs;
-extern atomic_unchecked_t cm_rejects;
-extern atomic_unchecked_t mod_qp_timouts;
-extern atomic_unchecked_t qps_created;
-extern atomic_unchecked_t qps_destroyed;
-extern atomic_unchecked_t sw_qps_destroyed;
+extern atomic_t cm_connects;
+extern atomic_t cm_accepts;
+extern atomic_t cm_disconnects;
+extern atomic_t cm_closes;
+extern atomic_t cm_connecteds;
+extern atomic_t cm_connect_reqs;
+extern atomic_t cm_rejects;
+extern atomic_t mod_qp_timouts;
+extern atomic_t qps_created;
+extern atomic_t qps_destroyed;
+extern atomic_t sw_qps_destroyed;
 extern u32 mh_detected;
 extern u32 mh_pauses_sent;
 extern u32 cm_packets_sent;
@@ -196,16 +199,16 @@ extern u32 cm_packets_created;
 extern u32 cm_packets_received;
 extern u32 cm_packets_dropped;
 extern u32 cm_packets_retrans;
-extern atomic_unchecked_t cm_listens_created;
-extern atomic_unchecked_t cm_listens_destroyed;
+extern atomic_t cm_listens_created;
+extern atomic_t cm_listens_destroyed;
 extern u32 cm_backlog_drops;
-extern atomic_unchecked_t cm_loopbacks;
-extern atomic_unchecked_t cm_nodes_created;
-extern atomic_unchecked_t cm_nodes_destroyed;
-extern atomic_unchecked_t cm_accel_dropped_pkts;
-extern atomic_unchecked_t cm_resets_recvd;
-extern atomic_unchecked_t pau_qps_created;
-extern atomic_unchecked_t pau_qps_destroyed;
+extern atomic_t cm_loopbacks;
+extern atomic_t cm_nodes_created;
+extern atomic_t cm_nodes_destroyed;
+extern atomic_t cm_accel_dropped_pkts;
+extern atomic_t cm_resets_recvd;
+extern atomic_t pau_qps_created;
+extern atomic_t pau_qps_destroyed;
 
 extern u32 int_mod_timer_init;
 extern u32 int_mod_cq_depth_256;

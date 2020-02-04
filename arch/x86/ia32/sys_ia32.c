@@ -69,8 +69,8 @@ asmlinkage long sys32_ftruncate64(unsigned int fd, unsigned long offset_low,
  */
 static int cp_stat64(struct stat64 __user *ubuf, struct kstat *stat)
 {
-	typeof(((struct stat64 *)0)->st_uid) uid = 0;
-	typeof(((struct stat64 *)0)->st_gid) gid = 0;
+	typeof(ubuf->st_uid) uid = 0;
+	typeof(ubuf->st_gid) gid = 0;
 	SET_UID(uid, from_kuid_munged(current_user_ns(), stat->uid));
 	SET_GID(gid, from_kgid_munged(current_user_ns(), stat->gid));
 	if (!access_ok(VERIFY_WRITE, ubuf, sizeof(struct stat64)) ||
@@ -199,20 +199,6 @@ long sys32_fadvise64_64(int fd, __u32 offset_low, __u32 offset_high,
 			       (((u64)offset_high)<<32) | offset_low,
 			       (((u64)len_high)<<32) | len_low,
 				advice);
-}
-
-long sys32_vm86_warning(void)
-{
-	struct task_struct *me = current;
-	static char lastcomm[sizeof(me->comm)];
-
-	if (strncmp(lastcomm, me->comm, sizeof(lastcomm))) {
-		compat_printk(KERN_INFO
-			      "%s: vm86 mode not supported on 64 bit kernel\n",
-			      me->comm);
-		strncpy(lastcomm, me->comm, sizeof(lastcomm));
-	}
-	return -ENOSYS;
 }
 
 asmlinkage ssize_t sys32_readahead(int fd, unsigned off_lo, unsigned off_hi,

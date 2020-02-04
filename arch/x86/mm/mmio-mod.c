@@ -24,7 +24,7 @@
 
 #define DEBUG 1
 
-#include <linux/module.h>
+#include <linux/moduleparam.h>
 #include <linux/debugfs.h>
 #include <linux/slab.h>
 #include <linux/uaccess.h>
@@ -194,7 +194,7 @@ static void pre(struct kmmio_probe *p, struct pt_regs *regs,
 		break;
 	default:
 		{
-			unsigned char *ip = (unsigned char *)ktla_ktva(instptr);
+			unsigned char *ip = (unsigned char *)instptr;
 			my_trace->opcode = MMIO_UNKNOWN_OP;
 			my_trace->width = 0;
 			my_trace->value = (*ip) << 16 | *(ip + 1) << 8 |
@@ -234,7 +234,7 @@ static void post(struct kmmio_probe *p, unsigned long condition,
 static void ioremap_trace_core(resource_size_t offset, unsigned long size,
 							void __iomem *addr)
 {
-	static atomic_unchecked_t next_id;
+	static atomic_t next_id;
 	struct remap_trace *trace = kmalloc(sizeof(*trace), GFP_KERNEL);
 	/* These are page-unaligned. */
 	struct mmiotrace_map map = {
@@ -258,7 +258,7 @@ static void ioremap_trace_core(resource_size_t offset, unsigned long size,
 			.private = trace
 		},
 		.phys = offset,
-		.id = atomic_inc_return_unchecked(&next_id)
+		.id = atomic_inc_return(&next_id)
 	};
 	map.map_id = trace->id;
 
@@ -290,7 +290,7 @@ void mmiotrace_ioremap(resource_size_t offset, unsigned long size,
 	ioremap_trace_core(offset, size, addr);
 }
 
-static void iounmap_trace_core(const volatile void __iomem *addr)
+static void iounmap_trace_core(volatile void __iomem *addr)
 {
 	struct mmiotrace_map map = {
 		.phys = 0,
@@ -328,7 +328,7 @@ not_enabled:
 	}
 }
 
-void mmiotrace_iounmap(const volatile void __iomem *addr)
+void mmiotrace_iounmap(volatile void __iomem *addr)
 {
 	might_sleep();
 	if (is_enabled()) /* recheck and proper locking in *_core() */
@@ -410,9 +410,7 @@ out:
 		pr_warning("multiple CPUs still online, may miss events.\n");
 }
 
-/* __ref because leave_uniprocessor calls cpu_up which is __cpuinit,
-   but this whole function is ifdefed CONFIG_HOTPLUG_CPU */
-static void __ref leave_uniprocessor(void)
+static void leave_uniprocessor(void)
 {
 	int cpu;
 	int err;

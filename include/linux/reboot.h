@@ -20,13 +20,13 @@ enum reboot_mode {
 extern enum reboot_mode reboot_mode;
 
 enum reboot_type {
-	BOOT_TRIPLE = 't',
-	BOOT_KBD = 'k',
-	BOOT_BIOS = 'b',
-	BOOT_ACPI = 'a',
-	BOOT_EFI = 'e',
-	BOOT_CF9 = 'p',
-	BOOT_CF9_COND = 'q',
+	BOOT_TRIPLE	= 't',
+	BOOT_KBD	= 'k',
+	BOOT_BIOS	= 'b',
+	BOOT_ACPI	= 'a',
+	BOOT_EFI	= 'e',
+	BOOT_CF9_FORCE	= 'p',
+	BOOT_CF9_SAFE	= 'q',
 };
 extern enum reboot_type reboot_type;
 
@@ -38,6 +38,9 @@ extern int reboot_force;
 extern int register_reboot_notifier(struct notifier_block *);
 extern int unregister_reboot_notifier(struct notifier_block *);
 
+extern int register_restart_handler(struct notifier_block *);
+extern int unregister_restart_handler(struct notifier_block *);
+extern void do_kernel_restart(char *cmd);
 
 /*
  * Architecture-specific implementations of sys_reboot commands.
@@ -57,9 +60,9 @@ extern void machine_crash_shutdown(struct pt_regs *);
  */
 
 extern void kernel_restart_prepare(char *cmd);
-extern void kernel_restart(char *cmd) __noreturn;
-extern void kernel_halt(void) __noreturn;
-extern void kernel_power_off(void) __noreturn;
+extern void kernel_restart(char *cmd);
+extern void kernel_halt(void);
+extern void kernel_power_off(void);
 
 extern int C_A_D; /* for sysctl */
 void ctrl_alt_del(void);
@@ -67,13 +70,14 @@ void ctrl_alt_del(void);
 #define POWEROFF_CMD_PATH_LEN	256
 extern char poweroff_cmd[POWEROFF_CMD_PATH_LEN];
 
-extern int orderly_poweroff(bool force);
+extern void orderly_poweroff(bool force);
+extern void orderly_reboot(void);
 
 /*
  * Emergency restart, callable from an interrupt handler.
  */
 
-extern void emergency_restart(void) __noreturn;
+extern void emergency_restart(void);
 #include <asm/emergency-restart.h>
 
 #endif /* _LINUX_REBOOT_H */

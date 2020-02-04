@@ -46,13 +46,16 @@ ENTRY(efi_call_phys)
 	 * parameter 2, ..., param n. To make things easy, we save the return
 	 * address of efi_call_phys in a global variable.
 	 */
-	popl	saved_return_addr(%edx)
-	popl	efi_rt_function_ptr(%edx)
+	popl	%ecx
+	movl	%ecx, saved_return_addr(%edx)
+	/* get the function pointer into ECX*/
+	popl	%ecx
+	movl	%ecx, efi_rt_function_ptr(%edx)
 
 	/*
 	 * 3. Call the physical function.
 	 */
-	call	*efi_rt_function_ptr(%edx)
+	call	*%ecx
 
 	/*
 	 * 4. Balance the stack. And because EAX contain the return value,
@@ -64,12 +67,15 @@ ENTRY(efi_call_phys)
 1:	popl	%edx
 	subl	$1b, %edx
 
-	pushl	efi_rt_function_ptr(%edx)
+	movl	efi_rt_function_ptr(%edx), %ecx
+	pushl	%ecx
 
 	/*
 	 * 10. Push the saved return address onto the stack and return.
 	 */
-	jmpl	*saved_return_addr(%edx)
+	movl	saved_return_addr(%edx), %ecx
+	pushl	%ecx
+	ret
 ENDPROC(efi_call_phys)
 .previous
 

@@ -1,5 +1,5 @@
 /***********************license start***************
- * Copyright (c) 2003-2015  Cavium Inc. (support@cavium.com). All rights
+ * Copyright (c) 2003-2017  Cavium Inc. (support@cavium.com). All rights
  * reserved.
  *
  *
@@ -133,8 +133,8 @@ static inline uint64_t CVMX_DTX_ASE_CTL_FUNC(void)
 static inline uint64_t CVMX_DTX_ASE_DATX(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_ASE_DATX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE6E8040ull) + ((offset) & 1) * 8;
 }
@@ -145,8 +145,8 @@ static inline uint64_t CVMX_DTX_ASE_DATX(unsigned long offset)
 static inline uint64_t CVMX_DTX_ASE_ENAX(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_ASE_ENAX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE6E8020ull) + ((offset) & 1) * 8;
 }
@@ -157,8 +157,8 @@ static inline uint64_t CVMX_DTX_ASE_ENAX(unsigned long offset)
 static inline uint64_t CVMX_DTX_ASE_SELX(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_ASE_SELX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE6E8000ull) + ((offset) & 1) * 8;
 }
@@ -393,8 +393,8 @@ static inline uint64_t CVMX_DTX_BGXX_BCST_RSP(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 2))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 5))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 5))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 5))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset == 0)))))
 		cvmx_warn("CVMX_DTX_BGXX_BCST_RSP(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE700080ull) + ((offset) & 7) * 32768;
@@ -407,8 +407,8 @@ static inline uint64_t CVMX_DTX_BGXX_CTL(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 2))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 5))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 5))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 5))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset == 0)))))
 		cvmx_warn("CVMX_DTX_BGXX_CTL(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE700060ull) + ((offset) & 7) * 32768;
@@ -421,8 +421,8 @@ static inline uint64_t CVMX_DTX_BGXX_DATX(unsigned long offset, unsigned long bl
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 1)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 1)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 1)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 1)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 1)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_DTX_BGXX_DATX(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800FE700040ull) + (((offset) & 1) + ((block_id) & 7) * 0x1000ull) * 8;
@@ -435,8 +435,8 @@ static inline uint64_t CVMX_DTX_BGXX_ENAX(unsigned long offset, unsigned long bl
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 1)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 1)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 1)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 1)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 1)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_DTX_BGXX_ENAX(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800FE700020ull) + (((offset) & 1) + ((block_id) & 7) * 0x1000ull) * 8;
@@ -449,8 +449,8 @@ static inline uint64_t CVMX_DTX_BGXX_SELX(unsigned long offset, unsigned long bl
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 1)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 1)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 1)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 1)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 1)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_DTX_BGXX_SELX(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800FE700000ull) + (((offset) & 1) + ((block_id) & 7) * 0x1000ull) * 8;
@@ -475,8 +475,8 @@ static inline uint64_t CVMX_DTX_BROADCAST_ENAX(unsigned long offset)
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_BROADCAST_ENAX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE7F0020ull) + ((offset) & 1) * 8;
@@ -490,8 +490,8 @@ static inline uint64_t CVMX_DTX_BROADCAST_SELX(unsigned long offset)
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_BROADCAST_SELX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE7F0000ull) + ((offset) & 1) * 8;
@@ -581,8 +581,8 @@ static inline uint64_t CVMX_DTX_CIU_DATX(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_CIU_DATX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE808040ull) + ((offset) & 1) * 8;
@@ -595,8 +595,8 @@ static inline uint64_t CVMX_DTX_CIU_ENAX(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_CIU_ENAX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE808020ull) + ((offset) & 1) * 8;
@@ -609,8 +609,8 @@ static inline uint64_t CVMX_DTX_CIU_SELX(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_CIU_SELX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE808000ull) + ((offset) & 1) * 8;
@@ -701,8 +701,8 @@ static inline uint64_t CVMX_DTX_DFA_DATX(unsigned long offset)
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_DFA_DATX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE1B8040ull) + ((offset) & 1) * 8;
 }
@@ -715,8 +715,8 @@ static inline uint64_t CVMX_DTX_DFA_ENAX(unsigned long offset)
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_DFA_ENAX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE1B8020ull) + ((offset) & 1) * 8;
 }
@@ -729,8 +729,8 @@ static inline uint64_t CVMX_DTX_DFA_SELX(unsigned long offset)
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_DFA_SELX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE1B8000ull) + ((offset) & 1) * 8;
 }
@@ -820,8 +820,8 @@ static inline uint64_t CVMX_DTX_DPI_DATX(unsigned long offset)
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_DPI_DATX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FEEF8040ull) + ((offset) & 1) * 8;
@@ -835,8 +835,8 @@ static inline uint64_t CVMX_DTX_DPI_ENAX(unsigned long offset)
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_DPI_ENAX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FEEF8020ull) + ((offset) & 1) * 8;
@@ -850,8 +850,8 @@ static inline uint64_t CVMX_DTX_DPI_SELX(unsigned long offset)
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_DPI_SELX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FEEF8000ull) + ((offset) & 1) * 8;
@@ -920,12 +920,12 @@ static inline uint64_t CVMX_DTX_FPA_BCST_RSP_FUNC(void)
 {
 	switch(cvmx_get_octeon_family()) {
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 					return CVMX_ADD_IO_SEG(0x00011800FE940080ull);
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 					return CVMX_ADD_IO_SEG(0x00011800FE940080ull);
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x00011800FE940080ull);
 			break;
 		case OCTEON_CN70XX & OCTEON_FAMILY_MASK:
@@ -941,12 +941,12 @@ static inline uint64_t CVMX_DTX_FPA_BCST_RSP_FUNC(void)
 {
 	switch(cvmx_get_octeon_family()) {
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return CVMX_ADD_IO_SEG(0x00011800FE940080ull);
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return CVMX_ADD_IO_SEG(0x00011800FE940080ull);
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x00011800FE940080ull);
 		case OCTEON_CN70XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x00011800FE140080ull);
@@ -960,12 +960,12 @@ static inline uint64_t CVMX_DTX_FPA_CTL_FUNC(void)
 {
 	switch(cvmx_get_octeon_family()) {
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 					return CVMX_ADD_IO_SEG(0x00011800FE940060ull);
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 					return CVMX_ADD_IO_SEG(0x00011800FE940060ull);
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x00011800FE940060ull);
 			break;
 		case OCTEON_CN70XX & OCTEON_FAMILY_MASK:
@@ -981,12 +981,12 @@ static inline uint64_t CVMX_DTX_FPA_CTL_FUNC(void)
 {
 	switch(cvmx_get_octeon_family()) {
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return CVMX_ADD_IO_SEG(0x00011800FE940060ull);
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return CVMX_ADD_IO_SEG(0x00011800FE940060ull);
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x00011800FE940060ull);
 		case OCTEON_CN70XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x00011800FE140060ull);
@@ -999,7 +999,6 @@ static inline uint64_t CVMX_DTX_FPA_DATX(unsigned long offset)
 {
 	switch(cvmx_get_octeon_family()) {
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				if ((offset <= 1))
@@ -1007,6 +1006,7 @@ static inline uint64_t CVMX_DTX_FPA_DATX(unsigned long offset)
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				if ((offset <= 1))
 					return CVMX_ADD_IO_SEG(0x00011800FE940040ull) + ((offset) & 1) * 8;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			if ((offset <= 1))
 				return CVMX_ADD_IO_SEG(0x00011800FE940040ull) + ((offset) & 1) * 8;
 			break;
@@ -1023,12 +1023,12 @@ static inline uint64_t CVMX_DTX_FPA_DATX(unsigned long offset)
 {
 	switch(cvmx_get_octeon_family()) {
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return CVMX_ADD_IO_SEG(0x00011800FE940040ull) + (offset) * 8;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return CVMX_ADD_IO_SEG(0x00011800FE940040ull) + (offset) * 8;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x00011800FE940040ull) + (offset) * 8;
 		case OCTEON_CN70XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x00011800FE140040ull) + (offset) * 8;
@@ -1041,7 +1041,6 @@ static inline uint64_t CVMX_DTX_FPA_ENAX(unsigned long offset)
 {
 	switch(cvmx_get_octeon_family()) {
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				if ((offset <= 1))
@@ -1049,6 +1048,7 @@ static inline uint64_t CVMX_DTX_FPA_ENAX(unsigned long offset)
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				if ((offset <= 1))
 					return CVMX_ADD_IO_SEG(0x00011800FE940020ull) + ((offset) & 1) * 8;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			if ((offset <= 1))
 				return CVMX_ADD_IO_SEG(0x00011800FE940020ull) + ((offset) & 1) * 8;
 			break;
@@ -1065,12 +1065,12 @@ static inline uint64_t CVMX_DTX_FPA_ENAX(unsigned long offset)
 {
 	switch(cvmx_get_octeon_family()) {
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return CVMX_ADD_IO_SEG(0x00011800FE940020ull) + (offset) * 8;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return CVMX_ADD_IO_SEG(0x00011800FE940020ull) + (offset) * 8;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x00011800FE940020ull) + (offset) * 8;
 		case OCTEON_CN70XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x00011800FE140020ull) + (offset) * 8;
@@ -1083,7 +1083,6 @@ static inline uint64_t CVMX_DTX_FPA_SELX(unsigned long offset)
 {
 	switch(cvmx_get_octeon_family()) {
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				if ((offset <= 1))
@@ -1091,6 +1090,7 @@ static inline uint64_t CVMX_DTX_FPA_SELX(unsigned long offset)
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				if ((offset <= 1))
 					return CVMX_ADD_IO_SEG(0x00011800FE940000ull) + ((offset) & 1) * 8;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			if ((offset <= 1))
 				return CVMX_ADD_IO_SEG(0x00011800FE940000ull) + ((offset) & 1) * 8;
 			break;
@@ -1107,12 +1107,12 @@ static inline uint64_t CVMX_DTX_FPA_SELX(unsigned long offset)
 {
 	switch(cvmx_get_octeon_family()) {
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return CVMX_ADD_IO_SEG(0x00011800FE940000ull) + (offset) * 8;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return CVMX_ADD_IO_SEG(0x00011800FE940000ull) + (offset) * 8;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x00011800FE940000ull) + (offset) * 8;
 		case OCTEON_CN70XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x00011800FE140000ull) + (offset) * 8;
@@ -1180,8 +1180,8 @@ static inline uint64_t CVMX_DTX_GSERX_BCST_RSP(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 6))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 13))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 8)))))
 		cvmx_warn("CVMX_DTX_GSERX_BCST_RSP(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE480080ull) + ((offset) & 15) * 32768;
@@ -1194,8 +1194,8 @@ static inline uint64_t CVMX_DTX_GSERX_CTL(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 6))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 13))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 8)))))
 		cvmx_warn("CVMX_DTX_GSERX_CTL(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE480060ull) + ((offset) & 15) * 32768;
@@ -1208,8 +1208,8 @@ static inline uint64_t CVMX_DTX_GSERX_DATX(unsigned long offset, unsigned long b
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 1)) && ((block_id <= 6)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 1)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 1)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 1)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 1)) && ((block_id <= 8))))))
 		cvmx_warn("CVMX_DTX_GSERX_DATX(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800FE480040ull) + (((offset) & 1) + ((block_id) & 15) * 0x1000ull) * 8;
@@ -1222,8 +1222,8 @@ static inline uint64_t CVMX_DTX_GSERX_ENAX(unsigned long offset, unsigned long b
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 1)) && ((block_id <= 6)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 1)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 1)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 1)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 1)) && ((block_id <= 8))))))
 		cvmx_warn("CVMX_DTX_GSERX_ENAX(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800FE480020ull) + (((offset) & 1) + ((block_id) & 15) * 0x1000ull) * 8;
@@ -1236,8 +1236,8 @@ static inline uint64_t CVMX_DTX_GSERX_SELX(unsigned long offset, unsigned long b
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 1)) && ((block_id <= 6)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 1)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 1)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 1)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 1)) && ((block_id <= 8))))))
 		cvmx_warn("CVMX_DTX_GSERX_SELX(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800FE480000ull) + (((offset) & 1) + ((block_id) & 15) * 0x1000ull) * 8;
@@ -1272,8 +1272,8 @@ static inline uint64_t CVMX_DTX_HNA_DATX(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_HNA_DATX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE238040ull) + ((offset) & 1) * 8;
 }
@@ -1285,8 +1285,8 @@ static inline uint64_t CVMX_DTX_HNA_ENAX(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_HNA_ENAX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE238020ull) + ((offset) & 1) * 8;
 }
@@ -1298,8 +1298,8 @@ static inline uint64_t CVMX_DTX_HNA_SELX(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_HNA_SELX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE238000ull) + ((offset) & 1) * 8;
 }
@@ -1332,8 +1332,8 @@ static inline uint64_t CVMX_DTX_ILA_CTL_FUNC(void)
 static inline uint64_t CVMX_DTX_ILA_DATX(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_ILA_DATX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE0B8040ull) + ((offset) & 1) * 8;
 }
@@ -1344,8 +1344,8 @@ static inline uint64_t CVMX_DTX_ILA_DATX(unsigned long offset)
 static inline uint64_t CVMX_DTX_ILA_ENAX(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_ILA_ENAX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE0B8020ull) + ((offset) & 1) * 8;
 }
@@ -1356,8 +1356,8 @@ static inline uint64_t CVMX_DTX_ILA_ENAX(unsigned long offset)
 static inline uint64_t CVMX_DTX_ILA_SELX(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_ILA_SELX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE0B8000ull) + ((offset) & 1) * 8;
 }
@@ -1390,8 +1390,8 @@ static inline uint64_t CVMX_DTX_ILK_CTL_FUNC(void)
 static inline uint64_t CVMX_DTX_ILK_DATX(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_ILK_DATX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE0A0040ull) + ((offset) & 1) * 8;
 }
@@ -1402,8 +1402,8 @@ static inline uint64_t CVMX_DTX_ILK_DATX(unsigned long offset)
 static inline uint64_t CVMX_DTX_ILK_ENAX(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_ILK_ENAX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE0A0020ull) + ((offset) & 1) * 8;
 }
@@ -1414,8 +1414,8 @@ static inline uint64_t CVMX_DTX_ILK_ENAX(unsigned long offset)
 static inline uint64_t CVMX_DTX_ILK_SELX(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_ILK_SELX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE0A0000ull) + ((offset) & 1) * 8;
 }
@@ -1449,8 +1449,8 @@ static inline uint64_t CVMX_DTX_IOBN_DATX(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_IOBN_DATX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE780040ull) + ((offset) & 1) * 8;
@@ -1463,8 +1463,8 @@ static inline uint64_t CVMX_DTX_IOBN_ENAX(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_IOBN_ENAX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE780020ull) + ((offset) & 1) * 8;
@@ -1477,8 +1477,8 @@ static inline uint64_t CVMX_DTX_IOBN_SELX(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_IOBN_SELX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE780000ull) + ((offset) & 1) * 8;
@@ -1513,8 +1513,8 @@ static inline uint64_t CVMX_DTX_IOBP_DATX(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_IOBP_DATX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE7A0040ull) + ((offset) & 1) * 8;
@@ -1527,8 +1527,8 @@ static inline uint64_t CVMX_DTX_IOBP_ENAX(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_IOBP_ENAX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE7A0020ull) + ((offset) & 1) * 8;
@@ -1541,8 +1541,8 @@ static inline uint64_t CVMX_DTX_IOBP_SELX(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_IOBP_SELX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE7A0000ull) + ((offset) & 1) * 8;
@@ -1688,8 +1688,8 @@ static inline uint64_t CVMX_DTX_KEY_DATX(unsigned long offset)
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_KEY_DATX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE100040ull) + ((offset) & 1) * 8;
@@ -1703,8 +1703,8 @@ static inline uint64_t CVMX_DTX_KEY_ENAX(unsigned long offset)
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_KEY_ENAX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE100020ull) + ((offset) & 1) * 8;
@@ -1718,8 +1718,8 @@ static inline uint64_t CVMX_DTX_KEY_SELX(unsigned long offset)
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_KEY_SELX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE100000ull) + ((offset) & 1) * 8;
@@ -1733,8 +1733,8 @@ static inline uint64_t CVMX_DTX_L2C_CBCX_BCST_RSP(unsigned long offset)
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 3))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_L2C_CBCX_BCST_RSP(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE420080ull) + ((offset) & 3) * 32768;
@@ -1748,8 +1748,8 @@ static inline uint64_t CVMX_DTX_L2C_CBCX_CTL(unsigned long offset)
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 3))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_L2C_CBCX_CTL(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE420060ull) + ((offset) & 3) * 32768;
@@ -1763,8 +1763,8 @@ static inline uint64_t CVMX_DTX_L2C_CBCX_DATX(unsigned long offset, unsigned lon
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && (((offset <= 1)) && ((block_id == 0)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 1)) && ((block_id <= 1)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 1)) && ((block_id <= 3)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 1)) && ((block_id <= 3)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 1)) && ((block_id <= 3)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 1)) && ((block_id <= 1))))))
 		cvmx_warn("CVMX_DTX_L2C_CBCX_DATX(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800FE420040ull) + (((offset) & 1) + ((block_id) & 3) * 0x1000ull) * 8;
@@ -1778,8 +1778,8 @@ static inline uint64_t CVMX_DTX_L2C_CBCX_ENAX(unsigned long offset, unsigned lon
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && (((offset <= 1)) && ((block_id == 0)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 1)) && ((block_id <= 1)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 1)) && ((block_id <= 3)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 1)) && ((block_id <= 3)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 1)) && ((block_id <= 3)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 1)) && ((block_id <= 1))))))
 		cvmx_warn("CVMX_DTX_L2C_CBCX_ENAX(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800FE420020ull) + (((offset) & 1) + ((block_id) & 3) * 0x1000ull) * 8;
@@ -1793,8 +1793,8 @@ static inline uint64_t CVMX_DTX_L2C_CBCX_SELX(unsigned long offset, unsigned lon
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && (((offset <= 1)) && ((block_id == 0)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 1)) && ((block_id <= 1)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 1)) && ((block_id <= 3)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 1)) && ((block_id <= 3)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 1)) && ((block_id <= 3)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 1)) && ((block_id <= 1))))))
 		cvmx_warn("CVMX_DTX_L2C_CBCX_SELX(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800FE420000ull) + (((offset) & 1) + ((block_id) & 3) * 0x1000ull) * 8;
@@ -1808,8 +1808,8 @@ static inline uint64_t CVMX_DTX_L2C_MCIX_BCST_RSP(unsigned long offset)
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 2))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 3))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_L2C_MCIX_BCST_RSP(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE2E0080ull) + ((offset) & 3) * 32768;
@@ -1823,8 +1823,8 @@ static inline uint64_t CVMX_DTX_L2C_MCIX_CTL(unsigned long offset)
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 2))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 3))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_L2C_MCIX_CTL(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE2E0060ull) + ((offset) & 3) * 32768;
@@ -1838,8 +1838,8 @@ static inline uint64_t CVMX_DTX_L2C_MCIX_DATX(unsigned long offset, unsigned lon
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && (((offset <= 1)) && ((block_id == 0)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 1)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 1)) && ((block_id <= 3)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 1)) && ((block_id <= 3)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 1)) && ((block_id <= 3)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 1)) && ((block_id <= 1))))))
 		cvmx_warn("CVMX_DTX_L2C_MCIX_DATX(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800FE2E0040ull) + (((offset) & 1) + ((block_id) & 3) * 0x1000ull) * 8;
@@ -1853,8 +1853,8 @@ static inline uint64_t CVMX_DTX_L2C_MCIX_ENAX(unsigned long offset, unsigned lon
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && (((offset <= 1)) && ((block_id == 0)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 1)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 1)) && ((block_id <= 3)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 1)) && ((block_id <= 3)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 1)) && ((block_id <= 3)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 1)) && ((block_id <= 1))))))
 		cvmx_warn("CVMX_DTX_L2C_MCIX_ENAX(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800FE2E0020ull) + (((offset) & 1) + ((block_id) & 3) * 0x1000ull) * 8;
@@ -1868,8 +1868,8 @@ static inline uint64_t CVMX_DTX_L2C_MCIX_SELX(unsigned long offset, unsigned lon
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && (((offset <= 1)) && ((block_id == 0)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 1)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 1)) && ((block_id <= 3)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 1)) && ((block_id <= 3)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 1)) && ((block_id <= 3)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 1)) && ((block_id <= 1))))))
 		cvmx_warn("CVMX_DTX_L2C_MCIX_SELX(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800FE2E0000ull) + (((offset) & 1) + ((block_id) & 3) * 0x1000ull) * 8;
@@ -1883,8 +1883,8 @@ static inline uint64_t CVMX_DTX_L2C_TADX_BCST_RSP(unsigned long offset)
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 3))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 7))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 7))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 7))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 3)))))
 		cvmx_warn("CVMX_DTX_L2C_TADX_BCST_RSP(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE240080ull) + ((offset) & 7) * 32768;
@@ -1898,8 +1898,8 @@ static inline uint64_t CVMX_DTX_L2C_TADX_CTL(unsigned long offset)
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 3))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 7))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 7))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 7))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 3)))))
 		cvmx_warn("CVMX_DTX_L2C_TADX_CTL(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE240060ull) + ((offset) & 7) * 32768;
@@ -1913,8 +1913,8 @@ static inline uint64_t CVMX_DTX_L2C_TADX_DATX(unsigned long offset, unsigned lon
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && (((offset <= 1)) && ((block_id == 0)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 1)) && ((block_id <= 3)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 1)) && ((block_id <= 7)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 1)) && ((block_id <= 7)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 1)) && ((block_id <= 7)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 1)) && ((block_id <= 3))))))
 		cvmx_warn("CVMX_DTX_L2C_TADX_DATX(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800FE240040ull) + (((offset) & 1) + ((block_id) & 7) * 0x1000ull) * 8;
@@ -1928,8 +1928,8 @@ static inline uint64_t CVMX_DTX_L2C_TADX_ENAX(unsigned long offset, unsigned lon
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && (((offset <= 1)) && ((block_id == 0)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 1)) && ((block_id <= 3)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 1)) && ((block_id <= 7)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 1)) && ((block_id <= 7)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 1)) && ((block_id <= 7)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 1)) && ((block_id <= 3))))))
 		cvmx_warn("CVMX_DTX_L2C_TADX_ENAX(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800FE240020ull) + (((offset) & 1) + ((block_id) & 7) * 0x1000ull) * 8;
@@ -1943,8 +1943,8 @@ static inline uint64_t CVMX_DTX_L2C_TADX_SELX(unsigned long offset, unsigned lon
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && (((offset <= 1)) && ((block_id == 0)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 1)) && ((block_id <= 3)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 1)) && ((block_id <= 7)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 1)) && ((block_id <= 7)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 1)) && ((block_id <= 7)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 1)) && ((block_id <= 3))))))
 		cvmx_warn("CVMX_DTX_L2C_TADX_SELX(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800FE240000ull) + (((offset) & 1) + ((block_id) & 7) * 0x1000ull) * 8;
@@ -1956,8 +1956,8 @@ static inline uint64_t CVMX_DTX_L2C_TADX_SELX(unsigned long offset, unsigned lon
 static inline uint64_t CVMX_DTX_LAPX_BCST_RSP(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_LAPX_BCST_RSP(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE060080ull) + ((offset) & 1) * 32768;
 }
@@ -1968,8 +1968,8 @@ static inline uint64_t CVMX_DTX_LAPX_BCST_RSP(unsigned long offset)
 static inline uint64_t CVMX_DTX_LAPX_CTL(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_LAPX_CTL(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE060060ull) + ((offset) & 1) * 32768;
 }
@@ -1980,8 +1980,8 @@ static inline uint64_t CVMX_DTX_LAPX_CTL(unsigned long offset)
 static inline uint64_t CVMX_DTX_LAPX_DATX(unsigned long offset, unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 1)) && ((block_id <= 1)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 1)) && ((block_id <= 1))))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 1)) && ((block_id <= 1)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 1)) && ((block_id <= 1))))))
 		cvmx_warn("CVMX_DTX_LAPX_DATX(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800FE060040ull) + (((offset) & 1) + ((block_id) & 1) * 0x1000ull) * 8;
 }
@@ -1992,8 +1992,8 @@ static inline uint64_t CVMX_DTX_LAPX_DATX(unsigned long offset, unsigned long bl
 static inline uint64_t CVMX_DTX_LAPX_ENAX(unsigned long offset, unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 1)) && ((block_id <= 1)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 1)) && ((block_id <= 1))))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 1)) && ((block_id <= 1)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 1)) && ((block_id <= 1))))))
 		cvmx_warn("CVMX_DTX_LAPX_ENAX(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800FE060020ull) + (((offset) & 1) + ((block_id) & 1) * 0x1000ull) * 8;
 }
@@ -2004,8 +2004,8 @@ static inline uint64_t CVMX_DTX_LAPX_ENAX(unsigned long offset, unsigned long bl
 static inline uint64_t CVMX_DTX_LAPX_SELX(unsigned long offset, unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 1)) && ((block_id <= 1)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 1)) && ((block_id <= 1))))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 1)) && ((block_id <= 1)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 1)) && ((block_id <= 1))))))
 		cvmx_warn("CVMX_DTX_LAPX_SELX(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800FE060000ull) + (((offset) & 1) + ((block_id) & 1) * 0x1000ull) * 8;
 }
@@ -2039,8 +2039,8 @@ static inline uint64_t CVMX_DTX_LBK_DATX(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_LBK_DATX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE090040ull) + ((offset) & 1) * 8;
@@ -2053,8 +2053,8 @@ static inline uint64_t CVMX_DTX_LBK_ENAX(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_LBK_ENAX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE090020ull) + ((offset) & 1) * 8;
@@ -2067,8 +2067,8 @@ static inline uint64_t CVMX_DTX_LBK_SELX(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_LBK_SELX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE090000ull) + ((offset) & 1) * 8;
@@ -2082,8 +2082,8 @@ static inline uint64_t CVMX_DTX_LMCX_BCST_RSP(unsigned long offset)
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 3))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_LMCX_BCST_RSP(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE440080ull) + ((offset) & 3) * 32768;
@@ -2097,8 +2097,8 @@ static inline uint64_t CVMX_DTX_LMCX_CTL(unsigned long offset)
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 3))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_LMCX_CTL(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE440060ull) + ((offset) & 3) * 32768;
@@ -2112,8 +2112,8 @@ static inline uint64_t CVMX_DTX_LMCX_DATX(unsigned long offset, unsigned long bl
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && (((offset <= 1)) && ((block_id == 0)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 1)) && ((block_id <= 1)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 1)) && ((block_id <= 3)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 1)) && ((block_id <= 3)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 1)) && ((block_id <= 3)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 1)) && ((block_id <= 1))))))
 		cvmx_warn("CVMX_DTX_LMCX_DATX(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800FE440040ull) + (((offset) & 1) + ((block_id) & 3) * 0x1000ull) * 8;
@@ -2127,8 +2127,8 @@ static inline uint64_t CVMX_DTX_LMCX_ENAX(unsigned long offset, unsigned long bl
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && (((offset <= 1)) && ((block_id == 0)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 1)) && ((block_id <= 1)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 1)) && ((block_id <= 3)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 1)) && ((block_id <= 3)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 1)) && ((block_id <= 3)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 1)) && ((block_id <= 1))))))
 		cvmx_warn("CVMX_DTX_LMCX_ENAX(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800FE440020ull) + (((offset) & 1) + ((block_id) & 3) * 0x1000ull) * 8;
@@ -2142,8 +2142,8 @@ static inline uint64_t CVMX_DTX_LMCX_SELX(unsigned long offset, unsigned long bl
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && (((offset <= 1)) && ((block_id == 0)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 1)) && ((block_id <= 1)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 1)) && ((block_id <= 3)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 1)) && ((block_id <= 3)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 1)) && ((block_id <= 3)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 1)) && ((block_id <= 1))))))
 		cvmx_warn("CVMX_DTX_LMCX_SELX(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800FE440000ull) + (((offset) & 1) + ((block_id) & 3) * 0x1000ull) * 8;
@@ -2289,8 +2289,8 @@ static inline uint64_t CVMX_DTX_MIO_DATX(unsigned long offset)
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_MIO_DATX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE000040ull) + ((offset) & 1) * 8;
@@ -2304,8 +2304,8 @@ static inline uint64_t CVMX_DTX_MIO_ENAX(unsigned long offset)
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_MIO_ENAX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE000020ull) + ((offset) & 1) * 8;
@@ -2319,8 +2319,8 @@ static inline uint64_t CVMX_DTX_MIO_SELX(unsigned long offset)
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_MIO_SELX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE000000ull) + ((offset) & 1) * 8;
@@ -2354,8 +2354,8 @@ static inline uint64_t CVMX_DTX_OCX_BOT_CTL_FUNC(void)
 static inline uint64_t CVMX_DTX_OCX_BOT_DATX(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_OCX_BOT_DATX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE198040ull) + ((offset) & 1) * 8;
 }
@@ -2366,8 +2366,8 @@ static inline uint64_t CVMX_DTX_OCX_BOT_DATX(unsigned long offset)
 static inline uint64_t CVMX_DTX_OCX_BOT_ENAX(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_OCX_BOT_ENAX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE198020ull) + ((offset) & 1) * 8;
 }
@@ -2378,8 +2378,8 @@ static inline uint64_t CVMX_DTX_OCX_BOT_ENAX(unsigned long offset)
 static inline uint64_t CVMX_DTX_OCX_BOT_SELX(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_OCX_BOT_SELX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE198000ull) + ((offset) & 1) * 8;
 }
@@ -2390,8 +2390,8 @@ static inline uint64_t CVMX_DTX_OCX_BOT_SELX(unsigned long offset)
 static inline uint64_t CVMX_DTX_OCX_LNKX_BCST_RSP(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 2))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 2)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 2))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 2)))))
 		cvmx_warn("CVMX_DTX_OCX_LNKX_BCST_RSP(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE180080ull) + ((offset) & 3) * 32768;
 }
@@ -2402,8 +2402,8 @@ static inline uint64_t CVMX_DTX_OCX_LNKX_BCST_RSP(unsigned long offset)
 static inline uint64_t CVMX_DTX_OCX_LNKX_CTL(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 2))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 2)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 2))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 2)))))
 		cvmx_warn("CVMX_DTX_OCX_LNKX_CTL(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE180060ull) + ((offset) & 3) * 32768;
 }
@@ -2414,8 +2414,8 @@ static inline uint64_t CVMX_DTX_OCX_LNKX_CTL(unsigned long offset)
 static inline uint64_t CVMX_DTX_OCX_LNKX_DATX(unsigned long offset, unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 1)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 1)) && ((block_id <= 2))))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 1)) && ((block_id <= 2)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 1)) && ((block_id <= 2))))))
 		cvmx_warn("CVMX_DTX_OCX_LNKX_DATX(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800FE180040ull) + (((offset) & 1) + ((block_id) & 3) * 0x1000ull) * 8;
 }
@@ -2426,8 +2426,8 @@ static inline uint64_t CVMX_DTX_OCX_LNKX_DATX(unsigned long offset, unsigned lon
 static inline uint64_t CVMX_DTX_OCX_LNKX_ENAX(unsigned long offset, unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 1)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 1)) && ((block_id <= 2))))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 1)) && ((block_id <= 2)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 1)) && ((block_id <= 2))))))
 		cvmx_warn("CVMX_DTX_OCX_LNKX_ENAX(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800FE180020ull) + (((offset) & 1) + ((block_id) & 3) * 0x1000ull) * 8;
 }
@@ -2438,8 +2438,8 @@ static inline uint64_t CVMX_DTX_OCX_LNKX_ENAX(unsigned long offset, unsigned lon
 static inline uint64_t CVMX_DTX_OCX_LNKX_SELX(unsigned long offset, unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 1)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 1)) && ((block_id <= 2))))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 1)) && ((block_id <= 2)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 1)) && ((block_id <= 2))))))
 		cvmx_warn("CVMX_DTX_OCX_LNKX_SELX(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800FE180000ull) + (((offset) & 1) + ((block_id) & 3) * 0x1000ull) * 8;
 }
@@ -2450,8 +2450,8 @@ static inline uint64_t CVMX_DTX_OCX_LNKX_SELX(unsigned long offset, unsigned lon
 static inline uint64_t CVMX_DTX_OCX_OLEX_BCST_RSP(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 2))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 2)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 2))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 2)))))
 		cvmx_warn("CVMX_DTX_OCX_OLEX_BCST_RSP(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE1A0080ull) + ((offset) & 3) * 32768;
 }
@@ -2462,8 +2462,8 @@ static inline uint64_t CVMX_DTX_OCX_OLEX_BCST_RSP(unsigned long offset)
 static inline uint64_t CVMX_DTX_OCX_OLEX_CTL(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 2))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 2)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 2))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 2)))))
 		cvmx_warn("CVMX_DTX_OCX_OLEX_CTL(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE1A0060ull) + ((offset) & 3) * 32768;
 }
@@ -2474,8 +2474,8 @@ static inline uint64_t CVMX_DTX_OCX_OLEX_CTL(unsigned long offset)
 static inline uint64_t CVMX_DTX_OCX_OLEX_DATX(unsigned long offset, unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 1)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 1)) && ((block_id <= 2))))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 1)) && ((block_id <= 2)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 1)) && ((block_id <= 2))))))
 		cvmx_warn("CVMX_DTX_OCX_OLEX_DATX(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800FE1A0040ull) + (((offset) & 1) + ((block_id) & 3) * 0x1000ull) * 8;
 }
@@ -2486,8 +2486,8 @@ static inline uint64_t CVMX_DTX_OCX_OLEX_DATX(unsigned long offset, unsigned lon
 static inline uint64_t CVMX_DTX_OCX_OLEX_ENAX(unsigned long offset, unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 1)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 1)) && ((block_id <= 2))))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 1)) && ((block_id <= 2)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 1)) && ((block_id <= 2))))))
 		cvmx_warn("CVMX_DTX_OCX_OLEX_ENAX(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800FE1A0020ull) + (((offset) & 1) + ((block_id) & 3) * 0x1000ull) * 8;
 }
@@ -2498,8 +2498,8 @@ static inline uint64_t CVMX_DTX_OCX_OLEX_ENAX(unsigned long offset, unsigned lon
 static inline uint64_t CVMX_DTX_OCX_OLEX_SELX(unsigned long offset, unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 1)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 1)) && ((block_id <= 2))))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 1)) && ((block_id <= 2)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 1)) && ((block_id <= 2))))))
 		cvmx_warn("CVMX_DTX_OCX_OLEX_SELX(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800FE1A0000ull) + (((offset) & 1) + ((block_id) & 3) * 0x1000ull) * 8;
 }
@@ -2532,8 +2532,8 @@ static inline uint64_t CVMX_DTX_OCX_TOP_CTL_FUNC(void)
 static inline uint64_t CVMX_DTX_OCX_TOP_DATX(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_OCX_TOP_DATX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE088040ull) + ((offset) & 1) * 8;
 }
@@ -2544,8 +2544,8 @@ static inline uint64_t CVMX_DTX_OCX_TOP_DATX(unsigned long offset)
 static inline uint64_t CVMX_DTX_OCX_TOP_ENAX(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_OCX_TOP_ENAX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE088020ull) + ((offset) & 1) * 8;
 }
@@ -2556,8 +2556,8 @@ static inline uint64_t CVMX_DTX_OCX_TOP_ENAX(unsigned long offset)
 static inline uint64_t CVMX_DTX_OCX_TOP_SELX(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_OCX_TOP_SELX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE088000ull) + ((offset) & 1) * 8;
 }
@@ -2808,8 +2808,8 @@ static inline uint64_t CVMX_DTX_PEMX_BCST_RSP(unsigned long offset)
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset <= 2))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset >= 1) && (offset <= 3)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 3))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_PEMX_BCST_RSP(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE600080ull) + ((offset) & 3) * 32768;
@@ -2823,8 +2823,8 @@ static inline uint64_t CVMX_DTX_PEMX_CTL(unsigned long offset)
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset <= 2))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset >= 1) && (offset <= 3)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 3))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_PEMX_CTL(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE600060ull) + ((offset) & 3) * 32768;
@@ -2838,8 +2838,8 @@ static inline uint64_t CVMX_DTX_PEMX_DATX(unsigned long offset, unsigned long bl
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && (((offset <= 1)) && ((block_id <= 2)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 1)) && (((block_id >= 1) && (block_id <= 3))))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 1)) && ((block_id <= 3)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 1)) && ((block_id <= 3)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 1)) && ((block_id <= 3)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 1)) && ((block_id <= 1))))))
 		cvmx_warn("CVMX_DTX_PEMX_DATX(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800FE600040ull) + (((offset) & 1) + ((block_id) & 3) * 0x1000ull) * 8;
@@ -2853,8 +2853,8 @@ static inline uint64_t CVMX_DTX_PEMX_ENAX(unsigned long offset, unsigned long bl
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && (((offset <= 1)) && ((block_id <= 2)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 1)) && (((block_id >= 1) && (block_id <= 3))))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 1)) && ((block_id <= 3)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 1)) && ((block_id <= 3)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 1)) && ((block_id <= 3)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 1)) && ((block_id <= 1))))))
 		cvmx_warn("CVMX_DTX_PEMX_ENAX(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800FE600020ull) + (((offset) & 1) + ((block_id) & 3) * 0x1000ull) * 8;
@@ -2868,8 +2868,8 @@ static inline uint64_t CVMX_DTX_PEMX_SELX(unsigned long offset, unsigned long bl
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && (((offset <= 1)) && ((block_id <= 2)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 1)) && (((block_id >= 1) && (block_id <= 3))))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 1)) && ((block_id <= 3)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 1)) && ((block_id <= 3)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 1)) && ((block_id <= 3)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 1)) && ((block_id <= 1))))))
 		cvmx_warn("CVMX_DTX_PEMX_SELX(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800FE600000ull) + (((offset) & 1) + ((block_id) & 3) * 0x1000ull) * 8;
@@ -2959,8 +2959,8 @@ static inline uint64_t CVMX_DTX_PKI_PBE_DATX(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_PKI_PBE_DATX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE228040ull) + ((offset) & 1) * 8;
@@ -2973,8 +2973,8 @@ static inline uint64_t CVMX_DTX_PKI_PBE_ENAX(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_PKI_PBE_ENAX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE228020ull) + ((offset) & 1) * 8;
@@ -2987,8 +2987,8 @@ static inline uint64_t CVMX_DTX_PKI_PBE_SELX(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_PKI_PBE_SELX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE228000ull) + ((offset) & 1) * 8;
@@ -3023,8 +3023,8 @@ static inline uint64_t CVMX_DTX_PKI_PFE_DATX(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_PKI_PFE_DATX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE220040ull) + ((offset) & 1) * 8;
@@ -3037,8 +3037,8 @@ static inline uint64_t CVMX_DTX_PKI_PFE_ENAX(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_PKI_PFE_ENAX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE220020ull) + ((offset) & 1) * 8;
@@ -3051,8 +3051,8 @@ static inline uint64_t CVMX_DTX_PKI_PFE_SELX(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_PKI_PFE_SELX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE220000ull) + ((offset) & 1) * 8;
@@ -3087,8 +3087,8 @@ static inline uint64_t CVMX_DTX_PKI_PIX_DATX(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_PKI_PIX_DATX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE230040ull) + ((offset) & 1) * 8;
@@ -3101,8 +3101,8 @@ static inline uint64_t CVMX_DTX_PKI_PIX_ENAX(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_PKI_PIX_ENAX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE230020ull) + ((offset) & 1) * 8;
@@ -3115,8 +3115,8 @@ static inline uint64_t CVMX_DTX_PKI_PIX_SELX(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_PKI_PIX_SELX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE230000ull) + ((offset) & 1) * 8;
@@ -3130,12 +3130,12 @@ static inline uint64_t CVMX_DTX_PKO_BCST_RSP_FUNC(void)
 {
 	switch(cvmx_get_octeon_family()) {
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 					return CVMX_ADD_IO_SEG(0x00011800FEAA0080ull);
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 					return CVMX_ADD_IO_SEG(0x00011800FEAA0080ull);
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x00011800FEAA0080ull);
 			break;
 		case OCTEON_CN70XX & OCTEON_FAMILY_MASK:
@@ -3151,12 +3151,12 @@ static inline uint64_t CVMX_DTX_PKO_BCST_RSP_FUNC(void)
 {
 	switch(cvmx_get_octeon_family()) {
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return CVMX_ADD_IO_SEG(0x00011800FEAA0080ull);
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return CVMX_ADD_IO_SEG(0x00011800FEAA0080ull);
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x00011800FEAA0080ull);
 		case OCTEON_CN70XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x00011800FE280080ull);
@@ -3170,12 +3170,12 @@ static inline uint64_t CVMX_DTX_PKO_CTL_FUNC(void)
 {
 	switch(cvmx_get_octeon_family()) {
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 					return CVMX_ADD_IO_SEG(0x00011800FEAA0060ull);
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 					return CVMX_ADD_IO_SEG(0x00011800FEAA0060ull);
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x00011800FEAA0060ull);
 			break;
 		case OCTEON_CN70XX & OCTEON_FAMILY_MASK:
@@ -3191,12 +3191,12 @@ static inline uint64_t CVMX_DTX_PKO_CTL_FUNC(void)
 {
 	switch(cvmx_get_octeon_family()) {
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return CVMX_ADD_IO_SEG(0x00011800FEAA0060ull);
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return CVMX_ADD_IO_SEG(0x00011800FEAA0060ull);
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x00011800FEAA0060ull);
 		case OCTEON_CN70XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x00011800FE280060ull);
@@ -3209,7 +3209,6 @@ static inline uint64_t CVMX_DTX_PKO_DATX(unsigned long offset)
 {
 	switch(cvmx_get_octeon_family()) {
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				if ((offset <= 1))
@@ -3217,6 +3216,7 @@ static inline uint64_t CVMX_DTX_PKO_DATX(unsigned long offset)
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				if ((offset <= 1))
 					return CVMX_ADD_IO_SEG(0x00011800FEAA0040ull) + ((offset) & 1) * 8;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			if ((offset <= 1))
 				return CVMX_ADD_IO_SEG(0x00011800FEAA0040ull) + ((offset) & 1) * 8;
 			break;
@@ -3233,12 +3233,12 @@ static inline uint64_t CVMX_DTX_PKO_DATX(unsigned long offset)
 {
 	switch(cvmx_get_octeon_family()) {
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return CVMX_ADD_IO_SEG(0x00011800FEAA0040ull) + (offset) * 8;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return CVMX_ADD_IO_SEG(0x00011800FEAA0040ull) + (offset) * 8;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x00011800FEAA0040ull) + (offset) * 8;
 		case OCTEON_CN70XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x00011800FE280040ull) + (offset) * 8;
@@ -3251,7 +3251,6 @@ static inline uint64_t CVMX_DTX_PKO_ENAX(unsigned long offset)
 {
 	switch(cvmx_get_octeon_family()) {
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				if ((offset <= 1))
@@ -3259,6 +3258,7 @@ static inline uint64_t CVMX_DTX_PKO_ENAX(unsigned long offset)
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				if ((offset <= 1))
 					return CVMX_ADD_IO_SEG(0x00011800FEAA0020ull) + ((offset) & 1) * 8;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			if ((offset <= 1))
 				return CVMX_ADD_IO_SEG(0x00011800FEAA0020ull) + ((offset) & 1) * 8;
 			break;
@@ -3275,12 +3275,12 @@ static inline uint64_t CVMX_DTX_PKO_ENAX(unsigned long offset)
 {
 	switch(cvmx_get_octeon_family()) {
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return CVMX_ADD_IO_SEG(0x00011800FEAA0020ull) + (offset) * 8;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return CVMX_ADD_IO_SEG(0x00011800FEAA0020ull) + (offset) * 8;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x00011800FEAA0020ull) + (offset) * 8;
 		case OCTEON_CN70XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x00011800FE280020ull) + (offset) * 8;
@@ -3293,7 +3293,6 @@ static inline uint64_t CVMX_DTX_PKO_SELX(unsigned long offset)
 {
 	switch(cvmx_get_octeon_family()) {
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				if ((offset <= 1))
@@ -3301,6 +3300,7 @@ static inline uint64_t CVMX_DTX_PKO_SELX(unsigned long offset)
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				if ((offset <= 1))
 					return CVMX_ADD_IO_SEG(0x00011800FEAA0000ull) + ((offset) & 1) * 8;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			if ((offset <= 1))
 				return CVMX_ADD_IO_SEG(0x00011800FEAA0000ull) + ((offset) & 1) * 8;
 			break;
@@ -3317,12 +3317,12 @@ static inline uint64_t CVMX_DTX_PKO_SELX(unsigned long offset)
 {
 	switch(cvmx_get_octeon_family()) {
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return CVMX_ADD_IO_SEG(0x00011800FEAA0000ull) + (offset) * 8;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return CVMX_ADD_IO_SEG(0x00011800FEAA0000ull) + (offset) * 8;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x00011800FEAA0000ull) + (offset) * 8;
 		case OCTEON_CN70XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x00011800FE280000ull) + (offset) * 8;
@@ -3632,8 +3632,8 @@ static inline uint64_t CVMX_DTX_RAD_DATX(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_RAD_DATX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE380040ull) + ((offset) & 1) * 8;
 }
@@ -3645,8 +3645,8 @@ static inline uint64_t CVMX_DTX_RAD_ENAX(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_RAD_ENAX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE380020ull) + ((offset) & 1) * 8;
 }
@@ -3658,8 +3658,8 @@ static inline uint64_t CVMX_DTX_RAD_SELX(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_RAD_SELX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE380000ull) + ((offset) & 1) * 8;
 }
@@ -3858,8 +3858,8 @@ static inline uint64_t CVMX_DTX_RNM_DATX(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_RNM_DATX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE200040ull) + ((offset) & 1) * 8;
@@ -3872,8 +3872,8 @@ static inline uint64_t CVMX_DTX_RNM_ENAX(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_RNM_ENAX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE200020ull) + ((offset) & 1) * 8;
@@ -3886,8 +3886,8 @@ static inline uint64_t CVMX_DTX_RNM_SELX(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_RNM_SELX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE200000ull) + ((offset) & 1) * 8;
@@ -3923,8 +3923,8 @@ static inline uint64_t CVMX_DTX_RST_DATX(unsigned long offset)
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_RST_DATX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE030040ull) + ((offset) & 1) * 8;
@@ -3938,8 +3938,8 @@ static inline uint64_t CVMX_DTX_RST_ENAX(unsigned long offset)
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_RST_ENAX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE030020ull) + ((offset) & 1) * 8;
@@ -3953,8 +3953,8 @@ static inline uint64_t CVMX_DTX_RST_SELX(unsigned long offset)
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_RST_SELX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE030000ull) + ((offset) & 1) * 8;
@@ -4048,8 +4048,8 @@ static inline uint64_t CVMX_DTX_SLI_DATX(unsigned long offset)
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_SLI_DATX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE8F8040ull) + ((offset) & 1) * 8;
@@ -4063,8 +4063,8 @@ static inline uint64_t CVMX_DTX_SLI_ENAX(unsigned long offset)
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_SLI_ENAX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE8F8020ull) + ((offset) & 1) * 8;
@@ -4078,8 +4078,8 @@ static inline uint64_t CVMX_DTX_SLI_SELX(unsigned long offset)
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_SLI_SELX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE8F8000ull) + ((offset) & 1) * 8;
@@ -4224,8 +4224,8 @@ static inline uint64_t CVMX_DTX_SSO_DATX(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_SSO_DATX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FEB38040ull) + ((offset) & 1) * 8;
@@ -4238,8 +4238,8 @@ static inline uint64_t CVMX_DTX_SSO_ENAX(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_SSO_ENAX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FEB38020ull) + ((offset) & 1) * 8;
@@ -4252,8 +4252,8 @@ static inline uint64_t CVMX_DTX_SSO_SELX(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_SSO_SELX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FEB38000ull) + ((offset) & 1) * 8;
@@ -4344,8 +4344,8 @@ static inline uint64_t CVMX_DTX_TIM_DATX(unsigned long offset)
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_TIM_DATX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE2C0040ull) + ((offset) & 1) * 8;
@@ -4359,8 +4359,8 @@ static inline uint64_t CVMX_DTX_TIM_ENAX(unsigned long offset)
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_TIM_ENAX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE2C0020ull) + ((offset) & 1) * 8;
@@ -4374,8 +4374,8 @@ static inline uint64_t CVMX_DTX_TIM_SELX(unsigned long offset)
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_TIM_SELX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE2C0000ull) + ((offset) & 1) * 8;
@@ -4507,8 +4507,8 @@ static inline uint64_t CVMX_DTX_USBDRDX_SELX(unsigned long offset, unsigned long
 static inline uint64_t CVMX_DTX_USBHX_BCST_RSP(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset == 0))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset == 0)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset == 0)))))
 		cvmx_warn("CVMX_DTX_USBHX_BCST_RSP(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE340080ull);
 }
@@ -4519,8 +4519,8 @@ static inline uint64_t CVMX_DTX_USBHX_BCST_RSP(unsigned long offset)
 static inline uint64_t CVMX_DTX_USBHX_CTL(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset == 0))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset == 0)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset == 0)))))
 		cvmx_warn("CVMX_DTX_USBHX_CTL(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE340060ull);
 }
@@ -4531,8 +4531,8 @@ static inline uint64_t CVMX_DTX_USBHX_CTL(unsigned long offset)
 static inline uint64_t CVMX_DTX_USBHX_DATX(unsigned long offset, unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 1)) && ((block_id == 0)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 1)) && ((block_id == 0))))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 1)) && ((block_id == 0)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 1)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_DTX_USBHX_DATX(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800FE340040ull) + (((offset) & 1) + ((block_id) & 0) * 0x0ull) * 8;
 }
@@ -4543,8 +4543,8 @@ static inline uint64_t CVMX_DTX_USBHX_DATX(unsigned long offset, unsigned long b
 static inline uint64_t CVMX_DTX_USBHX_ENAX(unsigned long offset, unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 1)) && ((block_id == 0)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 1)) && ((block_id == 0))))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 1)) && ((block_id == 0)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 1)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_DTX_USBHX_ENAX(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800FE340020ull) + (((offset) & 1) + ((block_id) & 0) * 0x0ull) * 8;
 }
@@ -4555,8 +4555,8 @@ static inline uint64_t CVMX_DTX_USBHX_ENAX(unsigned long offset, unsigned long b
 static inline uint64_t CVMX_DTX_USBHX_SELX(unsigned long offset, unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 1)) && ((block_id == 0)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 1)) && ((block_id == 0))))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 1)) && ((block_id == 0)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 1)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_DTX_USBHX_SELX(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800FE340000ull) + (((offset) & 1) + ((block_id) & 0) * 0x0ull) * 8;
 }
@@ -5033,8 +5033,8 @@ static inline uint64_t CVMX_DTX_ZIP_DATX(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_ZIP_DATX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE1C0040ull) + ((offset) & 1) * 8;
 }
@@ -5046,8 +5046,8 @@ static inline uint64_t CVMX_DTX_ZIP_ENAX(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_ZIP_ENAX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE1C0020ull) + ((offset) & 1) * 8;
 }
@@ -5059,8 +5059,8 @@ static inline uint64_t CVMX_DTX_ZIP_SELX(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DTX_ZIP_SELX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800FE1C0000ull) + ((offset) & 1) * 8;
 }
@@ -5097,9 +5097,9 @@ union cvmx_dtx_agl_ctl {
 	uint64_t reserved_5_63                : 59;
 	uint64_t active                       : 1;  /**< Force block's gated clocks on, so that the state of idle signals may be captured. */
 	uint64_t reserved_2_3                 : 2;
-	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block debug data.
-                                                         Not applicable when software directly reads the DAT(0..1) registers.  For diagnostic use
-                                                         only. */
+	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
+                                                         debug data. Not applicable when software directly reads the DAT(0..1) registers.
+                                                         For diagnostic use only. */
 	uint64_t swap                         : 1;  /**< Swap the high and low 36-bit debug bus outputs. */
 #else
 	uint64_t swap                         : 1;
@@ -5122,8 +5122,8 @@ union cvmx_dtx_agl_datx {
 	struct cvmx_dtx_agl_datx_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the ability to
-                                                         peek into blocks during an OCLA capture without OCLA reconfiguration. */
+	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                         ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
 #else
 	uint64_t raw                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -5142,8 +5142,8 @@ union cvmx_dtx_agl_enax {
 	struct cvmx_dtx_agl_enax_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug buses. Normally
-                                                         only one block will drive each bit. */
+	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                         buses. Normally only one block will drive each bit. */
 #else
 	uint64_t ena                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -5188,7 +5188,7 @@ union cvmx_dtx_ase_bcst_rsp {
 #endif
 	} s;
 	struct cvmx_dtx_ase_bcst_rsp_s        cn78xx;
-	struct cvmx_dtx_ase_bcst_rsp_s        cn78xxp2;
+	struct cvmx_dtx_ase_bcst_rsp_s        cn78xxp1;
 };
 typedef union cvmx_dtx_ase_bcst_rsp cvmx_dtx_ase_bcst_rsp_t;
 
@@ -5202,9 +5202,9 @@ union cvmx_dtx_ase_ctl {
 	uint64_t reserved_5_63                : 59;
 	uint64_t active                       : 1;  /**< Force block's gated clocks on, so that the state of idle signals may be captured. */
 	uint64_t reserved_2_3                 : 2;
-	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block debug data.
-                                                         Not applicable when software directly reads the DAT(0..1) registers.  For diagnostic use
-                                                         only. */
+	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
+                                                         debug data. Not applicable when software directly reads the DAT(0..1) registers.
+                                                         For diagnostic use only. */
 	uint64_t swap                         : 1;  /**< Swap the high and low 36-bit debug bus outputs. */
 #else
 	uint64_t swap                         : 1;
@@ -5215,7 +5215,7 @@ union cvmx_dtx_ase_ctl {
 #endif
 	} s;
 	struct cvmx_dtx_ase_ctl_s             cn78xx;
-	struct cvmx_dtx_ase_ctl_s             cn78xxp2;
+	struct cvmx_dtx_ase_ctl_s             cn78xxp1;
 };
 typedef union cvmx_dtx_ase_ctl cvmx_dtx_ase_ctl_t;
 
@@ -5227,15 +5227,15 @@ union cvmx_dtx_ase_datx {
 	struct cvmx_dtx_ase_datx_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the ability to
-                                                         peek into blocks during an OCLA capture without OCLA reconfiguration. */
+	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                         ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
 #else
 	uint64_t raw                          : 36;
 	uint64_t reserved_36_63               : 28;
 #endif
 	} s;
 	struct cvmx_dtx_ase_datx_s            cn78xx;
-	struct cvmx_dtx_ase_datx_s            cn78xxp2;
+	struct cvmx_dtx_ase_datx_s            cn78xxp1;
 };
 typedef union cvmx_dtx_ase_datx cvmx_dtx_ase_datx_t;
 
@@ -5247,15 +5247,15 @@ union cvmx_dtx_ase_enax {
 	struct cvmx_dtx_ase_enax_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug buses. Normally
-                                                         only one block will drive each bit. */
+	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                         buses. Normally only one block will drive each bit. */
 #else
 	uint64_t ena                          : 36;
 	uint64_t reserved_36_63               : 28;
 #endif
 	} s;
 	struct cvmx_dtx_ase_enax_s            cn78xx;
-	struct cvmx_dtx_ase_enax_s            cn78xxp2;
+	struct cvmx_dtx_ase_enax_s            cn78xxp1;
 };
 typedef union cvmx_dtx_ase_enax cvmx_dtx_ase_enax_t;
 
@@ -5274,7 +5274,7 @@ union cvmx_dtx_ase_selx {
 #endif
 	} s;
 	struct cvmx_dtx_ase_selx_s            cn78xx;
-	struct cvmx_dtx_ase_selx_s            cn78xxp2;
+	struct cvmx_dtx_ase_selx_s            cn78xxp1;
 };
 typedef union cvmx_dtx_ase_selx cvmx_dtx_ase_selx_t;
 
@@ -5306,9 +5306,9 @@ union cvmx_dtx_bbx1i_ctl {
 	uint64_t reserved_5_63                : 59;
 	uint64_t active                       : 1;  /**< Force block's gated clocks on, so that the state of idle signals may be captured. */
 	uint64_t reserved_2_3                 : 2;
-	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block debug data.
-                                                         Not applicable when software directly reads the DAT(0..1) registers.  For diagnostic use
-                                                         only. */
+	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
+                                                         debug data. Not applicable when software directly reads the DAT(0..1) registers.
+                                                         For diagnostic use only. */
 	uint64_t swap                         : 1;  /**< Swap the high and low 36-bit debug bus outputs. */
 #else
 	uint64_t swap                         : 1;
@@ -5330,8 +5330,8 @@ union cvmx_dtx_bbx1i_datx {
 	struct cvmx_dtx_bbx1i_datx_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the ability to
-                                                         peek into blocks during an OCLA capture without OCLA reconfiguration. */
+	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                         ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
 #else
 	uint64_t raw                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -5349,8 +5349,8 @@ union cvmx_dtx_bbx1i_enax {
 	struct cvmx_dtx_bbx1i_enax_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug buses. Normally
-                                                         only one block will drive each bit. */
+	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                         buses. Normally only one block will drive each bit. */
 #else
 	uint64_t ena                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -5406,9 +5406,9 @@ union cvmx_dtx_bbx2i_ctl {
 	uint64_t reserved_5_63                : 59;
 	uint64_t active                       : 1;  /**< Force block's gated clocks on, so that the state of idle signals may be captured. */
 	uint64_t reserved_2_3                 : 2;
-	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block debug data.
-                                                         Not applicable when software directly reads the DAT(0..1) registers.  For diagnostic use
-                                                         only. */
+	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
+                                                         debug data. Not applicable when software directly reads the DAT(0..1) registers.
+                                                         For diagnostic use only. */
 	uint64_t swap                         : 1;  /**< Swap the high and low 36-bit debug bus outputs. */
 #else
 	uint64_t swap                         : 1;
@@ -5430,8 +5430,8 @@ union cvmx_dtx_bbx2i_datx {
 	struct cvmx_dtx_bbx2i_datx_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the ability to
-                                                         peek into blocks during an OCLA capture without OCLA reconfiguration. */
+	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                         ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
 #else
 	uint64_t raw                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -5449,8 +5449,8 @@ union cvmx_dtx_bbx2i_enax {
 	struct cvmx_dtx_bbx2i_enax_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug buses. Normally
-                                                         only one block will drive each bit. */
+	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                         buses. Normally only one block will drive each bit. */
 #else
 	uint64_t ena                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -5506,9 +5506,9 @@ union cvmx_dtx_bbx3i_ctl {
 	uint64_t reserved_5_63                : 59;
 	uint64_t active                       : 1;  /**< Force block's gated clocks on, so that the state of idle signals may be captured. */
 	uint64_t reserved_2_3                 : 2;
-	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block debug data.
-                                                         Not applicable when software directly reads the DAT(0..1) registers.  For diagnostic use
-                                                         only. */
+	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
+                                                         debug data. Not applicable when software directly reads the DAT(0..1) registers.
+                                                         For diagnostic use only. */
 	uint64_t swap                         : 1;  /**< Swap the high and low 36-bit debug bus outputs. */
 #else
 	uint64_t swap                         : 1;
@@ -5530,8 +5530,8 @@ union cvmx_dtx_bbx3i_datx {
 	struct cvmx_dtx_bbx3i_datx_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the ability to
-                                                         peek into blocks during an OCLA capture without OCLA reconfiguration. */
+	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                         ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
 #else
 	uint64_t raw                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -5549,8 +5549,8 @@ union cvmx_dtx_bbx3i_enax {
 	struct cvmx_dtx_bbx3i_enax_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug buses. Normally
-                                                         only one block will drive each bit. */
+	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                         buses. Normally only one block will drive each bit. */
 #else
 	uint64_t ena                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -5607,9 +5607,9 @@ union cvmx_dtx_bch_ctl {
 	uint64_t reserved_5_63                : 59;
 	uint64_t active                       : 1;  /**< Force block's gated clocks on, so that the state of idle signals may be captured. */
 	uint64_t reserved_2_3                 : 2;
-	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block debug data.
-                                                         Not applicable when software directly reads the DAT(0..1) registers.  For diagnostic use
-                                                         only. */
+	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
+                                                         debug data. Not applicable when software directly reads the DAT(0..1) registers.
+                                                         For diagnostic use only. */
 	uint64_t swap                         : 1;  /**< Swap the high and low 36-bit debug bus outputs. */
 #else
 	uint64_t swap                         : 1;
@@ -5632,8 +5632,8 @@ union cvmx_dtx_bch_datx {
 	struct cvmx_dtx_bch_datx_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the ability to
-                                                         peek into blocks during an OCLA capture without OCLA reconfiguration. */
+	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                         ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
 #else
 	uint64_t raw                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -5652,8 +5652,8 @@ union cvmx_dtx_bch_enax {
 	struct cvmx_dtx_bch_enax_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug buses. Normally
-                                                         only one block will drive each bit. */
+	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                         buses. Normally only one block will drive each bit. */
 #else
 	uint64_t ena                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -5699,7 +5699,7 @@ union cvmx_dtx_bgxx_bcst_rsp {
 	} s;
 	struct cvmx_dtx_bgxx_bcst_rsp_s       cn73xx;
 	struct cvmx_dtx_bgxx_bcst_rsp_s       cn78xx;
-	struct cvmx_dtx_bgxx_bcst_rsp_s       cn78xxp2;
+	struct cvmx_dtx_bgxx_bcst_rsp_s       cn78xxp1;
 	struct cvmx_dtx_bgxx_bcst_rsp_s       cnf75xx;
 };
 typedef union cvmx_dtx_bgxx_bcst_rsp cvmx_dtx_bgxx_bcst_rsp_t;
@@ -5714,9 +5714,9 @@ union cvmx_dtx_bgxx_ctl {
 	uint64_t reserved_5_63                : 59;
 	uint64_t active                       : 1;  /**< Force block's gated clocks on, so that the state of idle signals may be captured. */
 	uint64_t reserved_2_3                 : 2;
-	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block debug data.
-                                                         Not applicable when software directly reads the DAT(0..1) registers.  For diagnostic use
-                                                         only. */
+	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
+                                                         debug data. Not applicable when software directly reads the DAT(0..1) registers.
+                                                         For diagnostic use only. */
 	uint64_t swap                         : 1;  /**< Swap the high and low 36-bit debug bus outputs. */
 #else
 	uint64_t swap                         : 1;
@@ -5728,7 +5728,7 @@ union cvmx_dtx_bgxx_ctl {
 	} s;
 	struct cvmx_dtx_bgxx_ctl_s            cn73xx;
 	struct cvmx_dtx_bgxx_ctl_s            cn78xx;
-	struct cvmx_dtx_bgxx_ctl_s            cn78xxp2;
+	struct cvmx_dtx_bgxx_ctl_s            cn78xxp1;
 	struct cvmx_dtx_bgxx_ctl_s            cnf75xx;
 };
 typedef union cvmx_dtx_bgxx_ctl cvmx_dtx_bgxx_ctl_t;
@@ -5741,8 +5741,8 @@ union cvmx_dtx_bgxx_datx {
 	struct cvmx_dtx_bgxx_datx_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the ability to
-                                                         peek into blocks during an OCLA capture without OCLA reconfiguration. */
+	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                         ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
 #else
 	uint64_t raw                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -5750,7 +5750,7 @@ union cvmx_dtx_bgxx_datx {
 	} s;
 	struct cvmx_dtx_bgxx_datx_s           cn73xx;
 	struct cvmx_dtx_bgxx_datx_s           cn78xx;
-	struct cvmx_dtx_bgxx_datx_s           cn78xxp2;
+	struct cvmx_dtx_bgxx_datx_s           cn78xxp1;
 	struct cvmx_dtx_bgxx_datx_s           cnf75xx;
 };
 typedef union cvmx_dtx_bgxx_datx cvmx_dtx_bgxx_datx_t;
@@ -5763,8 +5763,8 @@ union cvmx_dtx_bgxx_enax {
 	struct cvmx_dtx_bgxx_enax_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug buses. Normally
-                                                         only one block will drive each bit. */
+	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                         buses. Normally only one block will drive each bit. */
 #else
 	uint64_t ena                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -5772,7 +5772,7 @@ union cvmx_dtx_bgxx_enax {
 	} s;
 	struct cvmx_dtx_bgxx_enax_s           cn73xx;
 	struct cvmx_dtx_bgxx_enax_s           cn78xx;
-	struct cvmx_dtx_bgxx_enax_s           cn78xxp2;
+	struct cvmx_dtx_bgxx_enax_s           cn78xxp1;
 	struct cvmx_dtx_bgxx_enax_s           cnf75xx;
 };
 typedef union cvmx_dtx_bgxx_enax cvmx_dtx_bgxx_enax_t;
@@ -5793,7 +5793,7 @@ union cvmx_dtx_bgxx_selx {
 	} s;
 	struct cvmx_dtx_bgxx_selx_s           cn73xx;
 	struct cvmx_dtx_bgxx_selx_s           cn78xx;
-	struct cvmx_dtx_bgxx_selx_s           cn78xxp2;
+	struct cvmx_dtx_bgxx_selx_s           cn78xxp1;
 	struct cvmx_dtx_bgxx_selx_s           cnf75xx;
 };
 typedef union cvmx_dtx_bgxx_selx cvmx_dtx_bgxx_selx_t;
@@ -5808,9 +5808,9 @@ union cvmx_dtx_broadcast_ctl {
 	uint64_t reserved_5_63                : 59;
 	uint64_t active                       : 1;  /**< Force block's gated clocks on, so that the state of idle signals may be captured. */
 	uint64_t reserved_2_3                 : 2;
-	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block debug data.
-                                                         Not applicable when software directly reads the DAT(0..1) registers.  For diagnostic use
-                                                         only. */
+	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
+                                                         debug data. Not applicable when software directly reads the DAT(0..1) registers.
+                                                         For diagnostic use only. */
 	uint64_t swap                         : 1;  /**< Swap the high and low 36-bit debug bus outputs. */
 #else
 	uint64_t swap                         : 1;
@@ -5824,7 +5824,7 @@ union cvmx_dtx_broadcast_ctl {
 	struct cvmx_dtx_broadcast_ctl_s       cn70xxp1;
 	struct cvmx_dtx_broadcast_ctl_s       cn73xx;
 	struct cvmx_dtx_broadcast_ctl_s       cn78xx;
-	struct cvmx_dtx_broadcast_ctl_s       cn78xxp2;
+	struct cvmx_dtx_broadcast_ctl_s       cn78xxp1;
 	struct cvmx_dtx_broadcast_ctl_s       cnf75xx;
 };
 typedef union cvmx_dtx_broadcast_ctl cvmx_dtx_broadcast_ctl_t;
@@ -5837,8 +5837,8 @@ union cvmx_dtx_broadcast_enax {
 	struct cvmx_dtx_broadcast_enax_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug buses. Normally
-                                                         only one block will drive each bit. */
+	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                         buses. Normally only one block will drive each bit. */
 #else
 	uint64_t ena                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -5848,7 +5848,7 @@ union cvmx_dtx_broadcast_enax {
 	struct cvmx_dtx_broadcast_enax_s      cn70xxp1;
 	struct cvmx_dtx_broadcast_enax_s      cn73xx;
 	struct cvmx_dtx_broadcast_enax_s      cn78xx;
-	struct cvmx_dtx_broadcast_enax_s      cn78xxp2;
+	struct cvmx_dtx_broadcast_enax_s      cn78xxp1;
 	struct cvmx_dtx_broadcast_enax_s      cnf75xx;
 };
 typedef union cvmx_dtx_broadcast_enax cvmx_dtx_broadcast_enax_t;
@@ -5871,7 +5871,7 @@ union cvmx_dtx_broadcast_selx {
 	struct cvmx_dtx_broadcast_selx_s      cn70xxp1;
 	struct cvmx_dtx_broadcast_selx_s      cn73xx;
 	struct cvmx_dtx_broadcast_selx_s      cn78xx;
-	struct cvmx_dtx_broadcast_selx_s      cn78xxp2;
+	struct cvmx_dtx_broadcast_selx_s      cn78xxp1;
 	struct cvmx_dtx_broadcast_selx_s      cnf75xx;
 };
 typedef union cvmx_dtx_broadcast_selx cvmx_dtx_broadcast_selx_t;
@@ -5904,9 +5904,9 @@ union cvmx_dtx_bts_ctl {
 	uint64_t reserved_5_63                : 59;
 	uint64_t active                       : 1;  /**< Force block's gated clocks on, so that the state of idle signals may be captured. */
 	uint64_t reserved_2_3                 : 2;
-	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block debug data.
-                                                         Not applicable when software directly reads the DAT(0..1) registers.  For diagnostic use
-                                                         only. */
+	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
+                                                         debug data. Not applicable when software directly reads the DAT(0..1) registers.
+                                                         For diagnostic use only. */
 	uint64_t swap                         : 1;  /**< Swap the high and low 36-bit debug bus outputs. */
 #else
 	uint64_t swap                         : 1;
@@ -5928,8 +5928,8 @@ union cvmx_dtx_bts_datx {
 	struct cvmx_dtx_bts_datx_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the ability to
-                                                         peek into blocks during an OCLA capture without OCLA reconfiguration. */
+	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                         ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
 #else
 	uint64_t raw                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -5947,8 +5947,8 @@ union cvmx_dtx_bts_enax {
 	struct cvmx_dtx_bts_enax_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug buses. Normally
-                                                         only one block will drive each bit. */
+	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                         buses. Normally only one block will drive each bit. */
 #else
 	uint64_t ena                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -5992,7 +5992,7 @@ union cvmx_dtx_ciu_bcst_rsp {
 	} s;
 	struct cvmx_dtx_ciu_bcst_rsp_s        cn73xx;
 	struct cvmx_dtx_ciu_bcst_rsp_s        cn78xx;
-	struct cvmx_dtx_ciu_bcst_rsp_s        cn78xxp2;
+	struct cvmx_dtx_ciu_bcst_rsp_s        cn78xxp1;
 	struct cvmx_dtx_ciu_bcst_rsp_s        cnf75xx;
 };
 typedef union cvmx_dtx_ciu_bcst_rsp cvmx_dtx_ciu_bcst_rsp_t;
@@ -6007,9 +6007,9 @@ union cvmx_dtx_ciu_ctl {
 	uint64_t reserved_5_63                : 59;
 	uint64_t active                       : 1;  /**< Force block's gated clocks on, so that the state of idle signals may be captured. */
 	uint64_t reserved_2_3                 : 2;
-	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block debug data.
-                                                         Not applicable when software directly reads the DAT(0..1) registers.  For diagnostic use
-                                                         only. */
+	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
+                                                         debug data. Not applicable when software directly reads the DAT(0..1) registers.
+                                                         For diagnostic use only. */
 	uint64_t swap                         : 1;  /**< Swap the high and low 36-bit debug bus outputs. */
 #else
 	uint64_t swap                         : 1;
@@ -6021,7 +6021,7 @@ union cvmx_dtx_ciu_ctl {
 	} s;
 	struct cvmx_dtx_ciu_ctl_s             cn73xx;
 	struct cvmx_dtx_ciu_ctl_s             cn78xx;
-	struct cvmx_dtx_ciu_ctl_s             cn78xxp2;
+	struct cvmx_dtx_ciu_ctl_s             cn78xxp1;
 	struct cvmx_dtx_ciu_ctl_s             cnf75xx;
 };
 typedef union cvmx_dtx_ciu_ctl cvmx_dtx_ciu_ctl_t;
@@ -6034,8 +6034,8 @@ union cvmx_dtx_ciu_datx {
 	struct cvmx_dtx_ciu_datx_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the ability to
-                                                         peek into blocks during an OCLA capture without OCLA reconfiguration. */
+	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                         ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
 #else
 	uint64_t raw                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -6043,7 +6043,7 @@ union cvmx_dtx_ciu_datx {
 	} s;
 	struct cvmx_dtx_ciu_datx_s            cn73xx;
 	struct cvmx_dtx_ciu_datx_s            cn78xx;
-	struct cvmx_dtx_ciu_datx_s            cn78xxp2;
+	struct cvmx_dtx_ciu_datx_s            cn78xxp1;
 	struct cvmx_dtx_ciu_datx_s            cnf75xx;
 };
 typedef union cvmx_dtx_ciu_datx cvmx_dtx_ciu_datx_t;
@@ -6056,8 +6056,8 @@ union cvmx_dtx_ciu_enax {
 	struct cvmx_dtx_ciu_enax_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug buses. Normally
-                                                         only one block will drive each bit. */
+	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                         buses. Normally only one block will drive each bit. */
 #else
 	uint64_t ena                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -6065,7 +6065,7 @@ union cvmx_dtx_ciu_enax {
 	} s;
 	struct cvmx_dtx_ciu_enax_s            cn73xx;
 	struct cvmx_dtx_ciu_enax_s            cn78xx;
-	struct cvmx_dtx_ciu_enax_s            cn78xxp2;
+	struct cvmx_dtx_ciu_enax_s            cn78xxp1;
 	struct cvmx_dtx_ciu_enax_s            cnf75xx;
 };
 typedef union cvmx_dtx_ciu_enax cvmx_dtx_ciu_enax_t;
@@ -6086,7 +6086,7 @@ union cvmx_dtx_ciu_selx {
 	} s;
 	struct cvmx_dtx_ciu_selx_s            cn73xx;
 	struct cvmx_dtx_ciu_selx_s            cn78xx;
-	struct cvmx_dtx_ciu_selx_s            cn78xxp2;
+	struct cvmx_dtx_ciu_selx_s            cn78xxp1;
 	struct cvmx_dtx_ciu_selx_s            cnf75xx;
 };
 typedef union cvmx_dtx_ciu_selx cvmx_dtx_ciu_selx_t;
@@ -6119,9 +6119,9 @@ union cvmx_dtx_denc_ctl {
 	uint64_t reserved_5_63                : 59;
 	uint64_t active                       : 1;  /**< Force block's gated clocks on, so that the state of idle signals may be captured. */
 	uint64_t reserved_2_3                 : 2;
-	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block debug data.
-                                                         Not applicable when software directly reads the DAT(0..1) registers.  For diagnostic use
-                                                         only. */
+	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
+                                                         debug data. Not applicable when software directly reads the DAT(0..1) registers.
+                                                         For diagnostic use only. */
 	uint64_t swap                         : 1;  /**< Swap the high and low 36-bit debug bus outputs. */
 #else
 	uint64_t swap                         : 1;
@@ -6143,8 +6143,8 @@ union cvmx_dtx_denc_datx {
 	struct cvmx_dtx_denc_datx_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the ability to
-                                                         peek into blocks during an OCLA capture without OCLA reconfiguration. */
+	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                         ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
 #else
 	uint64_t raw                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -6162,8 +6162,8 @@ union cvmx_dtx_denc_enax {
 	struct cvmx_dtx_denc_enax_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug buses. Normally
-                                                         only one block will drive each bit. */
+	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                         buses. Normally only one block will drive each bit. */
 #else
 	uint64_t ena                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -6209,7 +6209,7 @@ union cvmx_dtx_dfa_bcst_rsp {
 	struct cvmx_dtx_dfa_bcst_rsp_s        cn70xxp1;
 	struct cvmx_dtx_dfa_bcst_rsp_s        cn73xx;
 	struct cvmx_dtx_dfa_bcst_rsp_s        cn78xx;
-	struct cvmx_dtx_dfa_bcst_rsp_s        cn78xxp2;
+	struct cvmx_dtx_dfa_bcst_rsp_s        cn78xxp1;
 };
 typedef union cvmx_dtx_dfa_bcst_rsp cvmx_dtx_dfa_bcst_rsp_t;
 
@@ -6223,9 +6223,9 @@ union cvmx_dtx_dfa_ctl {
 	uint64_t reserved_5_63                : 59;
 	uint64_t active                       : 1;  /**< Force block's gated clocks on, so that the state of idle signals may be captured. */
 	uint64_t reserved_2_3                 : 2;
-	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block debug data.
-                                                         Not applicable when software directly reads the DAT(0..1) registers.  For diagnostic use
-                                                         only. */
+	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
+                                                         debug data. Not applicable when software directly reads the DAT(0..1) registers.
+                                                         For diagnostic use only. */
 	uint64_t swap                         : 1;  /**< Swap the high and low 36-bit debug bus outputs. */
 #else
 	uint64_t swap                         : 1;
@@ -6239,7 +6239,7 @@ union cvmx_dtx_dfa_ctl {
 	struct cvmx_dtx_dfa_ctl_s             cn70xxp1;
 	struct cvmx_dtx_dfa_ctl_s             cn73xx;
 	struct cvmx_dtx_dfa_ctl_s             cn78xx;
-	struct cvmx_dtx_dfa_ctl_s             cn78xxp2;
+	struct cvmx_dtx_dfa_ctl_s             cn78xxp1;
 };
 typedef union cvmx_dtx_dfa_ctl cvmx_dtx_dfa_ctl_t;
 
@@ -6251,8 +6251,8 @@ union cvmx_dtx_dfa_datx {
 	struct cvmx_dtx_dfa_datx_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the ability to
-                                                         peek into blocks during an OCLA capture without OCLA reconfiguration. */
+	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                         ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
 #else
 	uint64_t raw                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -6262,7 +6262,7 @@ union cvmx_dtx_dfa_datx {
 	struct cvmx_dtx_dfa_datx_s            cn70xxp1;
 	struct cvmx_dtx_dfa_datx_s            cn73xx;
 	struct cvmx_dtx_dfa_datx_s            cn78xx;
-	struct cvmx_dtx_dfa_datx_s            cn78xxp2;
+	struct cvmx_dtx_dfa_datx_s            cn78xxp1;
 };
 typedef union cvmx_dtx_dfa_datx cvmx_dtx_dfa_datx_t;
 
@@ -6274,8 +6274,8 @@ union cvmx_dtx_dfa_enax {
 	struct cvmx_dtx_dfa_enax_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug buses. Normally
-                                                         only one block will drive each bit. */
+	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                         buses. Normally only one block will drive each bit. */
 #else
 	uint64_t ena                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -6285,7 +6285,7 @@ union cvmx_dtx_dfa_enax {
 	struct cvmx_dtx_dfa_enax_s            cn70xxp1;
 	struct cvmx_dtx_dfa_enax_s            cn73xx;
 	struct cvmx_dtx_dfa_enax_s            cn78xx;
-	struct cvmx_dtx_dfa_enax_s            cn78xxp2;
+	struct cvmx_dtx_dfa_enax_s            cn78xxp1;
 };
 typedef union cvmx_dtx_dfa_enax cvmx_dtx_dfa_enax_t;
 
@@ -6307,7 +6307,7 @@ union cvmx_dtx_dfa_selx {
 	struct cvmx_dtx_dfa_selx_s            cn70xxp1;
 	struct cvmx_dtx_dfa_selx_s            cn73xx;
 	struct cvmx_dtx_dfa_selx_s            cn78xx;
-	struct cvmx_dtx_dfa_selx_s            cn78xxp2;
+	struct cvmx_dtx_dfa_selx_s            cn78xxp1;
 };
 typedef union cvmx_dtx_dfa_selx cvmx_dtx_dfa_selx_t;
 
@@ -6339,9 +6339,9 @@ union cvmx_dtx_dlfe_ctl {
 	uint64_t reserved_5_63                : 59;
 	uint64_t active                       : 1;  /**< Force block's gated clocks on, so that the state of idle signals may be captured. */
 	uint64_t reserved_2_3                 : 2;
-	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block debug data.
-                                                         Not applicable when software directly reads the DAT(0..1) registers.  For diagnostic use
-                                                         only. */
+	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
+                                                         debug data. Not applicable when software directly reads the DAT(0..1) registers.
+                                                         For diagnostic use only. */
 	uint64_t swap                         : 1;  /**< Swap the high and low 36-bit debug bus outputs. */
 #else
 	uint64_t swap                         : 1;
@@ -6363,8 +6363,8 @@ union cvmx_dtx_dlfe_datx {
 	struct cvmx_dtx_dlfe_datx_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the ability to
-                                                         peek into blocks during an OCLA capture without OCLA reconfiguration. */
+	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                         ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
 #else
 	uint64_t raw                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -6382,8 +6382,8 @@ union cvmx_dtx_dlfe_enax {
 	struct cvmx_dtx_dlfe_enax_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug buses. Normally
-                                                         only one block will drive each bit. */
+	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                         buses. Normally only one block will drive each bit. */
 #else
 	uint64_t ena                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -6429,7 +6429,7 @@ union cvmx_dtx_dpi_bcst_rsp {
 	struct cvmx_dtx_dpi_bcst_rsp_s        cn70xxp1;
 	struct cvmx_dtx_dpi_bcst_rsp_s        cn73xx;
 	struct cvmx_dtx_dpi_bcst_rsp_s        cn78xx;
-	struct cvmx_dtx_dpi_bcst_rsp_s        cn78xxp2;
+	struct cvmx_dtx_dpi_bcst_rsp_s        cn78xxp1;
 	struct cvmx_dtx_dpi_bcst_rsp_s        cnf75xx;
 };
 typedef union cvmx_dtx_dpi_bcst_rsp cvmx_dtx_dpi_bcst_rsp_t;
@@ -6444,9 +6444,9 @@ union cvmx_dtx_dpi_ctl {
 	uint64_t reserved_5_63                : 59;
 	uint64_t active                       : 1;  /**< Force block's gated clocks on, so that the state of idle signals may be captured. */
 	uint64_t reserved_2_3                 : 2;
-	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block debug data.
-                                                         Not applicable when software directly reads the DAT(0..1) registers.  For diagnostic use
-                                                         only. */
+	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
+                                                         debug data. Not applicable when software directly reads the DAT(0..1) registers.
+                                                         For diagnostic use only. */
 	uint64_t swap                         : 1;  /**< Swap the high and low 36-bit debug bus outputs. */
 #else
 	uint64_t swap                         : 1;
@@ -6460,7 +6460,7 @@ union cvmx_dtx_dpi_ctl {
 	struct cvmx_dtx_dpi_ctl_s             cn70xxp1;
 	struct cvmx_dtx_dpi_ctl_s             cn73xx;
 	struct cvmx_dtx_dpi_ctl_s             cn78xx;
-	struct cvmx_dtx_dpi_ctl_s             cn78xxp2;
+	struct cvmx_dtx_dpi_ctl_s             cn78xxp1;
 	struct cvmx_dtx_dpi_ctl_s             cnf75xx;
 };
 typedef union cvmx_dtx_dpi_ctl cvmx_dtx_dpi_ctl_t;
@@ -6473,8 +6473,8 @@ union cvmx_dtx_dpi_datx {
 	struct cvmx_dtx_dpi_datx_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the ability to
-                                                         peek into blocks during an OCLA capture without OCLA reconfiguration. */
+	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                         ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
 #else
 	uint64_t raw                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -6484,7 +6484,7 @@ union cvmx_dtx_dpi_datx {
 	struct cvmx_dtx_dpi_datx_s            cn70xxp1;
 	struct cvmx_dtx_dpi_datx_s            cn73xx;
 	struct cvmx_dtx_dpi_datx_s            cn78xx;
-	struct cvmx_dtx_dpi_datx_s            cn78xxp2;
+	struct cvmx_dtx_dpi_datx_s            cn78xxp1;
 	struct cvmx_dtx_dpi_datx_s            cnf75xx;
 };
 typedef union cvmx_dtx_dpi_datx cvmx_dtx_dpi_datx_t;
@@ -6497,8 +6497,8 @@ union cvmx_dtx_dpi_enax {
 	struct cvmx_dtx_dpi_enax_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug buses. Normally
-                                                         only one block will drive each bit. */
+	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                         buses. Normally only one block will drive each bit. */
 #else
 	uint64_t ena                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -6508,7 +6508,7 @@ union cvmx_dtx_dpi_enax {
 	struct cvmx_dtx_dpi_enax_s            cn70xxp1;
 	struct cvmx_dtx_dpi_enax_s            cn73xx;
 	struct cvmx_dtx_dpi_enax_s            cn78xx;
-	struct cvmx_dtx_dpi_enax_s            cn78xxp2;
+	struct cvmx_dtx_dpi_enax_s            cn78xxp1;
 	struct cvmx_dtx_dpi_enax_s            cnf75xx;
 };
 typedef union cvmx_dtx_dpi_enax cvmx_dtx_dpi_enax_t;
@@ -6531,7 +6531,7 @@ union cvmx_dtx_dpi_selx {
 	struct cvmx_dtx_dpi_selx_s            cn70xxp1;
 	struct cvmx_dtx_dpi_selx_s            cn73xx;
 	struct cvmx_dtx_dpi_selx_s            cn78xx;
-	struct cvmx_dtx_dpi_selx_s            cn78xxp2;
+	struct cvmx_dtx_dpi_selx_s            cn78xxp1;
 	struct cvmx_dtx_dpi_selx_s            cnf75xx;
 };
 typedef union cvmx_dtx_dpi_selx cvmx_dtx_dpi_selx_t;
@@ -6564,9 +6564,9 @@ union cvmx_dtx_fdeqx_ctl {
 	uint64_t reserved_5_63                : 59;
 	uint64_t active                       : 1;  /**< Force block's gated clocks on, so that the state of idle signals may be captured. */
 	uint64_t reserved_2_3                 : 2;
-	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block debug data.
-                                                         Not applicable when software directly reads the DAT(0..1) registers.  For diagnostic use
-                                                         only. */
+	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
+                                                         debug data. Not applicable when software directly reads the DAT(0..1) registers.
+                                                         For diagnostic use only. */
 	uint64_t swap                         : 1;  /**< Swap the high and low 36-bit debug bus outputs. */
 #else
 	uint64_t swap                         : 1;
@@ -6588,8 +6588,8 @@ union cvmx_dtx_fdeqx_datx {
 	struct cvmx_dtx_fdeqx_datx_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the ability to
-                                                         peek into blocks during an OCLA capture without OCLA reconfiguration. */
+	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                         ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
 #else
 	uint64_t raw                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -6607,8 +6607,8 @@ union cvmx_dtx_fdeqx_enax {
 	struct cvmx_dtx_fdeqx_enax_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug buses. Normally
-                                                         only one block will drive each bit. */
+	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                         buses. Normally only one block will drive each bit. */
 #else
 	uint64_t ena                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -6654,7 +6654,7 @@ union cvmx_dtx_fpa_bcst_rsp {
 	struct cvmx_dtx_fpa_bcst_rsp_s        cn70xxp1;
 	struct cvmx_dtx_fpa_bcst_rsp_s        cn73xx;
 	struct cvmx_dtx_fpa_bcst_rsp_s        cn78xx;
-	struct cvmx_dtx_fpa_bcst_rsp_s        cn78xxp2;
+	struct cvmx_dtx_fpa_bcst_rsp_s        cn78xxp1;
 	struct cvmx_dtx_fpa_bcst_rsp_s        cnf75xx;
 };
 typedef union cvmx_dtx_fpa_bcst_rsp cvmx_dtx_fpa_bcst_rsp_t;
@@ -6669,9 +6669,9 @@ union cvmx_dtx_fpa_ctl {
 	uint64_t reserved_5_63                : 59;
 	uint64_t active                       : 1;  /**< Force block's gated clocks on, so that the state of idle signals may be captured. */
 	uint64_t reserved_2_3                 : 2;
-	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block debug data.
-                                                         Not applicable when software directly reads the DAT(0..1) registers.  For diagnostic use
-                                                         only. */
+	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
+                                                         debug data. Not applicable when software directly reads the DAT(0..1) registers.
+                                                         For diagnostic use only. */
 	uint64_t swap                         : 1;  /**< Swap the high and low 36-bit debug bus outputs. */
 #else
 	uint64_t swap                         : 1;
@@ -6685,7 +6685,7 @@ union cvmx_dtx_fpa_ctl {
 	struct cvmx_dtx_fpa_ctl_s             cn70xxp1;
 	struct cvmx_dtx_fpa_ctl_s             cn73xx;
 	struct cvmx_dtx_fpa_ctl_s             cn78xx;
-	struct cvmx_dtx_fpa_ctl_s             cn78xxp2;
+	struct cvmx_dtx_fpa_ctl_s             cn78xxp1;
 	struct cvmx_dtx_fpa_ctl_s             cnf75xx;
 };
 typedef union cvmx_dtx_fpa_ctl cvmx_dtx_fpa_ctl_t;
@@ -6698,8 +6698,8 @@ union cvmx_dtx_fpa_datx {
 	struct cvmx_dtx_fpa_datx_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the ability to
-                                                         peek into blocks during an OCLA capture without OCLA reconfiguration. */
+	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                         ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
 #else
 	uint64_t raw                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -6709,7 +6709,7 @@ union cvmx_dtx_fpa_datx {
 	struct cvmx_dtx_fpa_datx_s            cn70xxp1;
 	struct cvmx_dtx_fpa_datx_s            cn73xx;
 	struct cvmx_dtx_fpa_datx_s            cn78xx;
-	struct cvmx_dtx_fpa_datx_s            cn78xxp2;
+	struct cvmx_dtx_fpa_datx_s            cn78xxp1;
 	struct cvmx_dtx_fpa_datx_s            cnf75xx;
 };
 typedef union cvmx_dtx_fpa_datx cvmx_dtx_fpa_datx_t;
@@ -6722,8 +6722,8 @@ union cvmx_dtx_fpa_enax {
 	struct cvmx_dtx_fpa_enax_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug buses. Normally
-                                                         only one block will drive each bit. */
+	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                         buses. Normally only one block will drive each bit. */
 #else
 	uint64_t ena                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -6733,7 +6733,7 @@ union cvmx_dtx_fpa_enax {
 	struct cvmx_dtx_fpa_enax_s            cn70xxp1;
 	struct cvmx_dtx_fpa_enax_s            cn73xx;
 	struct cvmx_dtx_fpa_enax_s            cn78xx;
-	struct cvmx_dtx_fpa_enax_s            cn78xxp2;
+	struct cvmx_dtx_fpa_enax_s            cn78xxp1;
 	struct cvmx_dtx_fpa_enax_s            cnf75xx;
 };
 typedef union cvmx_dtx_fpa_enax cvmx_dtx_fpa_enax_t;
@@ -6756,7 +6756,7 @@ union cvmx_dtx_fpa_selx {
 	struct cvmx_dtx_fpa_selx_s            cn70xxp1;
 	struct cvmx_dtx_fpa_selx_s            cn73xx;
 	struct cvmx_dtx_fpa_selx_s            cn78xx;
-	struct cvmx_dtx_fpa_selx_s            cn78xxp2;
+	struct cvmx_dtx_fpa_selx_s            cn78xxp1;
 	struct cvmx_dtx_fpa_selx_s            cnf75xx;
 };
 typedef union cvmx_dtx_fpa_selx cvmx_dtx_fpa_selx_t;
@@ -6790,9 +6790,9 @@ union cvmx_dtx_gmxx_ctl {
 	uint64_t reserved_5_63                : 59;
 	uint64_t active                       : 1;  /**< Force block's gated clocks on, so that the state of idle signals may be captured. */
 	uint64_t reserved_2_3                 : 2;
-	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block debug data.
-                                                         Not applicable when software directly reads the DAT(0..1) registers.  For diagnostic use
-                                                         only. */
+	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
+                                                         debug data. Not applicable when software directly reads the DAT(0..1) registers.
+                                                         For diagnostic use only. */
 	uint64_t swap                         : 1;  /**< Swap the high and low 36-bit debug bus outputs. */
 #else
 	uint64_t swap                         : 1;
@@ -6815,8 +6815,8 @@ union cvmx_dtx_gmxx_datx {
 	struct cvmx_dtx_gmxx_datx_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the ability to
-                                                         peek into blocks during an OCLA capture without OCLA reconfiguration. */
+	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                         ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
 #else
 	uint64_t raw                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -6835,8 +6835,8 @@ union cvmx_dtx_gmxx_enax {
 	struct cvmx_dtx_gmxx_enax_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug buses. Normally
-                                                         only one block will drive each bit. */
+	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                         buses. Normally only one block will drive each bit. */
 #else
 	uint64_t ena                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -6882,7 +6882,7 @@ union cvmx_dtx_gserx_bcst_rsp {
 	} s;
 	struct cvmx_dtx_gserx_bcst_rsp_s      cn73xx;
 	struct cvmx_dtx_gserx_bcst_rsp_s      cn78xx;
-	struct cvmx_dtx_gserx_bcst_rsp_s      cn78xxp2;
+	struct cvmx_dtx_gserx_bcst_rsp_s      cn78xxp1;
 	struct cvmx_dtx_gserx_bcst_rsp_s      cnf75xx;
 };
 typedef union cvmx_dtx_gserx_bcst_rsp cvmx_dtx_gserx_bcst_rsp_t;
@@ -6897,9 +6897,9 @@ union cvmx_dtx_gserx_ctl {
 	uint64_t reserved_5_63                : 59;
 	uint64_t active                       : 1;  /**< Force block's gated clocks on, so that the state of idle signals may be captured. */
 	uint64_t reserved_2_3                 : 2;
-	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block debug data.
-                                                         Not applicable when software directly reads the DAT(0..1) registers.  For diagnostic use
-                                                         only. */
+	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
+                                                         debug data. Not applicable when software directly reads the DAT(0..1) registers.
+                                                         For diagnostic use only. */
 	uint64_t swap                         : 1;  /**< Swap the high and low 36-bit debug bus outputs. */
 #else
 	uint64_t swap                         : 1;
@@ -6911,7 +6911,7 @@ union cvmx_dtx_gserx_ctl {
 	} s;
 	struct cvmx_dtx_gserx_ctl_s           cn73xx;
 	struct cvmx_dtx_gserx_ctl_s           cn78xx;
-	struct cvmx_dtx_gserx_ctl_s           cn78xxp2;
+	struct cvmx_dtx_gserx_ctl_s           cn78xxp1;
 	struct cvmx_dtx_gserx_ctl_s           cnf75xx;
 };
 typedef union cvmx_dtx_gserx_ctl cvmx_dtx_gserx_ctl_t;
@@ -6924,8 +6924,8 @@ union cvmx_dtx_gserx_datx {
 	struct cvmx_dtx_gserx_datx_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the ability to
-                                                         peek into blocks during an OCLA capture without OCLA reconfiguration. */
+	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                         ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
 #else
 	uint64_t raw                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -6933,7 +6933,7 @@ union cvmx_dtx_gserx_datx {
 	} s;
 	struct cvmx_dtx_gserx_datx_s          cn73xx;
 	struct cvmx_dtx_gserx_datx_s          cn78xx;
-	struct cvmx_dtx_gserx_datx_s          cn78xxp2;
+	struct cvmx_dtx_gserx_datx_s          cn78xxp1;
 	struct cvmx_dtx_gserx_datx_s          cnf75xx;
 };
 typedef union cvmx_dtx_gserx_datx cvmx_dtx_gserx_datx_t;
@@ -6946,8 +6946,8 @@ union cvmx_dtx_gserx_enax {
 	struct cvmx_dtx_gserx_enax_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug buses. Normally
-                                                         only one block will drive each bit. */
+	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                         buses. Normally only one block will drive each bit. */
 #else
 	uint64_t ena                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -6955,7 +6955,7 @@ union cvmx_dtx_gserx_enax {
 	} s;
 	struct cvmx_dtx_gserx_enax_s          cn73xx;
 	struct cvmx_dtx_gserx_enax_s          cn78xx;
-	struct cvmx_dtx_gserx_enax_s          cn78xxp2;
+	struct cvmx_dtx_gserx_enax_s          cn78xxp1;
 	struct cvmx_dtx_gserx_enax_s          cnf75xx;
 };
 typedef union cvmx_dtx_gserx_enax cvmx_dtx_gserx_enax_t;
@@ -6976,7 +6976,7 @@ union cvmx_dtx_gserx_selx {
 	} s;
 	struct cvmx_dtx_gserx_selx_s          cn73xx;
 	struct cvmx_dtx_gserx_selx_s          cn78xx;
-	struct cvmx_dtx_gserx_selx_s          cn78xxp2;
+	struct cvmx_dtx_gserx_selx_s          cn78xxp1;
 	struct cvmx_dtx_gserx_selx_s          cnf75xx;
 };
 typedef union cvmx_dtx_gserx_selx cvmx_dtx_gserx_selx_t;
@@ -6997,7 +6997,7 @@ union cvmx_dtx_hna_bcst_rsp {
 	} s;
 	struct cvmx_dtx_hna_bcst_rsp_s        cn73xx;
 	struct cvmx_dtx_hna_bcst_rsp_s        cn78xx;
-	struct cvmx_dtx_hna_bcst_rsp_s        cn78xxp2;
+	struct cvmx_dtx_hna_bcst_rsp_s        cn78xxp1;
 };
 typedef union cvmx_dtx_hna_bcst_rsp cvmx_dtx_hna_bcst_rsp_t;
 
@@ -7011,9 +7011,9 @@ union cvmx_dtx_hna_ctl {
 	uint64_t reserved_5_63                : 59;
 	uint64_t active                       : 1;  /**< Force block's gated clocks on, so that the state of idle signals may be captured. */
 	uint64_t reserved_2_3                 : 2;
-	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block debug data.
-                                                         Not applicable when software directly reads the DAT(0..1) registers.  For diagnostic use
-                                                         only. */
+	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
+                                                         debug data. Not applicable when software directly reads the DAT(0..1) registers.
+                                                         For diagnostic use only. */
 	uint64_t swap                         : 1;  /**< Swap the high and low 36-bit debug bus outputs. */
 #else
 	uint64_t swap                         : 1;
@@ -7025,7 +7025,7 @@ union cvmx_dtx_hna_ctl {
 	} s;
 	struct cvmx_dtx_hna_ctl_s             cn73xx;
 	struct cvmx_dtx_hna_ctl_s             cn78xx;
-	struct cvmx_dtx_hna_ctl_s             cn78xxp2;
+	struct cvmx_dtx_hna_ctl_s             cn78xxp1;
 };
 typedef union cvmx_dtx_hna_ctl cvmx_dtx_hna_ctl_t;
 
@@ -7037,8 +7037,8 @@ union cvmx_dtx_hna_datx {
 	struct cvmx_dtx_hna_datx_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the ability to
-                                                         peek into blocks during an OCLA capture without OCLA reconfiguration. */
+	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                         ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
 #else
 	uint64_t raw                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -7046,7 +7046,7 @@ union cvmx_dtx_hna_datx {
 	} s;
 	struct cvmx_dtx_hna_datx_s            cn73xx;
 	struct cvmx_dtx_hna_datx_s            cn78xx;
-	struct cvmx_dtx_hna_datx_s            cn78xxp2;
+	struct cvmx_dtx_hna_datx_s            cn78xxp1;
 };
 typedef union cvmx_dtx_hna_datx cvmx_dtx_hna_datx_t;
 
@@ -7058,8 +7058,8 @@ union cvmx_dtx_hna_enax {
 	struct cvmx_dtx_hna_enax_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug buses. Normally
-                                                         only one block will drive each bit. */
+	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                         buses. Normally only one block will drive each bit. */
 #else
 	uint64_t ena                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -7067,7 +7067,7 @@ union cvmx_dtx_hna_enax {
 	} s;
 	struct cvmx_dtx_hna_enax_s            cn73xx;
 	struct cvmx_dtx_hna_enax_s            cn78xx;
-	struct cvmx_dtx_hna_enax_s            cn78xxp2;
+	struct cvmx_dtx_hna_enax_s            cn78xxp1;
 };
 typedef union cvmx_dtx_hna_enax cvmx_dtx_hna_enax_t;
 
@@ -7087,7 +7087,7 @@ union cvmx_dtx_hna_selx {
 	} s;
 	struct cvmx_dtx_hna_selx_s            cn73xx;
 	struct cvmx_dtx_hna_selx_s            cn78xx;
-	struct cvmx_dtx_hna_selx_s            cn78xxp2;
+	struct cvmx_dtx_hna_selx_s            cn78xxp1;
 };
 typedef union cvmx_dtx_hna_selx cvmx_dtx_hna_selx_t;
 
@@ -7106,7 +7106,7 @@ union cvmx_dtx_ila_bcst_rsp {
 #endif
 	} s;
 	struct cvmx_dtx_ila_bcst_rsp_s        cn78xx;
-	struct cvmx_dtx_ila_bcst_rsp_s        cn78xxp2;
+	struct cvmx_dtx_ila_bcst_rsp_s        cn78xxp1;
 };
 typedef union cvmx_dtx_ila_bcst_rsp cvmx_dtx_ila_bcst_rsp_t;
 
@@ -7120,9 +7120,9 @@ union cvmx_dtx_ila_ctl {
 	uint64_t reserved_5_63                : 59;
 	uint64_t active                       : 1;  /**< Force block's gated clocks on, so that the state of idle signals may be captured. */
 	uint64_t reserved_2_3                 : 2;
-	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block debug data.
-                                                         Not applicable when software directly reads the DAT(0..1) registers.  For diagnostic use
-                                                         only. */
+	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
+                                                         debug data. Not applicable when software directly reads the DAT(0..1) registers.
+                                                         For diagnostic use only. */
 	uint64_t swap                         : 1;  /**< Swap the high and low 36-bit debug bus outputs. */
 #else
 	uint64_t swap                         : 1;
@@ -7133,7 +7133,7 @@ union cvmx_dtx_ila_ctl {
 #endif
 	} s;
 	struct cvmx_dtx_ila_ctl_s             cn78xx;
-	struct cvmx_dtx_ila_ctl_s             cn78xxp2;
+	struct cvmx_dtx_ila_ctl_s             cn78xxp1;
 };
 typedef union cvmx_dtx_ila_ctl cvmx_dtx_ila_ctl_t;
 
@@ -7145,15 +7145,15 @@ union cvmx_dtx_ila_datx {
 	struct cvmx_dtx_ila_datx_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the ability to
-                                                         peek into blocks during an OCLA capture without OCLA reconfiguration. */
+	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                         ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
 #else
 	uint64_t raw                          : 36;
 	uint64_t reserved_36_63               : 28;
 #endif
 	} s;
 	struct cvmx_dtx_ila_datx_s            cn78xx;
-	struct cvmx_dtx_ila_datx_s            cn78xxp2;
+	struct cvmx_dtx_ila_datx_s            cn78xxp1;
 };
 typedef union cvmx_dtx_ila_datx cvmx_dtx_ila_datx_t;
 
@@ -7165,15 +7165,15 @@ union cvmx_dtx_ila_enax {
 	struct cvmx_dtx_ila_enax_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug buses. Normally
-                                                         only one block will drive each bit. */
+	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                         buses. Normally only one block will drive each bit. */
 #else
 	uint64_t ena                          : 36;
 	uint64_t reserved_36_63               : 28;
 #endif
 	} s;
 	struct cvmx_dtx_ila_enax_s            cn78xx;
-	struct cvmx_dtx_ila_enax_s            cn78xxp2;
+	struct cvmx_dtx_ila_enax_s            cn78xxp1;
 };
 typedef union cvmx_dtx_ila_enax cvmx_dtx_ila_enax_t;
 
@@ -7192,7 +7192,7 @@ union cvmx_dtx_ila_selx {
 #endif
 	} s;
 	struct cvmx_dtx_ila_selx_s            cn78xx;
-	struct cvmx_dtx_ila_selx_s            cn78xxp2;
+	struct cvmx_dtx_ila_selx_s            cn78xxp1;
 };
 typedef union cvmx_dtx_ila_selx cvmx_dtx_ila_selx_t;
 
@@ -7211,7 +7211,7 @@ union cvmx_dtx_ilk_bcst_rsp {
 #endif
 	} s;
 	struct cvmx_dtx_ilk_bcst_rsp_s        cn78xx;
-	struct cvmx_dtx_ilk_bcst_rsp_s        cn78xxp2;
+	struct cvmx_dtx_ilk_bcst_rsp_s        cn78xxp1;
 };
 typedef union cvmx_dtx_ilk_bcst_rsp cvmx_dtx_ilk_bcst_rsp_t;
 
@@ -7225,9 +7225,9 @@ union cvmx_dtx_ilk_ctl {
 	uint64_t reserved_5_63                : 59;
 	uint64_t active                       : 1;  /**< Force block's gated clocks on, so that the state of idle signals may be captured. */
 	uint64_t reserved_2_3                 : 2;
-	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block debug data.
-                                                         Not applicable when software directly reads the DAT(0..1) registers.  For diagnostic use
-                                                         only. */
+	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
+                                                         debug data. Not applicable when software directly reads the DAT(0..1) registers.
+                                                         For diagnostic use only. */
 	uint64_t swap                         : 1;  /**< Swap the high and low 36-bit debug bus outputs. */
 #else
 	uint64_t swap                         : 1;
@@ -7238,7 +7238,7 @@ union cvmx_dtx_ilk_ctl {
 #endif
 	} s;
 	struct cvmx_dtx_ilk_ctl_s             cn78xx;
-	struct cvmx_dtx_ilk_ctl_s             cn78xxp2;
+	struct cvmx_dtx_ilk_ctl_s             cn78xxp1;
 };
 typedef union cvmx_dtx_ilk_ctl cvmx_dtx_ilk_ctl_t;
 
@@ -7250,15 +7250,15 @@ union cvmx_dtx_ilk_datx {
 	struct cvmx_dtx_ilk_datx_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the ability to
-                                                         peek into blocks during an OCLA capture without OCLA reconfiguration. */
+	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                         ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
 #else
 	uint64_t raw                          : 36;
 	uint64_t reserved_36_63               : 28;
 #endif
 	} s;
 	struct cvmx_dtx_ilk_datx_s            cn78xx;
-	struct cvmx_dtx_ilk_datx_s            cn78xxp2;
+	struct cvmx_dtx_ilk_datx_s            cn78xxp1;
 };
 typedef union cvmx_dtx_ilk_datx cvmx_dtx_ilk_datx_t;
 
@@ -7270,15 +7270,15 @@ union cvmx_dtx_ilk_enax {
 	struct cvmx_dtx_ilk_enax_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug buses. Normally
-                                                         only one block will drive each bit. */
+	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                         buses. Normally only one block will drive each bit. */
 #else
 	uint64_t ena                          : 36;
 	uint64_t reserved_36_63               : 28;
 #endif
 	} s;
 	struct cvmx_dtx_ilk_enax_s            cn78xx;
-	struct cvmx_dtx_ilk_enax_s            cn78xxp2;
+	struct cvmx_dtx_ilk_enax_s            cn78xxp1;
 };
 typedef union cvmx_dtx_ilk_enax cvmx_dtx_ilk_enax_t;
 
@@ -7297,7 +7297,7 @@ union cvmx_dtx_ilk_selx {
 #endif
 	} s;
 	struct cvmx_dtx_ilk_selx_s            cn78xx;
-	struct cvmx_dtx_ilk_selx_s            cn78xxp2;
+	struct cvmx_dtx_ilk_selx_s            cn78xxp1;
 };
 typedef union cvmx_dtx_ilk_selx cvmx_dtx_ilk_selx_t;
 
@@ -7330,9 +7330,9 @@ union cvmx_dtx_iob_ctl {
 	uint64_t reserved_5_63                : 59;
 	uint64_t active                       : 1;  /**< Force block's gated clocks on, so that the state of idle signals may be captured. */
 	uint64_t reserved_2_3                 : 2;
-	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block debug data.
-                                                         Not applicable when software directly reads the DAT(0..1) registers.  For diagnostic use
-                                                         only. */
+	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
+                                                         debug data. Not applicable when software directly reads the DAT(0..1) registers.
+                                                         For diagnostic use only. */
 	uint64_t swap                         : 1;  /**< Swap the high and low 36-bit debug bus outputs. */
 #else
 	uint64_t swap                         : 1;
@@ -7355,8 +7355,8 @@ union cvmx_dtx_iob_datx {
 	struct cvmx_dtx_iob_datx_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the ability to
-                                                         peek into blocks during an OCLA capture without OCLA reconfiguration. */
+	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                         ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
 #else
 	uint64_t raw                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -7375,8 +7375,8 @@ union cvmx_dtx_iob_enax {
 	struct cvmx_dtx_iob_enax_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug buses. Normally
-                                                         only one block will drive each bit. */
+	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                         buses. Normally only one block will drive each bit. */
 #else
 	uint64_t ena                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -7422,7 +7422,7 @@ union cvmx_dtx_iobn_bcst_rsp {
 	} s;
 	struct cvmx_dtx_iobn_bcst_rsp_s       cn73xx;
 	struct cvmx_dtx_iobn_bcst_rsp_s       cn78xx;
-	struct cvmx_dtx_iobn_bcst_rsp_s       cn78xxp2;
+	struct cvmx_dtx_iobn_bcst_rsp_s       cn78xxp1;
 	struct cvmx_dtx_iobn_bcst_rsp_s       cnf75xx;
 };
 typedef union cvmx_dtx_iobn_bcst_rsp cvmx_dtx_iobn_bcst_rsp_t;
@@ -7437,9 +7437,9 @@ union cvmx_dtx_iobn_ctl {
 	uint64_t reserved_5_63                : 59;
 	uint64_t active                       : 1;  /**< Force block's gated clocks on, so that the state of idle signals may be captured. */
 	uint64_t reserved_2_3                 : 2;
-	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block debug data.
-                                                         Not applicable when software directly reads the DAT(0..1) registers.  For diagnostic use
-                                                         only. */
+	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
+                                                         debug data. Not applicable when software directly reads the DAT(0..1) registers.
+                                                         For diagnostic use only. */
 	uint64_t swap                         : 1;  /**< Swap the high and low 36-bit debug bus outputs. */
 #else
 	uint64_t swap                         : 1;
@@ -7451,7 +7451,7 @@ union cvmx_dtx_iobn_ctl {
 	} s;
 	struct cvmx_dtx_iobn_ctl_s            cn73xx;
 	struct cvmx_dtx_iobn_ctl_s            cn78xx;
-	struct cvmx_dtx_iobn_ctl_s            cn78xxp2;
+	struct cvmx_dtx_iobn_ctl_s            cn78xxp1;
 	struct cvmx_dtx_iobn_ctl_s            cnf75xx;
 };
 typedef union cvmx_dtx_iobn_ctl cvmx_dtx_iobn_ctl_t;
@@ -7464,8 +7464,8 @@ union cvmx_dtx_iobn_datx {
 	struct cvmx_dtx_iobn_datx_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the ability to
-                                                         peek into blocks during an OCLA capture without OCLA reconfiguration. */
+	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                         ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
 #else
 	uint64_t raw                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -7473,7 +7473,7 @@ union cvmx_dtx_iobn_datx {
 	} s;
 	struct cvmx_dtx_iobn_datx_s           cn73xx;
 	struct cvmx_dtx_iobn_datx_s           cn78xx;
-	struct cvmx_dtx_iobn_datx_s           cn78xxp2;
+	struct cvmx_dtx_iobn_datx_s           cn78xxp1;
 	struct cvmx_dtx_iobn_datx_s           cnf75xx;
 };
 typedef union cvmx_dtx_iobn_datx cvmx_dtx_iobn_datx_t;
@@ -7486,8 +7486,8 @@ union cvmx_dtx_iobn_enax {
 	struct cvmx_dtx_iobn_enax_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug buses. Normally
-                                                         only one block will drive each bit. */
+	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                         buses. Normally only one block will drive each bit. */
 #else
 	uint64_t ena                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -7495,7 +7495,7 @@ union cvmx_dtx_iobn_enax {
 	} s;
 	struct cvmx_dtx_iobn_enax_s           cn73xx;
 	struct cvmx_dtx_iobn_enax_s           cn78xx;
-	struct cvmx_dtx_iobn_enax_s           cn78xxp2;
+	struct cvmx_dtx_iobn_enax_s           cn78xxp1;
 	struct cvmx_dtx_iobn_enax_s           cnf75xx;
 };
 typedef union cvmx_dtx_iobn_enax cvmx_dtx_iobn_enax_t;
@@ -7516,7 +7516,7 @@ union cvmx_dtx_iobn_selx {
 	} s;
 	struct cvmx_dtx_iobn_selx_s           cn73xx;
 	struct cvmx_dtx_iobn_selx_s           cn78xx;
-	struct cvmx_dtx_iobn_selx_s           cn78xxp2;
+	struct cvmx_dtx_iobn_selx_s           cn78xxp1;
 	struct cvmx_dtx_iobn_selx_s           cnf75xx;
 };
 typedef union cvmx_dtx_iobn_selx cvmx_dtx_iobn_selx_t;
@@ -7537,7 +7537,7 @@ union cvmx_dtx_iobp_bcst_rsp {
 	} s;
 	struct cvmx_dtx_iobp_bcst_rsp_s       cn73xx;
 	struct cvmx_dtx_iobp_bcst_rsp_s       cn78xx;
-	struct cvmx_dtx_iobp_bcst_rsp_s       cn78xxp2;
+	struct cvmx_dtx_iobp_bcst_rsp_s       cn78xxp1;
 	struct cvmx_dtx_iobp_bcst_rsp_s       cnf75xx;
 };
 typedef union cvmx_dtx_iobp_bcst_rsp cvmx_dtx_iobp_bcst_rsp_t;
@@ -7552,9 +7552,9 @@ union cvmx_dtx_iobp_ctl {
 	uint64_t reserved_5_63                : 59;
 	uint64_t active                       : 1;  /**< Force block's gated clocks on, so that the state of idle signals may be captured. */
 	uint64_t reserved_2_3                 : 2;
-	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block debug data.
-                                                         Not applicable when software directly reads the DAT(0..1) registers.  For diagnostic use
-                                                         only. */
+	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
+                                                         debug data. Not applicable when software directly reads the DAT(0..1) registers.
+                                                         For diagnostic use only. */
 	uint64_t swap                         : 1;  /**< Swap the high and low 36-bit debug bus outputs. */
 #else
 	uint64_t swap                         : 1;
@@ -7566,7 +7566,7 @@ union cvmx_dtx_iobp_ctl {
 	} s;
 	struct cvmx_dtx_iobp_ctl_s            cn73xx;
 	struct cvmx_dtx_iobp_ctl_s            cn78xx;
-	struct cvmx_dtx_iobp_ctl_s            cn78xxp2;
+	struct cvmx_dtx_iobp_ctl_s            cn78xxp1;
 	struct cvmx_dtx_iobp_ctl_s            cnf75xx;
 };
 typedef union cvmx_dtx_iobp_ctl cvmx_dtx_iobp_ctl_t;
@@ -7579,8 +7579,8 @@ union cvmx_dtx_iobp_datx {
 	struct cvmx_dtx_iobp_datx_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the ability to
-                                                         peek into blocks during an OCLA capture without OCLA reconfiguration. */
+	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                         ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
 #else
 	uint64_t raw                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -7588,7 +7588,7 @@ union cvmx_dtx_iobp_datx {
 	} s;
 	struct cvmx_dtx_iobp_datx_s           cn73xx;
 	struct cvmx_dtx_iobp_datx_s           cn78xx;
-	struct cvmx_dtx_iobp_datx_s           cn78xxp2;
+	struct cvmx_dtx_iobp_datx_s           cn78xxp1;
 	struct cvmx_dtx_iobp_datx_s           cnf75xx;
 };
 typedef union cvmx_dtx_iobp_datx cvmx_dtx_iobp_datx_t;
@@ -7601,8 +7601,8 @@ union cvmx_dtx_iobp_enax {
 	struct cvmx_dtx_iobp_enax_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug buses. Normally
-                                                         only one block will drive each bit. */
+	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                         buses. Normally only one block will drive each bit. */
 #else
 	uint64_t ena                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -7610,7 +7610,7 @@ union cvmx_dtx_iobp_enax {
 	} s;
 	struct cvmx_dtx_iobp_enax_s           cn73xx;
 	struct cvmx_dtx_iobp_enax_s           cn78xx;
-	struct cvmx_dtx_iobp_enax_s           cn78xxp2;
+	struct cvmx_dtx_iobp_enax_s           cn78xxp1;
 	struct cvmx_dtx_iobp_enax_s           cnf75xx;
 };
 typedef union cvmx_dtx_iobp_enax cvmx_dtx_iobp_enax_t;
@@ -7631,7 +7631,7 @@ union cvmx_dtx_iobp_selx {
 	} s;
 	struct cvmx_dtx_iobp_selx_s           cn73xx;
 	struct cvmx_dtx_iobp_selx_s           cn78xx;
-	struct cvmx_dtx_iobp_selx_s           cn78xxp2;
+	struct cvmx_dtx_iobp_selx_s           cn78xxp1;
 	struct cvmx_dtx_iobp_selx_s           cnf75xx;
 };
 typedef union cvmx_dtx_iobp_selx cvmx_dtx_iobp_selx_t;
@@ -7665,9 +7665,9 @@ union cvmx_dtx_ipd_ctl {
 	uint64_t reserved_5_63                : 59;
 	uint64_t active                       : 1;  /**< Force block's gated clocks on, so that the state of idle signals may be captured. */
 	uint64_t reserved_2_3                 : 2;
-	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block debug data.
-                                                         Not applicable when software directly reads the DAT(0..1) registers.  For diagnostic use
-                                                         only. */
+	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
+                                                         debug data. Not applicable when software directly reads the DAT(0..1) registers.
+                                                         For diagnostic use only. */
 	uint64_t swap                         : 1;  /**< Swap the high and low 36-bit debug bus outputs. */
 #else
 	uint64_t swap                         : 1;
@@ -7690,8 +7690,8 @@ union cvmx_dtx_ipd_datx {
 	struct cvmx_dtx_ipd_datx_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the ability to
-                                                         peek into blocks during an OCLA capture without OCLA reconfiguration. */
+	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                         ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
 #else
 	uint64_t raw                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -7710,8 +7710,8 @@ union cvmx_dtx_ipd_enax {
 	struct cvmx_dtx_ipd_enax_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug buses. Normally
-                                                         only one block will drive each bit. */
+	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                         buses. Normally only one block will drive each bit. */
 #else
 	uint64_t ena                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -7759,7 +7759,7 @@ union cvmx_dtx_key_bcst_rsp {
 	struct cvmx_dtx_key_bcst_rsp_s        cn70xxp1;
 	struct cvmx_dtx_key_bcst_rsp_s        cn73xx;
 	struct cvmx_dtx_key_bcst_rsp_s        cn78xx;
-	struct cvmx_dtx_key_bcst_rsp_s        cn78xxp2;
+	struct cvmx_dtx_key_bcst_rsp_s        cn78xxp1;
 	struct cvmx_dtx_key_bcst_rsp_s        cnf75xx;
 };
 typedef union cvmx_dtx_key_bcst_rsp cvmx_dtx_key_bcst_rsp_t;
@@ -7774,9 +7774,9 @@ union cvmx_dtx_key_ctl {
 	uint64_t reserved_5_63                : 59;
 	uint64_t active                       : 1;  /**< Force block's gated clocks on, so that the state of idle signals may be captured. */
 	uint64_t reserved_2_3                 : 2;
-	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block debug data.
-                                                         Not applicable when software directly reads the DAT(0..1) registers.  For diagnostic use
-                                                         only. */
+	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
+                                                         debug data. Not applicable when software directly reads the DAT(0..1) registers.
+                                                         For diagnostic use only. */
 	uint64_t swap                         : 1;  /**< Swap the high and low 36-bit debug bus outputs. */
 #else
 	uint64_t swap                         : 1;
@@ -7790,7 +7790,7 @@ union cvmx_dtx_key_ctl {
 	struct cvmx_dtx_key_ctl_s             cn70xxp1;
 	struct cvmx_dtx_key_ctl_s             cn73xx;
 	struct cvmx_dtx_key_ctl_s             cn78xx;
-	struct cvmx_dtx_key_ctl_s             cn78xxp2;
+	struct cvmx_dtx_key_ctl_s             cn78xxp1;
 	struct cvmx_dtx_key_ctl_s             cnf75xx;
 };
 typedef union cvmx_dtx_key_ctl cvmx_dtx_key_ctl_t;
@@ -7803,8 +7803,8 @@ union cvmx_dtx_key_datx {
 	struct cvmx_dtx_key_datx_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the ability to
-                                                         peek into blocks during an OCLA capture without OCLA reconfiguration. */
+	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                         ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
 #else
 	uint64_t raw                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -7814,7 +7814,7 @@ union cvmx_dtx_key_datx {
 	struct cvmx_dtx_key_datx_s            cn70xxp1;
 	struct cvmx_dtx_key_datx_s            cn73xx;
 	struct cvmx_dtx_key_datx_s            cn78xx;
-	struct cvmx_dtx_key_datx_s            cn78xxp2;
+	struct cvmx_dtx_key_datx_s            cn78xxp1;
 	struct cvmx_dtx_key_datx_s            cnf75xx;
 };
 typedef union cvmx_dtx_key_datx cvmx_dtx_key_datx_t;
@@ -7827,8 +7827,8 @@ union cvmx_dtx_key_enax {
 	struct cvmx_dtx_key_enax_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug buses. Normally
-                                                         only one block will drive each bit. */
+	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                         buses. Normally only one block will drive each bit. */
 #else
 	uint64_t ena                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -7838,7 +7838,7 @@ union cvmx_dtx_key_enax {
 	struct cvmx_dtx_key_enax_s            cn70xxp1;
 	struct cvmx_dtx_key_enax_s            cn73xx;
 	struct cvmx_dtx_key_enax_s            cn78xx;
-	struct cvmx_dtx_key_enax_s            cn78xxp2;
+	struct cvmx_dtx_key_enax_s            cn78xxp1;
 	struct cvmx_dtx_key_enax_s            cnf75xx;
 };
 typedef union cvmx_dtx_key_enax cvmx_dtx_key_enax_t;
@@ -7861,7 +7861,7 @@ union cvmx_dtx_key_selx {
 	struct cvmx_dtx_key_selx_s            cn70xxp1;
 	struct cvmx_dtx_key_selx_s            cn73xx;
 	struct cvmx_dtx_key_selx_s            cn78xx;
-	struct cvmx_dtx_key_selx_s            cn78xxp2;
+	struct cvmx_dtx_key_selx_s            cn78xxp1;
 	struct cvmx_dtx_key_selx_s            cnf75xx;
 };
 typedef union cvmx_dtx_key_selx cvmx_dtx_key_selx_t;
@@ -7884,7 +7884,7 @@ union cvmx_dtx_l2c_cbcx_bcst_rsp {
 	struct cvmx_dtx_l2c_cbcx_bcst_rsp_s   cn70xxp1;
 	struct cvmx_dtx_l2c_cbcx_bcst_rsp_s   cn73xx;
 	struct cvmx_dtx_l2c_cbcx_bcst_rsp_s   cn78xx;
-	struct cvmx_dtx_l2c_cbcx_bcst_rsp_s   cn78xxp2;
+	struct cvmx_dtx_l2c_cbcx_bcst_rsp_s   cn78xxp1;
 	struct cvmx_dtx_l2c_cbcx_bcst_rsp_s   cnf75xx;
 };
 typedef union cvmx_dtx_l2c_cbcx_bcst_rsp cvmx_dtx_l2c_cbcx_bcst_rsp_t;
@@ -7899,9 +7899,9 @@ union cvmx_dtx_l2c_cbcx_ctl {
 	uint64_t reserved_5_63                : 59;
 	uint64_t active                       : 1;  /**< Force block's gated clocks on, so that the state of idle signals may be captured. */
 	uint64_t reserved_2_3                 : 2;
-	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block debug data.
-                                                         Not applicable when software directly reads the DAT(0..1) registers.  For diagnostic use
-                                                         only. */
+	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
+                                                         debug data. Not applicable when software directly reads the DAT(0..1) registers.
+                                                         For diagnostic use only. */
 	uint64_t swap                         : 1;  /**< Swap the high and low 36-bit debug bus outputs. */
 #else
 	uint64_t swap                         : 1;
@@ -7915,7 +7915,7 @@ union cvmx_dtx_l2c_cbcx_ctl {
 	struct cvmx_dtx_l2c_cbcx_ctl_s        cn70xxp1;
 	struct cvmx_dtx_l2c_cbcx_ctl_s        cn73xx;
 	struct cvmx_dtx_l2c_cbcx_ctl_s        cn78xx;
-	struct cvmx_dtx_l2c_cbcx_ctl_s        cn78xxp2;
+	struct cvmx_dtx_l2c_cbcx_ctl_s        cn78xxp1;
 	struct cvmx_dtx_l2c_cbcx_ctl_s        cnf75xx;
 };
 typedef union cvmx_dtx_l2c_cbcx_ctl cvmx_dtx_l2c_cbcx_ctl_t;
@@ -7928,8 +7928,8 @@ union cvmx_dtx_l2c_cbcx_datx {
 	struct cvmx_dtx_l2c_cbcx_datx_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the ability to
-                                                         peek into blocks during an OCLA capture without OCLA reconfiguration. */
+	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                         ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
 #else
 	uint64_t raw                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -7939,7 +7939,7 @@ union cvmx_dtx_l2c_cbcx_datx {
 	struct cvmx_dtx_l2c_cbcx_datx_s       cn70xxp1;
 	struct cvmx_dtx_l2c_cbcx_datx_s       cn73xx;
 	struct cvmx_dtx_l2c_cbcx_datx_s       cn78xx;
-	struct cvmx_dtx_l2c_cbcx_datx_s       cn78xxp2;
+	struct cvmx_dtx_l2c_cbcx_datx_s       cn78xxp1;
 	struct cvmx_dtx_l2c_cbcx_datx_s       cnf75xx;
 };
 typedef union cvmx_dtx_l2c_cbcx_datx cvmx_dtx_l2c_cbcx_datx_t;
@@ -7952,8 +7952,8 @@ union cvmx_dtx_l2c_cbcx_enax {
 	struct cvmx_dtx_l2c_cbcx_enax_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug buses. Normally
-                                                         only one block will drive each bit. */
+	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                         buses. Normally only one block will drive each bit. */
 #else
 	uint64_t ena                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -7963,7 +7963,7 @@ union cvmx_dtx_l2c_cbcx_enax {
 	struct cvmx_dtx_l2c_cbcx_enax_s       cn70xxp1;
 	struct cvmx_dtx_l2c_cbcx_enax_s       cn73xx;
 	struct cvmx_dtx_l2c_cbcx_enax_s       cn78xx;
-	struct cvmx_dtx_l2c_cbcx_enax_s       cn78xxp2;
+	struct cvmx_dtx_l2c_cbcx_enax_s       cn78xxp1;
 	struct cvmx_dtx_l2c_cbcx_enax_s       cnf75xx;
 };
 typedef union cvmx_dtx_l2c_cbcx_enax cvmx_dtx_l2c_cbcx_enax_t;
@@ -7986,7 +7986,7 @@ union cvmx_dtx_l2c_cbcx_selx {
 	struct cvmx_dtx_l2c_cbcx_selx_s       cn70xxp1;
 	struct cvmx_dtx_l2c_cbcx_selx_s       cn73xx;
 	struct cvmx_dtx_l2c_cbcx_selx_s       cn78xx;
-	struct cvmx_dtx_l2c_cbcx_selx_s       cn78xxp2;
+	struct cvmx_dtx_l2c_cbcx_selx_s       cn78xxp1;
 	struct cvmx_dtx_l2c_cbcx_selx_s       cnf75xx;
 };
 typedef union cvmx_dtx_l2c_cbcx_selx cvmx_dtx_l2c_cbcx_selx_t;
@@ -8009,7 +8009,7 @@ union cvmx_dtx_l2c_mcix_bcst_rsp {
 	struct cvmx_dtx_l2c_mcix_bcst_rsp_s   cn70xxp1;
 	struct cvmx_dtx_l2c_mcix_bcst_rsp_s   cn73xx;
 	struct cvmx_dtx_l2c_mcix_bcst_rsp_s   cn78xx;
-	struct cvmx_dtx_l2c_mcix_bcst_rsp_s   cn78xxp2;
+	struct cvmx_dtx_l2c_mcix_bcst_rsp_s   cn78xxp1;
 	struct cvmx_dtx_l2c_mcix_bcst_rsp_s   cnf75xx;
 };
 typedef union cvmx_dtx_l2c_mcix_bcst_rsp cvmx_dtx_l2c_mcix_bcst_rsp_t;
@@ -8024,9 +8024,9 @@ union cvmx_dtx_l2c_mcix_ctl {
 	uint64_t reserved_5_63                : 59;
 	uint64_t active                       : 1;  /**< Force block's gated clocks on, so that the state of idle signals may be captured. */
 	uint64_t reserved_2_3                 : 2;
-	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block debug data.
-                                                         Not applicable when software directly reads the DAT(0..1) registers.  For diagnostic use
-                                                         only. */
+	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
+                                                         debug data. Not applicable when software directly reads the DAT(0..1) registers.
+                                                         For diagnostic use only. */
 	uint64_t swap                         : 1;  /**< Swap the high and low 36-bit debug bus outputs. */
 #else
 	uint64_t swap                         : 1;
@@ -8040,7 +8040,7 @@ union cvmx_dtx_l2c_mcix_ctl {
 	struct cvmx_dtx_l2c_mcix_ctl_s        cn70xxp1;
 	struct cvmx_dtx_l2c_mcix_ctl_s        cn73xx;
 	struct cvmx_dtx_l2c_mcix_ctl_s        cn78xx;
-	struct cvmx_dtx_l2c_mcix_ctl_s        cn78xxp2;
+	struct cvmx_dtx_l2c_mcix_ctl_s        cn78xxp1;
 	struct cvmx_dtx_l2c_mcix_ctl_s        cnf75xx;
 };
 typedef union cvmx_dtx_l2c_mcix_ctl cvmx_dtx_l2c_mcix_ctl_t;
@@ -8053,8 +8053,8 @@ union cvmx_dtx_l2c_mcix_datx {
 	struct cvmx_dtx_l2c_mcix_datx_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the ability to
-                                                         peek into blocks during an OCLA capture without OCLA reconfiguration. */
+	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                         ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
 #else
 	uint64_t raw                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -8064,7 +8064,7 @@ union cvmx_dtx_l2c_mcix_datx {
 	struct cvmx_dtx_l2c_mcix_datx_s       cn70xxp1;
 	struct cvmx_dtx_l2c_mcix_datx_s       cn73xx;
 	struct cvmx_dtx_l2c_mcix_datx_s       cn78xx;
-	struct cvmx_dtx_l2c_mcix_datx_s       cn78xxp2;
+	struct cvmx_dtx_l2c_mcix_datx_s       cn78xxp1;
 	struct cvmx_dtx_l2c_mcix_datx_s       cnf75xx;
 };
 typedef union cvmx_dtx_l2c_mcix_datx cvmx_dtx_l2c_mcix_datx_t;
@@ -8077,8 +8077,8 @@ union cvmx_dtx_l2c_mcix_enax {
 	struct cvmx_dtx_l2c_mcix_enax_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug buses. Normally
-                                                         only one block will drive each bit. */
+	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                         buses. Normally only one block will drive each bit. */
 #else
 	uint64_t ena                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -8088,7 +8088,7 @@ union cvmx_dtx_l2c_mcix_enax {
 	struct cvmx_dtx_l2c_mcix_enax_s       cn70xxp1;
 	struct cvmx_dtx_l2c_mcix_enax_s       cn73xx;
 	struct cvmx_dtx_l2c_mcix_enax_s       cn78xx;
-	struct cvmx_dtx_l2c_mcix_enax_s       cn78xxp2;
+	struct cvmx_dtx_l2c_mcix_enax_s       cn78xxp1;
 	struct cvmx_dtx_l2c_mcix_enax_s       cnf75xx;
 };
 typedef union cvmx_dtx_l2c_mcix_enax cvmx_dtx_l2c_mcix_enax_t;
@@ -8111,7 +8111,7 @@ union cvmx_dtx_l2c_mcix_selx {
 	struct cvmx_dtx_l2c_mcix_selx_s       cn70xxp1;
 	struct cvmx_dtx_l2c_mcix_selx_s       cn73xx;
 	struct cvmx_dtx_l2c_mcix_selx_s       cn78xx;
-	struct cvmx_dtx_l2c_mcix_selx_s       cn78xxp2;
+	struct cvmx_dtx_l2c_mcix_selx_s       cn78xxp1;
 	struct cvmx_dtx_l2c_mcix_selx_s       cnf75xx;
 };
 typedef union cvmx_dtx_l2c_mcix_selx cvmx_dtx_l2c_mcix_selx_t;
@@ -8134,7 +8134,7 @@ union cvmx_dtx_l2c_tadx_bcst_rsp {
 	struct cvmx_dtx_l2c_tadx_bcst_rsp_s   cn70xxp1;
 	struct cvmx_dtx_l2c_tadx_bcst_rsp_s   cn73xx;
 	struct cvmx_dtx_l2c_tadx_bcst_rsp_s   cn78xx;
-	struct cvmx_dtx_l2c_tadx_bcst_rsp_s   cn78xxp2;
+	struct cvmx_dtx_l2c_tadx_bcst_rsp_s   cn78xxp1;
 	struct cvmx_dtx_l2c_tadx_bcst_rsp_s   cnf75xx;
 };
 typedef union cvmx_dtx_l2c_tadx_bcst_rsp cvmx_dtx_l2c_tadx_bcst_rsp_t;
@@ -8149,9 +8149,9 @@ union cvmx_dtx_l2c_tadx_ctl {
 	uint64_t reserved_5_63                : 59;
 	uint64_t active                       : 1;  /**< Force block's gated clocks on, so that the state of idle signals may be captured. */
 	uint64_t reserved_2_3                 : 2;
-	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block debug data.
-                                                         Not applicable when software directly reads the DAT(0..1) registers.  For diagnostic use
-                                                         only. */
+	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
+                                                         debug data. Not applicable when software directly reads the DAT(0..1) registers.
+                                                         For diagnostic use only. */
 	uint64_t swap                         : 1;  /**< Swap the high and low 36-bit debug bus outputs. */
 #else
 	uint64_t swap                         : 1;
@@ -8165,7 +8165,7 @@ union cvmx_dtx_l2c_tadx_ctl {
 	struct cvmx_dtx_l2c_tadx_ctl_s        cn70xxp1;
 	struct cvmx_dtx_l2c_tadx_ctl_s        cn73xx;
 	struct cvmx_dtx_l2c_tadx_ctl_s        cn78xx;
-	struct cvmx_dtx_l2c_tadx_ctl_s        cn78xxp2;
+	struct cvmx_dtx_l2c_tadx_ctl_s        cn78xxp1;
 	struct cvmx_dtx_l2c_tadx_ctl_s        cnf75xx;
 };
 typedef union cvmx_dtx_l2c_tadx_ctl cvmx_dtx_l2c_tadx_ctl_t;
@@ -8178,8 +8178,8 @@ union cvmx_dtx_l2c_tadx_datx {
 	struct cvmx_dtx_l2c_tadx_datx_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the ability to
-                                                         peek into blocks during an OCLA capture without OCLA reconfiguration. */
+	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                         ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
 #else
 	uint64_t raw                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -8189,7 +8189,7 @@ union cvmx_dtx_l2c_tadx_datx {
 	struct cvmx_dtx_l2c_tadx_datx_s       cn70xxp1;
 	struct cvmx_dtx_l2c_tadx_datx_s       cn73xx;
 	struct cvmx_dtx_l2c_tadx_datx_s       cn78xx;
-	struct cvmx_dtx_l2c_tadx_datx_s       cn78xxp2;
+	struct cvmx_dtx_l2c_tadx_datx_s       cn78xxp1;
 	struct cvmx_dtx_l2c_tadx_datx_s       cnf75xx;
 };
 typedef union cvmx_dtx_l2c_tadx_datx cvmx_dtx_l2c_tadx_datx_t;
@@ -8202,8 +8202,8 @@ union cvmx_dtx_l2c_tadx_enax {
 	struct cvmx_dtx_l2c_tadx_enax_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug buses. Normally
-                                                         only one block will drive each bit. */
+	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                         buses. Normally only one block will drive each bit. */
 #else
 	uint64_t ena                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -8213,7 +8213,7 @@ union cvmx_dtx_l2c_tadx_enax {
 	struct cvmx_dtx_l2c_tadx_enax_s       cn70xxp1;
 	struct cvmx_dtx_l2c_tadx_enax_s       cn73xx;
 	struct cvmx_dtx_l2c_tadx_enax_s       cn78xx;
-	struct cvmx_dtx_l2c_tadx_enax_s       cn78xxp2;
+	struct cvmx_dtx_l2c_tadx_enax_s       cn78xxp1;
 	struct cvmx_dtx_l2c_tadx_enax_s       cnf75xx;
 };
 typedef union cvmx_dtx_l2c_tadx_enax cvmx_dtx_l2c_tadx_enax_t;
@@ -8236,7 +8236,7 @@ union cvmx_dtx_l2c_tadx_selx {
 	struct cvmx_dtx_l2c_tadx_selx_s       cn70xxp1;
 	struct cvmx_dtx_l2c_tadx_selx_s       cn73xx;
 	struct cvmx_dtx_l2c_tadx_selx_s       cn78xx;
-	struct cvmx_dtx_l2c_tadx_selx_s       cn78xxp2;
+	struct cvmx_dtx_l2c_tadx_selx_s       cn78xxp1;
 	struct cvmx_dtx_l2c_tadx_selx_s       cnf75xx;
 };
 typedef union cvmx_dtx_l2c_tadx_selx cvmx_dtx_l2c_tadx_selx_t;
@@ -8256,7 +8256,7 @@ union cvmx_dtx_lapx_bcst_rsp {
 #endif
 	} s;
 	struct cvmx_dtx_lapx_bcst_rsp_s       cn78xx;
-	struct cvmx_dtx_lapx_bcst_rsp_s       cn78xxp2;
+	struct cvmx_dtx_lapx_bcst_rsp_s       cn78xxp1;
 };
 typedef union cvmx_dtx_lapx_bcst_rsp cvmx_dtx_lapx_bcst_rsp_t;
 
@@ -8270,9 +8270,9 @@ union cvmx_dtx_lapx_ctl {
 	uint64_t reserved_5_63                : 59;
 	uint64_t active                       : 1;  /**< Force block's gated clocks on, so that the state of idle signals may be captured. */
 	uint64_t reserved_2_3                 : 2;
-	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block debug data.
-                                                         Not applicable when software directly reads the DAT(0..1) registers.  For diagnostic use
-                                                         only. */
+	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
+                                                         debug data. Not applicable when software directly reads the DAT(0..1) registers.
+                                                         For diagnostic use only. */
 	uint64_t swap                         : 1;  /**< Swap the high and low 36-bit debug bus outputs. */
 #else
 	uint64_t swap                         : 1;
@@ -8283,7 +8283,7 @@ union cvmx_dtx_lapx_ctl {
 #endif
 	} s;
 	struct cvmx_dtx_lapx_ctl_s            cn78xx;
-	struct cvmx_dtx_lapx_ctl_s            cn78xxp2;
+	struct cvmx_dtx_lapx_ctl_s            cn78xxp1;
 };
 typedef union cvmx_dtx_lapx_ctl cvmx_dtx_lapx_ctl_t;
 
@@ -8295,15 +8295,15 @@ union cvmx_dtx_lapx_datx {
 	struct cvmx_dtx_lapx_datx_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the ability to
-                                                         peek into blocks during an OCLA capture without OCLA reconfiguration. */
+	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                         ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
 #else
 	uint64_t raw                          : 36;
 	uint64_t reserved_36_63               : 28;
 #endif
 	} s;
 	struct cvmx_dtx_lapx_datx_s           cn78xx;
-	struct cvmx_dtx_lapx_datx_s           cn78xxp2;
+	struct cvmx_dtx_lapx_datx_s           cn78xxp1;
 };
 typedef union cvmx_dtx_lapx_datx cvmx_dtx_lapx_datx_t;
 
@@ -8315,15 +8315,15 @@ union cvmx_dtx_lapx_enax {
 	struct cvmx_dtx_lapx_enax_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug buses. Normally
-                                                         only one block will drive each bit. */
+	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                         buses. Normally only one block will drive each bit. */
 #else
 	uint64_t ena                          : 36;
 	uint64_t reserved_36_63               : 28;
 #endif
 	} s;
 	struct cvmx_dtx_lapx_enax_s           cn78xx;
-	struct cvmx_dtx_lapx_enax_s           cn78xxp2;
+	struct cvmx_dtx_lapx_enax_s           cn78xxp1;
 };
 typedef union cvmx_dtx_lapx_enax cvmx_dtx_lapx_enax_t;
 
@@ -8342,7 +8342,7 @@ union cvmx_dtx_lapx_selx {
 #endif
 	} s;
 	struct cvmx_dtx_lapx_selx_s           cn78xx;
-	struct cvmx_dtx_lapx_selx_s           cn78xxp2;
+	struct cvmx_dtx_lapx_selx_s           cn78xxp1;
 };
 typedef union cvmx_dtx_lapx_selx cvmx_dtx_lapx_selx_t;
 
@@ -8362,7 +8362,7 @@ union cvmx_dtx_lbk_bcst_rsp {
 	} s;
 	struct cvmx_dtx_lbk_bcst_rsp_s        cn73xx;
 	struct cvmx_dtx_lbk_bcst_rsp_s        cn78xx;
-	struct cvmx_dtx_lbk_bcst_rsp_s        cn78xxp2;
+	struct cvmx_dtx_lbk_bcst_rsp_s        cn78xxp1;
 	struct cvmx_dtx_lbk_bcst_rsp_s        cnf75xx;
 };
 typedef union cvmx_dtx_lbk_bcst_rsp cvmx_dtx_lbk_bcst_rsp_t;
@@ -8377,9 +8377,9 @@ union cvmx_dtx_lbk_ctl {
 	uint64_t reserved_5_63                : 59;
 	uint64_t active                       : 1;  /**< Force block's gated clocks on, so that the state of idle signals may be captured. */
 	uint64_t reserved_2_3                 : 2;
-	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block debug data.
-                                                         Not applicable when software directly reads the DAT(0..1) registers.  For diagnostic use
-                                                         only. */
+	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
+                                                         debug data. Not applicable when software directly reads the DAT(0..1) registers.
+                                                         For diagnostic use only. */
 	uint64_t swap                         : 1;  /**< Swap the high and low 36-bit debug bus outputs. */
 #else
 	uint64_t swap                         : 1;
@@ -8391,7 +8391,7 @@ union cvmx_dtx_lbk_ctl {
 	} s;
 	struct cvmx_dtx_lbk_ctl_s             cn73xx;
 	struct cvmx_dtx_lbk_ctl_s             cn78xx;
-	struct cvmx_dtx_lbk_ctl_s             cn78xxp2;
+	struct cvmx_dtx_lbk_ctl_s             cn78xxp1;
 	struct cvmx_dtx_lbk_ctl_s             cnf75xx;
 };
 typedef union cvmx_dtx_lbk_ctl cvmx_dtx_lbk_ctl_t;
@@ -8404,8 +8404,8 @@ union cvmx_dtx_lbk_datx {
 	struct cvmx_dtx_lbk_datx_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the ability to
-                                                         peek into blocks during an OCLA capture without OCLA reconfiguration. */
+	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                         ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
 #else
 	uint64_t raw                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -8413,7 +8413,7 @@ union cvmx_dtx_lbk_datx {
 	} s;
 	struct cvmx_dtx_lbk_datx_s            cn73xx;
 	struct cvmx_dtx_lbk_datx_s            cn78xx;
-	struct cvmx_dtx_lbk_datx_s            cn78xxp2;
+	struct cvmx_dtx_lbk_datx_s            cn78xxp1;
 	struct cvmx_dtx_lbk_datx_s            cnf75xx;
 };
 typedef union cvmx_dtx_lbk_datx cvmx_dtx_lbk_datx_t;
@@ -8426,8 +8426,8 @@ union cvmx_dtx_lbk_enax {
 	struct cvmx_dtx_lbk_enax_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug buses. Normally
-                                                         only one block will drive each bit. */
+	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                         buses. Normally only one block will drive each bit. */
 #else
 	uint64_t ena                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -8435,7 +8435,7 @@ union cvmx_dtx_lbk_enax {
 	} s;
 	struct cvmx_dtx_lbk_enax_s            cn73xx;
 	struct cvmx_dtx_lbk_enax_s            cn78xx;
-	struct cvmx_dtx_lbk_enax_s            cn78xxp2;
+	struct cvmx_dtx_lbk_enax_s            cn78xxp1;
 	struct cvmx_dtx_lbk_enax_s            cnf75xx;
 };
 typedef union cvmx_dtx_lbk_enax cvmx_dtx_lbk_enax_t;
@@ -8456,7 +8456,7 @@ union cvmx_dtx_lbk_selx {
 	} s;
 	struct cvmx_dtx_lbk_selx_s            cn73xx;
 	struct cvmx_dtx_lbk_selx_s            cn78xx;
-	struct cvmx_dtx_lbk_selx_s            cn78xxp2;
+	struct cvmx_dtx_lbk_selx_s            cn78xxp1;
 	struct cvmx_dtx_lbk_selx_s            cnf75xx;
 };
 typedef union cvmx_dtx_lbk_selx cvmx_dtx_lbk_selx_t;
@@ -8479,7 +8479,7 @@ union cvmx_dtx_lmcx_bcst_rsp {
 	struct cvmx_dtx_lmcx_bcst_rsp_s       cn70xxp1;
 	struct cvmx_dtx_lmcx_bcst_rsp_s       cn73xx;
 	struct cvmx_dtx_lmcx_bcst_rsp_s       cn78xx;
-	struct cvmx_dtx_lmcx_bcst_rsp_s       cn78xxp2;
+	struct cvmx_dtx_lmcx_bcst_rsp_s       cn78xxp1;
 	struct cvmx_dtx_lmcx_bcst_rsp_s       cnf75xx;
 };
 typedef union cvmx_dtx_lmcx_bcst_rsp cvmx_dtx_lmcx_bcst_rsp_t;
@@ -8494,9 +8494,9 @@ union cvmx_dtx_lmcx_ctl {
 	uint64_t reserved_5_63                : 59;
 	uint64_t active                       : 1;  /**< Force block's gated clocks on, so that the state of idle signals may be captured. */
 	uint64_t reserved_2_3                 : 2;
-	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block debug data.
-                                                         Not applicable when software directly reads the DAT(0..1) registers.  For diagnostic use
-                                                         only. */
+	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
+                                                         debug data. Not applicable when software directly reads the DAT(0..1) registers.
+                                                         For diagnostic use only. */
 	uint64_t swap                         : 1;  /**< Swap the high and low 36-bit debug bus outputs. */
 #else
 	uint64_t swap                         : 1;
@@ -8510,7 +8510,7 @@ union cvmx_dtx_lmcx_ctl {
 	struct cvmx_dtx_lmcx_ctl_s            cn70xxp1;
 	struct cvmx_dtx_lmcx_ctl_s            cn73xx;
 	struct cvmx_dtx_lmcx_ctl_s            cn78xx;
-	struct cvmx_dtx_lmcx_ctl_s            cn78xxp2;
+	struct cvmx_dtx_lmcx_ctl_s            cn78xxp1;
 	struct cvmx_dtx_lmcx_ctl_s            cnf75xx;
 };
 typedef union cvmx_dtx_lmcx_ctl cvmx_dtx_lmcx_ctl_t;
@@ -8523,8 +8523,8 @@ union cvmx_dtx_lmcx_datx {
 	struct cvmx_dtx_lmcx_datx_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the ability to
-                                                         peek into blocks during an OCLA capture without OCLA reconfiguration. */
+	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                         ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
 #else
 	uint64_t raw                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -8534,7 +8534,7 @@ union cvmx_dtx_lmcx_datx {
 	struct cvmx_dtx_lmcx_datx_s           cn70xxp1;
 	struct cvmx_dtx_lmcx_datx_s           cn73xx;
 	struct cvmx_dtx_lmcx_datx_s           cn78xx;
-	struct cvmx_dtx_lmcx_datx_s           cn78xxp2;
+	struct cvmx_dtx_lmcx_datx_s           cn78xxp1;
 	struct cvmx_dtx_lmcx_datx_s           cnf75xx;
 };
 typedef union cvmx_dtx_lmcx_datx cvmx_dtx_lmcx_datx_t;
@@ -8547,8 +8547,8 @@ union cvmx_dtx_lmcx_enax {
 	struct cvmx_dtx_lmcx_enax_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug buses. Normally
-                                                         only one block will drive each bit. */
+	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                         buses. Normally only one block will drive each bit. */
 #else
 	uint64_t ena                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -8558,7 +8558,7 @@ union cvmx_dtx_lmcx_enax {
 	struct cvmx_dtx_lmcx_enax_s           cn70xxp1;
 	struct cvmx_dtx_lmcx_enax_s           cn73xx;
 	struct cvmx_dtx_lmcx_enax_s           cn78xx;
-	struct cvmx_dtx_lmcx_enax_s           cn78xxp2;
+	struct cvmx_dtx_lmcx_enax_s           cn78xxp1;
 	struct cvmx_dtx_lmcx_enax_s           cnf75xx;
 };
 typedef union cvmx_dtx_lmcx_enax cvmx_dtx_lmcx_enax_t;
@@ -8581,7 +8581,7 @@ union cvmx_dtx_lmcx_selx {
 	struct cvmx_dtx_lmcx_selx_s           cn70xxp1;
 	struct cvmx_dtx_lmcx_selx_s           cn73xx;
 	struct cvmx_dtx_lmcx_selx_s           cn78xx;
-	struct cvmx_dtx_lmcx_selx_s           cn78xxp2;
+	struct cvmx_dtx_lmcx_selx_s           cn78xxp1;
 	struct cvmx_dtx_lmcx_selx_s           cnf75xx;
 };
 typedef union cvmx_dtx_lmcx_selx cvmx_dtx_lmcx_selx_t;
@@ -8614,9 +8614,9 @@ union cvmx_dtx_mdbx_ctl {
 	uint64_t reserved_5_63                : 59;
 	uint64_t active                       : 1;  /**< Force block's gated clocks on, so that the state of idle signals may be captured. */
 	uint64_t reserved_2_3                 : 2;
-	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block debug data.
-                                                         Not applicable when software directly reads the DAT(0..1) registers.  For diagnostic use
-                                                         only. */
+	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
+                                                         debug data. Not applicable when software directly reads the DAT(0..1) registers.
+                                                         For diagnostic use only. */
 	uint64_t swap                         : 1;  /**< Swap the high and low 36-bit debug bus outputs. */
 #else
 	uint64_t swap                         : 1;
@@ -8638,8 +8638,8 @@ union cvmx_dtx_mdbx_datx {
 	struct cvmx_dtx_mdbx_datx_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the ability to
-                                                         peek into blocks during an OCLA capture without OCLA reconfiguration. */
+	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                         ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
 #else
 	uint64_t raw                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -8657,8 +8657,8 @@ union cvmx_dtx_mdbx_enax {
 	struct cvmx_dtx_mdbx_enax_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug buses. Normally
-                                                         only one block will drive each bit. */
+	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                         buses. Normally only one block will drive each bit. */
 #else
 	uint64_t ena                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -8714,9 +8714,9 @@ union cvmx_dtx_mhbw_ctl {
 	uint64_t reserved_5_63                : 59;
 	uint64_t active                       : 1;  /**< Force block's gated clocks on, so that the state of idle signals may be captured. */
 	uint64_t reserved_2_3                 : 2;
-	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block debug data.
-                                                         Not applicable when software directly reads the DAT(0..1) registers.  For diagnostic use
-                                                         only. */
+	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
+                                                         debug data. Not applicable when software directly reads the DAT(0..1) registers.
+                                                         For diagnostic use only. */
 	uint64_t swap                         : 1;  /**< Swap the high and low 36-bit debug bus outputs. */
 #else
 	uint64_t swap                         : 1;
@@ -8738,8 +8738,8 @@ union cvmx_dtx_mhbw_datx {
 	struct cvmx_dtx_mhbw_datx_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the ability to
-                                                         peek into blocks during an OCLA capture without OCLA reconfiguration. */
+	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                         ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
 #else
 	uint64_t raw                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -8757,8 +8757,8 @@ union cvmx_dtx_mhbw_enax {
 	struct cvmx_dtx_mhbw_enax_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug buses. Normally
-                                                         only one block will drive each bit. */
+	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                         buses. Normally only one block will drive each bit. */
 #else
 	uint64_t ena                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -8804,7 +8804,7 @@ union cvmx_dtx_mio_bcst_rsp {
 	struct cvmx_dtx_mio_bcst_rsp_s        cn70xxp1;
 	struct cvmx_dtx_mio_bcst_rsp_s        cn73xx;
 	struct cvmx_dtx_mio_bcst_rsp_s        cn78xx;
-	struct cvmx_dtx_mio_bcst_rsp_s        cn78xxp2;
+	struct cvmx_dtx_mio_bcst_rsp_s        cn78xxp1;
 	struct cvmx_dtx_mio_bcst_rsp_s        cnf75xx;
 };
 typedef union cvmx_dtx_mio_bcst_rsp cvmx_dtx_mio_bcst_rsp_t;
@@ -8819,9 +8819,9 @@ union cvmx_dtx_mio_ctl {
 	uint64_t reserved_5_63                : 59;
 	uint64_t active                       : 1;  /**< Force block's gated clocks on, so that the state of idle signals may be captured. */
 	uint64_t reserved_2_3                 : 2;
-	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block debug data.
-                                                         Not applicable when software directly reads the DAT(0..1) registers.  For diagnostic use
-                                                         only. */
+	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
+                                                         debug data. Not applicable when software directly reads the DAT(0..1) registers.
+                                                         For diagnostic use only. */
 	uint64_t swap                         : 1;  /**< Swap the high and low 36-bit debug bus outputs. */
 #else
 	uint64_t swap                         : 1;
@@ -8835,7 +8835,7 @@ union cvmx_dtx_mio_ctl {
 	struct cvmx_dtx_mio_ctl_s             cn70xxp1;
 	struct cvmx_dtx_mio_ctl_s             cn73xx;
 	struct cvmx_dtx_mio_ctl_s             cn78xx;
-	struct cvmx_dtx_mio_ctl_s             cn78xxp2;
+	struct cvmx_dtx_mio_ctl_s             cn78xxp1;
 	struct cvmx_dtx_mio_ctl_s             cnf75xx;
 };
 typedef union cvmx_dtx_mio_ctl cvmx_dtx_mio_ctl_t;
@@ -8848,8 +8848,8 @@ union cvmx_dtx_mio_datx {
 	struct cvmx_dtx_mio_datx_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the ability to
-                                                         peek into blocks during an OCLA capture without OCLA reconfiguration. */
+	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                         ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
 #else
 	uint64_t raw                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -8859,7 +8859,7 @@ union cvmx_dtx_mio_datx {
 	struct cvmx_dtx_mio_datx_s            cn70xxp1;
 	struct cvmx_dtx_mio_datx_s            cn73xx;
 	struct cvmx_dtx_mio_datx_s            cn78xx;
-	struct cvmx_dtx_mio_datx_s            cn78xxp2;
+	struct cvmx_dtx_mio_datx_s            cn78xxp1;
 	struct cvmx_dtx_mio_datx_s            cnf75xx;
 };
 typedef union cvmx_dtx_mio_datx cvmx_dtx_mio_datx_t;
@@ -8872,8 +8872,8 @@ union cvmx_dtx_mio_enax {
 	struct cvmx_dtx_mio_enax_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug buses. Normally
-                                                         only one block will drive each bit. */
+	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                         buses. Normally only one block will drive each bit. */
 #else
 	uint64_t ena                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -8883,7 +8883,7 @@ union cvmx_dtx_mio_enax {
 	struct cvmx_dtx_mio_enax_s            cn70xxp1;
 	struct cvmx_dtx_mio_enax_s            cn73xx;
 	struct cvmx_dtx_mio_enax_s            cn78xx;
-	struct cvmx_dtx_mio_enax_s            cn78xxp2;
+	struct cvmx_dtx_mio_enax_s            cn78xxp1;
 	struct cvmx_dtx_mio_enax_s            cnf75xx;
 };
 typedef union cvmx_dtx_mio_enax cvmx_dtx_mio_enax_t;
@@ -8906,7 +8906,7 @@ union cvmx_dtx_mio_selx {
 	struct cvmx_dtx_mio_selx_s            cn70xxp1;
 	struct cvmx_dtx_mio_selx_s            cn73xx;
 	struct cvmx_dtx_mio_selx_s            cn78xx;
-	struct cvmx_dtx_mio_selx_s            cn78xxp2;
+	struct cvmx_dtx_mio_selx_s            cn78xxp1;
 	struct cvmx_dtx_mio_selx_s            cnf75xx;
 };
 typedef union cvmx_dtx_mio_selx cvmx_dtx_mio_selx_t;
@@ -8926,7 +8926,7 @@ union cvmx_dtx_ocx_bot_bcst_rsp {
 #endif
 	} s;
 	struct cvmx_dtx_ocx_bot_bcst_rsp_s    cn78xx;
-	struct cvmx_dtx_ocx_bot_bcst_rsp_s    cn78xxp2;
+	struct cvmx_dtx_ocx_bot_bcst_rsp_s    cn78xxp1;
 };
 typedef union cvmx_dtx_ocx_bot_bcst_rsp cvmx_dtx_ocx_bot_bcst_rsp_t;
 
@@ -8940,9 +8940,9 @@ union cvmx_dtx_ocx_bot_ctl {
 	uint64_t reserved_5_63                : 59;
 	uint64_t active                       : 1;  /**< Force block's gated clocks on, so that the state of idle signals may be captured. */
 	uint64_t reserved_2_3                 : 2;
-	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block debug data.
-                                                         Not applicable when software directly reads the DAT(0..1) registers.  For diagnostic use
-                                                         only. */
+	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
+                                                         debug data. Not applicable when software directly reads the DAT(0..1) registers.
+                                                         For diagnostic use only. */
 	uint64_t swap                         : 1;  /**< Swap the high and low 36-bit debug bus outputs. */
 #else
 	uint64_t swap                         : 1;
@@ -8953,7 +8953,7 @@ union cvmx_dtx_ocx_bot_ctl {
 #endif
 	} s;
 	struct cvmx_dtx_ocx_bot_ctl_s         cn78xx;
-	struct cvmx_dtx_ocx_bot_ctl_s         cn78xxp2;
+	struct cvmx_dtx_ocx_bot_ctl_s         cn78xxp1;
 };
 typedef union cvmx_dtx_ocx_bot_ctl cvmx_dtx_ocx_bot_ctl_t;
 
@@ -8965,15 +8965,15 @@ union cvmx_dtx_ocx_bot_datx {
 	struct cvmx_dtx_ocx_bot_datx_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the ability to
-                                                         peek into blocks during an OCLA capture without OCLA reconfiguration. */
+	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                         ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
 #else
 	uint64_t raw                          : 36;
 	uint64_t reserved_36_63               : 28;
 #endif
 	} s;
 	struct cvmx_dtx_ocx_bot_datx_s        cn78xx;
-	struct cvmx_dtx_ocx_bot_datx_s        cn78xxp2;
+	struct cvmx_dtx_ocx_bot_datx_s        cn78xxp1;
 };
 typedef union cvmx_dtx_ocx_bot_datx cvmx_dtx_ocx_bot_datx_t;
 
@@ -8985,15 +8985,15 @@ union cvmx_dtx_ocx_bot_enax {
 	struct cvmx_dtx_ocx_bot_enax_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug buses. Normally
-                                                         only one block will drive each bit. */
+	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                         buses. Normally only one block will drive each bit. */
 #else
 	uint64_t ena                          : 36;
 	uint64_t reserved_36_63               : 28;
 #endif
 	} s;
 	struct cvmx_dtx_ocx_bot_enax_s        cn78xx;
-	struct cvmx_dtx_ocx_bot_enax_s        cn78xxp2;
+	struct cvmx_dtx_ocx_bot_enax_s        cn78xxp1;
 };
 typedef union cvmx_dtx_ocx_bot_enax cvmx_dtx_ocx_bot_enax_t;
 
@@ -9012,7 +9012,7 @@ union cvmx_dtx_ocx_bot_selx {
 #endif
 	} s;
 	struct cvmx_dtx_ocx_bot_selx_s        cn78xx;
-	struct cvmx_dtx_ocx_bot_selx_s        cn78xxp2;
+	struct cvmx_dtx_ocx_bot_selx_s        cn78xxp1;
 };
 typedef union cvmx_dtx_ocx_bot_selx cvmx_dtx_ocx_bot_selx_t;
 
@@ -9031,7 +9031,7 @@ union cvmx_dtx_ocx_lnkx_bcst_rsp {
 #endif
 	} s;
 	struct cvmx_dtx_ocx_lnkx_bcst_rsp_s   cn78xx;
-	struct cvmx_dtx_ocx_lnkx_bcst_rsp_s   cn78xxp2;
+	struct cvmx_dtx_ocx_lnkx_bcst_rsp_s   cn78xxp1;
 };
 typedef union cvmx_dtx_ocx_lnkx_bcst_rsp cvmx_dtx_ocx_lnkx_bcst_rsp_t;
 
@@ -9045,9 +9045,9 @@ union cvmx_dtx_ocx_lnkx_ctl {
 	uint64_t reserved_5_63                : 59;
 	uint64_t active                       : 1;  /**< Force block's gated clocks on, so that the state of idle signals may be captured. */
 	uint64_t reserved_2_3                 : 2;
-	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block debug data.
-                                                         Not applicable when software directly reads the DAT(0..1) registers.  For diagnostic use
-                                                         only. */
+	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
+                                                         debug data. Not applicable when software directly reads the DAT(0..1) registers.
+                                                         For diagnostic use only. */
 	uint64_t swap                         : 1;  /**< Swap the high and low 36-bit debug bus outputs. */
 #else
 	uint64_t swap                         : 1;
@@ -9058,7 +9058,7 @@ union cvmx_dtx_ocx_lnkx_ctl {
 #endif
 	} s;
 	struct cvmx_dtx_ocx_lnkx_ctl_s        cn78xx;
-	struct cvmx_dtx_ocx_lnkx_ctl_s        cn78xxp2;
+	struct cvmx_dtx_ocx_lnkx_ctl_s        cn78xxp1;
 };
 typedef union cvmx_dtx_ocx_lnkx_ctl cvmx_dtx_ocx_lnkx_ctl_t;
 
@@ -9070,15 +9070,15 @@ union cvmx_dtx_ocx_lnkx_datx {
 	struct cvmx_dtx_ocx_lnkx_datx_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the ability to
-                                                         peek into blocks during an OCLA capture without OCLA reconfiguration. */
+	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                         ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
 #else
 	uint64_t raw                          : 36;
 	uint64_t reserved_36_63               : 28;
 #endif
 	} s;
 	struct cvmx_dtx_ocx_lnkx_datx_s       cn78xx;
-	struct cvmx_dtx_ocx_lnkx_datx_s       cn78xxp2;
+	struct cvmx_dtx_ocx_lnkx_datx_s       cn78xxp1;
 };
 typedef union cvmx_dtx_ocx_lnkx_datx cvmx_dtx_ocx_lnkx_datx_t;
 
@@ -9090,15 +9090,15 @@ union cvmx_dtx_ocx_lnkx_enax {
 	struct cvmx_dtx_ocx_lnkx_enax_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug buses. Normally
-                                                         only one block will drive each bit. */
+	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                         buses. Normally only one block will drive each bit. */
 #else
 	uint64_t ena                          : 36;
 	uint64_t reserved_36_63               : 28;
 #endif
 	} s;
 	struct cvmx_dtx_ocx_lnkx_enax_s       cn78xx;
-	struct cvmx_dtx_ocx_lnkx_enax_s       cn78xxp2;
+	struct cvmx_dtx_ocx_lnkx_enax_s       cn78xxp1;
 };
 typedef union cvmx_dtx_ocx_lnkx_enax cvmx_dtx_ocx_lnkx_enax_t;
 
@@ -9117,7 +9117,7 @@ union cvmx_dtx_ocx_lnkx_selx {
 #endif
 	} s;
 	struct cvmx_dtx_ocx_lnkx_selx_s       cn78xx;
-	struct cvmx_dtx_ocx_lnkx_selx_s       cn78xxp2;
+	struct cvmx_dtx_ocx_lnkx_selx_s       cn78xxp1;
 };
 typedef union cvmx_dtx_ocx_lnkx_selx cvmx_dtx_ocx_lnkx_selx_t;
 
@@ -9136,7 +9136,7 @@ union cvmx_dtx_ocx_olex_bcst_rsp {
 #endif
 	} s;
 	struct cvmx_dtx_ocx_olex_bcst_rsp_s   cn78xx;
-	struct cvmx_dtx_ocx_olex_bcst_rsp_s   cn78xxp2;
+	struct cvmx_dtx_ocx_olex_bcst_rsp_s   cn78xxp1;
 };
 typedef union cvmx_dtx_ocx_olex_bcst_rsp cvmx_dtx_ocx_olex_bcst_rsp_t;
 
@@ -9150,9 +9150,9 @@ union cvmx_dtx_ocx_olex_ctl {
 	uint64_t reserved_5_63                : 59;
 	uint64_t active                       : 1;  /**< Force block's gated clocks on, so that the state of idle signals may be captured. */
 	uint64_t reserved_2_3                 : 2;
-	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block debug data.
-                                                         Not applicable when software directly reads the DAT(0..1) registers.  For diagnostic use
-                                                         only. */
+	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
+                                                         debug data. Not applicable when software directly reads the DAT(0..1) registers.
+                                                         For diagnostic use only. */
 	uint64_t swap                         : 1;  /**< Swap the high and low 36-bit debug bus outputs. */
 #else
 	uint64_t swap                         : 1;
@@ -9163,7 +9163,7 @@ union cvmx_dtx_ocx_olex_ctl {
 #endif
 	} s;
 	struct cvmx_dtx_ocx_olex_ctl_s        cn78xx;
-	struct cvmx_dtx_ocx_olex_ctl_s        cn78xxp2;
+	struct cvmx_dtx_ocx_olex_ctl_s        cn78xxp1;
 };
 typedef union cvmx_dtx_ocx_olex_ctl cvmx_dtx_ocx_olex_ctl_t;
 
@@ -9175,15 +9175,15 @@ union cvmx_dtx_ocx_olex_datx {
 	struct cvmx_dtx_ocx_olex_datx_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the ability to
-                                                         peek into blocks during an OCLA capture without OCLA reconfiguration. */
+	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                         ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
 #else
 	uint64_t raw                          : 36;
 	uint64_t reserved_36_63               : 28;
 #endif
 	} s;
 	struct cvmx_dtx_ocx_olex_datx_s       cn78xx;
-	struct cvmx_dtx_ocx_olex_datx_s       cn78xxp2;
+	struct cvmx_dtx_ocx_olex_datx_s       cn78xxp1;
 };
 typedef union cvmx_dtx_ocx_olex_datx cvmx_dtx_ocx_olex_datx_t;
 
@@ -9195,15 +9195,15 @@ union cvmx_dtx_ocx_olex_enax {
 	struct cvmx_dtx_ocx_olex_enax_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug buses. Normally
-                                                         only one block will drive each bit. */
+	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                         buses. Normally only one block will drive each bit. */
 #else
 	uint64_t ena                          : 36;
 	uint64_t reserved_36_63               : 28;
 #endif
 	} s;
 	struct cvmx_dtx_ocx_olex_enax_s       cn78xx;
-	struct cvmx_dtx_ocx_olex_enax_s       cn78xxp2;
+	struct cvmx_dtx_ocx_olex_enax_s       cn78xxp1;
 };
 typedef union cvmx_dtx_ocx_olex_enax cvmx_dtx_ocx_olex_enax_t;
 
@@ -9222,7 +9222,7 @@ union cvmx_dtx_ocx_olex_selx {
 #endif
 	} s;
 	struct cvmx_dtx_ocx_olex_selx_s       cn78xx;
-	struct cvmx_dtx_ocx_olex_selx_s       cn78xxp2;
+	struct cvmx_dtx_ocx_olex_selx_s       cn78xxp1;
 };
 typedef union cvmx_dtx_ocx_olex_selx cvmx_dtx_ocx_olex_selx_t;
 
@@ -9241,7 +9241,7 @@ union cvmx_dtx_ocx_top_bcst_rsp {
 #endif
 	} s;
 	struct cvmx_dtx_ocx_top_bcst_rsp_s    cn78xx;
-	struct cvmx_dtx_ocx_top_bcst_rsp_s    cn78xxp2;
+	struct cvmx_dtx_ocx_top_bcst_rsp_s    cn78xxp1;
 };
 typedef union cvmx_dtx_ocx_top_bcst_rsp cvmx_dtx_ocx_top_bcst_rsp_t;
 
@@ -9255,9 +9255,9 @@ union cvmx_dtx_ocx_top_ctl {
 	uint64_t reserved_5_63                : 59;
 	uint64_t active                       : 1;  /**< Force block's gated clocks on, so that the state of idle signals may be captured. */
 	uint64_t reserved_2_3                 : 2;
-	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block debug data.
-                                                         Not applicable when software directly reads the DAT(0..1) registers.  For diagnostic use
-                                                         only. */
+	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
+                                                         debug data. Not applicable when software directly reads the DAT(0..1) registers.
+                                                         For diagnostic use only. */
 	uint64_t swap                         : 1;  /**< Swap the high and low 36-bit debug bus outputs. */
 #else
 	uint64_t swap                         : 1;
@@ -9268,7 +9268,7 @@ union cvmx_dtx_ocx_top_ctl {
 #endif
 	} s;
 	struct cvmx_dtx_ocx_top_ctl_s         cn78xx;
-	struct cvmx_dtx_ocx_top_ctl_s         cn78xxp2;
+	struct cvmx_dtx_ocx_top_ctl_s         cn78xxp1;
 };
 typedef union cvmx_dtx_ocx_top_ctl cvmx_dtx_ocx_top_ctl_t;
 
@@ -9280,15 +9280,15 @@ union cvmx_dtx_ocx_top_datx {
 	struct cvmx_dtx_ocx_top_datx_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the ability to
-                                                         peek into blocks during an OCLA capture without OCLA reconfiguration. */
+	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                         ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
 #else
 	uint64_t raw                          : 36;
 	uint64_t reserved_36_63               : 28;
 #endif
 	} s;
 	struct cvmx_dtx_ocx_top_datx_s        cn78xx;
-	struct cvmx_dtx_ocx_top_datx_s        cn78xxp2;
+	struct cvmx_dtx_ocx_top_datx_s        cn78xxp1;
 };
 typedef union cvmx_dtx_ocx_top_datx cvmx_dtx_ocx_top_datx_t;
 
@@ -9300,15 +9300,15 @@ union cvmx_dtx_ocx_top_enax {
 	struct cvmx_dtx_ocx_top_enax_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug buses. Normally
-                                                         only one block will drive each bit. */
+	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                         buses. Normally only one block will drive each bit. */
 #else
 	uint64_t ena                          : 36;
 	uint64_t reserved_36_63               : 28;
 #endif
 	} s;
 	struct cvmx_dtx_ocx_top_enax_s        cn78xx;
-	struct cvmx_dtx_ocx_top_enax_s        cn78xxp2;
+	struct cvmx_dtx_ocx_top_enax_s        cn78xxp1;
 };
 typedef union cvmx_dtx_ocx_top_enax cvmx_dtx_ocx_top_enax_t;
 
@@ -9327,7 +9327,7 @@ union cvmx_dtx_ocx_top_selx {
 #endif
 	} s;
 	struct cvmx_dtx_ocx_top_selx_s        cn78xx;
-	struct cvmx_dtx_ocx_top_selx_s        cn78xxp2;
+	struct cvmx_dtx_ocx_top_selx_s        cn78xxp1;
 };
 typedef union cvmx_dtx_ocx_top_selx cvmx_dtx_ocx_top_selx_t;
 
@@ -9347,7 +9347,7 @@ union cvmx_dtx_osm_bcst_rsp {
 	} s;
 	struct cvmx_dtx_osm_bcst_rsp_s        cn73xx;
 	struct cvmx_dtx_osm_bcst_rsp_s        cn78xx;
-	struct cvmx_dtx_osm_bcst_rsp_s        cn78xxp2;
+	struct cvmx_dtx_osm_bcst_rsp_s        cn78xxp1;
 };
 typedef union cvmx_dtx_osm_bcst_rsp cvmx_dtx_osm_bcst_rsp_t;
 
@@ -9361,9 +9361,9 @@ union cvmx_dtx_osm_ctl {
 	uint64_t reserved_5_63                : 59;
 	uint64_t active                       : 1;  /**< Force block's gated clocks on, so that the state of idle signals may be captured. */
 	uint64_t reserved_2_3                 : 2;
-	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block debug data.
-                                                         Not applicable when software directly reads the DAT(0..1) registers.  For diagnostic use
-                                                         only. */
+	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
+                                                         debug data. Not applicable when software directly reads the DAT(0..1) registers.
+                                                         For diagnostic use only. */
 	uint64_t swap                         : 1;  /**< Swap the high and low 36-bit debug bus outputs. */
 #else
 	uint64_t swap                         : 1;
@@ -9375,7 +9375,7 @@ union cvmx_dtx_osm_ctl {
 	} s;
 	struct cvmx_dtx_osm_ctl_s             cn73xx;
 	struct cvmx_dtx_osm_ctl_s             cn78xx;
-	struct cvmx_dtx_osm_ctl_s             cn78xxp2;
+	struct cvmx_dtx_osm_ctl_s             cn78xxp1;
 };
 typedef union cvmx_dtx_osm_ctl cvmx_dtx_osm_ctl_t;
 
@@ -9387,8 +9387,8 @@ union cvmx_dtx_osm_datx {
 	struct cvmx_dtx_osm_datx_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the ability to
-                                                         peek into blocks during an OCLA capture without OCLA reconfiguration. */
+	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                         ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
 #else
 	uint64_t raw                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -9396,7 +9396,7 @@ union cvmx_dtx_osm_datx {
 	} s;
 	struct cvmx_dtx_osm_datx_s            cn73xx;
 	struct cvmx_dtx_osm_datx_s            cn78xx;
-	struct cvmx_dtx_osm_datx_s            cn78xxp2;
+	struct cvmx_dtx_osm_datx_s            cn78xxp1;
 };
 typedef union cvmx_dtx_osm_datx cvmx_dtx_osm_datx_t;
 
@@ -9408,8 +9408,8 @@ union cvmx_dtx_osm_enax {
 	struct cvmx_dtx_osm_enax_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug buses. Normally
-                                                         only one block will drive each bit. */
+	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                         buses. Normally only one block will drive each bit. */
 #else
 	uint64_t ena                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -9417,7 +9417,7 @@ union cvmx_dtx_osm_enax {
 	} s;
 	struct cvmx_dtx_osm_enax_s            cn73xx;
 	struct cvmx_dtx_osm_enax_s            cn78xx;
-	struct cvmx_dtx_osm_enax_s            cn78xxp2;
+	struct cvmx_dtx_osm_enax_s            cn78xxp1;
 };
 typedef union cvmx_dtx_osm_enax cvmx_dtx_osm_enax_t;
 
@@ -9437,7 +9437,7 @@ union cvmx_dtx_osm_selx {
 	} s;
 	struct cvmx_dtx_osm_selx_s            cn73xx;
 	struct cvmx_dtx_osm_selx_s            cn78xx;
-	struct cvmx_dtx_osm_selx_s            cn78xxp2;
+	struct cvmx_dtx_osm_selx_s            cn78xxp1;
 };
 typedef union cvmx_dtx_osm_selx cvmx_dtx_osm_selx_t;
 
@@ -9470,9 +9470,9 @@ union cvmx_dtx_pcsx_ctl {
 	uint64_t reserved_5_63                : 59;
 	uint64_t active                       : 1;  /**< Force block's gated clocks on, so that the state of idle signals may be captured. */
 	uint64_t reserved_2_3                 : 2;
-	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block debug data.
-                                                         Not applicable when software directly reads the DAT(0..1) registers.  For diagnostic use
-                                                         only. */
+	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
+                                                         debug data. Not applicable when software directly reads the DAT(0..1) registers.
+                                                         For diagnostic use only. */
 	uint64_t swap                         : 1;  /**< Swap the high and low 36-bit debug bus outputs. */
 #else
 	uint64_t swap                         : 1;
@@ -9495,8 +9495,8 @@ union cvmx_dtx_pcsx_datx {
 	struct cvmx_dtx_pcsx_datx_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the ability to
-                                                         peek into blocks during an OCLA capture without OCLA reconfiguration. */
+	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                         ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
 #else
 	uint64_t raw                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -9515,8 +9515,8 @@ union cvmx_dtx_pcsx_enax {
 	struct cvmx_dtx_pcsx_enax_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug buses. Normally
-                                                         only one block will drive each bit. */
+	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                         buses. Normally only one block will drive each bit. */
 #else
 	uint64_t ena                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -9564,7 +9564,7 @@ union cvmx_dtx_pemx_bcst_rsp {
 	struct cvmx_dtx_pemx_bcst_rsp_s       cn70xxp1;
 	struct cvmx_dtx_pemx_bcst_rsp_s       cn73xx;
 	struct cvmx_dtx_pemx_bcst_rsp_s       cn78xx;
-	struct cvmx_dtx_pemx_bcst_rsp_s       cn78xxp2;
+	struct cvmx_dtx_pemx_bcst_rsp_s       cn78xxp1;
 	struct cvmx_dtx_pemx_bcst_rsp_s       cnf75xx;
 };
 typedef union cvmx_dtx_pemx_bcst_rsp cvmx_dtx_pemx_bcst_rsp_t;
@@ -9579,9 +9579,9 @@ union cvmx_dtx_pemx_ctl {
 	uint64_t reserved_5_63                : 59;
 	uint64_t active                       : 1;  /**< Force block's gated clocks on, so that the state of idle signals may be captured. */
 	uint64_t reserved_2_3                 : 2;
-	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block debug data.
-                                                         Not applicable when software directly reads the DAT(0..1) registers.  For diagnostic use
-                                                         only. */
+	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
+                                                         debug data. Not applicable when software directly reads the DAT(0..1) registers.
+                                                         For diagnostic use only. */
 	uint64_t swap                         : 1;  /**< Swap the high and low 36-bit debug bus outputs. */
 #else
 	uint64_t swap                         : 1;
@@ -9595,7 +9595,7 @@ union cvmx_dtx_pemx_ctl {
 	struct cvmx_dtx_pemx_ctl_s            cn70xxp1;
 	struct cvmx_dtx_pemx_ctl_s            cn73xx;
 	struct cvmx_dtx_pemx_ctl_s            cn78xx;
-	struct cvmx_dtx_pemx_ctl_s            cn78xxp2;
+	struct cvmx_dtx_pemx_ctl_s            cn78xxp1;
 	struct cvmx_dtx_pemx_ctl_s            cnf75xx;
 };
 typedef union cvmx_dtx_pemx_ctl cvmx_dtx_pemx_ctl_t;
@@ -9608,8 +9608,8 @@ union cvmx_dtx_pemx_datx {
 	struct cvmx_dtx_pemx_datx_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the ability to
-                                                         peek into blocks during an OCLA capture without OCLA reconfiguration. */
+	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                         ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
 #else
 	uint64_t raw                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -9619,7 +9619,7 @@ union cvmx_dtx_pemx_datx {
 	struct cvmx_dtx_pemx_datx_s           cn70xxp1;
 	struct cvmx_dtx_pemx_datx_s           cn73xx;
 	struct cvmx_dtx_pemx_datx_s           cn78xx;
-	struct cvmx_dtx_pemx_datx_s           cn78xxp2;
+	struct cvmx_dtx_pemx_datx_s           cn78xxp1;
 	struct cvmx_dtx_pemx_datx_s           cnf75xx;
 };
 typedef union cvmx_dtx_pemx_datx cvmx_dtx_pemx_datx_t;
@@ -9632,8 +9632,8 @@ union cvmx_dtx_pemx_enax {
 	struct cvmx_dtx_pemx_enax_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug buses. Normally
-                                                         only one block will drive each bit. */
+	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                         buses. Normally only one block will drive each bit. */
 #else
 	uint64_t ena                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -9643,7 +9643,7 @@ union cvmx_dtx_pemx_enax {
 	struct cvmx_dtx_pemx_enax_s           cn70xxp1;
 	struct cvmx_dtx_pemx_enax_s           cn73xx;
 	struct cvmx_dtx_pemx_enax_s           cn78xx;
-	struct cvmx_dtx_pemx_enax_s           cn78xxp2;
+	struct cvmx_dtx_pemx_enax_s           cn78xxp1;
 	struct cvmx_dtx_pemx_enax_s           cnf75xx;
 };
 typedef union cvmx_dtx_pemx_enax cvmx_dtx_pemx_enax_t;
@@ -9666,7 +9666,7 @@ union cvmx_dtx_pemx_selx {
 	struct cvmx_dtx_pemx_selx_s           cn70xxp1;
 	struct cvmx_dtx_pemx_selx_s           cn73xx;
 	struct cvmx_dtx_pemx_selx_s           cn78xx;
-	struct cvmx_dtx_pemx_selx_s           cn78xxp2;
+	struct cvmx_dtx_pemx_selx_s           cn78xxp1;
 	struct cvmx_dtx_pemx_selx_s           cnf75xx;
 };
 typedef union cvmx_dtx_pemx_selx cvmx_dtx_pemx_selx_t;
@@ -9700,9 +9700,9 @@ union cvmx_dtx_pip_ctl {
 	uint64_t reserved_5_63                : 59;
 	uint64_t active                       : 1;  /**< Force block's gated clocks on, so that the state of idle signals may be captured. */
 	uint64_t reserved_2_3                 : 2;
-	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block debug data.
-                                                         Not applicable when software directly reads the DAT(0..1) registers.  For diagnostic use
-                                                         only. */
+	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
+                                                         debug data. Not applicable when software directly reads the DAT(0..1) registers.
+                                                         For diagnostic use only. */
 	uint64_t swap                         : 1;  /**< Swap the high and low 36-bit debug bus outputs. */
 #else
 	uint64_t swap                         : 1;
@@ -9725,8 +9725,8 @@ union cvmx_dtx_pip_datx {
 	struct cvmx_dtx_pip_datx_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the ability to
-                                                         peek into blocks during an OCLA capture without OCLA reconfiguration. */
+	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                         ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
 #else
 	uint64_t raw                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -9745,8 +9745,8 @@ union cvmx_dtx_pip_enax {
 	struct cvmx_dtx_pip_enax_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug buses. Normally
-                                                         only one block will drive each bit. */
+	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                         buses. Normally only one block will drive each bit. */
 #else
 	uint64_t ena                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -9792,7 +9792,7 @@ union cvmx_dtx_pki_pbe_bcst_rsp {
 	} s;
 	struct cvmx_dtx_pki_pbe_bcst_rsp_s    cn73xx;
 	struct cvmx_dtx_pki_pbe_bcst_rsp_s    cn78xx;
-	struct cvmx_dtx_pki_pbe_bcst_rsp_s    cn78xxp2;
+	struct cvmx_dtx_pki_pbe_bcst_rsp_s    cn78xxp1;
 	struct cvmx_dtx_pki_pbe_bcst_rsp_s    cnf75xx;
 };
 typedef union cvmx_dtx_pki_pbe_bcst_rsp cvmx_dtx_pki_pbe_bcst_rsp_t;
@@ -9807,9 +9807,9 @@ union cvmx_dtx_pki_pbe_ctl {
 	uint64_t reserved_5_63                : 59;
 	uint64_t active                       : 1;  /**< Force block's gated clocks on, so that the state of idle signals may be captured. */
 	uint64_t reserved_2_3                 : 2;
-	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block debug data.
-                                                         Not applicable when software directly reads the DAT(0..1) registers.  For diagnostic use
-                                                         only. */
+	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
+                                                         debug data. Not applicable when software directly reads the DAT(0..1) registers.
+                                                         For diagnostic use only. */
 	uint64_t swap                         : 1;  /**< Swap the high and low 36-bit debug bus outputs. */
 #else
 	uint64_t swap                         : 1;
@@ -9821,7 +9821,7 @@ union cvmx_dtx_pki_pbe_ctl {
 	} s;
 	struct cvmx_dtx_pki_pbe_ctl_s         cn73xx;
 	struct cvmx_dtx_pki_pbe_ctl_s         cn78xx;
-	struct cvmx_dtx_pki_pbe_ctl_s         cn78xxp2;
+	struct cvmx_dtx_pki_pbe_ctl_s         cn78xxp1;
 	struct cvmx_dtx_pki_pbe_ctl_s         cnf75xx;
 };
 typedef union cvmx_dtx_pki_pbe_ctl cvmx_dtx_pki_pbe_ctl_t;
@@ -9834,8 +9834,8 @@ union cvmx_dtx_pki_pbe_datx {
 	struct cvmx_dtx_pki_pbe_datx_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the ability to
-                                                         peek into blocks during an OCLA capture without OCLA reconfiguration. */
+	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                         ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
 #else
 	uint64_t raw                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -9843,7 +9843,7 @@ union cvmx_dtx_pki_pbe_datx {
 	} s;
 	struct cvmx_dtx_pki_pbe_datx_s        cn73xx;
 	struct cvmx_dtx_pki_pbe_datx_s        cn78xx;
-	struct cvmx_dtx_pki_pbe_datx_s        cn78xxp2;
+	struct cvmx_dtx_pki_pbe_datx_s        cn78xxp1;
 	struct cvmx_dtx_pki_pbe_datx_s        cnf75xx;
 };
 typedef union cvmx_dtx_pki_pbe_datx cvmx_dtx_pki_pbe_datx_t;
@@ -9856,8 +9856,8 @@ union cvmx_dtx_pki_pbe_enax {
 	struct cvmx_dtx_pki_pbe_enax_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug buses. Normally
-                                                         only one block will drive each bit. */
+	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                         buses. Normally only one block will drive each bit. */
 #else
 	uint64_t ena                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -9865,7 +9865,7 @@ union cvmx_dtx_pki_pbe_enax {
 	} s;
 	struct cvmx_dtx_pki_pbe_enax_s        cn73xx;
 	struct cvmx_dtx_pki_pbe_enax_s        cn78xx;
-	struct cvmx_dtx_pki_pbe_enax_s        cn78xxp2;
+	struct cvmx_dtx_pki_pbe_enax_s        cn78xxp1;
 	struct cvmx_dtx_pki_pbe_enax_s        cnf75xx;
 };
 typedef union cvmx_dtx_pki_pbe_enax cvmx_dtx_pki_pbe_enax_t;
@@ -9886,7 +9886,7 @@ union cvmx_dtx_pki_pbe_selx {
 	} s;
 	struct cvmx_dtx_pki_pbe_selx_s        cn73xx;
 	struct cvmx_dtx_pki_pbe_selx_s        cn78xx;
-	struct cvmx_dtx_pki_pbe_selx_s        cn78xxp2;
+	struct cvmx_dtx_pki_pbe_selx_s        cn78xxp1;
 	struct cvmx_dtx_pki_pbe_selx_s        cnf75xx;
 };
 typedef union cvmx_dtx_pki_pbe_selx cvmx_dtx_pki_pbe_selx_t;
@@ -9907,7 +9907,7 @@ union cvmx_dtx_pki_pfe_bcst_rsp {
 	} s;
 	struct cvmx_dtx_pki_pfe_bcst_rsp_s    cn73xx;
 	struct cvmx_dtx_pki_pfe_bcst_rsp_s    cn78xx;
-	struct cvmx_dtx_pki_pfe_bcst_rsp_s    cn78xxp2;
+	struct cvmx_dtx_pki_pfe_bcst_rsp_s    cn78xxp1;
 	struct cvmx_dtx_pki_pfe_bcst_rsp_s    cnf75xx;
 };
 typedef union cvmx_dtx_pki_pfe_bcst_rsp cvmx_dtx_pki_pfe_bcst_rsp_t;
@@ -9922,9 +9922,9 @@ union cvmx_dtx_pki_pfe_ctl {
 	uint64_t reserved_5_63                : 59;
 	uint64_t active                       : 1;  /**< Force block's gated clocks on, so that the state of idle signals may be captured. */
 	uint64_t reserved_2_3                 : 2;
-	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block debug data.
-                                                         Not applicable when software directly reads the DAT(0..1) registers.  For diagnostic use
-                                                         only. */
+	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
+                                                         debug data. Not applicable when software directly reads the DAT(0..1) registers.
+                                                         For diagnostic use only. */
 	uint64_t swap                         : 1;  /**< Swap the high and low 36-bit debug bus outputs. */
 #else
 	uint64_t swap                         : 1;
@@ -9936,7 +9936,7 @@ union cvmx_dtx_pki_pfe_ctl {
 	} s;
 	struct cvmx_dtx_pki_pfe_ctl_s         cn73xx;
 	struct cvmx_dtx_pki_pfe_ctl_s         cn78xx;
-	struct cvmx_dtx_pki_pfe_ctl_s         cn78xxp2;
+	struct cvmx_dtx_pki_pfe_ctl_s         cn78xxp1;
 	struct cvmx_dtx_pki_pfe_ctl_s         cnf75xx;
 };
 typedef union cvmx_dtx_pki_pfe_ctl cvmx_dtx_pki_pfe_ctl_t;
@@ -9949,8 +9949,8 @@ union cvmx_dtx_pki_pfe_datx {
 	struct cvmx_dtx_pki_pfe_datx_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the ability to
-                                                         peek into blocks during an OCLA capture without OCLA reconfiguration. */
+	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                         ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
 #else
 	uint64_t raw                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -9958,7 +9958,7 @@ union cvmx_dtx_pki_pfe_datx {
 	} s;
 	struct cvmx_dtx_pki_pfe_datx_s        cn73xx;
 	struct cvmx_dtx_pki_pfe_datx_s        cn78xx;
-	struct cvmx_dtx_pki_pfe_datx_s        cn78xxp2;
+	struct cvmx_dtx_pki_pfe_datx_s        cn78xxp1;
 	struct cvmx_dtx_pki_pfe_datx_s        cnf75xx;
 };
 typedef union cvmx_dtx_pki_pfe_datx cvmx_dtx_pki_pfe_datx_t;
@@ -9971,8 +9971,8 @@ union cvmx_dtx_pki_pfe_enax {
 	struct cvmx_dtx_pki_pfe_enax_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug buses. Normally
-                                                         only one block will drive each bit. */
+	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                         buses. Normally only one block will drive each bit. */
 #else
 	uint64_t ena                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -9980,7 +9980,7 @@ union cvmx_dtx_pki_pfe_enax {
 	} s;
 	struct cvmx_dtx_pki_pfe_enax_s        cn73xx;
 	struct cvmx_dtx_pki_pfe_enax_s        cn78xx;
-	struct cvmx_dtx_pki_pfe_enax_s        cn78xxp2;
+	struct cvmx_dtx_pki_pfe_enax_s        cn78xxp1;
 	struct cvmx_dtx_pki_pfe_enax_s        cnf75xx;
 };
 typedef union cvmx_dtx_pki_pfe_enax cvmx_dtx_pki_pfe_enax_t;
@@ -10001,7 +10001,7 @@ union cvmx_dtx_pki_pfe_selx {
 	} s;
 	struct cvmx_dtx_pki_pfe_selx_s        cn73xx;
 	struct cvmx_dtx_pki_pfe_selx_s        cn78xx;
-	struct cvmx_dtx_pki_pfe_selx_s        cn78xxp2;
+	struct cvmx_dtx_pki_pfe_selx_s        cn78xxp1;
 	struct cvmx_dtx_pki_pfe_selx_s        cnf75xx;
 };
 typedef union cvmx_dtx_pki_pfe_selx cvmx_dtx_pki_pfe_selx_t;
@@ -10022,7 +10022,7 @@ union cvmx_dtx_pki_pix_bcst_rsp {
 	} s;
 	struct cvmx_dtx_pki_pix_bcst_rsp_s    cn73xx;
 	struct cvmx_dtx_pki_pix_bcst_rsp_s    cn78xx;
-	struct cvmx_dtx_pki_pix_bcst_rsp_s    cn78xxp2;
+	struct cvmx_dtx_pki_pix_bcst_rsp_s    cn78xxp1;
 	struct cvmx_dtx_pki_pix_bcst_rsp_s    cnf75xx;
 };
 typedef union cvmx_dtx_pki_pix_bcst_rsp cvmx_dtx_pki_pix_bcst_rsp_t;
@@ -10037,9 +10037,9 @@ union cvmx_dtx_pki_pix_ctl {
 	uint64_t reserved_5_63                : 59;
 	uint64_t active                       : 1;  /**< Force block's gated clocks on, so that the state of idle signals may be captured. */
 	uint64_t reserved_2_3                 : 2;
-	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block debug data.
-                                                         Not applicable when software directly reads the DAT(0..1) registers.  For diagnostic use
-                                                         only. */
+	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
+                                                         debug data. Not applicable when software directly reads the DAT(0..1) registers.
+                                                         For diagnostic use only. */
 	uint64_t swap                         : 1;  /**< Swap the high and low 36-bit debug bus outputs. */
 #else
 	uint64_t swap                         : 1;
@@ -10051,7 +10051,7 @@ union cvmx_dtx_pki_pix_ctl {
 	} s;
 	struct cvmx_dtx_pki_pix_ctl_s         cn73xx;
 	struct cvmx_dtx_pki_pix_ctl_s         cn78xx;
-	struct cvmx_dtx_pki_pix_ctl_s         cn78xxp2;
+	struct cvmx_dtx_pki_pix_ctl_s         cn78xxp1;
 	struct cvmx_dtx_pki_pix_ctl_s         cnf75xx;
 };
 typedef union cvmx_dtx_pki_pix_ctl cvmx_dtx_pki_pix_ctl_t;
@@ -10064,8 +10064,8 @@ union cvmx_dtx_pki_pix_datx {
 	struct cvmx_dtx_pki_pix_datx_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the ability to
-                                                         peek into blocks during an OCLA capture without OCLA reconfiguration. */
+	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                         ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
 #else
 	uint64_t raw                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -10073,7 +10073,7 @@ union cvmx_dtx_pki_pix_datx {
 	} s;
 	struct cvmx_dtx_pki_pix_datx_s        cn73xx;
 	struct cvmx_dtx_pki_pix_datx_s        cn78xx;
-	struct cvmx_dtx_pki_pix_datx_s        cn78xxp2;
+	struct cvmx_dtx_pki_pix_datx_s        cn78xxp1;
 	struct cvmx_dtx_pki_pix_datx_s        cnf75xx;
 };
 typedef union cvmx_dtx_pki_pix_datx cvmx_dtx_pki_pix_datx_t;
@@ -10086,8 +10086,8 @@ union cvmx_dtx_pki_pix_enax {
 	struct cvmx_dtx_pki_pix_enax_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug buses. Normally
-                                                         only one block will drive each bit. */
+	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                         buses. Normally only one block will drive each bit. */
 #else
 	uint64_t ena                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -10095,7 +10095,7 @@ union cvmx_dtx_pki_pix_enax {
 	} s;
 	struct cvmx_dtx_pki_pix_enax_s        cn73xx;
 	struct cvmx_dtx_pki_pix_enax_s        cn78xx;
-	struct cvmx_dtx_pki_pix_enax_s        cn78xxp2;
+	struct cvmx_dtx_pki_pix_enax_s        cn78xxp1;
 	struct cvmx_dtx_pki_pix_enax_s        cnf75xx;
 };
 typedef union cvmx_dtx_pki_pix_enax cvmx_dtx_pki_pix_enax_t;
@@ -10116,7 +10116,7 @@ union cvmx_dtx_pki_pix_selx {
 	} s;
 	struct cvmx_dtx_pki_pix_selx_s        cn73xx;
 	struct cvmx_dtx_pki_pix_selx_s        cn78xx;
-	struct cvmx_dtx_pki_pix_selx_s        cn78xxp2;
+	struct cvmx_dtx_pki_pix_selx_s        cn78xxp1;
 	struct cvmx_dtx_pki_pix_selx_s        cnf75xx;
 };
 typedef union cvmx_dtx_pki_pix_selx cvmx_dtx_pki_pix_selx_t;
@@ -10139,7 +10139,7 @@ union cvmx_dtx_pko_bcst_rsp {
 	struct cvmx_dtx_pko_bcst_rsp_s        cn70xxp1;
 	struct cvmx_dtx_pko_bcst_rsp_s        cn73xx;
 	struct cvmx_dtx_pko_bcst_rsp_s        cn78xx;
-	struct cvmx_dtx_pko_bcst_rsp_s        cn78xxp2;
+	struct cvmx_dtx_pko_bcst_rsp_s        cn78xxp1;
 	struct cvmx_dtx_pko_bcst_rsp_s        cnf75xx;
 };
 typedef union cvmx_dtx_pko_bcst_rsp cvmx_dtx_pko_bcst_rsp_t;
@@ -10154,9 +10154,9 @@ union cvmx_dtx_pko_ctl {
 	uint64_t reserved_5_63                : 59;
 	uint64_t active                       : 1;  /**< Force block's gated clocks on, so that the state of idle signals may be captured. */
 	uint64_t reserved_2_3                 : 2;
-	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block debug data.
-                                                         Not applicable when software directly reads the DAT(0..1) registers.  For diagnostic use
-                                                         only. */
+	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
+                                                         debug data. Not applicable when software directly reads the DAT(0..1) registers.
+                                                         For diagnostic use only. */
 	uint64_t swap                         : 1;  /**< Swap the high and low 36-bit debug bus outputs. */
 #else
 	uint64_t swap                         : 1;
@@ -10170,7 +10170,7 @@ union cvmx_dtx_pko_ctl {
 	struct cvmx_dtx_pko_ctl_s             cn70xxp1;
 	struct cvmx_dtx_pko_ctl_s             cn73xx;
 	struct cvmx_dtx_pko_ctl_s             cn78xx;
-	struct cvmx_dtx_pko_ctl_s             cn78xxp2;
+	struct cvmx_dtx_pko_ctl_s             cn78xxp1;
 	struct cvmx_dtx_pko_ctl_s             cnf75xx;
 };
 typedef union cvmx_dtx_pko_ctl cvmx_dtx_pko_ctl_t;
@@ -10183,8 +10183,8 @@ union cvmx_dtx_pko_datx {
 	struct cvmx_dtx_pko_datx_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the ability to
-                                                         peek into blocks during an OCLA capture without OCLA reconfiguration. */
+	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                         ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
 #else
 	uint64_t raw                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -10194,7 +10194,7 @@ union cvmx_dtx_pko_datx {
 	struct cvmx_dtx_pko_datx_s            cn70xxp1;
 	struct cvmx_dtx_pko_datx_s            cn73xx;
 	struct cvmx_dtx_pko_datx_s            cn78xx;
-	struct cvmx_dtx_pko_datx_s            cn78xxp2;
+	struct cvmx_dtx_pko_datx_s            cn78xxp1;
 	struct cvmx_dtx_pko_datx_s            cnf75xx;
 };
 typedef union cvmx_dtx_pko_datx cvmx_dtx_pko_datx_t;
@@ -10207,8 +10207,8 @@ union cvmx_dtx_pko_enax {
 	struct cvmx_dtx_pko_enax_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug buses. Normally
-                                                         only one block will drive each bit. */
+	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                         buses. Normally only one block will drive each bit. */
 #else
 	uint64_t ena                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -10218,7 +10218,7 @@ union cvmx_dtx_pko_enax {
 	struct cvmx_dtx_pko_enax_s            cn70xxp1;
 	struct cvmx_dtx_pko_enax_s            cn73xx;
 	struct cvmx_dtx_pko_enax_s            cn78xx;
-	struct cvmx_dtx_pko_enax_s            cn78xxp2;
+	struct cvmx_dtx_pko_enax_s            cn78xxp1;
 	struct cvmx_dtx_pko_enax_s            cnf75xx;
 };
 typedef union cvmx_dtx_pko_enax cvmx_dtx_pko_enax_t;
@@ -10241,7 +10241,7 @@ union cvmx_dtx_pko_selx {
 	struct cvmx_dtx_pko_selx_s            cn70xxp1;
 	struct cvmx_dtx_pko_selx_s            cn73xx;
 	struct cvmx_dtx_pko_selx_s            cn78xx;
-	struct cvmx_dtx_pko_selx_s            cn78xxp2;
+	struct cvmx_dtx_pko_selx_s            cn78xxp1;
 	struct cvmx_dtx_pko_selx_s            cnf75xx;
 };
 typedef union cvmx_dtx_pko_selx cvmx_dtx_pko_selx_t;
@@ -10274,9 +10274,9 @@ union cvmx_dtx_pnbx_ctl {
 	uint64_t reserved_5_63                : 59;
 	uint64_t active                       : 1;  /**< Force block's gated clocks on, so that the state of idle signals may be captured. */
 	uint64_t reserved_2_3                 : 2;
-	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block debug data.
-                                                         Not applicable when software directly reads the DAT(0..1) registers.  For diagnostic use
-                                                         only. */
+	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
+                                                         debug data. Not applicable when software directly reads the DAT(0..1) registers.
+                                                         For diagnostic use only. */
 	uint64_t swap                         : 1;  /**< Swap the high and low 36-bit debug bus outputs. */
 #else
 	uint64_t swap                         : 1;
@@ -10298,8 +10298,8 @@ union cvmx_dtx_pnbx_datx {
 	struct cvmx_dtx_pnbx_datx_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the ability to
-                                                         peek into blocks during an OCLA capture without OCLA reconfiguration. */
+	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                         ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
 #else
 	uint64_t raw                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -10317,8 +10317,8 @@ union cvmx_dtx_pnbx_enax {
 	struct cvmx_dtx_pnbx_enax_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug buses. Normally
-                                                         only one block will drive each bit. */
+	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                         buses. Normally only one block will drive each bit. */
 #else
 	uint64_t ena                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -10374,9 +10374,9 @@ union cvmx_dtx_pnbdx_ctl {
 	uint64_t reserved_5_63                : 59;
 	uint64_t active                       : 1;  /**< Force block's gated clocks on, so that the state of idle signals may be captured. */
 	uint64_t reserved_2_3                 : 2;
-	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block debug data.
-                                                         Not applicable when software directly reads the DAT(0..1) registers.  For diagnostic use
-                                                         only. */
+	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
+                                                         debug data. Not applicable when software directly reads the DAT(0..1) registers.
+                                                         For diagnostic use only. */
 	uint64_t swap                         : 1;  /**< Swap the high and low 36-bit debug bus outputs. */
 #else
 	uint64_t swap                         : 1;
@@ -10398,8 +10398,8 @@ union cvmx_dtx_pnbdx_datx {
 	struct cvmx_dtx_pnbdx_datx_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the ability to
-                                                         peek into blocks during an OCLA capture without OCLA reconfiguration. */
+	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                         ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
 #else
 	uint64_t raw                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -10417,8 +10417,8 @@ union cvmx_dtx_pnbdx_enax {
 	struct cvmx_dtx_pnbdx_enax_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug buses. Normally
-                                                         only one block will drive each bit. */
+	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                         buses. Normally only one block will drive each bit. */
 #else
 	uint64_t ena                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -10475,9 +10475,9 @@ union cvmx_dtx_pow_ctl {
 	uint64_t reserved_5_63                : 59;
 	uint64_t active                       : 1;  /**< Force block's gated clocks on, so that the state of idle signals may be captured. */
 	uint64_t reserved_2_3                 : 2;
-	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block debug data.
-                                                         Not applicable when software directly reads the DAT(0..1) registers.  For diagnostic use
-                                                         only. */
+	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
+                                                         debug data. Not applicable when software directly reads the DAT(0..1) registers.
+                                                         For diagnostic use only. */
 	uint64_t swap                         : 1;  /**< Swap the high and low 36-bit debug bus outputs. */
 #else
 	uint64_t swap                         : 1;
@@ -10500,8 +10500,8 @@ union cvmx_dtx_pow_datx {
 	struct cvmx_dtx_pow_datx_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the ability to
-                                                         peek into blocks during an OCLA capture without OCLA reconfiguration. */
+	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                         ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
 #else
 	uint64_t raw                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -10520,8 +10520,8 @@ union cvmx_dtx_pow_enax {
 	struct cvmx_dtx_pow_enax_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug buses. Normally
-                                                         only one block will drive each bit. */
+	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                         buses. Normally only one block will drive each bit. */
 #else
 	uint64_t ena                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -10579,9 +10579,9 @@ union cvmx_dtx_prch_ctl {
 	uint64_t reserved_5_63                : 59;
 	uint64_t active                       : 1;  /**< Force block's gated clocks on, so that the state of idle signals may be captured. */
 	uint64_t reserved_2_3                 : 2;
-	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block debug data.
-                                                         Not applicable when software directly reads the DAT(0..1) registers.  For diagnostic use
-                                                         only. */
+	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
+                                                         debug data. Not applicable when software directly reads the DAT(0..1) registers.
+                                                         For diagnostic use only. */
 	uint64_t swap                         : 1;  /**< Swap the high and low 36-bit debug bus outputs. */
 #else
 	uint64_t swap                         : 1;
@@ -10603,8 +10603,8 @@ union cvmx_dtx_prch_datx {
 	struct cvmx_dtx_prch_datx_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the ability to
-                                                         peek into blocks during an OCLA capture without OCLA reconfiguration. */
+	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                         ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
 #else
 	uint64_t raw                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -10622,8 +10622,8 @@ union cvmx_dtx_prch_enax {
 	struct cvmx_dtx_prch_enax_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug buses. Normally
-                                                         only one block will drive each bit. */
+	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                         buses. Normally only one block will drive each bit. */
 #else
 	uint64_t ena                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -10679,9 +10679,9 @@ union cvmx_dtx_psm_ctl {
 	uint64_t reserved_5_63                : 59;
 	uint64_t active                       : 1;  /**< Force block's gated clocks on, so that the state of idle signals may be captured. */
 	uint64_t reserved_2_3                 : 2;
-	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block debug data.
-                                                         Not applicable when software directly reads the DAT(0..1) registers.  For diagnostic use
-                                                         only. */
+	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
+                                                         debug data. Not applicable when software directly reads the DAT(0..1) registers.
+                                                         For diagnostic use only. */
 	uint64_t swap                         : 1;  /**< Swap the high and low 36-bit debug bus outputs. */
 #else
 	uint64_t swap                         : 1;
@@ -10703,8 +10703,8 @@ union cvmx_dtx_psm_datx {
 	struct cvmx_dtx_psm_datx_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the ability to
-                                                         peek into blocks during an OCLA capture without OCLA reconfiguration. */
+	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                         ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
 #else
 	uint64_t raw                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -10722,8 +10722,8 @@ union cvmx_dtx_psm_enax {
 	struct cvmx_dtx_psm_enax_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug buses. Normally
-                                                         only one block will drive each bit. */
+	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                         buses. Normally only one block will drive each bit. */
 #else
 	uint64_t ena                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -10767,7 +10767,7 @@ union cvmx_dtx_rad_bcst_rsp {
 	} s;
 	struct cvmx_dtx_rad_bcst_rsp_s        cn73xx;
 	struct cvmx_dtx_rad_bcst_rsp_s        cn78xx;
-	struct cvmx_dtx_rad_bcst_rsp_s        cn78xxp2;
+	struct cvmx_dtx_rad_bcst_rsp_s        cn78xxp1;
 };
 typedef union cvmx_dtx_rad_bcst_rsp cvmx_dtx_rad_bcst_rsp_t;
 
@@ -10781,9 +10781,9 @@ union cvmx_dtx_rad_ctl {
 	uint64_t reserved_5_63                : 59;
 	uint64_t active                       : 1;  /**< Force block's gated clocks on, so that the state of idle signals may be captured. */
 	uint64_t reserved_2_3                 : 2;
-	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block debug data.
-                                                         Not applicable when software directly reads the DAT(0..1) registers.  For diagnostic use
-                                                         only. */
+	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
+                                                         debug data. Not applicable when software directly reads the DAT(0..1) registers.
+                                                         For diagnostic use only. */
 	uint64_t swap                         : 1;  /**< Swap the high and low 36-bit debug bus outputs. */
 #else
 	uint64_t swap                         : 1;
@@ -10795,7 +10795,7 @@ union cvmx_dtx_rad_ctl {
 	} s;
 	struct cvmx_dtx_rad_ctl_s             cn73xx;
 	struct cvmx_dtx_rad_ctl_s             cn78xx;
-	struct cvmx_dtx_rad_ctl_s             cn78xxp2;
+	struct cvmx_dtx_rad_ctl_s             cn78xxp1;
 };
 typedef union cvmx_dtx_rad_ctl cvmx_dtx_rad_ctl_t;
 
@@ -10807,8 +10807,8 @@ union cvmx_dtx_rad_datx {
 	struct cvmx_dtx_rad_datx_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the ability to
-                                                         peek into blocks during an OCLA capture without OCLA reconfiguration. */
+	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                         ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
 #else
 	uint64_t raw                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -10816,7 +10816,7 @@ union cvmx_dtx_rad_datx {
 	} s;
 	struct cvmx_dtx_rad_datx_s            cn73xx;
 	struct cvmx_dtx_rad_datx_s            cn78xx;
-	struct cvmx_dtx_rad_datx_s            cn78xxp2;
+	struct cvmx_dtx_rad_datx_s            cn78xxp1;
 };
 typedef union cvmx_dtx_rad_datx cvmx_dtx_rad_datx_t;
 
@@ -10828,8 +10828,8 @@ union cvmx_dtx_rad_enax {
 	struct cvmx_dtx_rad_enax_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug buses. Normally
-                                                         only one block will drive each bit. */
+	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                         buses. Normally only one block will drive each bit. */
 #else
 	uint64_t ena                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -10837,7 +10837,7 @@ union cvmx_dtx_rad_enax {
 	} s;
 	struct cvmx_dtx_rad_enax_s            cn73xx;
 	struct cvmx_dtx_rad_enax_s            cn78xx;
-	struct cvmx_dtx_rad_enax_s            cn78xxp2;
+	struct cvmx_dtx_rad_enax_s            cn78xxp1;
 };
 typedef union cvmx_dtx_rad_enax cvmx_dtx_rad_enax_t;
 
@@ -10857,7 +10857,7 @@ union cvmx_dtx_rad_selx {
 	} s;
 	struct cvmx_dtx_rad_selx_s            cn73xx;
 	struct cvmx_dtx_rad_selx_s            cn78xx;
-	struct cvmx_dtx_rad_selx_s            cn78xxp2;
+	struct cvmx_dtx_rad_selx_s            cn78xxp1;
 };
 typedef union cvmx_dtx_rad_selx cvmx_dtx_rad_selx_t;
 
@@ -10889,9 +10889,9 @@ union cvmx_dtx_rdec_ctl {
 	uint64_t reserved_5_63                : 59;
 	uint64_t active                       : 1;  /**< Force block's gated clocks on, so that the state of idle signals may be captured. */
 	uint64_t reserved_2_3                 : 2;
-	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block debug data.
-                                                         Not applicable when software directly reads the DAT(0..1) registers.  For diagnostic use
-                                                         only. */
+	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
+                                                         debug data. Not applicable when software directly reads the DAT(0..1) registers.
+                                                         For diagnostic use only. */
 	uint64_t swap                         : 1;  /**< Swap the high and low 36-bit debug bus outputs. */
 #else
 	uint64_t swap                         : 1;
@@ -10913,8 +10913,8 @@ union cvmx_dtx_rdec_datx {
 	struct cvmx_dtx_rdec_datx_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the ability to
-                                                         peek into blocks during an OCLA capture without OCLA reconfiguration. */
+	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                         ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
 #else
 	uint64_t raw                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -10932,8 +10932,8 @@ union cvmx_dtx_rdec_enax {
 	struct cvmx_dtx_rdec_enax_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug buses. Normally
-                                                         only one block will drive each bit. */
+	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                         buses. Normally only one block will drive each bit. */
 #else
 	uint64_t ena                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -10989,9 +10989,9 @@ union cvmx_dtx_rfif_ctl {
 	uint64_t reserved_5_63                : 59;
 	uint64_t active                       : 1;  /**< Force block's gated clocks on, so that the state of idle signals may be captured. */
 	uint64_t reserved_2_3                 : 2;
-	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block debug data.
-                                                         Not applicable when software directly reads the DAT(0..1) registers.  For diagnostic use
-                                                         only. */
+	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
+                                                         debug data. Not applicable when software directly reads the DAT(0..1) registers.
+                                                         For diagnostic use only. */
 	uint64_t swap                         : 1;  /**< Swap the high and low 36-bit debug bus outputs. */
 #else
 	uint64_t swap                         : 1;
@@ -11013,8 +11013,8 @@ union cvmx_dtx_rfif_datx {
 	struct cvmx_dtx_rfif_datx_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the ability to
-                                                         peek into blocks during an OCLA capture without OCLA reconfiguration. */
+	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                         ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
 #else
 	uint64_t raw                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -11032,8 +11032,8 @@ union cvmx_dtx_rfif_enax {
 	struct cvmx_dtx_rfif_enax_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug buses. Normally
-                                                         only one block will drive each bit. */
+	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                         buses. Normally only one block will drive each bit. */
 #else
 	uint64_t ena                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -11089,9 +11089,9 @@ union cvmx_dtx_rmap_ctl {
 	uint64_t reserved_5_63                : 59;
 	uint64_t active                       : 1;  /**< Force block's gated clocks on, so that the state of idle signals may be captured. */
 	uint64_t reserved_2_3                 : 2;
-	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block debug data.
-                                                         Not applicable when software directly reads the DAT(0..1) registers.  For diagnostic use
-                                                         only. */
+	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
+                                                         debug data. Not applicable when software directly reads the DAT(0..1) registers.
+                                                         For diagnostic use only. */
 	uint64_t swap                         : 1;  /**< Swap the high and low 36-bit debug bus outputs. */
 #else
 	uint64_t swap                         : 1;
@@ -11113,8 +11113,8 @@ union cvmx_dtx_rmap_datx {
 	struct cvmx_dtx_rmap_datx_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the ability to
-                                                         peek into blocks during an OCLA capture without OCLA reconfiguration. */
+	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                         ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
 #else
 	uint64_t raw                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -11132,8 +11132,8 @@ union cvmx_dtx_rmap_enax {
 	struct cvmx_dtx_rmap_enax_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug buses. Normally
-                                                         only one block will drive each bit. */
+	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                         buses. Normally only one block will drive each bit. */
 #else
 	uint64_t ena                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -11177,7 +11177,7 @@ union cvmx_dtx_rnm_bcst_rsp {
 	} s;
 	struct cvmx_dtx_rnm_bcst_rsp_s        cn73xx;
 	struct cvmx_dtx_rnm_bcst_rsp_s        cn78xx;
-	struct cvmx_dtx_rnm_bcst_rsp_s        cn78xxp2;
+	struct cvmx_dtx_rnm_bcst_rsp_s        cn78xxp1;
 	struct cvmx_dtx_rnm_bcst_rsp_s        cnf75xx;
 };
 typedef union cvmx_dtx_rnm_bcst_rsp cvmx_dtx_rnm_bcst_rsp_t;
@@ -11192,9 +11192,9 @@ union cvmx_dtx_rnm_ctl {
 	uint64_t reserved_5_63                : 59;
 	uint64_t active                       : 1;  /**< Force block's gated clocks on, so that the state of idle signals may be captured. */
 	uint64_t reserved_2_3                 : 2;
-	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block debug data.
-                                                         Not applicable when software directly reads the DAT(0..1) registers.  For diagnostic use
-                                                         only. */
+	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
+                                                         debug data. Not applicable when software directly reads the DAT(0..1) registers.
+                                                         For diagnostic use only. */
 	uint64_t swap                         : 1;  /**< Swap the high and low 36-bit debug bus outputs. */
 #else
 	uint64_t swap                         : 1;
@@ -11206,7 +11206,7 @@ union cvmx_dtx_rnm_ctl {
 	} s;
 	struct cvmx_dtx_rnm_ctl_s             cn73xx;
 	struct cvmx_dtx_rnm_ctl_s             cn78xx;
-	struct cvmx_dtx_rnm_ctl_s             cn78xxp2;
+	struct cvmx_dtx_rnm_ctl_s             cn78xxp1;
 	struct cvmx_dtx_rnm_ctl_s             cnf75xx;
 };
 typedef union cvmx_dtx_rnm_ctl cvmx_dtx_rnm_ctl_t;
@@ -11219,8 +11219,8 @@ union cvmx_dtx_rnm_datx {
 	struct cvmx_dtx_rnm_datx_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the ability to
-                                                         peek into blocks during an OCLA capture without OCLA reconfiguration. */
+	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                         ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
 #else
 	uint64_t raw                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -11228,7 +11228,7 @@ union cvmx_dtx_rnm_datx {
 	} s;
 	struct cvmx_dtx_rnm_datx_s            cn73xx;
 	struct cvmx_dtx_rnm_datx_s            cn78xx;
-	struct cvmx_dtx_rnm_datx_s            cn78xxp2;
+	struct cvmx_dtx_rnm_datx_s            cn78xxp1;
 	struct cvmx_dtx_rnm_datx_s            cnf75xx;
 };
 typedef union cvmx_dtx_rnm_datx cvmx_dtx_rnm_datx_t;
@@ -11241,8 +11241,8 @@ union cvmx_dtx_rnm_enax {
 	struct cvmx_dtx_rnm_enax_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug buses. Normally
-                                                         only one block will drive each bit. */
+	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                         buses. Normally only one block will drive each bit. */
 #else
 	uint64_t ena                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -11250,7 +11250,7 @@ union cvmx_dtx_rnm_enax {
 	} s;
 	struct cvmx_dtx_rnm_enax_s            cn73xx;
 	struct cvmx_dtx_rnm_enax_s            cn78xx;
-	struct cvmx_dtx_rnm_enax_s            cn78xxp2;
+	struct cvmx_dtx_rnm_enax_s            cn78xxp1;
 	struct cvmx_dtx_rnm_enax_s            cnf75xx;
 };
 typedef union cvmx_dtx_rnm_enax cvmx_dtx_rnm_enax_t;
@@ -11271,7 +11271,7 @@ union cvmx_dtx_rnm_selx {
 	} s;
 	struct cvmx_dtx_rnm_selx_s            cn73xx;
 	struct cvmx_dtx_rnm_selx_s            cn78xx;
-	struct cvmx_dtx_rnm_selx_s            cn78xxp2;
+	struct cvmx_dtx_rnm_selx_s            cn78xxp1;
 	struct cvmx_dtx_rnm_selx_s            cnf75xx;
 };
 typedef union cvmx_dtx_rnm_selx cvmx_dtx_rnm_selx_t;
@@ -11294,7 +11294,7 @@ union cvmx_dtx_rst_bcst_rsp {
 	struct cvmx_dtx_rst_bcst_rsp_s        cn70xxp1;
 	struct cvmx_dtx_rst_bcst_rsp_s        cn73xx;
 	struct cvmx_dtx_rst_bcst_rsp_s        cn78xx;
-	struct cvmx_dtx_rst_bcst_rsp_s        cn78xxp2;
+	struct cvmx_dtx_rst_bcst_rsp_s        cn78xxp1;
 	struct cvmx_dtx_rst_bcst_rsp_s        cnf75xx;
 };
 typedef union cvmx_dtx_rst_bcst_rsp cvmx_dtx_rst_bcst_rsp_t;
@@ -11309,9 +11309,9 @@ union cvmx_dtx_rst_ctl {
 	uint64_t reserved_5_63                : 59;
 	uint64_t active                       : 1;  /**< Force block's gated clocks on, so that the state of idle signals may be captured. */
 	uint64_t reserved_2_3                 : 2;
-	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block debug data.
-                                                         Not applicable when software directly reads the DAT(0..1) registers.  For diagnostic use
-                                                         only. */
+	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
+                                                         debug data. Not applicable when software directly reads the DAT(0..1) registers.
+                                                         For diagnostic use only. */
 	uint64_t swap                         : 1;  /**< Swap the high and low 36-bit debug bus outputs. */
 #else
 	uint64_t swap                         : 1;
@@ -11325,7 +11325,7 @@ union cvmx_dtx_rst_ctl {
 	struct cvmx_dtx_rst_ctl_s             cn70xxp1;
 	struct cvmx_dtx_rst_ctl_s             cn73xx;
 	struct cvmx_dtx_rst_ctl_s             cn78xx;
-	struct cvmx_dtx_rst_ctl_s             cn78xxp2;
+	struct cvmx_dtx_rst_ctl_s             cn78xxp1;
 	struct cvmx_dtx_rst_ctl_s             cnf75xx;
 };
 typedef union cvmx_dtx_rst_ctl cvmx_dtx_rst_ctl_t;
@@ -11338,8 +11338,8 @@ union cvmx_dtx_rst_datx {
 	struct cvmx_dtx_rst_datx_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the ability to
-                                                         peek into blocks during an OCLA capture without OCLA reconfiguration. */
+	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                         ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
 #else
 	uint64_t raw                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -11349,7 +11349,7 @@ union cvmx_dtx_rst_datx {
 	struct cvmx_dtx_rst_datx_s            cn70xxp1;
 	struct cvmx_dtx_rst_datx_s            cn73xx;
 	struct cvmx_dtx_rst_datx_s            cn78xx;
-	struct cvmx_dtx_rst_datx_s            cn78xxp2;
+	struct cvmx_dtx_rst_datx_s            cn78xxp1;
 	struct cvmx_dtx_rst_datx_s            cnf75xx;
 };
 typedef union cvmx_dtx_rst_datx cvmx_dtx_rst_datx_t;
@@ -11362,8 +11362,8 @@ union cvmx_dtx_rst_enax {
 	struct cvmx_dtx_rst_enax_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug buses. Normally
-                                                         only one block will drive each bit. */
+	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                         buses. Normally only one block will drive each bit. */
 #else
 	uint64_t ena                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -11373,7 +11373,7 @@ union cvmx_dtx_rst_enax {
 	struct cvmx_dtx_rst_enax_s            cn70xxp1;
 	struct cvmx_dtx_rst_enax_s            cn73xx;
 	struct cvmx_dtx_rst_enax_s            cn78xx;
-	struct cvmx_dtx_rst_enax_s            cn78xxp2;
+	struct cvmx_dtx_rst_enax_s            cn78xxp1;
 	struct cvmx_dtx_rst_enax_s            cnf75xx;
 };
 typedef union cvmx_dtx_rst_enax cvmx_dtx_rst_enax_t;
@@ -11396,7 +11396,7 @@ union cvmx_dtx_rst_selx {
 	struct cvmx_dtx_rst_selx_s            cn70xxp1;
 	struct cvmx_dtx_rst_selx_s            cn73xx;
 	struct cvmx_dtx_rst_selx_s            cn78xx;
-	struct cvmx_dtx_rst_selx_s            cn78xxp2;
+	struct cvmx_dtx_rst_selx_s            cn78xxp1;
 	struct cvmx_dtx_rst_selx_s            cnf75xx;
 };
 typedef union cvmx_dtx_rst_selx cvmx_dtx_rst_selx_t;
@@ -11431,9 +11431,9 @@ union cvmx_dtx_sata_ctl {
 	uint64_t reserved_5_63                : 59;
 	uint64_t active                       : 1;  /**< Force block's gated clocks on, so that the state of idle signals may be captured. */
 	uint64_t reserved_2_3                 : 2;
-	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block debug data.
-                                                         Not applicable when software directly reads the DAT(0..1) registers.  For diagnostic use
-                                                         only. */
+	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
+                                                         debug data. Not applicable when software directly reads the DAT(0..1) registers.
+                                                         For diagnostic use only. */
 	uint64_t swap                         : 1;  /**< Swap the high and low 36-bit debug bus outputs. */
 #else
 	uint64_t swap                         : 1;
@@ -11457,8 +11457,8 @@ union cvmx_dtx_sata_datx {
 	struct cvmx_dtx_sata_datx_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the ability to
-                                                         peek into blocks during an OCLA capture without OCLA reconfiguration. */
+	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                         ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
 #else
 	uint64_t raw                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -11478,8 +11478,8 @@ union cvmx_dtx_sata_enax {
 	struct cvmx_dtx_sata_enax_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug buses. Normally
-                                                         only one block will drive each bit. */
+	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                         buses. Normally only one block will drive each bit. */
 #else
 	uint64_t ena                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -11529,7 +11529,7 @@ union cvmx_dtx_sli_bcst_rsp {
 	struct cvmx_dtx_sli_bcst_rsp_s        cn70xxp1;
 	struct cvmx_dtx_sli_bcst_rsp_s        cn73xx;
 	struct cvmx_dtx_sli_bcst_rsp_s        cn78xx;
-	struct cvmx_dtx_sli_bcst_rsp_s        cn78xxp2;
+	struct cvmx_dtx_sli_bcst_rsp_s        cn78xxp1;
 	struct cvmx_dtx_sli_bcst_rsp_s        cnf75xx;
 };
 typedef union cvmx_dtx_sli_bcst_rsp cvmx_dtx_sli_bcst_rsp_t;
@@ -11544,9 +11544,9 @@ union cvmx_dtx_sli_ctl {
 	uint64_t reserved_5_63                : 59;
 	uint64_t active                       : 1;  /**< Force block's gated clocks on, so that the state of idle signals may be captured. */
 	uint64_t reserved_2_3                 : 2;
-	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block debug data.
-                                                         Not applicable when software directly reads the DAT(0..1) registers.  For diagnostic use
-                                                         only. */
+	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
+                                                         debug data. Not applicable when software directly reads the DAT(0..1) registers.
+                                                         For diagnostic use only. */
 	uint64_t swap                         : 1;  /**< Swap the high and low 36-bit debug bus outputs. */
 #else
 	uint64_t swap                         : 1;
@@ -11560,7 +11560,7 @@ union cvmx_dtx_sli_ctl {
 	struct cvmx_dtx_sli_ctl_s             cn70xxp1;
 	struct cvmx_dtx_sli_ctl_s             cn73xx;
 	struct cvmx_dtx_sli_ctl_s             cn78xx;
-	struct cvmx_dtx_sli_ctl_s             cn78xxp2;
+	struct cvmx_dtx_sli_ctl_s             cn78xxp1;
 	struct cvmx_dtx_sli_ctl_s             cnf75xx;
 };
 typedef union cvmx_dtx_sli_ctl cvmx_dtx_sli_ctl_t;
@@ -11573,8 +11573,8 @@ union cvmx_dtx_sli_datx {
 	struct cvmx_dtx_sli_datx_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the ability to
-                                                         peek into blocks during an OCLA capture without OCLA reconfiguration. */
+	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                         ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
 #else
 	uint64_t raw                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -11584,7 +11584,7 @@ union cvmx_dtx_sli_datx {
 	struct cvmx_dtx_sli_datx_s            cn70xxp1;
 	struct cvmx_dtx_sli_datx_s            cn73xx;
 	struct cvmx_dtx_sli_datx_s            cn78xx;
-	struct cvmx_dtx_sli_datx_s            cn78xxp2;
+	struct cvmx_dtx_sli_datx_s            cn78xxp1;
 	struct cvmx_dtx_sli_datx_s            cnf75xx;
 };
 typedef union cvmx_dtx_sli_datx cvmx_dtx_sli_datx_t;
@@ -11597,8 +11597,8 @@ union cvmx_dtx_sli_enax {
 	struct cvmx_dtx_sli_enax_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug buses. Normally
-                                                         only one block will drive each bit. */
+	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                         buses. Normally only one block will drive each bit. */
 #else
 	uint64_t ena                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -11608,7 +11608,7 @@ union cvmx_dtx_sli_enax {
 	struct cvmx_dtx_sli_enax_s            cn70xxp1;
 	struct cvmx_dtx_sli_enax_s            cn73xx;
 	struct cvmx_dtx_sli_enax_s            cn78xx;
-	struct cvmx_dtx_sli_enax_s            cn78xxp2;
+	struct cvmx_dtx_sli_enax_s            cn78xxp1;
 	struct cvmx_dtx_sli_enax_s            cnf75xx;
 };
 typedef union cvmx_dtx_sli_enax cvmx_dtx_sli_enax_t;
@@ -11631,7 +11631,7 @@ union cvmx_dtx_sli_selx {
 	struct cvmx_dtx_sli_selx_s            cn70xxp1;
 	struct cvmx_dtx_sli_selx_s            cn73xx;
 	struct cvmx_dtx_sli_selx_s            cn78xx;
-	struct cvmx_dtx_sli_selx_s            cn78xxp2;
+	struct cvmx_dtx_sli_selx_s            cn78xxp1;
 	struct cvmx_dtx_sli_selx_s            cnf75xx;
 };
 typedef union cvmx_dtx_sli_selx cvmx_dtx_sli_selx_t;
@@ -11664,9 +11664,9 @@ union cvmx_dtx_spem_ctl {
 	uint64_t reserved_5_63                : 59;
 	uint64_t active                       : 1;  /**< Force block's gated clocks on, so that the state of idle signals may be captured. */
 	uint64_t reserved_2_3                 : 2;
-	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block debug data.
-                                                         Not applicable when software directly reads the DAT(0..1) registers.  For diagnostic use
-                                                         only. */
+	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
+                                                         debug data. Not applicable when software directly reads the DAT(0..1) registers.
+                                                         For diagnostic use only. */
 	uint64_t swap                         : 1;  /**< Swap the high and low 36-bit debug bus outputs. */
 #else
 	uint64_t swap                         : 1;
@@ -11688,8 +11688,8 @@ union cvmx_dtx_spem_datx {
 	struct cvmx_dtx_spem_datx_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the ability to
-                                                         peek into blocks during an OCLA capture without OCLA reconfiguration. */
+	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                         ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
 #else
 	uint64_t raw                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -11707,8 +11707,8 @@ union cvmx_dtx_spem_enax {
 	struct cvmx_dtx_spem_enax_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug buses. Normally
-                                                         only one block will drive each bit. */
+	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                         buses. Normally only one block will drive each bit. */
 #else
 	uint64_t ena                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -11764,9 +11764,9 @@ union cvmx_dtx_sriox_ctl {
 	uint64_t reserved_5_63                : 59;
 	uint64_t active                       : 1;  /**< Force block's gated clocks on, so that the state of idle signals may be captured. */
 	uint64_t reserved_2_3                 : 2;
-	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block debug data.
-                                                         Not applicable when software directly reads the DAT(0..1) registers.  For diagnostic use
-                                                         only. */
+	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
+                                                         debug data. Not applicable when software directly reads the DAT(0..1) registers.
+                                                         For diagnostic use only. */
 	uint64_t swap                         : 1;  /**< Swap the high and low 36-bit debug bus outputs. */
 #else
 	uint64_t swap                         : 1;
@@ -11788,8 +11788,8 @@ union cvmx_dtx_sriox_datx {
 	struct cvmx_dtx_sriox_datx_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the ability to
-                                                         peek into blocks during an OCLA capture without OCLA reconfiguration. */
+	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                         ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
 #else
 	uint64_t raw                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -11807,8 +11807,8 @@ union cvmx_dtx_sriox_enax {
 	struct cvmx_dtx_sriox_enax_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug buses. Normally
-                                                         only one block will drive each bit. */
+	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                         buses. Normally only one block will drive each bit. */
 #else
 	uint64_t ena                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -11852,7 +11852,7 @@ union cvmx_dtx_sso_bcst_rsp {
 	} s;
 	struct cvmx_dtx_sso_bcst_rsp_s        cn73xx;
 	struct cvmx_dtx_sso_bcst_rsp_s        cn78xx;
-	struct cvmx_dtx_sso_bcst_rsp_s        cn78xxp2;
+	struct cvmx_dtx_sso_bcst_rsp_s        cn78xxp1;
 	struct cvmx_dtx_sso_bcst_rsp_s        cnf75xx;
 };
 typedef union cvmx_dtx_sso_bcst_rsp cvmx_dtx_sso_bcst_rsp_t;
@@ -11867,9 +11867,9 @@ union cvmx_dtx_sso_ctl {
 	uint64_t reserved_5_63                : 59;
 	uint64_t active                       : 1;  /**< Force block's gated clocks on, so that the state of idle signals may be captured. */
 	uint64_t reserved_2_3                 : 2;
-	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block debug data.
-                                                         Not applicable when software directly reads the DAT(0..1) registers.  For diagnostic use
-                                                         only. */
+	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
+                                                         debug data. Not applicable when software directly reads the DAT(0..1) registers.
+                                                         For diagnostic use only. */
 	uint64_t swap                         : 1;  /**< Swap the high and low 36-bit debug bus outputs. */
 #else
 	uint64_t swap                         : 1;
@@ -11881,7 +11881,7 @@ union cvmx_dtx_sso_ctl {
 	} s;
 	struct cvmx_dtx_sso_ctl_s             cn73xx;
 	struct cvmx_dtx_sso_ctl_s             cn78xx;
-	struct cvmx_dtx_sso_ctl_s             cn78xxp2;
+	struct cvmx_dtx_sso_ctl_s             cn78xxp1;
 	struct cvmx_dtx_sso_ctl_s             cnf75xx;
 };
 typedef union cvmx_dtx_sso_ctl cvmx_dtx_sso_ctl_t;
@@ -11894,8 +11894,8 @@ union cvmx_dtx_sso_datx {
 	struct cvmx_dtx_sso_datx_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the ability to
-                                                         peek into blocks during an OCLA capture without OCLA reconfiguration. */
+	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                         ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
 #else
 	uint64_t raw                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -11903,7 +11903,7 @@ union cvmx_dtx_sso_datx {
 	} s;
 	struct cvmx_dtx_sso_datx_s            cn73xx;
 	struct cvmx_dtx_sso_datx_s            cn78xx;
-	struct cvmx_dtx_sso_datx_s            cn78xxp2;
+	struct cvmx_dtx_sso_datx_s            cn78xxp1;
 	struct cvmx_dtx_sso_datx_s            cnf75xx;
 };
 typedef union cvmx_dtx_sso_datx cvmx_dtx_sso_datx_t;
@@ -11916,8 +11916,8 @@ union cvmx_dtx_sso_enax {
 	struct cvmx_dtx_sso_enax_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug buses. Normally
-                                                         only one block will drive each bit. */
+	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                         buses. Normally only one block will drive each bit. */
 #else
 	uint64_t ena                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -11925,7 +11925,7 @@ union cvmx_dtx_sso_enax {
 	} s;
 	struct cvmx_dtx_sso_enax_s            cn73xx;
 	struct cvmx_dtx_sso_enax_s            cn78xx;
-	struct cvmx_dtx_sso_enax_s            cn78xxp2;
+	struct cvmx_dtx_sso_enax_s            cn78xxp1;
 	struct cvmx_dtx_sso_enax_s            cnf75xx;
 };
 typedef union cvmx_dtx_sso_enax cvmx_dtx_sso_enax_t;
@@ -11946,7 +11946,7 @@ union cvmx_dtx_sso_selx {
 	} s;
 	struct cvmx_dtx_sso_selx_s            cn73xx;
 	struct cvmx_dtx_sso_selx_s            cn78xx;
-	struct cvmx_dtx_sso_selx_s            cn78xxp2;
+	struct cvmx_dtx_sso_selx_s            cn78xxp1;
 	struct cvmx_dtx_sso_selx_s            cnf75xx;
 };
 typedef union cvmx_dtx_sso_selx cvmx_dtx_sso_selx_t;
@@ -11979,9 +11979,9 @@ union cvmx_dtx_tdec_ctl {
 	uint64_t reserved_5_63                : 59;
 	uint64_t active                       : 1;  /**< Force block's gated clocks on, so that the state of idle signals may be captured. */
 	uint64_t reserved_2_3                 : 2;
-	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block debug data.
-                                                         Not applicable when software directly reads the DAT(0..1) registers.  For diagnostic use
-                                                         only. */
+	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
+                                                         debug data. Not applicable when software directly reads the DAT(0..1) registers.
+                                                         For diagnostic use only. */
 	uint64_t swap                         : 1;  /**< Swap the high and low 36-bit debug bus outputs. */
 #else
 	uint64_t swap                         : 1;
@@ -12003,8 +12003,8 @@ union cvmx_dtx_tdec_datx {
 	struct cvmx_dtx_tdec_datx_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the ability to
-                                                         peek into blocks during an OCLA capture without OCLA reconfiguration. */
+	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                         ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
 #else
 	uint64_t raw                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -12022,8 +12022,8 @@ union cvmx_dtx_tdec_enax {
 	struct cvmx_dtx_tdec_enax_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug buses. Normally
-                                                         only one block will drive each bit. */
+	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                         buses. Normally only one block will drive each bit. */
 #else
 	uint64_t ena                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -12069,7 +12069,7 @@ union cvmx_dtx_tim_bcst_rsp {
 	struct cvmx_dtx_tim_bcst_rsp_s        cn70xxp1;
 	struct cvmx_dtx_tim_bcst_rsp_s        cn73xx;
 	struct cvmx_dtx_tim_bcst_rsp_s        cn78xx;
-	struct cvmx_dtx_tim_bcst_rsp_s        cn78xxp2;
+	struct cvmx_dtx_tim_bcst_rsp_s        cn78xxp1;
 	struct cvmx_dtx_tim_bcst_rsp_s        cnf75xx;
 };
 typedef union cvmx_dtx_tim_bcst_rsp cvmx_dtx_tim_bcst_rsp_t;
@@ -12084,9 +12084,9 @@ union cvmx_dtx_tim_ctl {
 	uint64_t reserved_5_63                : 59;
 	uint64_t active                       : 1;  /**< Force block's gated clocks on, so that the state of idle signals may be captured. */
 	uint64_t reserved_2_3                 : 2;
-	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block debug data.
-                                                         Not applicable when software directly reads the DAT(0..1) registers.  For diagnostic use
-                                                         only. */
+	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
+                                                         debug data. Not applicable when software directly reads the DAT(0..1) registers.
+                                                         For diagnostic use only. */
 	uint64_t swap                         : 1;  /**< Swap the high and low 36-bit debug bus outputs. */
 #else
 	uint64_t swap                         : 1;
@@ -12100,7 +12100,7 @@ union cvmx_dtx_tim_ctl {
 	struct cvmx_dtx_tim_ctl_s             cn70xxp1;
 	struct cvmx_dtx_tim_ctl_s             cn73xx;
 	struct cvmx_dtx_tim_ctl_s             cn78xx;
-	struct cvmx_dtx_tim_ctl_s             cn78xxp2;
+	struct cvmx_dtx_tim_ctl_s             cn78xxp1;
 	struct cvmx_dtx_tim_ctl_s             cnf75xx;
 };
 typedef union cvmx_dtx_tim_ctl cvmx_dtx_tim_ctl_t;
@@ -12113,8 +12113,8 @@ union cvmx_dtx_tim_datx {
 	struct cvmx_dtx_tim_datx_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the ability to
-                                                         peek into blocks during an OCLA capture without OCLA reconfiguration. */
+	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                         ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
 #else
 	uint64_t raw                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -12124,7 +12124,7 @@ union cvmx_dtx_tim_datx {
 	struct cvmx_dtx_tim_datx_s            cn70xxp1;
 	struct cvmx_dtx_tim_datx_s            cn73xx;
 	struct cvmx_dtx_tim_datx_s            cn78xx;
-	struct cvmx_dtx_tim_datx_s            cn78xxp2;
+	struct cvmx_dtx_tim_datx_s            cn78xxp1;
 	struct cvmx_dtx_tim_datx_s            cnf75xx;
 };
 typedef union cvmx_dtx_tim_datx cvmx_dtx_tim_datx_t;
@@ -12137,8 +12137,8 @@ union cvmx_dtx_tim_enax {
 	struct cvmx_dtx_tim_enax_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug buses. Normally
-                                                         only one block will drive each bit. */
+	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                         buses. Normally only one block will drive each bit. */
 #else
 	uint64_t ena                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -12148,7 +12148,7 @@ union cvmx_dtx_tim_enax {
 	struct cvmx_dtx_tim_enax_s            cn70xxp1;
 	struct cvmx_dtx_tim_enax_s            cn73xx;
 	struct cvmx_dtx_tim_enax_s            cn78xx;
-	struct cvmx_dtx_tim_enax_s            cn78xxp2;
+	struct cvmx_dtx_tim_enax_s            cn78xxp1;
 	struct cvmx_dtx_tim_enax_s            cnf75xx;
 };
 typedef union cvmx_dtx_tim_enax cvmx_dtx_tim_enax_t;
@@ -12171,7 +12171,7 @@ union cvmx_dtx_tim_selx {
 	struct cvmx_dtx_tim_selx_s            cn70xxp1;
 	struct cvmx_dtx_tim_selx_s            cn73xx;
 	struct cvmx_dtx_tim_selx_s            cn78xx;
-	struct cvmx_dtx_tim_selx_s            cn78xxp2;
+	struct cvmx_dtx_tim_selx_s            cn78xxp1;
 	struct cvmx_dtx_tim_selx_s            cnf75xx;
 };
 typedef union cvmx_dtx_tim_selx cvmx_dtx_tim_selx_t;
@@ -12204,9 +12204,9 @@ union cvmx_dtx_ulfe_ctl {
 	uint64_t reserved_5_63                : 59;
 	uint64_t active                       : 1;  /**< Force block's gated clocks on, so that the state of idle signals may be captured. */
 	uint64_t reserved_2_3                 : 2;
-	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block debug data.
-                                                         Not applicable when software directly reads the DAT(0..1) registers.  For diagnostic use
-                                                         only. */
+	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
+                                                         debug data. Not applicable when software directly reads the DAT(0..1) registers.
+                                                         For diagnostic use only. */
 	uint64_t swap                         : 1;  /**< Swap the high and low 36-bit debug bus outputs. */
 #else
 	uint64_t swap                         : 1;
@@ -12228,8 +12228,8 @@ union cvmx_dtx_ulfe_datx {
 	struct cvmx_dtx_ulfe_datx_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the ability to
-                                                         peek into blocks during an OCLA capture without OCLA reconfiguration. */
+	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                         ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
 #else
 	uint64_t raw                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -12247,8 +12247,8 @@ union cvmx_dtx_ulfe_enax {
 	struct cvmx_dtx_ulfe_enax_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug buses. Normally
-                                                         only one block will drive each bit. */
+	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                         buses. Normally only one block will drive each bit. */
 #else
 	uint64_t ena                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -12307,9 +12307,9 @@ union cvmx_dtx_usbdrdx_ctl {
 	uint64_t reserved_5_63                : 59;
 	uint64_t active                       : 1;  /**< Force block's gated clocks on, so that the state of idle signals may be captured. */
 	uint64_t reserved_2_3                 : 2;
-	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block debug data.
-                                                         Not applicable when software directly reads the DAT(0..1) registers.  For diagnostic use
-                                                         only. */
+	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
+                                                         debug data. Not applicable when software directly reads the DAT(0..1) registers.
+                                                         For diagnostic use only. */
 	uint64_t swap                         : 1;  /**< Swap the high and low 36-bit debug bus outputs. */
 #else
 	uint64_t swap                         : 1;
@@ -12334,8 +12334,8 @@ union cvmx_dtx_usbdrdx_datx {
 	struct cvmx_dtx_usbdrdx_datx_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the ability to
-                                                         peek into blocks during an OCLA capture without OCLA reconfiguration. */
+	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                         ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
 #else
 	uint64_t raw                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -12356,8 +12356,8 @@ union cvmx_dtx_usbdrdx_enax {
 	struct cvmx_dtx_usbdrdx_enax_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug buses. Normally
-                                                         only one block will drive each bit. */
+	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                         buses. Normally only one block will drive each bit. */
 #else
 	uint64_t ena                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -12406,7 +12406,7 @@ union cvmx_dtx_usbhx_bcst_rsp {
 #endif
 	} s;
 	struct cvmx_dtx_usbhx_bcst_rsp_s      cn78xx;
-	struct cvmx_dtx_usbhx_bcst_rsp_s      cn78xxp2;
+	struct cvmx_dtx_usbhx_bcst_rsp_s      cn78xxp1;
 };
 typedef union cvmx_dtx_usbhx_bcst_rsp cvmx_dtx_usbhx_bcst_rsp_t;
 
@@ -12420,9 +12420,9 @@ union cvmx_dtx_usbhx_ctl {
 	uint64_t reserved_5_63                : 59;
 	uint64_t active                       : 1;  /**< Force block's gated clocks on, so that the state of idle signals may be captured. */
 	uint64_t reserved_2_3                 : 2;
-	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block debug data.
-                                                         Not applicable when software directly reads the DAT(0..1) registers.  For diagnostic use
-                                                         only. */
+	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
+                                                         debug data. Not applicable when software directly reads the DAT(0..1) registers.
+                                                         For diagnostic use only. */
 	uint64_t swap                         : 1;  /**< Swap the high and low 36-bit debug bus outputs. */
 #else
 	uint64_t swap                         : 1;
@@ -12433,7 +12433,7 @@ union cvmx_dtx_usbhx_ctl {
 #endif
 	} s;
 	struct cvmx_dtx_usbhx_ctl_s           cn78xx;
-	struct cvmx_dtx_usbhx_ctl_s           cn78xxp2;
+	struct cvmx_dtx_usbhx_ctl_s           cn78xxp1;
 };
 typedef union cvmx_dtx_usbhx_ctl cvmx_dtx_usbhx_ctl_t;
 
@@ -12445,15 +12445,15 @@ union cvmx_dtx_usbhx_datx {
 	struct cvmx_dtx_usbhx_datx_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the ability to
-                                                         peek into blocks during an OCLA capture without OCLA reconfiguration. */
+	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                         ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
 #else
 	uint64_t raw                          : 36;
 	uint64_t reserved_36_63               : 28;
 #endif
 	} s;
 	struct cvmx_dtx_usbhx_datx_s          cn78xx;
-	struct cvmx_dtx_usbhx_datx_s          cn78xxp2;
+	struct cvmx_dtx_usbhx_datx_s          cn78xxp1;
 };
 typedef union cvmx_dtx_usbhx_datx cvmx_dtx_usbhx_datx_t;
 
@@ -12465,15 +12465,15 @@ union cvmx_dtx_usbhx_enax {
 	struct cvmx_dtx_usbhx_enax_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug buses. Normally
-                                                         only one block will drive each bit. */
+	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                         buses. Normally only one block will drive each bit. */
 #else
 	uint64_t ena                          : 36;
 	uint64_t reserved_36_63               : 28;
 #endif
 	} s;
 	struct cvmx_dtx_usbhx_enax_s          cn78xx;
-	struct cvmx_dtx_usbhx_enax_s          cn78xxp2;
+	struct cvmx_dtx_usbhx_enax_s          cn78xxp1;
 };
 typedef union cvmx_dtx_usbhx_enax cvmx_dtx_usbhx_enax_t;
 
@@ -12492,7 +12492,7 @@ union cvmx_dtx_usbhx_selx {
 #endif
 	} s;
 	struct cvmx_dtx_usbhx_selx_s          cn78xx;
-	struct cvmx_dtx_usbhx_selx_s          cn78xxp2;
+	struct cvmx_dtx_usbhx_selx_s          cn78xxp1;
 };
 typedef union cvmx_dtx_usbhx_selx cvmx_dtx_usbhx_selx_t;
 
@@ -12524,9 +12524,9 @@ union cvmx_dtx_vdec_ctl {
 	uint64_t reserved_5_63                : 59;
 	uint64_t active                       : 1;  /**< Force block's gated clocks on, so that the state of idle signals may be captured. */
 	uint64_t reserved_2_3                 : 2;
-	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block debug data.
-                                                         Not applicable when software directly reads the DAT(0..1) registers.  For diagnostic use
-                                                         only. */
+	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
+                                                         debug data. Not applicable when software directly reads the DAT(0..1) registers.
+                                                         For diagnostic use only. */
 	uint64_t swap                         : 1;  /**< Swap the high and low 36-bit debug bus outputs. */
 #else
 	uint64_t swap                         : 1;
@@ -12548,8 +12548,8 @@ union cvmx_dtx_vdec_datx {
 	struct cvmx_dtx_vdec_datx_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the ability to
-                                                         peek into blocks during an OCLA capture without OCLA reconfiguration. */
+	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                         ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
 #else
 	uint64_t raw                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -12567,8 +12567,8 @@ union cvmx_dtx_vdec_enax {
 	struct cvmx_dtx_vdec_enax_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug buses. Normally
-                                                         only one block will drive each bit. */
+	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                         buses. Normally only one block will drive each bit. */
 #else
 	uint64_t ena                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -12624,9 +12624,9 @@ union cvmx_dtx_wpse_ctl {
 	uint64_t reserved_5_63                : 59;
 	uint64_t active                       : 1;  /**< Force block's gated clocks on, so that the state of idle signals may be captured. */
 	uint64_t reserved_2_3                 : 2;
-	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block debug data.
-                                                         Not applicable when software directly reads the DAT(0..1) registers.  For diagnostic use
-                                                         only. */
+	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
+                                                         debug data. Not applicable when software directly reads the DAT(0..1) registers.
+                                                         For diagnostic use only. */
 	uint64_t swap                         : 1;  /**< Swap the high and low 36-bit debug bus outputs. */
 #else
 	uint64_t swap                         : 1;
@@ -12648,8 +12648,8 @@ union cvmx_dtx_wpse_datx {
 	struct cvmx_dtx_wpse_datx_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the ability to
-                                                         peek into blocks during an OCLA capture without OCLA reconfiguration. */
+	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                         ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
 #else
 	uint64_t raw                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -12667,8 +12667,8 @@ union cvmx_dtx_wpse_enax {
 	struct cvmx_dtx_wpse_enax_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug buses. Normally
-                                                         only one block will drive each bit. */
+	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                         buses. Normally only one block will drive each bit. */
 #else
 	uint64_t ena                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -12724,9 +12724,9 @@ union cvmx_dtx_wrce_ctl {
 	uint64_t reserved_5_63                : 59;
 	uint64_t active                       : 1;  /**< Force block's gated clocks on, so that the state of idle signals may be captured. */
 	uint64_t reserved_2_3                 : 2;
-	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block debug data.
-                                                         Not applicable when software directly reads the DAT(0..1) registers.  For diagnostic use
-                                                         only. */
+	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
+                                                         debug data. Not applicable when software directly reads the DAT(0..1) registers.
+                                                         For diagnostic use only. */
 	uint64_t swap                         : 1;  /**< Swap the high and low 36-bit debug bus outputs. */
 #else
 	uint64_t swap                         : 1;
@@ -12748,8 +12748,8 @@ union cvmx_dtx_wrce_datx {
 	struct cvmx_dtx_wrce_datx_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the ability to
-                                                         peek into blocks during an OCLA capture without OCLA reconfiguration. */
+	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                         ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
 #else
 	uint64_t raw                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -12767,8 +12767,8 @@ union cvmx_dtx_wrce_enax {
 	struct cvmx_dtx_wrce_enax_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug buses. Normally
-                                                         only one block will drive each bit. */
+	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                         buses. Normally only one block will drive each bit. */
 #else
 	uint64_t ena                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -12824,9 +12824,9 @@ union cvmx_dtx_wrde_ctl {
 	uint64_t reserved_5_63                : 59;
 	uint64_t active                       : 1;  /**< Force block's gated clocks on, so that the state of idle signals may be captured. */
 	uint64_t reserved_2_3                 : 2;
-	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block debug data.
-                                                         Not applicable when software directly reads the DAT(0..1) registers.  For diagnostic use
-                                                         only. */
+	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
+                                                         debug data. Not applicable when software directly reads the DAT(0..1) registers.
+                                                         For diagnostic use only. */
 	uint64_t swap                         : 1;  /**< Swap the high and low 36-bit debug bus outputs. */
 #else
 	uint64_t swap                         : 1;
@@ -12848,8 +12848,8 @@ union cvmx_dtx_wrde_datx {
 	struct cvmx_dtx_wrde_datx_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the ability to
-                                                         peek into blocks during an OCLA capture without OCLA reconfiguration. */
+	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                         ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
 #else
 	uint64_t raw                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -12867,8 +12867,8 @@ union cvmx_dtx_wrde_enax {
 	struct cvmx_dtx_wrde_enax_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug buses. Normally
-                                                         only one block will drive each bit. */
+	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                         buses. Normally only one block will drive each bit. */
 #else
 	uint64_t ena                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -12924,9 +12924,9 @@ union cvmx_dtx_wrse_ctl {
 	uint64_t reserved_5_63                : 59;
 	uint64_t active                       : 1;  /**< Force block's gated clocks on, so that the state of idle signals may be captured. */
 	uint64_t reserved_2_3                 : 2;
-	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block debug data.
-                                                         Not applicable when software directly reads the DAT(0..1) registers.  For diagnostic use
-                                                         only. */
+	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
+                                                         debug data. Not applicable when software directly reads the DAT(0..1) registers.
+                                                         For diagnostic use only. */
 	uint64_t swap                         : 1;  /**< Swap the high and low 36-bit debug bus outputs. */
 #else
 	uint64_t swap                         : 1;
@@ -12948,8 +12948,8 @@ union cvmx_dtx_wrse_datx {
 	struct cvmx_dtx_wrse_datx_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the ability to
-                                                         peek into blocks during an OCLA capture without OCLA reconfiguration. */
+	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                         ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
 #else
 	uint64_t raw                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -12967,8 +12967,8 @@ union cvmx_dtx_wrse_enax {
 	struct cvmx_dtx_wrse_enax_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug buses. Normally
-                                                         only one block will drive each bit. */
+	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                         buses. Normally only one block will drive each bit. */
 #else
 	uint64_t ena                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -13024,9 +13024,9 @@ union cvmx_dtx_wtxe_ctl {
 	uint64_t reserved_5_63                : 59;
 	uint64_t active                       : 1;  /**< Force block's gated clocks on, so that the state of idle signals may be captured. */
 	uint64_t reserved_2_3                 : 2;
-	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block debug data.
-                                                         Not applicable when software directly reads the DAT(0..1) registers.  For diagnostic use
-                                                         only. */
+	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
+                                                         debug data. Not applicable when software directly reads the DAT(0..1) registers.
+                                                         For diagnostic use only. */
 	uint64_t swap                         : 1;  /**< Swap the high and low 36-bit debug bus outputs. */
 #else
 	uint64_t swap                         : 1;
@@ -13048,8 +13048,8 @@ union cvmx_dtx_wtxe_datx {
 	struct cvmx_dtx_wtxe_datx_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the ability to
-                                                         peek into blocks during an OCLA capture without OCLA reconfiguration. */
+	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                         ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
 #else
 	uint64_t raw                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -13067,8 +13067,8 @@ union cvmx_dtx_wtxe_enax {
 	struct cvmx_dtx_wtxe_enax_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug buses. Normally
-                                                         only one block will drive each bit. */
+	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                         buses. Normally only one block will drive each bit. */
 #else
 	uint64_t ena                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -13125,9 +13125,9 @@ union cvmx_dtx_xcv_ctl {
 	uint64_t reserved_5_63                : 59;
 	uint64_t active                       : 1;  /**< Force block's gated clocks on, so that the state of idle signals may be captured. */
 	uint64_t reserved_2_3                 : 2;
-	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block debug data.
-                                                         Not applicable when software directly reads the DAT(0..1) registers.  For diagnostic use
-                                                         only. */
+	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
+                                                         debug data. Not applicable when software directly reads the DAT(0..1) registers.
+                                                         For diagnostic use only. */
 	uint64_t swap                         : 1;  /**< Swap the high and low 36-bit debug bus outputs. */
 #else
 	uint64_t swap                         : 1;
@@ -13150,8 +13150,8 @@ union cvmx_dtx_xcv_datx {
 	struct cvmx_dtx_xcv_datx_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the ability to
-                                                         peek into blocks during an OCLA capture without OCLA reconfiguration. */
+	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                         ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
 #else
 	uint64_t raw                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -13170,8 +13170,8 @@ union cvmx_dtx_xcv_enax {
 	struct cvmx_dtx_xcv_enax_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug buses. Normally
-                                                         only one block will drive each bit. */
+	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                         buses. Normally only one block will drive each bit. */
 #else
 	uint64_t ena                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -13229,9 +13229,9 @@ union cvmx_dtx_xsx_ctl {
 	uint64_t reserved_5_63                : 59;
 	uint64_t active                       : 1;  /**< Force block's gated clocks on, so that the state of idle signals may be captured. */
 	uint64_t reserved_2_3                 : 2;
-	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block debug data.
-                                                         Not applicable when software directly reads the DAT(0..1) registers.  For diagnostic use
-                                                         only. */
+	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
+                                                         debug data. Not applicable when software directly reads the DAT(0..1) registers.
+                                                         For diagnostic use only. */
 	uint64_t swap                         : 1;  /**< Swap the high and low 36-bit debug bus outputs. */
 #else
 	uint64_t swap                         : 1;
@@ -13253,8 +13253,8 @@ union cvmx_dtx_xsx_datx {
 	struct cvmx_dtx_xsx_datx_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the ability to
-                                                         peek into blocks during an OCLA capture without OCLA reconfiguration. */
+	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                         ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
 #else
 	uint64_t raw                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -13272,8 +13272,8 @@ union cvmx_dtx_xsx_enax {
 	struct cvmx_dtx_xsx_enax_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug buses. Normally
-                                                         only one block will drive each bit. */
+	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                         buses. Normally only one block will drive each bit. */
 #else
 	uint64_t ena                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -13317,7 +13317,7 @@ union cvmx_dtx_zip_bcst_rsp {
 	} s;
 	struct cvmx_dtx_zip_bcst_rsp_s        cn73xx;
 	struct cvmx_dtx_zip_bcst_rsp_s        cn78xx;
-	struct cvmx_dtx_zip_bcst_rsp_s        cn78xxp2;
+	struct cvmx_dtx_zip_bcst_rsp_s        cn78xxp1;
 };
 typedef union cvmx_dtx_zip_bcst_rsp cvmx_dtx_zip_bcst_rsp_t;
 
@@ -13331,9 +13331,9 @@ union cvmx_dtx_zip_ctl {
 	uint64_t reserved_5_63                : 59;
 	uint64_t active                       : 1;  /**< Force block's gated clocks on, so that the state of idle signals may be captured. */
 	uint64_t reserved_2_3                 : 2;
-	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block debug data.
-                                                         Not applicable when software directly reads the DAT(0..1) registers.  For diagnostic use
-                                                         only. */
+	uint64_t echoen                       : 1;  /**< Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
+                                                         debug data. Not applicable when software directly reads the DAT(0..1) registers.
+                                                         For diagnostic use only. */
 	uint64_t swap                         : 1;  /**< Swap the high and low 36-bit debug bus outputs. */
 #else
 	uint64_t swap                         : 1;
@@ -13345,7 +13345,7 @@ union cvmx_dtx_zip_ctl {
 	} s;
 	struct cvmx_dtx_zip_ctl_s             cn73xx;
 	struct cvmx_dtx_zip_ctl_s             cn78xx;
-	struct cvmx_dtx_zip_ctl_s             cn78xxp2;
+	struct cvmx_dtx_zip_ctl_s             cn78xxp1;
 };
 typedef union cvmx_dtx_zip_ctl cvmx_dtx_zip_ctl_t;
 
@@ -13357,8 +13357,8 @@ union cvmx_dtx_zip_datx {
 	struct cvmx_dtx_zip_datx_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the ability to
-                                                         peek into blocks during an OCLA capture without OCLA reconfiguration. */
+	uint64_t raw                          : 36; /**< Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                         ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
 #else
 	uint64_t raw                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -13366,7 +13366,7 @@ union cvmx_dtx_zip_datx {
 	} s;
 	struct cvmx_dtx_zip_datx_s            cn73xx;
 	struct cvmx_dtx_zip_datx_s            cn78xx;
-	struct cvmx_dtx_zip_datx_s            cn78xxp2;
+	struct cvmx_dtx_zip_datx_s            cn78xxp1;
 };
 typedef union cvmx_dtx_zip_datx cvmx_dtx_zip_datx_t;
 
@@ -13378,8 +13378,8 @@ union cvmx_dtx_zip_enax {
 	struct cvmx_dtx_zip_enax_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_36_63               : 28;
-	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug buses. Normally
-                                                         only one block will drive each bit. */
+	uint64_t ena                          : 36; /**< Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                         buses. Normally only one block will drive each bit. */
 #else
 	uint64_t ena                          : 36;
 	uint64_t reserved_36_63               : 28;
@@ -13387,7 +13387,7 @@ union cvmx_dtx_zip_enax {
 	} s;
 	struct cvmx_dtx_zip_enax_s            cn73xx;
 	struct cvmx_dtx_zip_enax_s            cn78xx;
-	struct cvmx_dtx_zip_enax_s            cn78xxp2;
+	struct cvmx_dtx_zip_enax_s            cn78xxp1;
 };
 typedef union cvmx_dtx_zip_enax cvmx_dtx_zip_enax_t;
 
@@ -13407,7 +13407,7 @@ union cvmx_dtx_zip_selx {
 	} s;
 	struct cvmx_dtx_zip_selx_s            cn73xx;
 	struct cvmx_dtx_zip_selx_s            cn78xx;
-	struct cvmx_dtx_zip_selx_s            cn78xxp2;
+	struct cvmx_dtx_zip_selx_s            cn78xxp1;
 };
 typedef union cvmx_dtx_zip_selx cvmx_dtx_zip_selx_t;
 

@@ -1,5 +1,5 @@
 /***********************license start***************
- * Copyright (c) 2003-2015  Cavium Inc. (support@cavium.com). All rights
+ * Copyright (c) 2003-2017  Cavium Inc. (support@cavium.com). All rights
  * reserved.
  *
  *
@@ -64,7 +64,6 @@ static inline uint64_t CVMX_PEMX_BAR1_INDEXX(unsigned long offset, unsigned long
 			if (((offset <= 15)) && ((block_id <= 1)))
 				return CVMX_ADD_IO_SEG(0x00011800C0000100ull) + (((offset) & 15) + ((block_id) & 1) * 0x200000ull) * 8;
 			break;
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				if (((offset <= 15)) && ((block_id <= 3)))
@@ -72,6 +71,7 @@ static inline uint64_t CVMX_PEMX_BAR1_INDEXX(unsigned long offset, unsigned long
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				if (((offset <= 15)) && ((block_id <= 3)))
 					return CVMX_ADD_IO_SEG(0x00011800C0000100ull) + (((offset) & 15) + ((block_id) & 3) * 0x200000ull) * 8;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			if (((offset <= 15)) && (((block_id >= 1) && (block_id <= 3))))
 				return CVMX_ADD_IO_SEG(0x00011800C0000100ull) + (((offset) & 15) + ((block_id) & 3) * 0x200000ull) * 8;
 			break;
@@ -95,12 +95,12 @@ static inline uint64_t CVMX_PEMX_BAR1_INDEXX(unsigned long offset, unsigned long
 			return CVMX_ADD_IO_SEG(0x00011800C0000100ull) + ((offset) + (block_id) * 0x200000ull) * 8;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x00011800C0000100ull) + ((offset) + (block_id) * 0x200000ull) * 8;
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return CVMX_ADD_IO_SEG(0x00011800C0000100ull) + ((offset) + (block_id) * 0x200000ull) * 8;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return CVMX_ADD_IO_SEG(0x00011800C0000100ull) + ((offset) + (block_id) * 0x200000ull) * 8;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x00011800C0000100ull) + ((offset) + (block_id) * 0x200000ull) * 8;
 		case OCTEON_CN66XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CNF71XX & OCTEON_FAMILY_MASK:
@@ -124,7 +124,6 @@ static inline uint64_t CVMX_PEMX_BAR2_MASK(unsigned long offset)
 			if ((offset <= 1))
 				return CVMX_ADD_IO_SEG(0x00011800C00000B0ull) + ((offset) & 1) * 0x1000000ull;
 			break;
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				if ((offset <= 3))
@@ -132,6 +131,7 @@ static inline uint64_t CVMX_PEMX_BAR2_MASK(unsigned long offset)
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				if ((offset <= 3))
 					return CVMX_ADD_IO_SEG(0x00011800C00000B0ull) + ((offset) & 3) * 0x1000000ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			if (((offset >= 1) && (offset <= 3)))
 				return CVMX_ADD_IO_SEG(0x00011800C10000B0ull) + ((offset) & 3) * 0x1000000ull - 16777216*1;
 			break;
@@ -154,12 +154,12 @@ static inline uint64_t CVMX_PEMX_BAR2_MASK(unsigned long offset)
 			return CVMX_ADD_IO_SEG(0x00011800C00000B0ull) + (offset) * 0x1000000ull;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x00011800C00000B0ull) + (offset) * 0x1000000ull;
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return CVMX_ADD_IO_SEG(0x00011800C00000B0ull) + (offset) * 0x1000000ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return CVMX_ADD_IO_SEG(0x00011800C00000B0ull) + (offset) * 0x1000000ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x00011800C10000B0ull) + (offset) * 0x1000000ull - 16777216*1;
 		case OCTEON_CN66XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CNF71XX & OCTEON_FAMILY_MASK:
@@ -182,7 +182,6 @@ static inline uint64_t CVMX_PEMX_BAR_CTL(unsigned long offset)
 			if ((offset <= 1))
 				return CVMX_ADD_IO_SEG(0x00011800C00000A8ull) + ((offset) & 1) * 0x1000000ull;
 			break;
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				if ((offset <= 3))
@@ -190,6 +189,7 @@ static inline uint64_t CVMX_PEMX_BAR_CTL(unsigned long offset)
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				if ((offset <= 3))
 					return CVMX_ADD_IO_SEG(0x00011800C00000A8ull) + ((offset) & 3) * 0x1000000ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			if (((offset >= 1) && (offset <= 3)))
 				return CVMX_ADD_IO_SEG(0x00011800C10000A8ull) + ((offset) & 3) * 0x1000000ull - 16777216*1;
 			break;
@@ -213,12 +213,12 @@ static inline uint64_t CVMX_PEMX_BAR_CTL(unsigned long offset)
 			return CVMX_ADD_IO_SEG(0x00011800C00000A8ull) + (offset) * 0x1000000ull;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x00011800C00000A8ull) + (offset) * 0x1000000ull;
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return CVMX_ADD_IO_SEG(0x00011800C00000A8ull) + (offset) * 0x1000000ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return CVMX_ADD_IO_SEG(0x00011800C00000A8ull) + (offset) * 0x1000000ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x00011800C10000A8ull) + (offset) * 0x1000000ull - 16777216*1;
 		case OCTEON_CN66XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CNF71XX & OCTEON_FAMILY_MASK:
@@ -250,7 +250,6 @@ static inline uint64_t CVMX_PEMX_BIST_STATUS(unsigned long offset)
 			if ((offset <= 1))
 				return CVMX_ADD_IO_SEG(0x00011800C0000440ull) + ((offset) & 1) * 0x1000000ull;
 			break;
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				if ((offset <= 3))
@@ -258,6 +257,7 @@ static inline uint64_t CVMX_PEMX_BIST_STATUS(unsigned long offset)
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				if ((offset <= 3))
 					return CVMX_ADD_IO_SEG(0x00011800C0000440ull) + ((offset) & 3) * 0x1000000ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			if (((offset >= 1) && (offset <= 3)))
 				return CVMX_ADD_IO_SEG(0x00011800C1000440ull) + ((offset) & 3) * 0x1000000ull - 16777216*1;
 			break;
@@ -279,12 +279,12 @@ static inline uint64_t CVMX_PEMX_BIST_STATUS(unsigned long offset)
 			return CVMX_ADD_IO_SEG(0x00011800C0000018ull) + (offset) * 0x1000000ull;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x00011800C0000440ull) + (offset) * 0x1000000ull;
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return CVMX_ADD_IO_SEG(0x00011800C0000440ull) + (offset) * 0x1000000ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return CVMX_ADD_IO_SEG(0x00011800C0000440ull) + (offset) * 0x1000000ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x00011800C1000440ull) + (offset) * 0x1000000ull - 16777216*1;
 	}
 	return CVMX_ADD_IO_SEG(0x00011800C0000440ull) + (offset) * 0x1000000ull;
@@ -332,8 +332,8 @@ static inline uint64_t CVMX_PEMX_CFG(unsigned long offset)
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset <= 2))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset >= 1) && (offset <= 3)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 3))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_PEMX_CFG(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800C0000410ull) + ((offset) & 3) * 0x1000000ull;
@@ -351,8 +351,8 @@ static inline uint64_t CVMX_PEMX_CFG_RD(unsigned long offset)
 	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset <= 2))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset >= 1) && (offset <= 3)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 3))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_PEMX_CFG_RD(%lu) is invalid on this chip\n", offset);
@@ -371,8 +371,8 @@ static inline uint64_t CVMX_PEMX_CFG_WR(unsigned long offset)
 	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset <= 2))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset >= 1) && (offset <= 3)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 3))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_PEMX_CFG_WR(%lu) is invalid on this chip\n", offset);
@@ -387,8 +387,8 @@ static inline uint64_t CVMX_PEMX_CLK_EN(unsigned long offset)
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset <= 2))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset >= 1) && (offset <= 3)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 3))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_PEMX_CLK_EN(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800C0000400ull) + ((offset) & 3) * 0x1000000ull;
@@ -406,8 +406,8 @@ static inline uint64_t CVMX_PEMX_CPL_LUT_VALID(unsigned long offset)
 	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset <= 2))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset >= 1) && (offset <= 3)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 3))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_PEMX_CPL_LUT_VALID(%lu) is invalid on this chip\n", offset);
@@ -426,8 +426,8 @@ static inline uint64_t CVMX_PEMX_CTL_STATUS(unsigned long offset)
 	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset <= 2))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset >= 1) && (offset <= 3)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 3))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_PEMX_CTL_STATUS(%lu) is invalid on this chip\n", offset);
@@ -441,8 +441,8 @@ static inline uint64_t CVMX_PEMX_CTL_STATUS2(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset >= 1) && (offset <= 3)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 3))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_PEMX_CTL_STATUS2(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800C0000008ull) + ((offset) & 3) * 0x1000000ull;
@@ -462,7 +462,6 @@ static inline uint64_t CVMX_PEMX_DBG_INFO(unsigned long offset)
 			if ((offset <= 1))
 				return CVMX_ADD_IO_SEG(0x00011800C00000D0ull) + ((offset) & 1) * 0x1000000ull;
 			break;
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				if ((offset <= 3))
@@ -470,6 +469,7 @@ static inline uint64_t CVMX_PEMX_DBG_INFO(unsigned long offset)
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				if ((offset <= 3))
 					return CVMX_ADD_IO_SEG(0x00011800C00000D0ull) + ((offset) & 3) * 0x1000000ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			if (((offset >= 1) && (offset <= 3)))
 				return CVMX_ADD_IO_SEG(0x00011800C10000D0ull) + ((offset) & 3) * 0x1000000ull - 16777216*1;
 			break;
@@ -493,12 +493,12 @@ static inline uint64_t CVMX_PEMX_DBG_INFO(unsigned long offset)
 			return CVMX_ADD_IO_SEG(0x00011800C00000D0ull) + (offset) * 0x1000000ull;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x00011800C00000D0ull) + (offset) * 0x1000000ull;
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return CVMX_ADD_IO_SEG(0x00011800C00000D0ull) + (offset) * 0x1000000ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return CVMX_ADD_IO_SEG(0x00011800C00000D0ull) + (offset) * 0x1000000ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x00011800C10000D0ull) + (offset) * 0x1000000ull - 16777216*1;
 		case OCTEON_CN66XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CNF71XX & OCTEON_FAMILY_MASK:
@@ -536,8 +536,8 @@ static inline uint64_t CVMX_PEMX_DIAG_STATUS(unsigned long offset)
 	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset <= 2))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset >= 1) && (offset <= 3)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 3))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_PEMX_DIAG_STATUS(%lu) is invalid on this chip\n", offset);
@@ -554,7 +554,6 @@ static inline uint64_t CVMX_PEMX_ECC_ENA(unsigned long offset)
 			if ((offset <= 1))
 				return CVMX_ADD_IO_SEG(0x00011800C0000448ull) + ((offset) & 1) * 0x1000000ull;
 			break;
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				if ((offset <= 3))
@@ -562,6 +561,7 @@ static inline uint64_t CVMX_PEMX_ECC_ENA(unsigned long offset)
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				if ((offset <= 3))
 					return CVMX_ADD_IO_SEG(0x00011800C0000448ull) + ((offset) & 3) * 0x1000000ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			if (((offset >= 1) && (offset <= 3)))
 				return CVMX_ADD_IO_SEG(0x00011800C1000448ull) + ((offset) & 3) * 0x1000000ull - 16777216*1;
 			break;
@@ -579,12 +579,12 @@ static inline uint64_t CVMX_PEMX_ECC_ENA(unsigned long offset)
 	switch(cvmx_get_octeon_family()) {
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x00011800C0000448ull) + (offset) * 0x1000000ull;
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return CVMX_ADD_IO_SEG(0x00011800C0000448ull) + (offset) * 0x1000000ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return CVMX_ADD_IO_SEG(0x00011800C0000448ull) + (offset) * 0x1000000ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x00011800C1000448ull) + (offset) * 0x1000000ull - 16777216*1;
 		case OCTEON_CN70XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x00011800C00000C0ull) + (offset) * 0x1000000ull;
@@ -600,7 +600,6 @@ static inline uint64_t CVMX_PEMX_ECC_SYND_CTRL(unsigned long offset)
 			if ((offset <= 1))
 				return CVMX_ADD_IO_SEG(0x00011800C0000450ull) + ((offset) & 1) * 0x1000000ull;
 			break;
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				if ((offset <= 3))
@@ -608,6 +607,7 @@ static inline uint64_t CVMX_PEMX_ECC_SYND_CTRL(unsigned long offset)
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				if ((offset <= 3))
 					return CVMX_ADD_IO_SEG(0x00011800C0000450ull) + ((offset) & 3) * 0x1000000ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			if (((offset >= 1) && (offset <= 3)))
 				return CVMX_ADD_IO_SEG(0x00011800C1000450ull) + ((offset) & 3) * 0x1000000ull - 16777216*1;
 			break;
@@ -625,12 +625,12 @@ static inline uint64_t CVMX_PEMX_ECC_SYND_CTRL(unsigned long offset)
 	switch(cvmx_get_octeon_family()) {
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x00011800C0000450ull) + (offset) * 0x1000000ull;
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return CVMX_ADD_IO_SEG(0x00011800C0000450ull) + (offset) * 0x1000000ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return CVMX_ADD_IO_SEG(0x00011800C0000450ull) + (offset) * 0x1000000ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x00011800C1000450ull) + (offset) * 0x1000000ull - 16777216*1;
 		case OCTEON_CN70XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x00011800C00000C8ull) + (offset) * 0x1000000ull;
@@ -727,7 +727,6 @@ static inline uint64_t CVMX_PEMX_INB_READ_CREDITS(unsigned long offset)
 			if ((offset <= 1))
 				return CVMX_ADD_IO_SEG(0x00011800C00000B8ull) + ((offset) & 1) * 0x1000000ull;
 			break;
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				if ((offset <= 3))
@@ -735,6 +734,7 @@ static inline uint64_t CVMX_PEMX_INB_READ_CREDITS(unsigned long offset)
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				if ((offset <= 3))
 					return CVMX_ADD_IO_SEG(0x00011800C00000B8ull) + ((offset) & 3) * 0x1000000ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			if (((offset >= 1) && (offset <= 3)))
 				return CVMX_ADD_IO_SEG(0x00011800C10000B8ull) + ((offset) & 3) * 0x1000000ull - 16777216*1;
 			break;
@@ -757,12 +757,12 @@ static inline uint64_t CVMX_PEMX_INB_READ_CREDITS(unsigned long offset)
 			return CVMX_ADD_IO_SEG(0x00011800C00000B8ull) + (offset) * 0x1000000ull;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x00011800C00000B8ull) + (offset) * 0x1000000ull;
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return CVMX_ADD_IO_SEG(0x00011800C00000B8ull) + (offset) * 0x1000000ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return CVMX_ADD_IO_SEG(0x00011800C00000B8ull) + (offset) * 0x1000000ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x00011800C10000B8ull) + (offset) * 0x1000000ull - 16777216*1;
 		case OCTEON_CN66XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CNF71XX & OCTEON_FAMILY_MASK:
@@ -857,7 +857,6 @@ static inline uint64_t CVMX_PEMX_INT_SUM(unsigned long offset)
 			if ((offset <= 1))
 				return CVMX_ADD_IO_SEG(0x00011800C0000428ull) + ((offset) & 1) * 0x1000000ull;
 			break;
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				if ((offset <= 3))
@@ -865,6 +864,7 @@ static inline uint64_t CVMX_PEMX_INT_SUM(unsigned long offset)
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				if ((offset <= 3))
 					return CVMX_ADD_IO_SEG(0x00011800C0000428ull) + ((offset) & 3) * 0x1000000ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			if (((offset >= 1) && (offset <= 3)))
 				return CVMX_ADD_IO_SEG(0x00011800C1000428ull) + ((offset) & 3) * 0x1000000ull - 16777216*1;
 			break;
@@ -888,12 +888,12 @@ static inline uint64_t CVMX_PEMX_INT_SUM(unsigned long offset)
 			return CVMX_ADD_IO_SEG(0x00011800C0000428ull) + (offset) * 0x1000000ull;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x00011800C0000428ull) + (offset) * 0x1000000ull;
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return CVMX_ADD_IO_SEG(0x00011800C0000428ull) + (offset) * 0x1000000ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return CVMX_ADD_IO_SEG(0x00011800C0000428ull) + (offset) * 0x1000000ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x00011800C1000428ull) + (offset) * 0x1000000ull - 16777216*1;
 		case OCTEON_CN66XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CNF71XX & OCTEON_FAMILY_MASK:
@@ -911,8 +911,8 @@ static inline uint64_t CVMX_PEMX_ON(unsigned long offset)
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset <= 2))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset >= 1) && (offset <= 3)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 3))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_PEMX_ON(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800C0000420ull) + ((offset) & 3) * 0x1000000ull;
@@ -930,8 +930,8 @@ static inline uint64_t CVMX_PEMX_P2N_BAR0_START(unsigned long offset)
 	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset <= 2))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset >= 1) && (offset <= 3)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 3))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_PEMX_P2N_BAR0_START(%lu) is invalid on this chip\n", offset);
@@ -950,8 +950,8 @@ static inline uint64_t CVMX_PEMX_P2N_BAR1_START(unsigned long offset)
 	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset <= 2))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset >= 1) && (offset <= 3)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 3))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_PEMX_P2N_BAR1_START(%lu) is invalid on this chip\n", offset);
@@ -970,8 +970,8 @@ static inline uint64_t CVMX_PEMX_P2N_BAR2_START(unsigned long offset)
 	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset <= 2))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset >= 1) && (offset <= 3)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 3))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_PEMX_P2N_BAR2_START(%lu) is invalid on this chip\n", offset);
@@ -988,8 +988,8 @@ static inline uint64_t CVMX_PEMX_P2P_BARX_END(unsigned long offset, unsigned lon
 	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && (((offset <= 3)) && ((block_id <= 1)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (((offset <= 3)) && ((block_id <= 1)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && (((block_id >= 1) && (block_id <= 3))))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 3)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 3)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 3)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id <= 1))))))
 		cvmx_warn("CVMX_PEMX_P2P_BARX_END(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800C0000048ull) + (((offset) & 3) + ((block_id) & 3) * 0x100000ull) * 16;
@@ -1005,8 +1005,8 @@ static inline uint64_t CVMX_PEMX_P2P_BARX_START(unsigned long offset, unsigned l
 	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && (((offset <= 3)) && ((block_id <= 1)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (((offset <= 3)) && ((block_id <= 1)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && (((block_id >= 1) && (block_id <= 3))))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 3)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 3)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 3)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id <= 1))))))
 		cvmx_warn("CVMX_PEMX_P2P_BARX_START(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800C0000040ull) + (((offset) & 3) + ((block_id) & 3) * 0x100000ull) * 16;
@@ -1019,8 +1019,8 @@ static inline uint64_t CVMX_PEMX_QLM(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset >= 1) && (offset <= 3)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 3))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_PEMX_QLM(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800C0000418ull) + ((offset) & 3) * 0x1000000ull;
@@ -1034,8 +1034,8 @@ static inline uint64_t CVMX_PEMX_SPI_CTL(unsigned long offset)
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset <= 2))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset >= 1) && (offset <= 3)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 3))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_PEMX_SPI_CTL(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800C0000180ull) + ((offset) & 3) * 0x1000000ull;
@@ -1049,8 +1049,8 @@ static inline uint64_t CVMX_PEMX_SPI_DATA(unsigned long offset)
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset <= 2))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset >= 1) && (offset <= 3)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 3))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_PEMX_SPI_DATA(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800C0000188ull) + ((offset) & 3) * 0x1000000ull;
@@ -1064,8 +1064,8 @@ static inline uint64_t CVMX_PEMX_STRAP(unsigned long offset)
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset <= 2))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset >= 1) && (offset <= 3)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 3))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_PEMX_STRAP(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800C0000408ull) + ((offset) & 3) * 0x1000000ull;
@@ -1083,8 +1083,8 @@ static inline uint64_t CVMX_PEMX_TLP_CREDITS(unsigned long offset)
 	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset <= 2))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset >= 1) && (offset <= 3)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 3))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_PEMX_TLP_CREDITS(%lu) is invalid on this chip\n", offset);
@@ -1142,7 +1142,7 @@ union cvmx_pemx_bar1_indexx {
 	struct cvmx_pemx_bar1_indexx_s        cn70xxp1;
 	struct cvmx_pemx_bar1_indexx_s        cn73xx;
 	struct cvmx_pemx_bar1_indexx_s        cn78xx;
-	struct cvmx_pemx_bar1_indexx_s        cn78xxp2;
+	struct cvmx_pemx_bar1_indexx_s        cn78xxp1;
 	struct cvmx_pemx_bar1_indexx_cn61xx   cnf71xx;
 	struct cvmx_pemx_bar1_indexx_s        cnf75xx;
 };
@@ -1196,8 +1196,8 @@ union cvmx_pemx_bar2_mask {
 	uint64_t reserved_42_63               : 22;
 #endif
 	} cn73xx;
-	struct cvmx_pemx_bar2_mask_cn73xx     cn78xx;
-	struct cvmx_pemx_bar2_mask_s          cn78xxp2;
+	struct cvmx_pemx_bar2_mask_s          cn78xx;
+	struct cvmx_pemx_bar2_mask_cn73xx     cn78xxp1;
 	struct cvmx_pemx_bar2_mask_cn61xx     cnf71xx;
 	struct cvmx_pemx_bar2_mask_cn73xx     cnf75xx;
 };
@@ -1246,7 +1246,7 @@ union cvmx_pemx_bar_ctl {
 	struct cvmx_pemx_bar_ctl_s            cn70xxp1;
 	struct cvmx_pemx_bar_ctl_s            cn73xx;
 	struct cvmx_pemx_bar_ctl_s            cn78xx;
-	struct cvmx_pemx_bar_ctl_s            cn78xxp2;
+	struct cvmx_pemx_bar_ctl_s            cn78xxp1;
 	struct cvmx_pemx_bar_ctl_s            cnf71xx;
 	struct cvmx_pemx_bar_ctl_s            cnf75xx;
 };
@@ -1373,7 +1373,7 @@ union cvmx_pemx_bist_status {
 #endif
 	} cn73xx;
 	struct cvmx_pemx_bist_status_cn73xx   cn78xx;
-	struct cvmx_pemx_bist_status_cn73xx   cn78xxp2;
+	struct cvmx_pemx_bist_status_cn73xx   cn78xxp1;
 	struct cvmx_pemx_bist_status_cn61xx   cnf71xx;
 	struct cvmx_pemx_bist_status_cn73xx   cnf75xx;
 };
@@ -1578,7 +1578,7 @@ union cvmx_pemx_cfg {
 #endif
 	} cn73xx;
 	struct cvmx_pemx_cfg_cn73xx           cn78xx;
-	struct cvmx_pemx_cfg_cn73xx           cn78xxp2;
+	struct cvmx_pemx_cfg_cn73xx           cn78xxp1;
 	struct cvmx_pemx_cfg_cn73xx           cnf75xx;
 };
 typedef union cvmx_pemx_cfg cvmx_pemx_cfg_t;
@@ -1621,7 +1621,7 @@ union cvmx_pemx_cfg_rd {
 	struct cvmx_pemx_cfg_rd_s             cn70xxp1;
 	struct cvmx_pemx_cfg_rd_s             cn73xx;
 	struct cvmx_pemx_cfg_rd_s             cn78xx;
-	struct cvmx_pemx_cfg_rd_s             cn78xxp2;
+	struct cvmx_pemx_cfg_rd_s             cn78xxp1;
 	struct cvmx_pemx_cfg_rd_s             cnf71xx;
 	struct cvmx_pemx_cfg_rd_s             cnf75xx;
 };
@@ -1669,7 +1669,7 @@ union cvmx_pemx_cfg_wr {
 	struct cvmx_pemx_cfg_wr_s             cn70xxp1;
 	struct cvmx_pemx_cfg_wr_s             cn73xx;
 	struct cvmx_pemx_cfg_wr_s             cn78xx;
-	struct cvmx_pemx_cfg_wr_s             cn78xxp2;
+	struct cvmx_pemx_cfg_wr_s             cn78xxp1;
 	struct cvmx_pemx_cfg_wr_s             cnf71xx;
 	struct cvmx_pemx_cfg_wr_s             cnf75xx;
 };
@@ -1702,7 +1702,7 @@ union cvmx_pemx_clk_en {
 	struct cvmx_pemx_clk_en_s             cn70xxp1;
 	struct cvmx_pemx_clk_en_s             cn73xx;
 	struct cvmx_pemx_clk_en_s             cn78xx;
-	struct cvmx_pemx_clk_en_s             cn78xxp2;
+	struct cvmx_pemx_clk_en_s             cn78xxp1;
 	struct cvmx_pemx_clk_en_s             cnf75xx;
 };
 typedef union cvmx_pemx_clk_en cvmx_pemx_clk_en_t;
@@ -1741,7 +1741,7 @@ union cvmx_pemx_cpl_lut_valid {
 	struct cvmx_pemx_cpl_lut_valid_cn61xx cn70xxp1;
 	struct cvmx_pemx_cpl_lut_valid_s      cn73xx;
 	struct cvmx_pemx_cpl_lut_valid_s      cn78xx;
-	struct cvmx_pemx_cpl_lut_valid_s      cn78xxp2;
+	struct cvmx_pemx_cpl_lut_valid_s      cn78xxp1;
 	struct cvmx_pemx_cpl_lut_valid_cn61xx cnf71xx;
 	struct cvmx_pemx_cpl_lut_valid_s      cnf75xx;
 };
@@ -1939,7 +1939,7 @@ union cvmx_pemx_ctl_status {
 #endif
 	} cn73xx;
 	struct cvmx_pemx_ctl_status_cn73xx    cn78xx;
-	struct cvmx_pemx_ctl_status_cn73xx    cn78xxp2;
+	struct cvmx_pemx_ctl_status_cn73xx    cn78xxp1;
 	struct cvmx_pemx_ctl_status_cn61xx    cnf71xx;
 	struct cvmx_pemx_ctl_status_cn73xx    cnf75xx;
 };
@@ -1969,7 +1969,7 @@ union cvmx_pemx_ctl_status2 {
 	} s;
 	struct cvmx_pemx_ctl_status2_s        cn73xx;
 	struct cvmx_pemx_ctl_status2_s        cn78xx;
-	struct cvmx_pemx_ctl_status2_s        cn78xxp2;
+	struct cvmx_pemx_ctl_status2_s        cn78xxp1;
 	struct cvmx_pemx_ctl_status2_s        cnf75xx;
 };
 typedef union cvmx_pemx_ctl_status2 cvmx_pemx_ctl_status2_t;
@@ -2602,7 +2602,8 @@ union cvmx_pemx_dbg_info {
 	uint64_t reserved_62_63               : 2;
 #endif
 	} cn73xx;
-	struct cvmx_pemx_dbg_info_cn78xx {
+	struct cvmx_pemx_dbg_info_cn73xx      cn78xx;
+	struct cvmx_pemx_dbg_info_cn78xxp1 {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_58_63               : 6;
 	uint64_t qhdr_b1_dbe                  : 1;  /**< Detected a core header queue bank1 double bit error.
@@ -2786,8 +2787,7 @@ union cvmx_pemx_dbg_info {
 	uint64_t qhdr_b1_dbe                  : 1;
 	uint64_t reserved_58_63               : 6;
 #endif
-	} cn78xx;
-	struct cvmx_pemx_dbg_info_cn73xx      cn78xxp2;
+	} cn78xxp1;
 	struct cvmx_pemx_dbg_info_cn61xx      cnf71xx;
 	struct cvmx_pemx_dbg_info_cn73xx      cnf75xx;
 };
@@ -3059,7 +3059,7 @@ union cvmx_pemx_diag_status {
 #endif
 	} cn73xx;
 	struct cvmx_pemx_diag_status_cn73xx   cn78xx;
-	struct cvmx_pemx_diag_status_cn73xx   cn78xxp2;
+	struct cvmx_pemx_diag_status_cn73xx   cn78xxp1;
 	struct cvmx_pemx_diag_status_cn61xx   cnf71xx;
 	struct cvmx_pemx_diag_status_cn73xx   cnf75xx;
 };
@@ -3157,7 +3157,8 @@ union cvmx_pemx_ecc_ena {
 	uint64_t reserved_35_63               : 29;
 #endif
 	} cn73xx;
-	struct cvmx_pemx_ecc_ena_cn78xx {
+	struct cvmx_pemx_ecc_ena_cn73xx       cn78xx;
+	struct cvmx_pemx_ecc_ena_cn78xxp1 {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_35_63               : 29;
 	uint64_t qhdr_b1_ena                  : 1;  /**< ECC enable for Core's Q HDR Bank1 RAM. */
@@ -3189,8 +3190,7 @@ union cvmx_pemx_ecc_ena {
 	uint64_t qhdr_b1_ena                  : 1;
 	uint64_t reserved_35_63               : 29;
 #endif
-	} cn78xx;
-	struct cvmx_pemx_ecc_ena_cn73xx       cn78xxp2;
+	} cn78xxp1;
 	struct cvmx_pemx_ecc_ena_cn73xx       cnf75xx;
 };
 typedef union cvmx_pemx_ecc_ena cvmx_pemx_ecc_ena_t;
@@ -3287,7 +3287,8 @@ union cvmx_pemx_ecc_synd_ctrl {
 	uint64_t reserved_38_63               : 26;
 #endif
 	} cn73xx;
-	struct cvmx_pemx_ecc_synd_ctrl_cn78xx {
+	struct cvmx_pemx_ecc_synd_ctrl_cn73xx cn78xx;
+	struct cvmx_pemx_ecc_synd_ctrl_cn78xxp1 {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_38_63               : 26;
 	uint64_t qhdr_b1_syn                  : 2;  /**< Syndrome flip bits for Core's Q HDR Bank1 RAM. */
@@ -3319,8 +3320,7 @@ union cvmx_pemx_ecc_synd_ctrl {
 	uint64_t qhdr_b1_syn                  : 2;
 	uint64_t reserved_38_63               : 26;
 #endif
-	} cn78xx;
-	struct cvmx_pemx_ecc_synd_ctrl_cn73xx cn78xxp2;
+	} cn78xxp1;
 	struct cvmx_pemx_ecc_synd_ctrl_cn73xx cnf75xx;
 };
 typedef union cvmx_pemx_ecc_synd_ctrl cvmx_pemx_ecc_synd_ctrl_t;
@@ -3333,14 +3333,14 @@ union cvmx_pemx_eco {
 	struct cvmx_pemx_eco_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_8_63                : 56;
-	uint64_t eco_rw                       : 8;  /**< N/A */
+	uint64_t eco_rw                       : 8;  /**< Reserved for ECO usage. */
 #else
 	uint64_t eco_rw                       : 8;
 	uint64_t reserved_8_63                : 56;
 #endif
 	} s;
 	struct cvmx_pemx_eco_s                cn73xx;
-	struct cvmx_pemx_eco_s                cn78xxp2;
+	struct cvmx_pemx_eco_s                cn78xx;
 	struct cvmx_pemx_eco_s                cnf75xx;
 };
 typedef union cvmx_pemx_eco cvmx_pemx_eco_t;
@@ -3371,7 +3371,7 @@ union cvmx_pemx_flr_glblcnt_ctl {
 #endif
 	} s;
 	struct cvmx_pemx_flr_glblcnt_ctl_s    cn73xx;
-	struct cvmx_pemx_flr_glblcnt_ctl_s    cn78xxp2;
+	struct cvmx_pemx_flr_glblcnt_ctl_s    cn78xx;
 	struct cvmx_pemx_flr_glblcnt_ctl_s    cnf75xx;
 };
 typedef union cvmx_pemx_flr_glblcnt_ctl cvmx_pemx_flr_glblcnt_ctl_t;
@@ -3405,7 +3405,7 @@ union cvmx_pemx_flr_pf0_vf_stopreq {
 #endif
 	} s;
 	struct cvmx_pemx_flr_pf0_vf_stopreq_s cn73xx;
-	struct cvmx_pemx_flr_pf0_vf_stopreq_s cn78xxp2;
+	struct cvmx_pemx_flr_pf0_vf_stopreq_s cn78xx;
 	struct cvmx_pemx_flr_pf0_vf_stopreq_s cnf75xx;
 };
 typedef union cvmx_pemx_flr_pf0_vf_stopreq cvmx_pemx_flr_pf0_vf_stopreq_t;
@@ -3426,12 +3426,13 @@ typedef union cvmx_pemx_flr_pf0_vf_stopreq cvmx_pemx_flr_pf0_vf_stopreq_t;
  * STOPREQ mimics the behavior of PCIEEP()_CFG001[ME] for outbound requests that will
  * master the PCIe bus (P and NP).
  *
- * Note that STOPREQ will have no effect on completions returned by CNXXXX over the S2M,
+ * STOPREQ will have no effect on completions returned by CNXXXX over the S2M,
  * nor on M2S traffic.
  *
- * Note that when a PF()_STOPREQ is set, none of the associated
- * PEM()_FLR_PF()_VF_STOPREQ[VF_STOPREQ]
- * will be set.
+ * When a PF()_STOPREQ is set, none of the associated
+ * PEM()_FLR_PF()_VF_STOPREQ[VF_STOPREQ] will be set.
+ *
+ * STOPREQ is reset when the MAC is reset, and is not reset after a chip soft reset.
  */
 union cvmx_pemx_flr_pf_stopreq {
 	uint64_t u64;
@@ -3445,7 +3446,7 @@ union cvmx_pemx_flr_pf_stopreq {
 #endif
 	} s;
 	struct cvmx_pemx_flr_pf_stopreq_s     cn73xx;
-	struct cvmx_pemx_flr_pf_stopreq_s     cn78xxp2;
+	struct cvmx_pemx_flr_pf_stopreq_s     cn78xx;
 	struct cvmx_pemx_flr_pf_stopreq_s     cnf75xx;
 };
 typedef union cvmx_pemx_flr_pf_stopreq cvmx_pemx_flr_pf_stopreq_t;
@@ -3472,7 +3473,7 @@ union cvmx_pemx_flr_stopreq_ctl {
 	uint64_t reserved_1_63                : 63;
 #endif
 	} s;
-	struct cvmx_pemx_flr_stopreq_ctl_s    cn78xxp2;
+	struct cvmx_pemx_flr_stopreq_ctl_s    cn78xx;
 	struct cvmx_pemx_flr_stopreq_ctl_s    cnf75xx;
 };
 typedef union cvmx_pemx_flr_stopreq_ctl cvmx_pemx_flr_stopreq_ctl_t;
@@ -3485,12 +3486,12 @@ union cvmx_pemx_flr_zombie_ctl {
 	struct cvmx_pemx_flr_zombie_ctl_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_10_63               : 54;
-	uint64_t exp                          : 10; /**< The expiration value for the inbound shared global zombie counter.  The global zombie
+	uint64_t exp                          : 10; /**< The expiration value for the inbound shared global zombie counter. The global zombie
                                                          counter
                                                          continuously counts the number of cycles where the PCIe Core was allowed to send
                                                          either a Posted request or a Completion to the PEM.  When the global zombie counter
                                                          reaches expiration (EXP), it resets to zero and all the nonzero per PCIe tag zombie
-                                                         counters are decremented.  When a per PCIe tag zombie counter decrements to zero, a
+                                                         counters are decremented. When a per PCIe tag zombie counter decrements to zero, a
                                                          SWI_RSP_ERROR is
                                                          sent to the M2S bus and its associated PCIe tag is returned to the pool.
                                                          This field allows software programmability control of the zombie counter expiration. */
@@ -3500,7 +3501,7 @@ union cvmx_pemx_flr_zombie_ctl {
 #endif
 	} s;
 	struct cvmx_pemx_flr_zombie_ctl_s     cn73xx;
-	struct cvmx_pemx_flr_zombie_ctl_s     cn78xxp2;
+	struct cvmx_pemx_flr_zombie_ctl_s     cn78xx;
 	struct cvmx_pemx_flr_zombie_ctl_s     cnf75xx;
 };
 typedef union cvmx_pemx_flr_zombie_ctl cvmx_pemx_flr_zombie_ctl_t;
@@ -3540,7 +3541,7 @@ union cvmx_pemx_inb_read_credits {
 	struct cvmx_pemx_inb_read_credits_cn61xx cn70xxp1;
 	struct cvmx_pemx_inb_read_credits_s   cn73xx;
 	struct cvmx_pemx_inb_read_credits_s   cn78xx;
-	struct cvmx_pemx_inb_read_credits_s   cn78xxp2;
+	struct cvmx_pemx_inb_read_credits_s   cn78xxp1;
 	struct cvmx_pemx_inb_read_credits_cn61xx cnf71xx;
 	struct cvmx_pemx_inb_read_credits_s   cnf75xx;
 };
@@ -3874,7 +3875,7 @@ union cvmx_pemx_int_sum {
 #endif
 	} cn73xx;
 	struct cvmx_pemx_int_sum_cn73xx       cn78xx;
-	struct cvmx_pemx_int_sum_cn73xx       cn78xxp2;
+	struct cvmx_pemx_int_sum_cn73xx       cn78xxp1;
 	struct cvmx_pemx_int_sum_cn61xx       cnf71xx;
 	struct cvmx_pemx_int_sum_cn73xx       cnf75xx;
 };
@@ -3905,7 +3906,7 @@ union cvmx_pemx_on {
 	struct cvmx_pemx_on_s                 cn70xxp1;
 	struct cvmx_pemx_on_s                 cn73xx;
 	struct cvmx_pemx_on_s                 cn78xx;
-	struct cvmx_pemx_on_s                 cn78xxp2;
+	struct cvmx_pemx_on_s                 cn78xxp1;
 	struct cvmx_pemx_on_s                 cnf75xx;
 };
 typedef union cvmx_pemx_on cvmx_pemx_on_t;
@@ -3951,7 +3952,8 @@ union cvmx_pemx_p2n_bar0_start {
 	uint64_t addr                         : 41;
 #endif
 	} cn73xx;
-	struct cvmx_pemx_p2n_bar0_start_cn78xx {
+	struct cvmx_pemx_p2n_bar0_start_cn73xx cn78xx;
+	struct cvmx_pemx_p2n_bar0_start_cn78xxp1 {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t addr                         : 49; /**< The starting address of the 32KB BAR0 address space. */
 	uint64_t reserved_0_14                : 15;
@@ -3959,8 +3961,7 @@ union cvmx_pemx_p2n_bar0_start {
 	uint64_t reserved_0_14                : 15;
 	uint64_t addr                         : 49;
 #endif
-	} cn78xx;
-	struct cvmx_pemx_p2n_bar0_start_cn73xx cn78xxp2;
+	} cn78xxp1;
 	struct cvmx_pemx_p2n_bar0_start_cn61xx cnf71xx;
 	struct cvmx_pemx_p2n_bar0_start_cn73xx cnf75xx;
 };
@@ -3993,7 +3994,7 @@ union cvmx_pemx_p2n_bar1_start {
 	struct cvmx_pemx_p2n_bar1_start_s     cn70xxp1;
 	struct cvmx_pemx_p2n_bar1_start_s     cn73xx;
 	struct cvmx_pemx_p2n_bar1_start_s     cn78xx;
-	struct cvmx_pemx_p2n_bar1_start_s     cn78xxp2;
+	struct cvmx_pemx_p2n_bar1_start_s     cn78xxp1;
 	struct cvmx_pemx_p2n_bar1_start_s     cnf71xx;
 	struct cvmx_pemx_p2n_bar1_start_s     cnf75xx;
 };
@@ -4041,7 +4042,7 @@ union cvmx_pemx_p2n_bar2_start {
 #endif
 	} cn73xx;
 	struct cvmx_pemx_p2n_bar2_start_cn73xx cn78xx;
-	struct cvmx_pemx_p2n_bar2_start_cn73xx cn78xxp2;
+	struct cvmx_pemx_p2n_bar2_start_cn73xx cn78xxp1;
 	struct cvmx_pemx_p2n_bar2_start_cn61xx cnf71xx;
 	struct cvmx_pemx_p2n_bar2_start_cn73xx cnf75xx;
 };
@@ -4073,7 +4074,7 @@ union cvmx_pemx_p2p_barx_end {
 	struct cvmx_pemx_p2p_barx_end_s       cn68xxp1;
 	struct cvmx_pemx_p2p_barx_end_s       cn73xx;
 	struct cvmx_pemx_p2p_barx_end_s       cn78xx;
-	struct cvmx_pemx_p2p_barx_end_s       cn78xxp2;
+	struct cvmx_pemx_p2p_barx_end_s       cn78xxp1;
 	struct cvmx_pemx_p2p_barx_end_s       cnf75xx;
 };
 typedef union cvmx_pemx_p2p_barx_end cvmx_pemx_p2p_barx_end_t;
@@ -4119,7 +4120,7 @@ union cvmx_pemx_p2p_barx_start {
 	struct cvmx_pemx_p2p_barx_start_cn63xx cn68xxp1;
 	struct cvmx_pemx_p2p_barx_start_s     cn73xx;
 	struct cvmx_pemx_p2p_barx_start_s     cn78xx;
-	struct cvmx_pemx_p2p_barx_start_s     cn78xxp2;
+	struct cvmx_pemx_p2p_barx_start_s     cn78xxp1;
 	struct cvmx_pemx_p2p_barx_start_s     cnf75xx;
 };
 typedef union cvmx_pemx_p2p_barx_start cvmx_pemx_p2p_barx_start_t;
@@ -4166,7 +4167,7 @@ union cvmx_pemx_qlm {
 	uint64_t reserved_1_63                : 63;
 #endif
 	} cn78xx;
-	struct cvmx_pemx_qlm_cn78xx           cn78xxp2;
+	struct cvmx_pemx_qlm_cn78xx           cn78xxp1;
 	struct cvmx_pemx_qlm_cn73xx           cnf75xx;
 };
 typedef union cvmx_pemx_qlm cvmx_pemx_qlm_t;
@@ -4215,7 +4216,7 @@ union cvmx_pemx_spi_ctl {
 	struct cvmx_pemx_spi_ctl_s            cn70xxp1;
 	struct cvmx_pemx_spi_ctl_s            cn73xx;
 	struct cvmx_pemx_spi_ctl_s            cn78xx;
-	struct cvmx_pemx_spi_ctl_s            cn78xxp2;
+	struct cvmx_pemx_spi_ctl_s            cn78xxp1;
 	struct cvmx_pemx_spi_ctl_s            cnf75xx;
 };
 typedef union cvmx_pemx_spi_ctl cvmx_pemx_spi_ctl_t;
@@ -4262,7 +4263,7 @@ union cvmx_pemx_spi_data {
 	struct cvmx_pemx_spi_data_s           cn70xxp1;
 	struct cvmx_pemx_spi_data_s           cn73xx;
 	struct cvmx_pemx_spi_data_s           cn78xx;
-	struct cvmx_pemx_spi_data_s           cn78xxp2;
+	struct cvmx_pemx_spi_data_s           cn78xxp1;
 	struct cvmx_pemx_spi_data_s           cnf75xx;
 };
 typedef union cvmx_pemx_spi_data cvmx_pemx_spi_data_t;
@@ -4353,7 +4354,7 @@ union cvmx_pemx_strap {
 	uint64_t reserved_4_63                : 60;
 #endif
 	} cn78xx;
-	struct cvmx_pemx_strap_cn78xx         cn78xxp2;
+	struct cvmx_pemx_strap_cn78xx         cn78xxp1;
 	struct cvmx_pemx_strap_cnf75xx {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_5_63                : 59;
@@ -4420,7 +4421,7 @@ union cvmx_pemx_tlp_credits {
                                                             1 2-ln PEM    n     2             0xFF
                                                          </pre> */
 	uint64_t sli_np                       : 8;  /**< TLP 8B credits for nonposted TLPs in the SLI. Legal values are 0x4 to
-                                                         0x20. Pairs of PEMs share a single SLI interface.  When both PEM0 and PEM1
+                                                         0x20. Pairs of PEMs share a single SLI interface.  When both PEM(0) and PEM(1)
                                                          are configured, the sum of both PEMs' SLI_NP fields must not exceed 0x20. The
                                                          reset value for this register assumes the minimum (e.g. 2-lane)
                                                          configuration. This ensures that the total allocated credits does not
@@ -4438,7 +4439,7 @@ union cvmx_pemx_tlp_credits {
                                                             1 2-ln PEM     n    2             0x20
                                                          </pre> */
 	uint64_t sli_p                        : 8;  /**< TLP 8B credits for Posted TLPs in the SLI. Legal values are 0x24 to 0xFF. Pairs
-                                                         of PEMs share a single SLI interface. Wnen both PEM(0) and PEM(1)
+                                                         of PEMs share a single SLI interface. When both PEM(0) and PEM(1)
                                                          are configured, the sum of both PEMs' SLI_P fields must not exceed 0x100. The reset
                                                          value for this register assumes the minimum (e.g. 2-lane) configuration.
                                                          This ensures the total allocated credits does not oversubscribe the SLI.
@@ -4577,7 +4578,7 @@ union cvmx_pemx_tlp_credits {
 #endif
 	} cn73xx;
 	struct cvmx_pemx_tlp_credits_cn73xx   cn78xx;
-	struct cvmx_pemx_tlp_credits_cn73xx   cn78xxp2;
+	struct cvmx_pemx_tlp_credits_cn73xx   cn78xxp1;
 	struct cvmx_pemx_tlp_credits_cn61xx   cnf71xx;
 	struct cvmx_pemx_tlp_credits_cn73xx   cnf75xx;
 };

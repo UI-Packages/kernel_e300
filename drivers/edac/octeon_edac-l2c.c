@@ -551,7 +551,7 @@ static int octeon_l2c_probe(struct platform_device *pdev)
 		cvmx_write_csr(CVMX_L2T_ERR, l2d_err.u64);
 
 		l2c->edac_check = octeon_l2c_poll_oct1;
-	} else if (current_cpu_type() == CPU_CAVIUM_OCTEON2) {
+		} else if (current_cpu_type() == CPU_CAVIUM_OCTEON2) {
 		/* OCTEON II */
 		l2c->edac_check = octeon_l2c_poll_oct2;
 	} else {
@@ -580,6 +580,7 @@ static int octeon_l2c_remove(struct platform_device *pdev)
 	struct edac_device_ctl_info *l2c = platform_get_drvdata(pdev);
 
 	edac_device_del_device(&pdev->dev);
+	if (l2c)
 	edac_device_free_ctl_info(l2c);
 
 	return 0;

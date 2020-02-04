@@ -16,6 +16,7 @@
 #include "boot.h"
 #include "video.h"
 #include "vesa.h"
+#include "string.h"
 
 /* VESA information */
 static struct vesa_general_info vginfo;
@@ -200,7 +201,6 @@ static void vesa_store_pm_info(void)
 
 	boot_params.screen_info.vesapm_seg = oreg.es;
 	boot_params.screen_info.vesapm_off = oreg.di;
-	boot_params.screen_info.vesapm_size = oreg.cx;
 }
 
 /*

@@ -68,7 +68,7 @@ struct entry {
 	 * Number of timeout events:
 	 */
 	unsigned long		count;
-	unsigned int		timer_flag;
+	u32			flags;
 
 	/*
 	 * We save the command-line string to preserve
@@ -116,7 +116,7 @@ static ktime_t time_start, time_stop;
 static unsigned long nr_entries;
 static struct entry entries[MAX_ENTRIES];
 
-static atomic_unchecked_t overflow_count;
+static atomic_t overflow_count;
 
 /*
  * The entries are in a hash-table, for fast lookup:
@@ -140,7 +140,7 @@ static void reset_entries(void)
 	nr_entries = 0;
 	memset(entries, 0, sizeof(entries));
 	memset(tstat_hash_table, 0, sizeof(tstat_hash_table));
-	atomic_set_unchecked(&overflow_count, 0);
+	atomic_set(&overflow_count, 0);
 }
 
 static struct entry *alloc_entry(void)
@@ -227,13 +227,13 @@ static struct entry *tstat_lookup(struct entry *entry, char *comm)
  * @startf:	pointer to the function which did the timer setup
  * @timerf:	pointer to the timer callback function of the timer
  * @comm:	name of the process which set up the timer
+ * @tflags:	The flags field of the timer
  *
  * When the timer is already registered, then the event counter is
  * incremented. Otherwise the timer is registered in a free slot.
  */
 void timer_stats_update_stats(void *timer, pid_t pid, void *startf,
-			      void *timerf, char *comm,
-			      unsigned int timer_flag)
+			      void *timerf, char *comm, u32 tflags)
 {
 	/*
 	 * It doesn't matter which lock we take:
@@ -251,7 +251,7 @@ void timer_stats_update_stats(void *timer, pid_t pid, void *startf,
 	input.start_func = startf;
 	input.expire_func = timerf;
 	input.pid = pid;
-	input.timer_flag = timer_flag;
+	input.flags = tflags;
 
 	raw_spin_lock_irqsave(lock, flags);
 	if (!timer_stats_active)
@@ -261,7 +261,7 @@ void timer_stats_update_stats(void *timer, pid_t pid, void *startf,
 	if (likely(entry))
 		entry->count++;
 	else
-		atomic_inc_unchecked(&overflow_count);
+		atomic_inc(&overflow_count);
 
  out_unlock:
 	raw_spin_unlock_irqrestore(lock, flags);
@@ -279,7 +279,7 @@ static void print_name_offset(struct seq_file *m, unsigned long addr)
 
 static int tstats_show(struct seq_file *m, void *v)
 {
-	struct timespec period;
+	struct timespec64 period;
 	struct entry *entry;
 	unsigned long ms;
 	long events = 0;
@@ -295,18 +295,18 @@ static int tstats_show(struct seq_file *m, void *v)
 
 	time = ktime_sub(time_stop, time_start);
 
-	period = ktime_to_timespec(time);
+	period = ktime_to_timespec64(time);
 	ms = period.tv_nsec / 1000000;
 
-	seq_puts(m, "Timer Stats Version: v0.2\n");
-	seq_printf(m, "Sample period: %ld.%03ld s\n", period.tv_sec, ms);
-	if (atomic_read_unchecked(&overflow_count))
-		seq_printf(m, "Overflow: %d entries\n",
-			atomic_read_unchecked(&overflow_count));
+	seq_puts(m, "Timer Stats Version: v0.3\n");
+	seq_printf(m, "Sample period: %ld.%03ld s\n", (long)period.tv_sec, ms);
+	if (atomic_read(&overflow_count))
+		seq_printf(m, "Overflow: %d entries\n", atomic_read(&overflow_count));
+	seq_printf(m, "Collection: %s\n", timer_stats_active ? "active" : "inactive");
 
 	for (i = 0; i < nr_entries; i++) {
 		entry = entries + i;
- 		if (entry->timer_flag & TIMER_STATS_FLAG_DEFERRABLE) {
+		if (entry->flags & TIMER_DEFERRABLE) {
 			seq_printf(m, "%4luD, %5d %-16s ",
 				entry->count, entry->pid, entry->comm);
 		} else {

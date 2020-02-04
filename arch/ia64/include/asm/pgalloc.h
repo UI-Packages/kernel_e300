@@ -32,17 +32,11 @@ static inline void pgd_free(struct mm_struct *mm, pgd_t *pgd)
 	quicklist_free(0, NULL, pgd);
 }
 
-#ifdef CONFIG_PGTABLE_4
+#if CONFIG_PGTABLE_LEVELS == 4
 static inline void
 pgd_populate(struct mm_struct *mm, pgd_t * pgd_entry, pud_t * pud)
 {
 	pgd_val(*pgd_entry) = __pa(pud);
-}
-
-static inline void
-pgd_populate_kernel(struct mm_struct *mm, pgd_t * pgd_entry, pud_t * pud)
-{
-	pgd_populate(mm, pgd_entry, pud);
 }
 
 static inline pud_t *pud_alloc_one(struct mm_struct *mm, unsigned long addr)
@@ -55,18 +49,12 @@ static inline void pud_free(struct mm_struct *mm, pud_t *pud)
 	quicklist_free(0, NULL, pud);
 }
 #define __pud_free_tlb(tlb, pud, address)	pud_free((tlb)->mm, pud)
-#endif /* CONFIG_PGTABLE_4 */
+#endif /* CONFIG_PGTABLE_LEVELS == 4 */
 
 static inline void
 pud_populate(struct mm_struct *mm, pud_t * pud_entry, pmd_t * pmd)
 {
 	pud_val(*pud_entry) = __pa(pmd);
-}
-
-static inline void
-pud_populate_kernel(struct mm_struct *mm, pud_t * pud_entry, pmd_t * pmd)
-{
-	pud_populate(mm, pud_entry, pmd);
 }
 
 static inline pmd_t *pmd_alloc_one(struct mm_struct *mm, unsigned long addr)
@@ -103,7 +91,10 @@ static inline pgtable_t pte_alloc_one(struct mm_struct *mm, unsigned long addr)
 	if (!pg)
 		return NULL;
 	page = virt_to_page(pg);
-	pgtable_page_ctor(page);
+	if (!pgtable_page_ctor(page)) {
+		quicklist_free(0, NULL, pg);
+		return NULL;
+	}
 	return page;
 }
 

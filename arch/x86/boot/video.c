@@ -13,9 +13,13 @@
  * Select video mode
  */
 
+#include <uapi/asm/boot.h>
+
 #include "boot.h"
 #include "video.h"
 #include "vesa.h"
+
+static u16 video_segment;
 
 static void store_cursor_position(void)
 {
@@ -96,7 +100,7 @@ static void store_mode_params(void)
 static unsigned int get_entry(void)
 {
 	char entry_buf[4];
-	unsigned int i, len = 0;
+	int i, len = 0;
 	int key;
 	unsigned int v;
 

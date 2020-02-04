@@ -5,18 +5,22 @@
 #include <linux/interrupt.h>
 #include <linux/kernel.h>
 #include <linux/types.h>
-#include <linux/init.h>
 
 #include <asm/processor.h>
+#include <asm/traps.h>
+#include <asm/tlbflush.h>
 #include <asm/mce.h>
 #include <asm/msr.h>
-#include <asm/pgtable.h>
 
 /* Machine check handler for WinChip C6: */
 static void winchip_machine_check(struct pt_regs *regs, long error_code)
 {
-	printk(KERN_EMERG "CPU0: Machine Check Exception.\n");
+	ist_enter(regs);
+
+	pr_emerg("CPU0: Machine Check Exception.\n");
 	add_taint(TAINT_MACHINE_CHECK, LOCKDEP_NOW_UNRELIABLE);
+
+	ist_exit(regs);
 }
 
 /* Set up machine check reporting on the Winchip C6 series */
@@ -24,9 +28,7 @@ void winchip_mcheck_init(struct cpuinfo_x86 *c)
 {
 	u32 lo, hi;
 
-	pax_open_kernel();
 	machine_check_vector = winchip_machine_check;
-	pax_close_kernel();
 	/* Make sure the vector pointer is visible before we enable MCEs: */
 	wmb();
 
@@ -35,8 +37,7 @@ void winchip_mcheck_init(struct cpuinfo_x86 *c)
 	lo &= ~(1<<4);	/* Enable MCE */
 	wrmsr(MSR_IDT_FCR1, lo, hi);
 
-	set_in_cr4(X86_CR4_MCE);
+	cr4_set_bits(X86_CR4_MCE);
 
-	printk(KERN_INFO
-	       "Winchip machine check reporting enabled on CPU#0.\n");
+	pr_info("Winchip machine check reporting enabled on CPU#0.\n");
 }

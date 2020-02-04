@@ -15,7 +15,7 @@
 
 #include <net/af_unix.h>
 
-static ctl_table unix_table[] = {
+static struct ctl_table unix_table[] = {
 	{
 		.procname	= "max_dgram_qlen",
 		.data		= &init_net.unx.sysctl_max_dgram_qlen,
@@ -28,7 +28,7 @@ static ctl_table unix_table[] = {
 
 int __net_init unix_sysctl_register(struct net *net)
 {
-	ctl_table_no_const *table;
+	struct ctl_table *table;
 
 	table = kmemdup(unix_table, sizeof(unix_table), GFP_KERNEL);
 	if (table == NULL)

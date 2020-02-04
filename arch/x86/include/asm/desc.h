@@ -4,7 +4,6 @@
 #include <asm/desc_defs.h>
 #include <asm/ldt.h>
 #include <asm/mmu.h>
-#include <asm/pgtable.h>
 
 #include <linux/smp.h>
 #include <linux/percpu.h>
@@ -18,7 +17,6 @@ static inline void fill_ldt(struct desc_struct *desc, const struct user_desc *in
 
 	desc->type		= (info->read_exec_only ^ 1) << 1;
 	desc->type	       |= info->contents << 2;
-	desc->type	       |= info->seg_not_present ^ 1;
 
 	desc->s			= 1;
 	desc->dpl		= 0x3;
@@ -37,14 +35,19 @@ static inline void fill_ldt(struct desc_struct *desc, const struct user_desc *in
 }
 
 extern struct desc_ptr idt_descr;
-extern struct desc_ptr nmi_idt_descr;
-extern gate_desc idt_table[256];
-extern gate_desc nmi_idt_table[256];
+extern gate_desc idt_table[];
+extern const struct desc_ptr debug_idt_descr;
+extern gate_desc debug_idt_table[];
 
-extern struct desc_struct cpu_gdt_table[NR_CPUS][PAGE_SIZE / sizeof(struct desc_struct)];
+struct gdt_page {
+	struct desc_struct gdt[GDT_ENTRIES];
+} __attribute__((aligned(PAGE_SIZE)));
+
+DECLARE_PER_CPU_PAGE_ALIGNED_USER_MAPPED(struct gdt_page, gdt_page);
+
 static inline struct desc_struct *get_cpu_gdt_table(unsigned int cpu)
 {
-	return cpu_gdt_table[cpu];
+	return per_cpu(gdt_page, cpu).gdt;
 }
 
 #ifdef CONFIG_X86_64
@@ -69,14 +72,8 @@ static inline void pack_gate(gate_desc *gate, unsigned char type,
 			     unsigned long base, unsigned dpl, unsigned flags,
 			     unsigned short seg)
 {
-	gate->gate.offset_low	= base;
-	gate->gate.seg		= seg;
-	gate->gate.reserved	= 0;
-	gate->gate.type		= type;
-	gate->gate.s		= 0;
-	gate->gate.dpl		= dpl;
-	gate->gate.p		= 1;
-	gate->gate.offset_high	= base >> 16;
+	gate->a = (seg << 16) | (base & 0xffff);
+	gate->b = (base & 0xffff0000) | (((0x80 | type | (dpl << 5)) & 0xff) << 8);
 }
 
 #endif
@@ -121,16 +118,12 @@ static inline void paravirt_free_ldt(struct desc_struct *ldt, unsigned entries)
 
 static inline void native_write_idt_entry(gate_desc *idt, int entry, const gate_desc *gate)
 {
-	pax_open_kernel();
 	memcpy(&idt[entry], gate, sizeof(*gate));
-	pax_close_kernel();
 }
 
 static inline void native_write_ldt_entry(struct desc_struct *ldt, int entry, const void *desc)
 {
-	pax_open_kernel();
 	memcpy(&ldt[entry], desc, 8);
-	pax_close_kernel();
 }
 
 static inline void
@@ -144,9 +137,7 @@ native_write_gdt_entry(struct desc_struct *gdt, int entry, const void *desc, int
 	default:	size = sizeof(*gdt);		break;
 	}
 
-	pax_open_kernel();
 	memcpy(&gdt[entry], desc, size);
-	pax_close_kernel();
 }
 
 static inline void pack_descriptor(struct desc_struct *desc, unsigned long base,
@@ -219,9 +210,7 @@ static inline void native_set_ldt(const void *addr, unsigned int entries)
 
 static inline void native_load_tr_desc(void)
 {
-	pax_open_kernel();
 	asm volatile("ltr %w0"::"q" (GDT_ENTRY_TSS*8));
-	pax_close_kernel();
 }
 
 static inline void native_load_gdt(const struct desc_ptr *dtr)
@@ -258,10 +247,8 @@ static inline void native_load_tls(struct thread_struct *t, unsigned int cpu)
 	struct desc_struct *gdt = get_cpu_gdt_table(cpu);
 	unsigned int i;
 
-	pax_open_kernel();
 	for (i = 0; i < GDT_ENTRY_TLS_ENTRIES; i++)
 		gdt[GDT_ENTRY_TLS_MIN + i] = t->tls_array[i];
-	pax_close_kernel();
 }
 
 /* This intentionally ignores lm, since 32-bit apps don't have that field. */
@@ -293,22 +280,7 @@ static inline void clear_LDT(void)
 	set_ldt(NULL, 0);
 }
 
-/*
- * load one particular LDT into the current CPU
- */
-static inline void load_LDT_nolock(mm_context_t *pc)
-{
-	set_ldt(pc->ldt, pc->size);
-}
-
-static inline void load_LDT(mm_context_t *pc)
-{
-	preempt_disable();
-	load_LDT_nolock(pc);
-	preempt_enable();
-}
-
-static inline unsigned long __intentional_overflow(-1) get_desc_base(const struct desc_struct *desc)
+static inline unsigned long get_desc_base(const struct desc_struct *desc)
 {
 	return (unsigned)(desc->base0 | ((desc->base1) << 16) | ((desc->base2) << 24));
 }
@@ -332,16 +304,44 @@ static inline void set_desc_limit(struct desc_struct *desc, unsigned long limit)
 }
 
 #ifdef CONFIG_X86_64
-static inline void set_nmi_gate(int gate, const void *addr)
+static inline void set_nmi_gate(int gate, void *addr)
 {
 	gate_desc s;
 
 	pack_gate(&s, GATE_INTERRUPT, (unsigned long)addr, 0, 0, __KERNEL_CS);
-	write_idt_entry(nmi_idt_table, gate, &s);
+	write_idt_entry(debug_idt_table, gate, &s);
 }
 #endif
 
-static inline void _set_gate(int gate, unsigned type, const void *addr,
+#ifdef CONFIG_TRACING
+extern struct desc_ptr trace_idt_descr;
+extern gate_desc trace_idt_table[];
+static inline void write_trace_idt_entry(int entry, const gate_desc *gate)
+{
+	write_idt_entry(trace_idt_table, entry, gate);
+}
+
+static inline void _trace_set_gate(int gate, unsigned type, void *addr,
+				   unsigned dpl, unsigned ist, unsigned seg)
+{
+	gate_desc s;
+
+	pack_gate(&s, type, (unsigned long)addr, dpl, ist, seg);
+	/*
+	 * does not need to be atomic because it is only done once at
+	 * setup time
+	 */
+	write_trace_idt_entry(gate, &s);
+}
+#else
+static inline void write_trace_idt_entry(int entry, const gate_desc *gate)
+{
+}
+
+#define _trace_set_gate(gate, type, addr, dpl, ist, seg)
+#endif
+
+static inline void _set_gate(int gate, unsigned type, void *addr,
 			     unsigned dpl, unsigned ist, unsigned seg)
 {
 	gate_desc s;
@@ -352,6 +352,7 @@ static inline void _set_gate(int gate, unsigned type, const void *addr,
 	 * setup time
 	 */
 	write_idt_entry(idt_table, gate, &s);
+	write_trace_idt_entry(gate, &s);
 }
 
 /*
@@ -360,11 +361,19 @@ static inline void _set_gate(int gate, unsigned type, const void *addr,
  * Pentium F0 0F bugfix can have resulted in the mapped
  * IDT being write-protected.
  */
-static inline void set_intr_gate(unsigned int n, const void *addr)
-{
-	BUG_ON((unsigned)n > 0xFF);
-	_set_gate(n, GATE_INTERRUPT, addr, 0, 0, __KERNEL_CS);
-}
+#define set_intr_gate_notrace(n, addr)					\
+	do {								\
+		BUG_ON((unsigned)n > 0xFF);				\
+		_set_gate(n, GATE_INTERRUPT, (void *)addr, 0, 0,	\
+			  __KERNEL_CS);					\
+	} while (0)
+
+#define set_intr_gate(n, addr)						\
+	do {								\
+		set_intr_gate_notrace(n, addr);				\
+		_trace_set_gate(n, GATE_INTERRUPT, (void *)trace_##addr,\
+				0, 0, __KERNEL_CS);			\
+	} while (0)
 
 extern int first_system_vector;
 /* used_vectors is BITMAP for irq is not managed by percpu vector_irq */
@@ -381,28 +390,28 @@ static inline void alloc_system_vector(int vector)
 	}
 }
 
-static inline void alloc_intr_gate(unsigned int n, void *addr)
-{
-	alloc_system_vector(n);
-	set_intr_gate(n, addr);
-}
+#define alloc_intr_gate(n, addr)				\
+	do {							\
+		alloc_system_vector(n);				\
+		set_intr_gate(n, addr);				\
+	} while (0)
 
 /*
  * This routine sets up an interrupt gate at directory privilege level 3.
  */
-static inline void set_system_intr_gate(unsigned int n, const void *addr)
+static inline void set_system_intr_gate(unsigned int n, void *addr)
 {
 	BUG_ON((unsigned)n > 0xFF);
 	_set_gate(n, GATE_INTERRUPT, addr, 0x3, 0, __KERNEL_CS);
 }
 
-static inline void set_system_trap_gate(unsigned int n, const void *addr)
+static inline void set_system_trap_gate(unsigned int n, void *addr)
 {
 	BUG_ON((unsigned)n > 0xFF);
 	_set_gate(n, GATE_TRAP, addr, 0x3, 0, __KERNEL_CS);
 }
 
-static inline void set_trap_gate(unsigned int n, const void *addr)
+static inline void set_trap_gate(unsigned int n, void *addr)
 {
 	BUG_ON((unsigned)n > 0xFF);
 	_set_gate(n, GATE_TRAP, addr, 0, 0, __KERNEL_CS);
@@ -411,31 +420,85 @@ static inline void set_trap_gate(unsigned int n, const void *addr)
 static inline void set_task_gate(unsigned int n, unsigned int gdt_entry)
 {
 	BUG_ON((unsigned)n > 0xFF);
-	_set_gate(n, GATE_TASK, (const void *)0, 0, 0, (gdt_entry<<3));
+	_set_gate(n, GATE_TASK, (void *)0, 0, 0, (gdt_entry<<3));
 }
 
-static inline void set_intr_gate_ist(int n, const void *addr, unsigned ist)
+static inline void set_intr_gate_ist(int n, void *addr, unsigned ist)
 {
 	BUG_ON((unsigned)n > 0xFF);
 	_set_gate(n, GATE_INTERRUPT, addr, 0, ist, __KERNEL_CS);
 }
 
-static inline void set_system_intr_gate_ist(int n, const void *addr, unsigned ist)
+static inline void set_system_intr_gate_ist(int n, void *addr, unsigned ist)
 {
 	BUG_ON((unsigned)n > 0xFF);
 	_set_gate(n, GATE_INTERRUPT, addr, 0x3, ist, __KERNEL_CS);
 }
 
-#ifdef CONFIG_X86_32
-static inline void set_user_cs(unsigned long base, unsigned long limit, int cpu)
+#ifdef CONFIG_X86_64
+DECLARE_PER_CPU(u32, debug_idt_ctr);
+static inline bool is_debug_idt_enabled(void)
 {
-	struct desc_struct d;
+	if (this_cpu_read(debug_idt_ctr))
+		return true;
 
-	if (likely(limit))
-		limit = (limit - 1UL) >> PAGE_SHIFT;
-	pack_descriptor(&d, base, limit, 0xFB, 0xC);
-	write_gdt_entry(get_cpu_gdt_table(cpu), GDT_ENTRY_DEFAULT_USER_CS, &d, DESCTYPE_S);
+	return false;
+}
+
+static inline void load_debug_idt(void)
+{
+	load_idt((const struct desc_ptr *)&debug_idt_descr);
+}
+#else
+static inline bool is_debug_idt_enabled(void)
+{
+	return false;
+}
+
+static inline void load_debug_idt(void)
+{
 }
 #endif
 
+#ifdef CONFIG_TRACING
+extern atomic_t trace_idt_ctr;
+static inline bool is_trace_idt_enabled(void)
+{
+	if (atomic_read(&trace_idt_ctr))
+		return true;
+
+	return false;
+}
+
+static inline void load_trace_idt(void)
+{
+	load_idt((const struct desc_ptr *)&trace_idt_descr);
+}
+#else
+static inline bool is_trace_idt_enabled(void)
+{
+	return false;
+}
+
+static inline void load_trace_idt(void)
+{
+}
+#endif
+
+/*
+ * The load_current_idt() must be called with interrupts disabled
+ * to avoid races. That way the IDT will always be set back to the expected
+ * descriptor. It's also called when a CPU is being initialized, and
+ * that doesn't need to disable interrupts, as nothing should be
+ * bothering the CPU then.
+ */
+static inline void load_current_idt(void)
+{
+	if (is_debug_idt_enabled())
+		load_debug_idt();
+	else if (is_trace_idt_enabled())
+		load_trace_idt();
+	else
+		load_idt((const struct desc_ptr *)&idt_descr);
+}
 #endif /* _ASM_X86_DESC_H */

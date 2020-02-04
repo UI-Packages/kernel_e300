@@ -742,7 +742,6 @@ void cvmx_helper_free_packet_data(cvmx_wqe_t *work)
 		}
 		buffer_ptr.u64 = next_buffer_ptr;
 	}
-
 }
 
 void cvmx_helper_setup_legacy_red(int pass_thresh, int drop_thresh)

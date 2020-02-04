@@ -305,13 +305,12 @@ plt_target (struct plt_entry *plt)
 #endif /* !USE_BRL */
 
 void
-module_free (struct module *mod, void *module_region)
+module_arch_freeing_init (struct module *mod)
 {
-	if (mod && mod->arch.init_unw_table && module_region == mod->module_init_rx) {
+	if (mod->arch.init_unw_table) {
 		unw_remove_unwind_table(mod->arch.init_unw_table);
 		mod->arch.init_unw_table = NULL;
 	}
-	vfree(module_region);
 }
 
 /* Have we already seen one of these relocations? */
@@ -440,14 +439,6 @@ module_frob_arch_sections (Elf_Ehdr *ehdr, Elf_Shdr *sechdrs, char *secstrings,
 			mod->arch.opd = s;
 		else if (strcmp(".IA_64.unwind", secstrings + s->sh_name) == 0)
 			mod->arch.unwind = s;
-#ifdef CONFIG_PARAVIRT
-		else if (strcmp(".paravirt_bundles",
-				secstrings + s->sh_name) == 0)
-			mod->arch.paravirt_bundles = s;
-		else if (strcmp(".paravirt_insts",
-				secstrings + s->sh_name) == 0)
-			mod->arch.paravirt_insts = s;
-#endif
 
 	if (!mod->arch.core_plt || !mod->arch.init_plt || !mod->arch.got || !mod->arch.opd) {
 		printk(KERN_ERR "%s: sections missing\n", mod->name);
@@ -493,39 +484,15 @@ module_frob_arch_sections (Elf_Ehdr *ehdr, Elf_Shdr *sechdrs, char *secstrings,
 }
 
 static inline int
-in_init_rx (const struct module *mod, uint64_t addr)
-{
-	return addr - (uint64_t) mod->module_init_rx < mod->init_size_rx;
-}
-
-static inline int
-in_init_rw (const struct module *mod, uint64_t addr)
-{
-	return addr - (uint64_t) mod->module_init_rw < mod->init_size_rw;
-}
-
-static inline int
 in_init (const struct module *mod, uint64_t addr)
 {
-	return in_init_rx(mod, addr) || in_init_rw(mod, addr);
-}
-
-static inline int
-in_core_rx (const struct module *mod, uint64_t addr)
-{
-	return addr - (uint64_t) mod->module_core_rx < mod->core_size_rx;
-}
-
-static inline int
-in_core_rw (const struct module *mod, uint64_t addr)
-{
-	return addr - (uint64_t) mod->module_core_rw < mod->core_size_rw;
+	return addr - (uint64_t) mod->init_layout.base < mod->init_layout.size;
 }
 
 static inline int
 in_core (const struct module *mod, uint64_t addr)
 {
-	return in_core_rx(mod, addr) || in_core_rw(mod, addr);
+	return addr - (uint64_t) mod->core_layout.base < mod->core_layout.size;
 }
 
 static inline int
@@ -708,14 +675,7 @@ do_reloc (struct module *mod, uint8_t r_type, Elf64_Sym *sym, uint64_t addend,
 		break;
 
 	      case RV_BDREL:
-		if (in_init_rx(mod, val))
-			val -= (uint64_t) mod->module_init_rx;
-		else if (in_init_rw(mod, val))
-			val -= (uint64_t) mod->module_init_rw;
-		else if (in_core_rx(mod, val))
-			val -= (uint64_t) mod->module_core_rx;
-		else if (in_core_rw(mod, val))
-			val -= (uint64_t) mod->module_core_rw;
+		val -= (uint64_t) (in_init(mod, val) ? mod->init_layout.base : mod->core_layout.base);
 		break;
 
 	      case RV_LTV:
@@ -850,15 +810,15 @@ apply_relocate_add (Elf64_Shdr *sechdrs, const char *strtab, unsigned int symind
 		 *     addresses have been selected...
 		 */
 		uint64_t gp;
-		if (mod->core_size_rx + mod->core_size_rw > MAX_LTOFF)
+		if (mod->core_layout.size > MAX_LTOFF)
 			/*
 			 * This takes advantage of fact that SHF_ARCH_SMALL gets allocated
 			 * at the end of the module.
 			 */
-			gp = mod->core_size_rx + mod->core_size_rw - MAX_LTOFF / 2;
+			gp = mod->core_layout.size - MAX_LTOFF / 2;
 		else
-			gp = (mod->core_size_rx + mod->core_size_rw) / 2;
-		gp = (uint64_t) mod->module_core_rx + ((gp + 7) & -8);
+			gp = mod->core_layout.size / 2;
+		gp = (uint64_t) mod->core_layout.base + ((gp + 7) & -8);
 		mod->arch.gp = gp;
 		DEBUGP("%s: placing gp at 0x%lx\n", __func__, gp);
 	}
@@ -946,30 +906,6 @@ module_finalize (const Elf_Ehdr *hdr, const Elf_Shdr *sechdrs, struct module *mo
 	DEBUGP("%s: init: entry=%p\n", __func__, mod->init);
 	if (mod->arch.unwind)
 		register_unwind_table(mod);
-#ifdef CONFIG_PARAVIRT
-        if (mod->arch.paravirt_bundles) {
-                struct paravirt_patch_site_bundle *start =
-                        (struct paravirt_patch_site_bundle *)
-                        mod->arch.paravirt_bundles->sh_addr;
-                struct paravirt_patch_site_bundle *end =
-                        (struct paravirt_patch_site_bundle *)
-                        (mod->arch.paravirt_bundles->sh_addr +
-                         mod->arch.paravirt_bundles->sh_size);
-
-                paravirt_patch_apply_bundle(start, end);
-        }
-        if (mod->arch.paravirt_insts) {
-                struct paravirt_patch_site_inst *start =
-                        (struct paravirt_patch_site_inst *)
-                        mod->arch.paravirt_insts->sh_addr;
-                struct paravirt_patch_site_inst *end =
-                        (struct paravirt_patch_site_inst *)
-                        (mod->arch.paravirt_insts->sh_addr +
-                         mod->arch.paravirt_insts->sh_size);
-
-                paravirt_patch_apply_inst(start, end);
-        }
-#endif
 	return 0;
 }
 

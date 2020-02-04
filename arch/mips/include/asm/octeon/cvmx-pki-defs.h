@@ -1,5 +1,5 @@
 /***********************license start***************
- * Copyright (c) 2003-2015  Cavium Inc. (support@cavium.com). All rights
+ * Copyright (c) 2003-2017  Cavium Inc. (support@cavium.com). All rights
  * reserved.
  *
  *
@@ -90,8 +90,8 @@ static inline uint64_t CVMX_PKI_AURAX_CFG(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 511))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1023))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1023))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1023))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 511)))))
 		cvmx_warn("CVMX_PKI_AURAX_CFG(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180044900000ull) + ((offset) & 1023) * 8;
@@ -137,8 +137,8 @@ static inline uint64_t CVMX_PKI_BPIDX_STATE(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 511))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1023))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1023))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1023))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 511)))))
 		cvmx_warn("CVMX_PKI_BPIDX_STATE(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180044B00000ull) + ((offset) & 1023) * 8;
@@ -162,8 +162,8 @@ static inline uint64_t CVMX_PKI_CHANX_CFG(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 4095))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 4095))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 4095))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 4095))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 4095)))))
 		cvmx_warn("CVMX_PKI_CHANX_CFG(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180044A00000ull) + ((offset) & 4095) * 8;
@@ -187,8 +187,8 @@ static inline uint64_t CVMX_PKI_CLX_ECC_CTL(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 3))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_PKI_CLX_ECC_CTL(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x000118004400C020ull) + ((offset) & 3) * 0x10000ull;
@@ -201,8 +201,8 @@ static inline uint64_t CVMX_PKI_CLX_ECC_INT(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 3))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_PKI_CLX_ECC_INT(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x000118004400C010ull) + ((offset) & 3) * 0x10000ull;
@@ -215,8 +215,8 @@ static inline uint64_t CVMX_PKI_CLX_INT(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 3))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_PKI_CLX_INT(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x000118004400C000ull) + ((offset) & 3) * 0x10000ull;
@@ -229,8 +229,8 @@ static inline uint64_t CVMX_PKI_CLX_PCAMX_ACTIONX(unsigned long a, unsigned long
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((a <= 1)) && ((b <= 1)) && ((c <= 191)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((a <= 3)) && ((b <= 1)) && ((c <= 191)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((a <= 3)) && ((b <= 1)) && ((c <= 191)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((a <= 3)) && ((b <= 1)) && ((c <= 191)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((a <= 1)) && ((b <= 1)) && ((c <= 191))))))
 		cvmx_warn("CVMX_PKI_CLX_PCAMX_ACTIONX(%lu,%lu,%lu) is invalid on this chip\n", a, b, c);
 	return CVMX_ADD_IO_SEG(0x0001180044708000ull) + ((a) << 16) + ((b) << 12) + ((c) << 3);
@@ -243,8 +243,8 @@ static inline uint64_t CVMX_PKI_CLX_PCAMX_MATCHX(unsigned long a, unsigned long 
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((a <= 1)) && ((b <= 1)) && ((c <= 191)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((a <= 3)) && ((b <= 1)) && ((c <= 191)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((a <= 3)) && ((b <= 1)) && ((c <= 191)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((a <= 3)) && ((b <= 1)) && ((c <= 191)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((a <= 1)) && ((b <= 1)) && ((c <= 191))))))
 		cvmx_warn("CVMX_PKI_CLX_PCAMX_MATCHX(%lu,%lu,%lu) is invalid on this chip\n", a, b, c);
 	return CVMX_ADD_IO_SEG(0x0001180044704000ull) + ((a) << 16) + ((b) << 12) + ((c) << 3);
@@ -257,8 +257,8 @@ static inline uint64_t CVMX_PKI_CLX_PCAMX_TERMX(unsigned long a, unsigned long b
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((a <= 1)) && ((b <= 1)) && ((c <= 191)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((a <= 3)) && ((b <= 1)) && ((c <= 191)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((a <= 3)) && ((b <= 1)) && ((c <= 191)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((a <= 3)) && ((b <= 1)) && ((c <= 191)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((a <= 1)) && ((b <= 1)) && ((c <= 191))))))
 		cvmx_warn("CVMX_PKI_CLX_PCAMX_TERMX(%lu,%lu,%lu) is invalid on this chip\n", a, b, c);
 	return CVMX_ADD_IO_SEG(0x0001180044700000ull) + ((a) << 16) + ((b) << 12) + ((c) << 3);
@@ -271,8 +271,8 @@ static inline uint64_t CVMX_PKI_CLX_PKINDX_CFG(unsigned long offset, unsigned lo
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 63)) && ((block_id <= 1)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 63)) && ((block_id <= 3)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 63)) && ((block_id <= 3)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 63)) && ((block_id <= 3)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 63)) && ((block_id <= 1))))))
 		cvmx_warn("CVMX_PKI_CLX_PKINDX_CFG(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x0001180044300040ull) + (((offset) & 63) + ((block_id) & 3) * 0x100ull) * 256;
@@ -285,8 +285,8 @@ static inline uint64_t CVMX_PKI_CLX_PKINDX_KMEMX(unsigned long a, unsigned long 
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((a <= 1)) && ((b <= 63)) && ((c <= 15)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((a <= 3)) && ((b <= 63)) && ((c <= 15)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((a <= 3)) && ((b <= 63)) && ((c <= 15)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((a <= 3)) && ((b <= 63)) && ((c <= 15)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((a <= 1)) && ((b <= 63)) && ((c <= 15))))))
 		cvmx_warn("CVMX_PKI_CLX_PKINDX_KMEMX(%lu,%lu,%lu) is invalid on this chip\n", a, b, c);
 	return CVMX_ADD_IO_SEG(0x0001180044200000ull) + ((a) << 16) + ((b) << 8) + ((c) << 3);
@@ -299,8 +299,8 @@ static inline uint64_t CVMX_PKI_CLX_PKINDX_L2_CUSTOM(unsigned long offset, unsig
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 63)) && ((block_id <= 1)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 63)) && ((block_id <= 3)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 63)) && ((block_id <= 3)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 63)) && ((block_id <= 3)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 63)) && ((block_id <= 1))))))
 		cvmx_warn("CVMX_PKI_CLX_PKINDX_L2_CUSTOM(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x0001180044300058ull) + (((offset) & 63) + ((block_id) & 3) * 0x100ull) * 256;
@@ -313,8 +313,8 @@ static inline uint64_t CVMX_PKI_CLX_PKINDX_LG_CUSTOM(unsigned long offset, unsig
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 63)) && ((block_id <= 1)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 63)) && ((block_id <= 3)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 63)) && ((block_id <= 3)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 63)) && ((block_id <= 3)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 63)) && ((block_id <= 1))))))
 		cvmx_warn("CVMX_PKI_CLX_PKINDX_LG_CUSTOM(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x0001180044300060ull) + (((offset) & 63) + ((block_id) & 3) * 0x100ull) * 256;
@@ -327,8 +327,8 @@ static inline uint64_t CVMX_PKI_CLX_PKINDX_SKIP(unsigned long offset, unsigned l
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 63)) && ((block_id <= 1)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 63)) && ((block_id <= 3)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 63)) && ((block_id <= 3)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 63)) && ((block_id <= 3)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 63)) && ((block_id <= 1))))))
 		cvmx_warn("CVMX_PKI_CLX_PKINDX_SKIP(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x0001180044300050ull) + (((offset) & 63) + ((block_id) & 3) * 0x100ull) * 256;
@@ -341,8 +341,8 @@ static inline uint64_t CVMX_PKI_CLX_PKINDX_STYLE(unsigned long offset, unsigned 
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 63)) && ((block_id <= 1)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 63)) && ((block_id <= 3)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 63)) && ((block_id <= 3)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 63)) && ((block_id <= 3)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 63)) && ((block_id <= 1))))))
 		cvmx_warn("CVMX_PKI_CLX_PKINDX_STYLE(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x0001180044300048ull) + (((offset) & 63) + ((block_id) & 3) * 0x100ull) * 256;
@@ -355,8 +355,8 @@ static inline uint64_t CVMX_PKI_CLX_SMEMX(unsigned long offset, unsigned long bl
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 2047)) && ((block_id <= 1)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 2047)) && ((block_id <= 3)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 2047)) && ((block_id <= 3)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 2047)) && ((block_id <= 3)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 2047)) && ((block_id <= 1))))))
 		cvmx_warn("CVMX_PKI_CLX_SMEMX(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x0001180044400000ull) + (((offset) & 2047) + ((block_id) & 3) * 0x2000ull) * 8;
@@ -369,8 +369,8 @@ static inline uint64_t CVMX_PKI_CLX_START(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 3))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_PKI_CLX_START(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x000118004400C030ull) + ((offset) & 3) * 0x10000ull;
@@ -383,8 +383,8 @@ static inline uint64_t CVMX_PKI_CLX_STYLEX_ALG(unsigned long offset, unsigned lo
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 63)) && ((block_id <= 1)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 63)) && ((block_id <= 3)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 63)) && ((block_id <= 3)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 63)) && ((block_id <= 3)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 63)) && ((block_id <= 1))))))
 		cvmx_warn("CVMX_PKI_CLX_STYLEX_ALG(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x0001180044501000ull) + (((offset) & 63) + ((block_id) & 3) * 0x2000ull) * 8;
@@ -397,8 +397,8 @@ static inline uint64_t CVMX_PKI_CLX_STYLEX_CFG(unsigned long offset, unsigned lo
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 63)) && ((block_id <= 1)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 63)) && ((block_id <= 3)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 63)) && ((block_id <= 3)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 63)) && ((block_id <= 3)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 63)) && ((block_id <= 1))))))
 		cvmx_warn("CVMX_PKI_CLX_STYLEX_CFG(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x0001180044500000ull) + (((offset) & 63) + ((block_id) & 3) * 0x2000ull) * 8;
@@ -411,8 +411,8 @@ static inline uint64_t CVMX_PKI_CLX_STYLEX_CFG2(unsigned long offset, unsigned l
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 63)) && ((block_id <= 1)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 63)) && ((block_id <= 3)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 63)) && ((block_id <= 3)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 63)) && ((block_id <= 3)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 63)) && ((block_id <= 1))))))
 		cvmx_warn("CVMX_PKI_CLX_STYLEX_CFG2(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x0001180044500800ull) + (((offset) & 63) + ((block_id) & 3) * 0x2000ull) * 8;
@@ -556,8 +556,8 @@ static inline uint64_t CVMX_PKI_FRM_LEN_CHKX(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_PKI_FRM_LEN_CHKX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180044004000ull) + ((offset) & 1) * 8;
@@ -592,8 +592,8 @@ static inline uint64_t CVMX_PKI_ICGX_CFG(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset == 0))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset == 0)))))
 		cvmx_warn("CVMX_PKI_ICGX_CFG(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x000118004400A000ull);
@@ -606,8 +606,8 @@ static inline uint64_t CVMX_PKI_IMEMX(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 2047))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 2047))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 2047))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 2047))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 2047)))))
 		cvmx_warn("CVMX_PKI_IMEMX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180044100000ull) + ((offset) & 2047) * 8;
@@ -620,8 +620,8 @@ static inline uint64_t CVMX_PKI_LTYPEX_MAP(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 31))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 31))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 31))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 31))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 31)))))
 		cvmx_warn("CVMX_PKI_LTYPEX_MAP(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180044005000ull) + ((offset) & 31) * 8;
@@ -722,8 +722,8 @@ static inline uint64_t CVMX_PKI_PKINDX_ICGSEL(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 63))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 63))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 63)))))
 		cvmx_warn("CVMX_PKI_PKINDX_ICGSEL(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180044010000ull) + ((offset) & 63) * 8;
@@ -736,8 +736,8 @@ static inline uint64_t CVMX_PKI_PKNDX_INB_STAT0(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 63))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 63))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 63)))))
 		cvmx_warn("CVMX_PKI_PKNDX_INB_STAT0(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180044F00000ull) + ((offset) & 63) * 256;
@@ -750,8 +750,8 @@ static inline uint64_t CVMX_PKI_PKNDX_INB_STAT1(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 63))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 63))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 63)))))
 		cvmx_warn("CVMX_PKI_PKNDX_INB_STAT1(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180044F00008ull) + ((offset) & 63) * 256;
@@ -764,8 +764,8 @@ static inline uint64_t CVMX_PKI_PKNDX_INB_STAT2(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 63))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 63))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 63)))))
 		cvmx_warn("CVMX_PKI_PKNDX_INB_STAT2(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180044F00010ull) + ((offset) & 63) * 256;
@@ -813,8 +813,8 @@ static inline uint64_t CVMX_PKI_QPG_TBLX(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 2047))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 2047))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 2047))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 2047))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 2047)))))
 		cvmx_warn("CVMX_PKI_QPG_TBLX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180044800000ull) + ((offset) & 2047) * 8;
@@ -827,8 +827,8 @@ static inline uint64_t CVMX_PKI_REASM_SOPX(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_PKI_REASM_SOPX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180044006000ull) + ((offset) & 1) * 8;
@@ -863,8 +863,8 @@ static inline uint64_t CVMX_PKI_STATX_HIST0(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 63))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 63))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 63)))))
 		cvmx_warn("CVMX_PKI_STATX_HIST0(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180044E00000ull) + ((offset) & 63) * 256;
@@ -877,8 +877,8 @@ static inline uint64_t CVMX_PKI_STATX_HIST1(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 63))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 63))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 63)))))
 		cvmx_warn("CVMX_PKI_STATX_HIST1(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180044E00008ull) + ((offset) & 63) * 256;
@@ -891,8 +891,8 @@ static inline uint64_t CVMX_PKI_STATX_HIST2(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 63))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 63))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 63)))))
 		cvmx_warn("CVMX_PKI_STATX_HIST2(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180044E00010ull) + ((offset) & 63) * 256;
@@ -905,8 +905,8 @@ static inline uint64_t CVMX_PKI_STATX_HIST3(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 63))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 63))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 63)))))
 		cvmx_warn("CVMX_PKI_STATX_HIST3(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180044E00018ull) + ((offset) & 63) * 256;
@@ -919,8 +919,8 @@ static inline uint64_t CVMX_PKI_STATX_HIST4(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 63))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 63))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 63)))))
 		cvmx_warn("CVMX_PKI_STATX_HIST4(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180044E00020ull) + ((offset) & 63) * 256;
@@ -933,8 +933,8 @@ static inline uint64_t CVMX_PKI_STATX_HIST5(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 63))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 63))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 63)))))
 		cvmx_warn("CVMX_PKI_STATX_HIST5(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180044E00028ull) + ((offset) & 63) * 256;
@@ -947,8 +947,8 @@ static inline uint64_t CVMX_PKI_STATX_HIST6(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 63))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 63))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 63)))))
 		cvmx_warn("CVMX_PKI_STATX_HIST6(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180044E00030ull) + ((offset) & 63) * 256;
@@ -961,8 +961,8 @@ static inline uint64_t CVMX_PKI_STATX_STAT0(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 63))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 63))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 63)))))
 		cvmx_warn("CVMX_PKI_STATX_STAT0(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180044E00038ull) + ((offset) & 63) * 256;
@@ -975,8 +975,8 @@ static inline uint64_t CVMX_PKI_STATX_STAT1(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 63))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 63))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 63)))))
 		cvmx_warn("CVMX_PKI_STATX_STAT1(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180044E00040ull) + ((offset) & 63) * 256;
@@ -989,8 +989,8 @@ static inline uint64_t CVMX_PKI_STATX_STAT10(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 63))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 63))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 63)))))
 		cvmx_warn("CVMX_PKI_STATX_STAT10(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180044E00088ull) + ((offset) & 63) * 256;
@@ -1003,8 +1003,8 @@ static inline uint64_t CVMX_PKI_STATX_STAT11(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 63))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 63))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 63)))))
 		cvmx_warn("CVMX_PKI_STATX_STAT11(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180044E00090ull) + ((offset) & 63) * 256;
@@ -1017,8 +1017,8 @@ static inline uint64_t CVMX_PKI_STATX_STAT12(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 63))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 63))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 63)))))
 		cvmx_warn("CVMX_PKI_STATX_STAT12(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180044E00098ull) + ((offset) & 63) * 256;
@@ -1031,8 +1031,8 @@ static inline uint64_t CVMX_PKI_STATX_STAT13(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 63))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 63))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 63)))))
 		cvmx_warn("CVMX_PKI_STATX_STAT13(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180044E000A0ull) + ((offset) & 63) * 256;
@@ -1045,8 +1045,8 @@ static inline uint64_t CVMX_PKI_STATX_STAT14(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 63))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 63))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 63)))))
 		cvmx_warn("CVMX_PKI_STATX_STAT14(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180044E000A8ull) + ((offset) & 63) * 256;
@@ -1059,8 +1059,8 @@ static inline uint64_t CVMX_PKI_STATX_STAT15(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 63))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 63))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 63)))))
 		cvmx_warn("CVMX_PKI_STATX_STAT15(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180044E000B0ull) + ((offset) & 63) * 256;
@@ -1073,8 +1073,8 @@ static inline uint64_t CVMX_PKI_STATX_STAT16(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 63))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 63))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 63)))))
 		cvmx_warn("CVMX_PKI_STATX_STAT16(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180044E000B8ull) + ((offset) & 63) * 256;
@@ -1087,8 +1087,8 @@ static inline uint64_t CVMX_PKI_STATX_STAT17(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 63))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 63))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 63)))))
 		cvmx_warn("CVMX_PKI_STATX_STAT17(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180044E000C0ull) + ((offset) & 63) * 256;
@@ -1101,8 +1101,8 @@ static inline uint64_t CVMX_PKI_STATX_STAT18(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 63))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 63))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 63)))))
 		cvmx_warn("CVMX_PKI_STATX_STAT18(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180044E000C8ull) + ((offset) & 63) * 256;
@@ -1115,8 +1115,8 @@ static inline uint64_t CVMX_PKI_STATX_STAT2(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 63))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 63))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 63)))))
 		cvmx_warn("CVMX_PKI_STATX_STAT2(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180044E00048ull) + ((offset) & 63) * 256;
@@ -1129,8 +1129,8 @@ static inline uint64_t CVMX_PKI_STATX_STAT3(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 63))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 63))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 63)))))
 		cvmx_warn("CVMX_PKI_STATX_STAT3(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180044E00050ull) + ((offset) & 63) * 256;
@@ -1143,8 +1143,8 @@ static inline uint64_t CVMX_PKI_STATX_STAT4(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 63))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 63))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 63)))))
 		cvmx_warn("CVMX_PKI_STATX_STAT4(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180044E00058ull) + ((offset) & 63) * 256;
@@ -1157,8 +1157,8 @@ static inline uint64_t CVMX_PKI_STATX_STAT5(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 63))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 63))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 63)))))
 		cvmx_warn("CVMX_PKI_STATX_STAT5(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180044E00060ull) + ((offset) & 63) * 256;
@@ -1171,8 +1171,8 @@ static inline uint64_t CVMX_PKI_STATX_STAT6(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 63))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 63))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 63)))))
 		cvmx_warn("CVMX_PKI_STATX_STAT6(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180044E00068ull) + ((offset) & 63) * 256;
@@ -1185,8 +1185,8 @@ static inline uint64_t CVMX_PKI_STATX_STAT7(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 63))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 63))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 63)))))
 		cvmx_warn("CVMX_PKI_STATX_STAT7(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180044E00070ull) + ((offset) & 63) * 256;
@@ -1199,8 +1199,8 @@ static inline uint64_t CVMX_PKI_STATX_STAT8(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 63))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 63))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 63)))))
 		cvmx_warn("CVMX_PKI_STATX_STAT8(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180044E00078ull) + ((offset) & 63) * 256;
@@ -1213,8 +1213,8 @@ static inline uint64_t CVMX_PKI_STATX_STAT9(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 63))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 63))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 63)))))
 		cvmx_warn("CVMX_PKI_STATX_STAT9(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180044E00080ull) + ((offset) & 63) * 256;
@@ -1238,8 +1238,8 @@ static inline uint64_t CVMX_PKI_STYLEX_BUF(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 63))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 63))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 63)))))
 		cvmx_warn("CVMX_PKI_STYLEX_BUF(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180044024000ull) + ((offset) & 63) * 8;
@@ -1252,8 +1252,8 @@ static inline uint64_t CVMX_PKI_STYLEX_TAG_MASK(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 63))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 63))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 63)))))
 		cvmx_warn("CVMX_PKI_STYLEX_TAG_MASK(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180044021000ull) + ((offset) & 63) * 8;
@@ -1266,8 +1266,8 @@ static inline uint64_t CVMX_PKI_STYLEX_TAG_SEL(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 63))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 63))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 63)))))
 		cvmx_warn("CVMX_PKI_STYLEX_TAG_SEL(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180044020000ull) + ((offset) & 63) * 8;
@@ -1280,8 +1280,8 @@ static inline uint64_t CVMX_PKI_STYLEX_WQ2(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 63))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 63))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 63)))))
 		cvmx_warn("CVMX_PKI_STYLEX_WQ2(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180044022000ull) + ((offset) & 63) * 8;
@@ -1294,8 +1294,8 @@ static inline uint64_t CVMX_PKI_STYLEX_WQ4(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 63))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 63))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 63)))))
 		cvmx_warn("CVMX_PKI_STYLEX_WQ4(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180044023000ull) + ((offset) & 63) * 8;
@@ -1308,8 +1308,8 @@ static inline uint64_t CVMX_PKI_TAG_INCX_CTL(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 31))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 31))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 31))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 31))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 31)))))
 		cvmx_warn("CVMX_PKI_TAG_INCX_CTL(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180044007000ull) + ((offset) & 31) * 8;
@@ -1322,8 +1322,8 @@ static inline uint64_t CVMX_PKI_TAG_INCX_MASK(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 31))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 31))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 31))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 31))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 31)))))
 		cvmx_warn("CVMX_PKI_TAG_INCX_MASK(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180044008000ull) + ((offset) & 31) * 8;
@@ -1370,7 +1370,7 @@ union cvmx_pki_active0 {
 	} s;
 	struct cvmx_pki_active0_s             cn73xx;
 	struct cvmx_pki_active0_s             cn78xx;
-	struct cvmx_pki_active0_s             cn78xxp2;
+	struct cvmx_pki_active0_s             cn78xxp1;
 	struct cvmx_pki_active0_s             cnf75xx;
 };
 typedef union cvmx_pki_active0 cvmx_pki_active0_t;
@@ -1397,7 +1397,7 @@ union cvmx_pki_active1 {
 	} s;
 	struct cvmx_pki_active1_s             cn73xx;
 	struct cvmx_pki_active1_s             cn78xx;
-	struct cvmx_pki_active1_s             cn78xxp2;
+	struct cvmx_pki_active1_s             cn78xxp1;
 	struct cvmx_pki_active1_s             cnf75xx;
 };
 typedef union cvmx_pki_active1 cvmx_pki_active1_t;
@@ -1418,7 +1418,7 @@ union cvmx_pki_active2 {
 	} s;
 	struct cvmx_pki_active2_s             cn73xx;
 	struct cvmx_pki_active2_s             cn78xx;
-	struct cvmx_pki_active2_s             cn78xxp2;
+	struct cvmx_pki_active2_s             cn78xxp1;
 	struct cvmx_pki_active2_s             cnf75xx;
 };
 typedef union cvmx_pki_active2 cvmx_pki_active2_t;
@@ -1462,7 +1462,7 @@ union cvmx_pki_aurax_cfg {
 	} s;
 	struct cvmx_pki_aurax_cfg_s           cn73xx;
 	struct cvmx_pki_aurax_cfg_s           cn78xx;
-	struct cvmx_pki_aurax_cfg_s           cn78xxp2;
+	struct cvmx_pki_aurax_cfg_s           cn78xxp1;
 	struct cvmx_pki_aurax_cfg_s           cnf75xx;
 };
 typedef union cvmx_pki_aurax_cfg cvmx_pki_aurax_cfg_t;
@@ -1486,7 +1486,7 @@ union cvmx_pki_bist_status0 {
 	} s;
 	struct cvmx_pki_bist_status0_s        cn73xx;
 	struct cvmx_pki_bist_status0_s        cn78xx;
-	struct cvmx_pki_bist_status0_s        cn78xxp2;
+	struct cvmx_pki_bist_status0_s        cn78xxp1;
 	struct cvmx_pki_bist_status0_s        cnf75xx;
 };
 typedef union cvmx_pki_bist_status0 cvmx_pki_bist_status0_t;
@@ -1509,7 +1509,8 @@ union cvmx_pki_bist_status1 {
 #endif
 	} s;
 	struct cvmx_pki_bist_status1_s        cn73xx;
-	struct cvmx_pki_bist_status1_cn78xx {
+	struct cvmx_pki_bist_status1_s        cn78xx;
+	struct cvmx_pki_bist_status1_cn78xxp1 {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_21_63               : 43;
 	uint64_t bist                         : 21; /**< BIST results. Hardware sets a bit in BIST for memory that fails BIST. */
@@ -1517,8 +1518,7 @@ union cvmx_pki_bist_status1 {
 	uint64_t bist                         : 21;
 	uint64_t reserved_21_63               : 43;
 #endif
-	} cn78xx;
-	struct cvmx_pki_bist_status1_s        cn78xxp2;
+	} cn78xxp1;
 	struct cvmx_pki_bist_status1_s        cnf75xx;
 };
 typedef union cvmx_pki_bist_status1 cvmx_pki_bist_status1_t;
@@ -1542,7 +1542,7 @@ union cvmx_pki_bist_status2 {
 	} s;
 	struct cvmx_pki_bist_status2_s        cn73xx;
 	struct cvmx_pki_bist_status2_s        cn78xx;
-	struct cvmx_pki_bist_status2_s        cn78xxp2;
+	struct cvmx_pki_bist_status2_s        cn78xxp1;
 	struct cvmx_pki_bist_status2_s        cnf75xx;
 };
 typedef union cvmx_pki_bist_status2 cvmx_pki_bist_status2_t;
@@ -1566,7 +1566,7 @@ union cvmx_pki_bpidx_state {
 	} s;
 	struct cvmx_pki_bpidx_state_s         cn73xx;
 	struct cvmx_pki_bpidx_state_s         cn78xx;
-	struct cvmx_pki_bpidx_state_s         cn78xxp2;
+	struct cvmx_pki_bpidx_state_s         cn78xxp1;
 	struct cvmx_pki_bpidx_state_s         cnf75xx;
 };
 typedef union cvmx_pki_bpidx_state cvmx_pki_bpidx_state_t;
@@ -1611,7 +1611,7 @@ union cvmx_pki_buf_ctl {
 	} s;
 	struct cvmx_pki_buf_ctl_s             cn73xx;
 	struct cvmx_pki_buf_ctl_s             cn78xx;
-	struct cvmx_pki_buf_ctl_s             cn78xxp2;
+	struct cvmx_pki_buf_ctl_s             cn78xxp1;
 	struct cvmx_pki_buf_ctl_s             cnf75xx;
 };
 typedef union cvmx_pki_buf_ctl cvmx_pki_buf_ctl_t;
@@ -1644,7 +1644,7 @@ union cvmx_pki_chanx_cfg {
 	} s;
 	struct cvmx_pki_chanx_cfg_s           cn73xx;
 	struct cvmx_pki_chanx_cfg_s           cn78xx;
-	struct cvmx_pki_chanx_cfg_s           cn78xxp2;
+	struct cvmx_pki_chanx_cfg_s           cn78xxp1;
 	struct cvmx_pki_chanx_cfg_s           cnf75xx;
 };
 typedef union cvmx_pki_chanx_cfg cvmx_pki_chanx_cfg_t;
@@ -1692,7 +1692,7 @@ union cvmx_pki_clx_ecc_ctl {
 	} s;
 	struct cvmx_pki_clx_ecc_ctl_s         cn73xx;
 	struct cvmx_pki_clx_ecc_ctl_s         cn78xx;
-	struct cvmx_pki_clx_ecc_ctl_s         cn78xxp2;
+	struct cvmx_pki_clx_ecc_ctl_s         cn78xxp1;
 	struct cvmx_pki_clx_ecc_ctl_s         cnf75xx;
 };
 typedef union cvmx_pki_clx_ecc_ctl cvmx_pki_clx_ecc_ctl_t;
@@ -1729,7 +1729,7 @@ union cvmx_pki_clx_ecc_int {
 	} s;
 	struct cvmx_pki_clx_ecc_int_s         cn73xx;
 	struct cvmx_pki_clx_ecc_int_s         cn78xx;
-	struct cvmx_pki_clx_ecc_int_s         cn78xxp2;
+	struct cvmx_pki_clx_ecc_int_s         cn78xxp1;
 	struct cvmx_pki_clx_ecc_int_s         cnf75xx;
 };
 typedef union cvmx_pki_clx_ecc_int cvmx_pki_clx_ecc_int_t;
@@ -1759,7 +1759,7 @@ union cvmx_pki_clx_int {
 	} s;
 	struct cvmx_pki_clx_int_s             cn73xx;
 	struct cvmx_pki_clx_int_s             cn78xx;
-	struct cvmx_pki_clx_int_s             cn78xxp2;
+	struct cvmx_pki_clx_int_s             cn78xxp1;
 	struct cvmx_pki_clx_int_s             cnf75xx;
 };
 typedef union cvmx_pki_clx_int cvmx_pki_clx_int_t;
@@ -1845,7 +1845,7 @@ union cvmx_pki_clx_pcamx_actionx {
 	} s;
 	struct cvmx_pki_clx_pcamx_actionx_s   cn73xx;
 	struct cvmx_pki_clx_pcamx_actionx_s   cn78xx;
-	struct cvmx_pki_clx_pcamx_actionx_s   cn78xxp2;
+	struct cvmx_pki_clx_pcamx_actionx_s   cn78xxp1;
 	struct cvmx_pki_clx_pcamx_actionx_s   cnf75xx;
 };
 typedef union cvmx_pki_clx_pcamx_actionx cvmx_pki_clx_pcamx_actionx_t;
@@ -1878,7 +1878,7 @@ union cvmx_pki_clx_pcamx_matchx {
 	} s;
 	struct cvmx_pki_clx_pcamx_matchx_s    cn73xx;
 	struct cvmx_pki_clx_pcamx_matchx_s    cn78xx;
-	struct cvmx_pki_clx_pcamx_matchx_s    cn78xxp2;
+	struct cvmx_pki_clx_pcamx_matchx_s    cn78xxp1;
 	struct cvmx_pki_clx_pcamx_matchx_s    cnf75xx;
 };
 typedef union cvmx_pki_clx_pcamx_matchx cvmx_pki_clx_pcamx_matchx_t;
@@ -1908,7 +1908,7 @@ union cvmx_pki_clx_pcamx_termx {
                                                          _ [TERM1]<n>=1, [TERM0]<n>=0: Match when data<n> == 1.
                                                          _ [TERM1]<n>=1, [TERM0]<n>=1: Reserved. */
 	uint64_t style0                       : 8;  /**< Previous interim style. The style that must have been calculated by the port
-                                                         PKI_CL()_PKIND()_STYLE[STYLE] or as modified by previous CAM hits's
+                                                         PKI_CL()_PKIND()_STYLE[STYLE] or as modified by previous CAM hits'
                                                          PKI_CL()_PCAM()_ACTION()[STYLE_ADD]. This is used to form AND style matches.
                                                          The field value is ternary, where each bit matches as follows:
                                                          _ [STYLE1]<n>=0, [STYLE0]<n>=0: Always match; data<n> don't care.
@@ -1927,7 +1927,7 @@ union cvmx_pki_clx_pcamx_termx {
 	} s;
 	struct cvmx_pki_clx_pcamx_termx_s     cn73xx;
 	struct cvmx_pki_clx_pcamx_termx_s     cn78xx;
-	struct cvmx_pki_clx_pcamx_termx_s     cn78xxp2;
+	struct cvmx_pki_clx_pcamx_termx_s     cn78xxp1;
 	struct cvmx_pki_clx_pcamx_termx_s     cnf75xx;
 };
 typedef union cvmx_pki_clx_pcamx_termx cvmx_pki_clx_pcamx_termx_t;
@@ -1963,7 +1963,7 @@ union cvmx_pki_clx_pkindx_cfg {
                                                          1 = MPLS label stacks are parsed and skipped over. */
 	uint64_t inst_hdr                     : 1;  /**< INST header. When set, a PKI_INST_HDR_S is present PKI_CL()_PKIND()_SKIP[INST_SKIP]
                                                          bytes into the packet received by PKI. */
-	uint64_t lg_custom                    : 1;  /**< Reserved. */
+	uint64_t lg_custom                    : 1;  /**< Enable parsing LG_CUSTOM layers. */
 	uint64_t fulc_en                      : 1;  /**< Enable Fulcrum tag parsing.
                                                          0 = Any Fulcrum header is ignored.
                                                          1 = Fulcrum header is parsed.
@@ -1995,7 +1995,7 @@ union cvmx_pki_clx_pkindx_cfg {
 	} s;
 	struct cvmx_pki_clx_pkindx_cfg_s      cn73xx;
 	struct cvmx_pki_clx_pkindx_cfg_s      cn78xx;
-	struct cvmx_pki_clx_pkindx_cfg_s      cn78xxp2;
+	struct cvmx_pki_clx_pkindx_cfg_s      cn78xxp1;
 	struct cvmx_pki_clx_pkindx_cfg_s      cnf75xx;
 };
 typedef union cvmx_pki_clx_pkindx_cfg cvmx_pki_clx_pkindx_cfg_t;
@@ -2037,7 +2037,7 @@ union cvmx_pki_clx_pkindx_kmemx {
 	} s;
 	struct cvmx_pki_clx_pkindx_kmemx_s    cn73xx;
 	struct cvmx_pki_clx_pkindx_kmemx_s    cn78xx;
-	struct cvmx_pki_clx_pkindx_kmemx_s    cn78xxp2;
+	struct cvmx_pki_clx_pkindx_kmemx_s    cn78xxp1;
 	struct cvmx_pki_clx_pkindx_kmemx_s    cnf75xx;
 };
 typedef union cvmx_pki_clx_pkindx_kmemx cvmx_pki_clx_pkindx_kmemx_t;
@@ -2059,9 +2059,10 @@ union cvmx_pki_clx_pkindx_l2_custom {
                                                          0 = Disable custom L2 header extraction.
                                                          1 = Enable custom L2 header extraction. */
 	uint64_t reserved_8_14                : 7;
-	uint64_t offset                       : 8;  /**< Scan offset. Pointer to first byte of 32-bit custom extraction header, as absolute number
-                                                         of bytes from beginning of packet. If PTP_MODE, the 8-byte timestamp is prepended to the
-                                                         packet, and must be included in counting offset bytes. */
+	uint64_t offset                       : 8;  /**< Scan offset. Pointer to first byte of 32-bit custom extraction header, as
+                                                         absolute number of bytes from beginning of packet. Must be even. If PTP_MODE,
+                                                         the 8-byte timestamp is prepended to the packet, and must be included in
+                                                         counting offset bytes. */
 #else
 	uint64_t offset                       : 8;
 	uint64_t reserved_8_14                : 7;
@@ -2071,7 +2072,7 @@ union cvmx_pki_clx_pkindx_l2_custom {
 	} s;
 	struct cvmx_pki_clx_pkindx_l2_custom_s cn73xx;
 	struct cvmx_pki_clx_pkindx_l2_custom_s cn78xx;
-	struct cvmx_pki_clx_pkindx_l2_custom_s cn78xxp2;
+	struct cvmx_pki_clx_pkindx_l2_custom_s cn78xxp1;
 	struct cvmx_pki_clx_pkindx_l2_custom_s cnf75xx;
 };
 typedef union cvmx_pki_clx_pkindx_l2_custom cvmx_pki_clx_pkindx_l2_custom_t;
@@ -2092,7 +2093,7 @@ union cvmx_pki_clx_pkindx_lg_custom {
 	uint64_t offset                       : 8;  /**< Scan offset. Pointer to first byte of 32-bit custom extraction header, as
                                                          relative number of bytes from PKI_WQE_S[LCPTR], PKI_WQE_S[LDPTR],
                                                          PKI_WQE_S[LEPTR], PKI_WQE_S[LFPTR], as selected by
-                                                         PKI_CL()_PKIND()_CFG[LG_CUSTOM_LAYER]. */
+                                                         PKI_CL()_PKIND()_CFG[LG_CUSTOM_LAYER]. Must be even. */
 #else
 	uint64_t offset                       : 8;
 	uint64_t reserved_8_63                : 56;
@@ -2100,7 +2101,7 @@ union cvmx_pki_clx_pkindx_lg_custom {
 	} s;
 	struct cvmx_pki_clx_pkindx_lg_custom_s cn73xx;
 	struct cvmx_pki_clx_pkindx_lg_custom_s cn78xx;
-	struct cvmx_pki_clx_pkindx_lg_custom_s cn78xxp2;
+	struct cvmx_pki_clx_pkindx_lg_custom_s cn78xxp1;
 	struct cvmx_pki_clx_pkindx_lg_custom_s cnf75xx;
 };
 typedef union cvmx_pki_clx_pkindx_lg_custom cvmx_pki_clx_pkindx_lg_custom_t;
@@ -2134,7 +2135,7 @@ union cvmx_pki_clx_pkindx_skip {
 	} s;
 	struct cvmx_pki_clx_pkindx_skip_s     cn73xx;
 	struct cvmx_pki_clx_pkindx_skip_s     cn78xx;
-	struct cvmx_pki_clx_pkindx_skip_s     cn78xxp2;
+	struct cvmx_pki_clx_pkindx_skip_s     cn78xxp1;
 	struct cvmx_pki_clx_pkindx_skip_s     cnf75xx;
 };
 typedef union cvmx_pki_clx_pkindx_skip cvmx_pki_clx_pkindx_skip_t;
@@ -2178,7 +2179,7 @@ union cvmx_pki_clx_pkindx_style {
 	} s;
 	struct cvmx_pki_clx_pkindx_style_s    cn73xx;
 	struct cvmx_pki_clx_pkindx_style_s    cn78xx;
-	struct cvmx_pki_clx_pkindx_style_s    cn78xxp2;
+	struct cvmx_pki_clx_pkindx_style_s    cn78xxp1;
 	struct cvmx_pki_clx_pkindx_style_s    cnf75xx;
 };
 typedef union cvmx_pki_clx_pkindx_style cvmx_pki_clx_pkindx_style_t;
@@ -2217,7 +2218,7 @@ union cvmx_pki_clx_smemx {
 	} s;
 	struct cvmx_pki_clx_smemx_s           cn73xx;
 	struct cvmx_pki_clx_smemx_s           cn78xx;
-	struct cvmx_pki_clx_smemx_s           cn78xxp2;
+	struct cvmx_pki_clx_smemx_s           cn78xxp1;
 	struct cvmx_pki_clx_smemx_s           cnf75xx;
 };
 typedef union cvmx_pki_clx_smemx cvmx_pki_clx_smemx_t;
@@ -2241,7 +2242,7 @@ union cvmx_pki_clx_start {
 	} s;
 	struct cvmx_pki_clx_start_s           cn73xx;
 	struct cvmx_pki_clx_start_s           cn78xx;
-	struct cvmx_pki_clx_start_s           cn78xxp2;
+	struct cvmx_pki_clx_start_s           cn78xxp1;
 	struct cvmx_pki_clx_start_s           cnf75xx;
 };
 typedef union cvmx_pki_clx_start cvmx_pki_clx_start_t;
@@ -2314,7 +2315,7 @@ union cvmx_pki_clx_stylex_alg {
 	} s;
 	struct cvmx_pki_clx_stylex_alg_s      cn73xx;
 	struct cvmx_pki_clx_stylex_alg_s      cn78xx;
-	struct cvmx_pki_clx_stylex_alg_s      cn78xxp2;
+	struct cvmx_pki_clx_stylex_alg_s      cn78xxp1;
 	struct cvmx_pki_clx_stylex_alg_s      cnf75xx;
 };
 typedef union cvmx_pki_clx_stylex_alg cvmx_pki_clx_stylex_alg_t;
@@ -2397,7 +2398,7 @@ union cvmx_pki_clx_stylex_cfg {
 	} s;
 	struct cvmx_pki_clx_stylex_cfg_s      cn73xx;
 	struct cvmx_pki_clx_stylex_cfg_s      cn78xx;
-	struct cvmx_pki_clx_stylex_cfg_s      cn78xxp2;
+	struct cvmx_pki_clx_stylex_cfg_s      cn78xxp1;
 	struct cvmx_pki_clx_stylex_cfg_s      cnf75xx;
 };
 typedef union cvmx_pki_clx_stylex_cfg cvmx_pki_clx_stylex_cfg_t;
@@ -2533,7 +2534,7 @@ union cvmx_pki_clx_stylex_cfg2 {
 	} s;
 	struct cvmx_pki_clx_stylex_cfg2_s     cn73xx;
 	struct cvmx_pki_clx_stylex_cfg2_s     cn78xx;
-	struct cvmx_pki_clx_stylex_cfg2_s     cn78xxp2;
+	struct cvmx_pki_clx_stylex_cfg2_s     cn78xxp1;
 	struct cvmx_pki_clx_stylex_cfg2_s     cnf75xx;
 };
 typedef union cvmx_pki_clx_stylex_cfg2 cvmx_pki_clx_stylex_cfg2_t;
@@ -2556,7 +2557,7 @@ union cvmx_pki_clken {
 	} s;
 	struct cvmx_pki_clken_s               cn73xx;
 	struct cvmx_pki_clken_s               cn78xx;
-	struct cvmx_pki_clken_s               cn78xxp2;
+	struct cvmx_pki_clken_s               cn78xxp1;
 	struct cvmx_pki_clken_s               cnf75xx;
 };
 typedef union cvmx_pki_clken cvmx_pki_clken_t;
@@ -2580,7 +2581,7 @@ union cvmx_pki_dstatx_stat0 {
 #endif
 	} s;
 	struct cvmx_pki_dstatx_stat0_s        cn73xx;
-	struct cvmx_pki_dstatx_stat0_s        cn78xxp2;
+	struct cvmx_pki_dstatx_stat0_s        cn78xx;
 	struct cvmx_pki_dstatx_stat0_s        cnf75xx;
 };
 typedef union cvmx_pki_dstatx_stat0 cvmx_pki_dstatx_stat0_t;
@@ -2604,7 +2605,7 @@ union cvmx_pki_dstatx_stat1 {
 #endif
 	} s;
 	struct cvmx_pki_dstatx_stat1_s        cn73xx;
-	struct cvmx_pki_dstatx_stat1_s        cn78xxp2;
+	struct cvmx_pki_dstatx_stat1_s        cn78xx;
 	struct cvmx_pki_dstatx_stat1_s        cnf75xx;
 };
 typedef union cvmx_pki_dstatx_stat1 cvmx_pki_dstatx_stat1_t;
@@ -2631,7 +2632,7 @@ union cvmx_pki_dstatx_stat2 {
 #endif
 	} s;
 	struct cvmx_pki_dstatx_stat2_s        cn73xx;
-	struct cvmx_pki_dstatx_stat2_s        cn78xxp2;
+	struct cvmx_pki_dstatx_stat2_s        cn78xx;
 	struct cvmx_pki_dstatx_stat2_s        cnf75xx;
 };
 typedef union cvmx_pki_dstatx_stat2 cvmx_pki_dstatx_stat2_t;
@@ -2655,7 +2656,7 @@ union cvmx_pki_dstatx_stat3 {
 #endif
 	} s;
 	struct cvmx_pki_dstatx_stat3_s        cn73xx;
-	struct cvmx_pki_dstatx_stat3_s        cn78xxp2;
+	struct cvmx_pki_dstatx_stat3_s        cn78xx;
 	struct cvmx_pki_dstatx_stat3_s        cnf75xx;
 };
 typedef union cvmx_pki_dstatx_stat3 cvmx_pki_dstatx_stat3_t;
@@ -2679,7 +2680,7 @@ union cvmx_pki_dstatx_stat4 {
 #endif
 	} s;
 	struct cvmx_pki_dstatx_stat4_s        cn73xx;
-	struct cvmx_pki_dstatx_stat4_s        cn78xxp2;
+	struct cvmx_pki_dstatx_stat4_s        cn78xx;
 	struct cvmx_pki_dstatx_stat4_s        cnf75xx;
 };
 typedef union cvmx_pki_dstatx_stat4 cvmx_pki_dstatx_stat4_t;
@@ -2741,7 +2742,7 @@ union cvmx_pki_ecc_ctl0 {
 	} s;
 	struct cvmx_pki_ecc_ctl0_s            cn73xx;
 	struct cvmx_pki_ecc_ctl0_s            cn78xx;
-	struct cvmx_pki_ecc_ctl0_s            cn78xxp2;
+	struct cvmx_pki_ecc_ctl0_s            cn78xxp1;
 	struct cvmx_pki_ecc_ctl0_s            cnf75xx;
 };
 typedef union cvmx_pki_ecc_ctl0 cvmx_pki_ecc_ctl0_t;
@@ -2818,7 +2819,8 @@ union cvmx_pki_ecc_ctl1 {
 #endif
 	} s;
 	struct cvmx_pki_ecc_ctl1_s            cn73xx;
-	struct cvmx_pki_ecc_ctl1_cn78xx {
+	struct cvmx_pki_ecc_ctl1_s            cn78xx;
+	struct cvmx_pki_ecc_ctl1_cn78xxp1 {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_51_63               : 13;
 	uint64_t sws_flip                     : 2;  /**< SWS flip syndrome bits on write. */
@@ -2876,8 +2878,7 @@ union cvmx_pki_ecc_ctl1 {
 	uint64_t sws_flip                     : 2;
 	uint64_t reserved_51_63               : 13;
 #endif
-	} cn78xx;
-	struct cvmx_pki_ecc_ctl1_s            cn78xxp2;
+	} cn78xxp1;
 	struct cvmx_pki_ecc_ctl1_s            cnf75xx;
 };
 typedef union cvmx_pki_ecc_ctl1 cvmx_pki_ecc_ctl1_t;
@@ -2904,7 +2905,7 @@ union cvmx_pki_ecc_ctl2 {
 	} s;
 	struct cvmx_pki_ecc_ctl2_s            cn73xx;
 	struct cvmx_pki_ecc_ctl2_s            cn78xx;
-	struct cvmx_pki_ecc_ctl2_s            cn78xxp2;
+	struct cvmx_pki_ecc_ctl2_s            cn78xxp1;
 	struct cvmx_pki_ecc_ctl2_s            cnf75xx;
 };
 typedef union cvmx_pki_ecc_ctl2 cvmx_pki_ecc_ctl2_t;
@@ -2957,7 +2958,7 @@ union cvmx_pki_ecc_int0 {
 	} s;
 	struct cvmx_pki_ecc_int0_s            cn73xx;
 	struct cvmx_pki_ecc_int0_s            cn78xx;
-	struct cvmx_pki_ecc_int0_s            cn78xxp2;
+	struct cvmx_pki_ecc_int0_s            cn78xxp1;
 	struct cvmx_pki_ecc_int0_s            cnf75xx;
 };
 typedef union cvmx_pki_ecc_int0 cvmx_pki_ecc_int0_t;
@@ -3028,7 +3029,7 @@ union cvmx_pki_ecc_int1 {
 	} s;
 	struct cvmx_pki_ecc_int1_s            cn73xx;
 	struct cvmx_pki_ecc_int1_s            cn78xx;
-	struct cvmx_pki_ecc_int1_s            cn78xxp2;
+	struct cvmx_pki_ecc_int1_s            cn78xxp1;
 	struct cvmx_pki_ecc_int1_s            cnf75xx;
 };
 typedef union cvmx_pki_ecc_int1 cvmx_pki_ecc_int1_t;
@@ -3053,7 +3054,7 @@ union cvmx_pki_ecc_int2 {
 	} s;
 	struct cvmx_pki_ecc_int2_s            cn73xx;
 	struct cvmx_pki_ecc_int2_s            cn78xx;
-	struct cvmx_pki_ecc_int2_s            cn78xxp2;
+	struct cvmx_pki_ecc_int2_s            cn78xxp1;
 	struct cvmx_pki_ecc_int2_s            cnf75xx;
 };
 typedef union cvmx_pki_ecc_int2 cvmx_pki_ecc_int2_t;
@@ -3084,7 +3085,7 @@ union cvmx_pki_frm_len_chkx {
 	} s;
 	struct cvmx_pki_frm_len_chkx_s        cn73xx;
 	struct cvmx_pki_frm_len_chkx_s        cn78xx;
-	struct cvmx_pki_frm_len_chkx_s        cn78xxp2;
+	struct cvmx_pki_frm_len_chkx_s        cn78xxp1;
 	struct cvmx_pki_frm_len_chkx_s        cnf75xx;
 };
 typedef union cvmx_pki_frm_len_chkx cvmx_pki_frm_len_chkx_t;
@@ -3096,7 +3097,7 @@ typedef union cvmx_pki_frm_len_chkx cvmx_pki_frm_len_chkx_t;
  * pkinds. The values are opaque to PKI HW.
  *
  * This is intended for communication between the higher-level software SDK, and the
- * SDK code that loads PKI_IMEM() with the parse engine code.  This allows the loader to
+ * SDK code that loads PKI_IMEM() with the parse engine code. This allows the loader to
  * appropriately select the parse engine code with only those features required, so that
  * performance will be optimized.
  */
@@ -3174,7 +3175,7 @@ union cvmx_pki_gbl_pen {
 	} s;
 	struct cvmx_pki_gbl_pen_s             cn73xx;
 	struct cvmx_pki_gbl_pen_s             cn78xx;
-	struct cvmx_pki_gbl_pen_s             cn78xxp2;
+	struct cvmx_pki_gbl_pen_s             cn78xxp1;
 	struct cvmx_pki_gbl_pen_s             cnf75xx;
 };
 typedef union cvmx_pki_gbl_pen cvmx_pki_gbl_pen_t;
@@ -3208,7 +3209,7 @@ union cvmx_pki_gen_int {
                                                          bit can be set when the previous reported bit is cleared. Also see PKI_PKT_ERR. Throws
                                                          PKI_INTSN_E::PKI_GEN_SOP. */
 	uint64_t bckprs                       : 1;  /**< PKI asserted backpressure. Set when PKI was unable to accept the next valid data from
-                                                         BGX/SRIO/DPI/LBK etc. over X2P due to all internal resources being used up, and PKI will
+                                                         BGX, SRIO, DPI, LBK, etc. over X2P due to all internal resources being used up, and PKI will
                                                          backpressure X2P. Throws PKI_INTSN_E::PKI_GEN_BCKPRS. */
 	uint64_t crcerr                       : 1;  /**< PKI calculated bad CRC in the L2 frame. Throws PKI_INTSN_E::PKI_GEN_CRCERR. */
 	uint64_t pktdrp                       : 1;  /**< Packet dropped due to QOS. If the QOS algorithm decides to drop a packet, PKI asserts this
@@ -3228,7 +3229,8 @@ union cvmx_pki_gen_int {
 #endif
 	} s;
 	struct cvmx_pki_gen_int_s             cn73xx;
-	struct cvmx_pki_gen_int_cn78xx {
+	struct cvmx_pki_gen_int_s             cn78xx;
+	struct cvmx_pki_gen_int_cn78xxp1 {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_8_63                : 56;
 	uint64_t x2p_req_ofl                  : 1;  /**< Set when a device attempts to have more than the allocated requests outstanding to PKI.
@@ -3264,8 +3266,7 @@ union cvmx_pki_gen_int {
 	uint64_t x2p_req_ofl                  : 1;
 	uint64_t reserved_8_63                : 56;
 #endif
-	} cn78xx;
-	struct cvmx_pki_gen_int_s             cn78xxp2;
+	} cn78xxp1;
 	struct cvmx_pki_gen_int_s             cnf75xx;
 };
 typedef union cvmx_pki_gen_int cvmx_pki_gen_int_t;
@@ -3317,7 +3318,7 @@ union cvmx_pki_icgx_cfg {
 	} s;
 	struct cvmx_pki_icgx_cfg_s            cn73xx;
 	struct cvmx_pki_icgx_cfg_s            cn78xx;
-	struct cvmx_pki_icgx_cfg_s            cn78xxp2;
+	struct cvmx_pki_icgx_cfg_s            cn78xxp1;
 	struct cvmx_pki_icgx_cfg_s            cnf75xx;
 };
 typedef union cvmx_pki_icgx_cfg cvmx_pki_icgx_cfg_t;
@@ -3337,7 +3338,7 @@ union cvmx_pki_imemx {
 	} s;
 	struct cvmx_pki_imemx_s               cn73xx;
 	struct cvmx_pki_imemx_s               cn78xx;
-	struct cvmx_pki_imemx_s               cn78xxp2;
+	struct cvmx_pki_imemx_s               cn78xxp1;
 	struct cvmx_pki_imemx_s               cnf75xx;
 };
 typedef union cvmx_pki_imemx cvmx_pki_imemx_t;
@@ -3364,7 +3365,7 @@ union cvmx_pki_ltypex_map {
 	} s;
 	struct cvmx_pki_ltypex_map_s          cn73xx;
 	struct cvmx_pki_ltypex_map_s          cn78xx;
-	struct cvmx_pki_ltypex_map_s          cn78xxp2;
+	struct cvmx_pki_ltypex_map_s          cn78xxp1;
 	struct cvmx_pki_ltypex_map_s          cnf75xx;
 };
 typedef union cvmx_pki_ltypex_map cvmx_pki_ltypex_map_t;
@@ -3384,7 +3385,7 @@ union cvmx_pki_pbe_eco {
 #endif
 	} s;
 	struct cvmx_pki_pbe_eco_s             cn73xx;
-	struct cvmx_pki_pbe_eco_s             cn78xxp2;
+	struct cvmx_pki_pbe_eco_s             cn78xx;
 	struct cvmx_pki_pbe_eco_s             cnf75xx;
 };
 typedef union cvmx_pki_pbe_eco cvmx_pki_pbe_eco_t;
@@ -3418,7 +3419,7 @@ union cvmx_pki_pcam_lookup {
 	} s;
 	struct cvmx_pki_pcam_lookup_s         cn73xx;
 	struct cvmx_pki_pcam_lookup_s         cn78xx;
-	struct cvmx_pki_pcam_lookup_s         cn78xxp2;
+	struct cvmx_pki_pcam_lookup_s         cn78xxp1;
 	struct cvmx_pki_pcam_lookup_s         cnf75xx;
 };
 typedef union cvmx_pki_pcam_lookup cvmx_pki_pcam_lookup_t;
@@ -3428,7 +3429,7 @@ typedef union cvmx_pki_pcam_lookup cvmx_pki_pcam_lookup_t;
  *
  * For diagnostic use only, this register returns PCAM results for the most recent write to
  * PKI_PCAM_LOOKUP. The read will stall until the lookup is completed.
- * PKI_CL()_ECC_CTL[PCAM_EN] must be clear before accessing this register.  Read stall
+ * PKI_CL()_ECC_CTL[PCAM_EN] must be clear before accessing this register. Read stall
  * is implemented by delaying the PKI_PCAM_LOOKUP write acknowledge until the PCAM is
  * free and the lookup can be issued.
  */
@@ -3466,7 +3467,7 @@ union cvmx_pki_pcam_result {
 #endif
 	} cn73xx;
 	struct cvmx_pki_pcam_result_cn73xx    cn78xx;
-	struct cvmx_pki_pcam_result_cn73xx    cn78xxp2;
+	struct cvmx_pki_pcam_result_cn73xx    cn78xxp1;
 	struct cvmx_pki_pcam_result_cn73xx    cnf75xx;
 };
 typedef union cvmx_pki_pcam_result cvmx_pki_pcam_result_t;
@@ -3487,7 +3488,7 @@ union cvmx_pki_pfe_diag {
 	} s;
 	struct cvmx_pki_pfe_diag_s            cn73xx;
 	struct cvmx_pki_pfe_diag_s            cn78xx;
-	struct cvmx_pki_pfe_diag_s            cn78xxp2;
+	struct cvmx_pki_pfe_diag_s            cn78xxp1;
 	struct cvmx_pki_pfe_diag_s            cnf75xx;
 };
 typedef union cvmx_pki_pfe_diag cvmx_pki_pfe_diag_t;
@@ -3507,7 +3508,7 @@ union cvmx_pki_pfe_eco {
 #endif
 	} s;
 	struct cvmx_pki_pfe_eco_s             cn73xx;
-	struct cvmx_pki_pfe_eco_s             cn78xxp2;
+	struct cvmx_pki_pfe_eco_s             cn78xx;
 	struct cvmx_pki_pfe_eco_s             cnf75xx;
 };
 typedef union cvmx_pki_pfe_eco cvmx_pki_pfe_eco_t;
@@ -3532,7 +3533,7 @@ union cvmx_pki_pix_clken {
 	} s;
 	struct cvmx_pki_pix_clken_s           cn73xx;
 	struct cvmx_pki_pix_clken_s           cn78xx;
-	struct cvmx_pki_pix_clken_s           cn78xxp2;
+	struct cvmx_pki_pix_clken_s           cn78xxp1;
 	struct cvmx_pki_pix_clken_s           cnf75xx;
 };
 typedef union cvmx_pki_pix_clken cvmx_pki_pix_clken_t;
@@ -3553,7 +3554,7 @@ union cvmx_pki_pix_diag {
 	} s;
 	struct cvmx_pki_pix_diag_s            cn73xx;
 	struct cvmx_pki_pix_diag_s            cn78xx;
-	struct cvmx_pki_pix_diag_s            cn78xxp2;
+	struct cvmx_pki_pix_diag_s            cn78xxp1;
 	struct cvmx_pki_pix_diag_s            cnf75xx;
 };
 typedef union cvmx_pki_pix_diag cvmx_pki_pix_diag_t;
@@ -3573,7 +3574,7 @@ union cvmx_pki_pix_eco {
 #endif
 	} s;
 	struct cvmx_pki_pix_eco_s             cn73xx;
-	struct cvmx_pki_pix_eco_s             cn78xxp2;
+	struct cvmx_pki_pix_eco_s             cn78xx;
 	struct cvmx_pki_pix_eco_s             cnf75xx;
 };
 typedef union cvmx_pki_pix_eco cvmx_pki_pix_eco_t;
@@ -3594,7 +3595,7 @@ union cvmx_pki_pkindx_icgsel {
 	} s;
 	struct cvmx_pki_pkindx_icgsel_s       cn73xx;
 	struct cvmx_pki_pkindx_icgsel_s       cn78xx;
-	struct cvmx_pki_pkindx_icgsel_s       cn78xxp2;
+	struct cvmx_pki_pkindx_icgsel_s       cn78xxp1;
 	struct cvmx_pki_pkindx_icgsel_s       cnf75xx;
 };
 typedef union cvmx_pki_pkindx_icgsel cvmx_pki_pkindx_icgsel_t;
@@ -3618,7 +3619,7 @@ union cvmx_pki_pkndx_inb_stat0 {
 	} s;
 	struct cvmx_pki_pkndx_inb_stat0_s     cn73xx;
 	struct cvmx_pki_pkndx_inb_stat0_s     cn78xx;
-	struct cvmx_pki_pkndx_inb_stat0_s     cn78xxp2;
+	struct cvmx_pki_pkndx_inb_stat0_s     cn78xxp1;
 	struct cvmx_pki_pkndx_inb_stat0_s     cnf75xx;
 };
 typedef union cvmx_pki_pkndx_inb_stat0 cvmx_pki_pkndx_inb_stat0_t;
@@ -3642,7 +3643,7 @@ union cvmx_pki_pkndx_inb_stat1 {
 	} s;
 	struct cvmx_pki_pkndx_inb_stat1_s     cn73xx;
 	struct cvmx_pki_pkndx_inb_stat1_s     cn78xx;
-	struct cvmx_pki_pkndx_inb_stat1_s     cn78xxp2;
+	struct cvmx_pki_pkndx_inb_stat1_s     cn78xxp1;
 	struct cvmx_pki_pkndx_inb_stat1_s     cnf75xx;
 };
 typedef union cvmx_pki_pkndx_inb_stat1 cvmx_pki_pkndx_inb_stat1_t;
@@ -3666,7 +3667,7 @@ union cvmx_pki_pkndx_inb_stat2 {
 	} s;
 	struct cvmx_pki_pkndx_inb_stat2_s     cn73xx;
 	struct cvmx_pki_pkndx_inb_stat2_s     cn78xx;
-	struct cvmx_pki_pkndx_inb_stat2_s     cn78xxp2;
+	struct cvmx_pki_pkndx_inb_stat2_s     cn78xxp1;
 	struct cvmx_pki_pkndx_inb_stat2_s     cnf75xx;
 };
 typedef union cvmx_pki_pkndx_inb_stat2 cvmx_pki_pkndx_inb_stat2_t;
@@ -3688,7 +3689,7 @@ union cvmx_pki_pkt_err {
 	} s;
 	struct cvmx_pki_pkt_err_s             cn73xx;
 	struct cvmx_pki_pkt_err_s             cn78xx;
-	struct cvmx_pki_pkt_err_s             cn78xxp2;
+	struct cvmx_pki_pkt_err_s             cn78xxp1;
 	struct cvmx_pki_pkt_err_s             cnf75xx;
 };
 typedef union cvmx_pki_pkt_err cvmx_pki_pkt_err_t;
@@ -3716,7 +3717,7 @@ union cvmx_pki_ptag_avail {
 #endif
 	} s;
 	struct cvmx_pki_ptag_avail_s          cn73xx;
-	struct cvmx_pki_ptag_avail_s          cn78xxp2;
+	struct cvmx_pki_ptag_avail_s          cn78xx;
 	struct cvmx_pki_ptag_avail_s          cnf75xx;
 };
 typedef union cvmx_pki_ptag_avail cvmx_pki_ptag_avail_t;
@@ -3759,7 +3760,7 @@ union cvmx_pki_qpg_tblx {
 	} s;
 	struct cvmx_pki_qpg_tblx_s            cn73xx;
 	struct cvmx_pki_qpg_tblx_s            cn78xx;
-	struct cvmx_pki_qpg_tblx_s            cn78xxp2;
+	struct cvmx_pki_qpg_tblx_s            cn78xxp1;
 	struct cvmx_pki_qpg_tblx_s            cnf75xx;
 };
 typedef union cvmx_pki_qpg_tblx cvmx_pki_qpg_tblx_t;
@@ -3785,7 +3786,7 @@ union cvmx_pki_qpg_tblbx {
 #endif
 	} s;
 	struct cvmx_pki_qpg_tblbx_s           cn73xx;
-	struct cvmx_pki_qpg_tblbx_s           cn78xxp2;
+	struct cvmx_pki_qpg_tblbx_s           cn78xx;
 	struct cvmx_pki_qpg_tblbx_s           cnf75xx;
 };
 typedef union cvmx_pki_qpg_tblbx cvmx_pki_qpg_tblbx_t;
@@ -3808,7 +3809,7 @@ union cvmx_pki_reasm_sopx {
 	} s;
 	struct cvmx_pki_reasm_sopx_s          cn73xx;
 	struct cvmx_pki_reasm_sopx_s          cn78xx;
-	struct cvmx_pki_reasm_sopx_s          cn78xxp2;
+	struct cvmx_pki_reasm_sopx_s          cn78xxp1;
 	struct cvmx_pki_reasm_sopx_s          cnf75xx;
 };
 typedef union cvmx_pki_reasm_sopx cvmx_pki_reasm_sopx_t;
@@ -3848,7 +3849,7 @@ union cvmx_pki_req_wgt {
 	} s;
 	struct cvmx_pki_req_wgt_s             cn73xx;
 	struct cvmx_pki_req_wgt_s             cn78xx;
-	struct cvmx_pki_req_wgt_s             cn78xxp2;
+	struct cvmx_pki_req_wgt_s             cn78xxp1;
 	struct cvmx_pki_req_wgt_s             cnf75xx;
 };
 typedef union cvmx_pki_req_wgt cvmx_pki_req_wgt_t;
@@ -3877,7 +3878,7 @@ union cvmx_pki_sft_rst {
 	} s;
 	struct cvmx_pki_sft_rst_s             cn73xx;
 	struct cvmx_pki_sft_rst_s             cn78xx;
-	struct cvmx_pki_sft_rst_s             cn78xxp2;
+	struct cvmx_pki_sft_rst_s             cn78xxp1;
 	struct cvmx_pki_sft_rst_s             cnf75xx;
 };
 typedef union cvmx_pki_sft_rst cvmx_pki_sft_rst_t;
@@ -3899,7 +3900,7 @@ union cvmx_pki_statx_hist0 {
 	} s;
 	struct cvmx_pki_statx_hist0_s         cn73xx;
 	struct cvmx_pki_statx_hist0_s         cn78xx;
-	struct cvmx_pki_statx_hist0_s         cn78xxp2;
+	struct cvmx_pki_statx_hist0_s         cn78xxp1;
 	struct cvmx_pki_statx_hist0_s         cnf75xx;
 };
 typedef union cvmx_pki_statx_hist0 cvmx_pki_statx_hist0_t;
@@ -3920,7 +3921,7 @@ union cvmx_pki_statx_hist1 {
 	} s;
 	struct cvmx_pki_statx_hist1_s         cn73xx;
 	struct cvmx_pki_statx_hist1_s         cn78xx;
-	struct cvmx_pki_statx_hist1_s         cn78xxp2;
+	struct cvmx_pki_statx_hist1_s         cn78xxp1;
 	struct cvmx_pki_statx_hist1_s         cnf75xx;
 };
 typedef union cvmx_pki_statx_hist1 cvmx_pki_statx_hist1_t;
@@ -3941,7 +3942,7 @@ union cvmx_pki_statx_hist2 {
 	} s;
 	struct cvmx_pki_statx_hist2_s         cn73xx;
 	struct cvmx_pki_statx_hist2_s         cn78xx;
-	struct cvmx_pki_statx_hist2_s         cn78xxp2;
+	struct cvmx_pki_statx_hist2_s         cn78xxp1;
 	struct cvmx_pki_statx_hist2_s         cnf75xx;
 };
 typedef union cvmx_pki_statx_hist2 cvmx_pki_statx_hist2_t;
@@ -3962,7 +3963,7 @@ union cvmx_pki_statx_hist3 {
 	} s;
 	struct cvmx_pki_statx_hist3_s         cn73xx;
 	struct cvmx_pki_statx_hist3_s         cn78xx;
-	struct cvmx_pki_statx_hist3_s         cn78xxp2;
+	struct cvmx_pki_statx_hist3_s         cn78xxp1;
 	struct cvmx_pki_statx_hist3_s         cnf75xx;
 };
 typedef union cvmx_pki_statx_hist3 cvmx_pki_statx_hist3_t;
@@ -3983,7 +3984,7 @@ union cvmx_pki_statx_hist4 {
 	} s;
 	struct cvmx_pki_statx_hist4_s         cn73xx;
 	struct cvmx_pki_statx_hist4_s         cn78xx;
-	struct cvmx_pki_statx_hist4_s         cn78xxp2;
+	struct cvmx_pki_statx_hist4_s         cn78xxp1;
 	struct cvmx_pki_statx_hist4_s         cnf75xx;
 };
 typedef union cvmx_pki_statx_hist4 cvmx_pki_statx_hist4_t;
@@ -4004,7 +4005,7 @@ union cvmx_pki_statx_hist5 {
 	} s;
 	struct cvmx_pki_statx_hist5_s         cn73xx;
 	struct cvmx_pki_statx_hist5_s         cn78xx;
-	struct cvmx_pki_statx_hist5_s         cn78xxp2;
+	struct cvmx_pki_statx_hist5_s         cn78xxp1;
 	struct cvmx_pki_statx_hist5_s         cnf75xx;
 };
 typedef union cvmx_pki_statx_hist5 cvmx_pki_statx_hist5_t;
@@ -4025,7 +4026,7 @@ union cvmx_pki_statx_hist6 {
 	} s;
 	struct cvmx_pki_statx_hist6_s         cn73xx;
 	struct cvmx_pki_statx_hist6_s         cn78xx;
-	struct cvmx_pki_statx_hist6_s         cn78xxp2;
+	struct cvmx_pki_statx_hist6_s         cn78xxp1;
 	struct cvmx_pki_statx_hist6_s         cnf75xx;
 };
 typedef union cvmx_pki_statx_hist6 cvmx_pki_statx_hist6_t;
@@ -4046,7 +4047,7 @@ union cvmx_pki_statx_stat0 {
 	} s;
 	struct cvmx_pki_statx_stat0_s         cn73xx;
 	struct cvmx_pki_statx_stat0_s         cn78xx;
-	struct cvmx_pki_statx_stat0_s         cn78xxp2;
+	struct cvmx_pki_statx_stat0_s         cn78xxp1;
 	struct cvmx_pki_statx_stat0_s         cnf75xx;
 };
 typedef union cvmx_pki_statx_stat0 cvmx_pki_statx_stat0_t;
@@ -4067,7 +4068,7 @@ union cvmx_pki_statx_stat1 {
 	} s;
 	struct cvmx_pki_statx_stat1_s         cn73xx;
 	struct cvmx_pki_statx_stat1_s         cn78xx;
-	struct cvmx_pki_statx_stat1_s         cn78xxp2;
+	struct cvmx_pki_statx_stat1_s         cn78xxp1;
 	struct cvmx_pki_statx_stat1_s         cnf75xx;
 };
 typedef union cvmx_pki_statx_stat1 cvmx_pki_statx_stat1_t;
@@ -4088,7 +4089,7 @@ union cvmx_pki_statx_stat10 {
 	} s;
 	struct cvmx_pki_statx_stat10_s        cn73xx;
 	struct cvmx_pki_statx_stat10_s        cn78xx;
-	struct cvmx_pki_statx_stat10_s        cn78xxp2;
+	struct cvmx_pki_statx_stat10_s        cn78xxp1;
 	struct cvmx_pki_statx_stat10_s        cnf75xx;
 };
 typedef union cvmx_pki_statx_stat10 cvmx_pki_statx_stat10_t;
@@ -4109,7 +4110,7 @@ union cvmx_pki_statx_stat11 {
 	} s;
 	struct cvmx_pki_statx_stat11_s        cn73xx;
 	struct cvmx_pki_statx_stat11_s        cn78xx;
-	struct cvmx_pki_statx_stat11_s        cn78xxp2;
+	struct cvmx_pki_statx_stat11_s        cn78xxp1;
 	struct cvmx_pki_statx_stat11_s        cnf75xx;
 };
 typedef union cvmx_pki_statx_stat11 cvmx_pki_statx_stat11_t;
@@ -4132,7 +4133,7 @@ union cvmx_pki_statx_stat12 {
 	} s;
 	struct cvmx_pki_statx_stat12_s        cn73xx;
 	struct cvmx_pki_statx_stat12_s        cn78xx;
-	struct cvmx_pki_statx_stat12_s        cn78xxp2;
+	struct cvmx_pki_statx_stat12_s        cn78xxp1;
 	struct cvmx_pki_statx_stat12_s        cnf75xx;
 };
 typedef union cvmx_pki_statx_stat12 cvmx_pki_statx_stat12_t;
@@ -4154,7 +4155,7 @@ union cvmx_pki_statx_stat13 {
 	} s;
 	struct cvmx_pki_statx_stat13_s        cn73xx;
 	struct cvmx_pki_statx_stat13_s        cn78xx;
-	struct cvmx_pki_statx_stat13_s        cn78xxp2;
+	struct cvmx_pki_statx_stat13_s        cn78xxp1;
 	struct cvmx_pki_statx_stat13_s        cnf75xx;
 };
 typedef union cvmx_pki_statx_stat13 cvmx_pki_statx_stat13_t;
@@ -4176,7 +4177,7 @@ union cvmx_pki_statx_stat14 {
 	} s;
 	struct cvmx_pki_statx_stat14_s        cn73xx;
 	struct cvmx_pki_statx_stat14_s        cn78xx;
-	struct cvmx_pki_statx_stat14_s        cn78xxp2;
+	struct cvmx_pki_statx_stat14_s        cn78xxp1;
 	struct cvmx_pki_statx_stat14_s        cnf75xx;
 };
 typedef union cvmx_pki_statx_stat14 cvmx_pki_statx_stat14_t;
@@ -4198,7 +4199,7 @@ union cvmx_pki_statx_stat15 {
 	} s;
 	struct cvmx_pki_statx_stat15_s        cn73xx;
 	struct cvmx_pki_statx_stat15_s        cn78xx;
-	struct cvmx_pki_statx_stat15_s        cn78xxp2;
+	struct cvmx_pki_statx_stat15_s        cn78xxp1;
 	struct cvmx_pki_statx_stat15_s        cnf75xx;
 };
 typedef union cvmx_pki_statx_stat15 cvmx_pki_statx_stat15_t;
@@ -4220,7 +4221,7 @@ union cvmx_pki_statx_stat16 {
 	} s;
 	struct cvmx_pki_statx_stat16_s        cn73xx;
 	struct cvmx_pki_statx_stat16_s        cn78xx;
-	struct cvmx_pki_statx_stat16_s        cn78xxp2;
+	struct cvmx_pki_statx_stat16_s        cn78xxp1;
 	struct cvmx_pki_statx_stat16_s        cnf75xx;
 };
 typedef union cvmx_pki_statx_stat16 cvmx_pki_statx_stat16_t;
@@ -4242,7 +4243,7 @@ union cvmx_pki_statx_stat17 {
 	} s;
 	struct cvmx_pki_statx_stat17_s        cn73xx;
 	struct cvmx_pki_statx_stat17_s        cn78xx;
-	struct cvmx_pki_statx_stat17_s        cn78xxp2;
+	struct cvmx_pki_statx_stat17_s        cn78xxp1;
 	struct cvmx_pki_statx_stat17_s        cnf75xx;
 };
 typedef union cvmx_pki_statx_stat17 cvmx_pki_statx_stat17_t;
@@ -4264,7 +4265,7 @@ union cvmx_pki_statx_stat18 {
 	} s;
 	struct cvmx_pki_statx_stat18_s        cn73xx;
 	struct cvmx_pki_statx_stat18_s        cn78xx;
-	struct cvmx_pki_statx_stat18_s        cn78xxp2;
+	struct cvmx_pki_statx_stat18_s        cn78xxp1;
 	struct cvmx_pki_statx_stat18_s        cnf75xx;
 };
 typedef union cvmx_pki_statx_stat18 cvmx_pki_statx_stat18_t;
@@ -4285,7 +4286,7 @@ union cvmx_pki_statx_stat2 {
 	} s;
 	struct cvmx_pki_statx_stat2_s         cn73xx;
 	struct cvmx_pki_statx_stat2_s         cn78xx;
-	struct cvmx_pki_statx_stat2_s         cn78xxp2;
+	struct cvmx_pki_statx_stat2_s         cn78xxp1;
 	struct cvmx_pki_statx_stat2_s         cnf75xx;
 };
 typedef union cvmx_pki_statx_stat2 cvmx_pki_statx_stat2_t;
@@ -4306,7 +4307,7 @@ union cvmx_pki_statx_stat3 {
 	} s;
 	struct cvmx_pki_statx_stat3_s         cn73xx;
 	struct cvmx_pki_statx_stat3_s         cn78xx;
-	struct cvmx_pki_statx_stat3_s         cn78xxp2;
+	struct cvmx_pki_statx_stat3_s         cn78xxp1;
 	struct cvmx_pki_statx_stat3_s         cnf75xx;
 };
 typedef union cvmx_pki_statx_stat3 cvmx_pki_statx_stat3_t;
@@ -4327,7 +4328,7 @@ union cvmx_pki_statx_stat4 {
 	} s;
 	struct cvmx_pki_statx_stat4_s         cn73xx;
 	struct cvmx_pki_statx_stat4_s         cn78xx;
-	struct cvmx_pki_statx_stat4_s         cn78xxp2;
+	struct cvmx_pki_statx_stat4_s         cn78xxp1;
 	struct cvmx_pki_statx_stat4_s         cnf75xx;
 };
 typedef union cvmx_pki_statx_stat4 cvmx_pki_statx_stat4_t;
@@ -4349,7 +4350,7 @@ union cvmx_pki_statx_stat5 {
 	} s;
 	struct cvmx_pki_statx_stat5_s         cn73xx;
 	struct cvmx_pki_statx_stat5_s         cn78xx;
-	struct cvmx_pki_statx_stat5_s         cn78xxp2;
+	struct cvmx_pki_statx_stat5_s         cn78xxp1;
 	struct cvmx_pki_statx_stat5_s         cnf75xx;
 };
 typedef union cvmx_pki_statx_stat5 cvmx_pki_statx_stat5_t;
@@ -4371,7 +4372,7 @@ union cvmx_pki_statx_stat6 {
 	} s;
 	struct cvmx_pki_statx_stat6_s         cn73xx;
 	struct cvmx_pki_statx_stat6_s         cn78xx;
-	struct cvmx_pki_statx_stat6_s         cn78xxp2;
+	struct cvmx_pki_statx_stat6_s         cn78xxp1;
 	struct cvmx_pki_statx_stat6_s         cnf75xx;
 };
 typedef union cvmx_pki_statx_stat6 cvmx_pki_statx_stat6_t;
@@ -4392,7 +4393,7 @@ union cvmx_pki_statx_stat7 {
 	} s;
 	struct cvmx_pki_statx_stat7_s         cn73xx;
 	struct cvmx_pki_statx_stat7_s         cn78xx;
-	struct cvmx_pki_statx_stat7_s         cn78xxp2;
+	struct cvmx_pki_statx_stat7_s         cn78xxp1;
 	struct cvmx_pki_statx_stat7_s         cnf75xx;
 };
 typedef union cvmx_pki_statx_stat7 cvmx_pki_statx_stat7_t;
@@ -4413,7 +4414,7 @@ union cvmx_pki_statx_stat8 {
 	} s;
 	struct cvmx_pki_statx_stat8_s         cn73xx;
 	struct cvmx_pki_statx_stat8_s         cn78xx;
-	struct cvmx_pki_statx_stat8_s         cn78xxp2;
+	struct cvmx_pki_statx_stat8_s         cn78xxp1;
 	struct cvmx_pki_statx_stat8_s         cnf75xx;
 };
 typedef union cvmx_pki_statx_stat8 cvmx_pki_statx_stat8_t;
@@ -4434,7 +4435,7 @@ union cvmx_pki_statx_stat9 {
 	} s;
 	struct cvmx_pki_statx_stat9_s         cn73xx;
 	struct cvmx_pki_statx_stat9_s         cn78xx;
-	struct cvmx_pki_statx_stat9_s         cn78xxp2;
+	struct cvmx_pki_statx_stat9_s         cn78xxp1;
 	struct cvmx_pki_statx_stat9_s         cnf75xx;
 };
 typedef union cvmx_pki_statx_stat9 cvmx_pki_statx_stat9_t;
@@ -4466,7 +4467,7 @@ union cvmx_pki_stat_ctl {
 	} s;
 	struct cvmx_pki_stat_ctl_s            cn73xx;
 	struct cvmx_pki_stat_ctl_s            cn78xx;
-	struct cvmx_pki_stat_ctl_s            cn78xxp2;
+	struct cvmx_pki_stat_ctl_s            cn78xxp1;
 	struct cvmx_pki_stat_ctl_s            cnf75xx;
 };
 typedef union cvmx_pki_stat_ctl cvmx_pki_stat_ctl_t;
@@ -4555,7 +4556,7 @@ union cvmx_pki_stylex_buf {
 	} s;
 	struct cvmx_pki_stylex_buf_s          cn73xx;
 	struct cvmx_pki_stylex_buf_s          cn78xx;
-	struct cvmx_pki_stylex_buf_s          cn78xxp2;
+	struct cvmx_pki_stylex_buf_s          cn78xxp1;
 	struct cvmx_pki_stylex_buf_s          cnf75xx;
 };
 typedef union cvmx_pki_stylex_buf cvmx_pki_stylex_buf_t;
@@ -4581,7 +4582,7 @@ union cvmx_pki_stylex_tag_mask {
 	} s;
 	struct cvmx_pki_stylex_tag_mask_s     cn73xx;
 	struct cvmx_pki_stylex_tag_mask_s     cn78xx;
-	struct cvmx_pki_stylex_tag_mask_s     cn78xxp2;
+	struct cvmx_pki_stylex_tag_mask_s     cn78xxp1;
 	struct cvmx_pki_stylex_tag_mask_s     cnf75xx;
 };
 typedef union cvmx_pki_stylex_tag_mask cvmx_pki_stylex_tag_mask_t;
@@ -4618,7 +4619,7 @@ union cvmx_pki_stylex_tag_sel {
 	} s;
 	struct cvmx_pki_stylex_tag_sel_s      cn73xx;
 	struct cvmx_pki_stylex_tag_sel_s      cn78xx;
-	struct cvmx_pki_stylex_tag_sel_s      cn78xxp2;
+	struct cvmx_pki_stylex_tag_sel_s      cn78xxp1;
 	struct cvmx_pki_stylex_tag_sel_s      cnf75xx;
 };
 typedef union cvmx_pki_stylex_tag_sel cvmx_pki_stylex_tag_sel_t;
@@ -4643,7 +4644,7 @@ union cvmx_pki_stylex_wq2 {
 	} s;
 	struct cvmx_pki_stylex_wq2_s          cn73xx;
 	struct cvmx_pki_stylex_wq2_s          cn78xx;
-	struct cvmx_pki_stylex_wq2_s          cn78xxp2;
+	struct cvmx_pki_stylex_wq2_s          cn78xxp1;
 	struct cvmx_pki_stylex_wq2_s          cnf75xx;
 };
 typedef union cvmx_pki_stylex_wq2 cvmx_pki_stylex_wq2_t;
@@ -4668,7 +4669,7 @@ union cvmx_pki_stylex_wq4 {
 	} s;
 	struct cvmx_pki_stylex_wq4_s          cn73xx;
 	struct cvmx_pki_stylex_wq4_s          cn78xx;
-	struct cvmx_pki_stylex_wq4_s          cn78xxp2;
+	struct cvmx_pki_stylex_wq4_s          cn78xxp1;
 	struct cvmx_pki_stylex_wq4_s          cnf75xx;
 };
 typedef union cvmx_pki_stylex_wq4 cvmx_pki_stylex_wq4_t;
@@ -4710,7 +4711,7 @@ union cvmx_pki_tag_incx_ctl {
 	} s;
 	struct cvmx_pki_tag_incx_ctl_s        cn73xx;
 	struct cvmx_pki_tag_incx_ctl_s        cn78xx;
-	struct cvmx_pki_tag_incx_ctl_s        cn78xxp2;
+	struct cvmx_pki_tag_incx_ctl_s        cn78xxp1;
 	struct cvmx_pki_tag_incx_ctl_s        cnf75xx;
 };
 typedef union cvmx_pki_tag_incx_ctl cvmx_pki_tag_incx_ctl_t;
@@ -4731,7 +4732,7 @@ union cvmx_pki_tag_incx_mask {
 	} s;
 	struct cvmx_pki_tag_incx_mask_s       cn73xx;
 	struct cvmx_pki_tag_incx_mask_s       cn78xx;
-	struct cvmx_pki_tag_incx_mask_s       cn78xxp2;
+	struct cvmx_pki_tag_incx_mask_s       cn78xxp1;
 	struct cvmx_pki_tag_incx_mask_s       cnf75xx;
 };
 typedef union cvmx_pki_tag_incx_mask cvmx_pki_tag_incx_mask_t;
@@ -4747,12 +4748,12 @@ union cvmx_pki_tag_secret {
 	struct cvmx_pki_tag_secret_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t dst6                         : 16; /**< Secret for the destination tuple IPv6 tag CRC calculation. Typically identical to SRC6 to
-                                                         insure tagging is symmetric between source/destination flows. Typically different from DST
+                                                         ensure tagging is symmetric between source/destination flows. Typically different from DST
                                                          for maximum security. */
 	uint64_t src6                         : 16; /**< Secret for the source tuple IPv6 tag CRC calculation. Typically different from SRC for
                                                          maximum security. */
-	uint64_t dst                          : 16; /**< Secret for the destination tuple tag CRC calculation. Typically identical to DST6 to
-                                                         insure tagging is symmetric between source/destination flows. */
+	uint64_t dst                          : 16; /**< Secret for the destination tuple tag CRC calculation. Typically identical to SRC to
+                                                         ensure tagging is symmetric between source/destination flows. */
 	uint64_t src                          : 16; /**< Secret for the source tuple tag CRC calculation. */
 #else
 	uint64_t src                          : 16;
@@ -4763,7 +4764,7 @@ union cvmx_pki_tag_secret {
 	} s;
 	struct cvmx_pki_tag_secret_s          cn73xx;
 	struct cvmx_pki_tag_secret_s          cn78xx;
-	struct cvmx_pki_tag_secret_s          cn78xxp2;
+	struct cvmx_pki_tag_secret_s          cn78xxp1;
 	struct cvmx_pki_tag_secret_s          cnf75xx;
 };
 typedef union cvmx_pki_tag_secret cvmx_pki_tag_secret_t;
@@ -4785,7 +4786,7 @@ union cvmx_pki_x2p_req_ofl {
 	} s;
 	struct cvmx_pki_x2p_req_ofl_s         cn73xx;
 	struct cvmx_pki_x2p_req_ofl_s         cn78xx;
-	struct cvmx_pki_x2p_req_ofl_s         cn78xxp2;
+	struct cvmx_pki_x2p_req_ofl_s         cn78xxp1;
 	struct cvmx_pki_x2p_req_ofl_s         cnf75xx;
 };
 typedef union cvmx_pki_x2p_req_ofl cvmx_pki_x2p_req_ofl_t;

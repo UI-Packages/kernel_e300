@@ -5,7 +5,8 @@
  * Wrappers of assembly checksum functions for x86-64.
  */
 #include <asm/checksum.h>
-#include <linux/module.h>
+#include <linux/export.h>
+#include <linux/uaccess.h>
 #include <asm/smap.h>
 
 /**
@@ -41,9 +42,8 @@ csum_partial_copy_from_user(const void __user *src, void *dst,
 		while (((unsigned long)src & 6) && len >= 2) {
 			__u16 val16;
 
-			*errp = __get_user(val16, (const __u16 __user *)src);
-			if (*errp)
-				return isum;
+			if (__get_user(val16, (const __u16 __user *)src))
+				goto out_err;
 
 			*(__u16 *)dst = val16;
 			isum = (__force __wsum)add32_with_carry(
@@ -53,12 +53,10 @@ csum_partial_copy_from_user(const void __user *src, void *dst,
 			len -= 2;
 		}
 	}
-	pax_open_userland();
 	stac();
-	isum = csum_partial_copy_generic((const void __force_kernel *)____m(src),
+	isum = csum_partial_copy_generic((__force const void *)src,
 				dst, len, isum, errp, NULL);
 	clac();
-	pax_close_userland();
 	if (unlikely(*errp))
 		goto out_err;
 
@@ -112,13 +110,11 @@ csum_partial_copy_to_user(const void *src, void __user *dst,
 	}
 
 	*errp = 0;
-	pax_open_userland();
 	stac();
-	isum = csum_partial_copy_generic(src, (void __force_kernel *)____m(dst),
-					 len, isum, NULL, errp);
+	ret = csum_partial_copy_generic(src, (void __force *)dst,
+					len, isum, NULL, errp);
 	clac();
-	pax_close_userland();
-	return isum;
+	return ret;
 }
 EXPORT_SYMBOL(csum_partial_copy_to_user);
 
@@ -140,7 +136,7 @@ EXPORT_SYMBOL(csum_partial_copy_nocheck);
 
 __sum16 csum_ipv6_magic(const struct in6_addr *saddr,
 			const struct in6_addr *daddr,
-			__u32 len, unsigned short proto, __wsum sum)
+			__u32 len, __u8 proto, __wsum sum)
 {
 	__u64 rest, sum64;
 

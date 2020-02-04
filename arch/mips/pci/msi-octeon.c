@@ -539,11 +539,10 @@ int arch_setup_msi_irqs(struct pci_dev *dev, int nvec, int type)
 	int rc = -1;
 
 	if (type == PCI_CAP_ID_MSI && nvec > 1) {
-		entry = list_first_entry(&dev->msi_list,
-					 struct msi_desc, list);
+		entry = first_pci_msi_entry(dev);
 		rc = arch_setup_multi_msi_irq(dev, entry, nvec);
 	} else {
-		list_for_each_entry(entry, &dev->msi_list, list) {
+		for_each_pci_msi_entry(entry, dev) {
 			rc = arch_setup_msi_irq(dev, entry);
 			if (rc)
 				return rc;
@@ -641,7 +640,6 @@ static struct irq_chip octeon_irq_msi_chip_ciu3 = {
 	.irq_mask = octeon_irq_ciu3_mask,
 	.irq_mask_ack = octeon_msi_ciu3_mask_ack,
 	.irq_unmask = octeon_irq_ciu3_enable,
-	.irq_set_type = octeon_irq_ciu_set_type,
 #ifdef CONFIG_SMP
 	.irq_set_affinity = octeon_irq_ciu3_set_affinity,
 #endif

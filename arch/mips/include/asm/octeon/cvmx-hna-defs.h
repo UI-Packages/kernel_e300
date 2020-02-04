@@ -1,5 +1,5 @@
 /***********************license start***************
- * Copyright (c) 2003-2015  Cavium Inc. (support@cavium.com). All rights
+ * Copyright (c) 2003-2017  Cavium Inc. (support@cavium.com). All rights
  * reserved.
  *
  *
@@ -178,8 +178,8 @@ static inline uint64_t CVMX_HNA_HNC0_RAM1X(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 63))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 63)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 63))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63)))))
 		cvmx_warn("CVMX_HNA_HNC0_RAM1X(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001470400000000ull) + ((offset) & 63) * 8;
 }
@@ -191,8 +191,8 @@ static inline uint64_t CVMX_HNA_HNC0_RAM2X(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 63))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 63)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 63))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63)))))
 		cvmx_warn("CVMX_HNA_HNC0_RAM2X(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001470400040000ull) + ((offset) & 63) * 8;
 }
@@ -204,8 +204,8 @@ static inline uint64_t CVMX_HNA_HNC1_RAM1X(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 63))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 63)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 63))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63)))))
 		cvmx_warn("CVMX_HNA_HNC1_RAM1X(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001470400400000ull) + ((offset) & 63) * 8;
 }
@@ -217,8 +217,8 @@ static inline uint64_t CVMX_HNA_HNC1_RAM2X(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 63))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 63)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 63))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63)))))
 		cvmx_warn("CVMX_HNA_HNC1_RAM2X(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001470400440000ull) + ((offset) & 63) * 8;
 }
@@ -445,7 +445,7 @@ union cvmx_hna_bist0 {
 #endif
 	} cn73xx;
 	struct cvmx_hna_bist0_s               cn78xx;
-	struct cvmx_hna_bist0_s               cn78xxp2;
+	struct cvmx_hna_bist0_s               cn78xxp1;
 };
 typedef union cvmx_hna_bist0 cvmx_hna_bist0_t;
 
@@ -494,7 +494,7 @@ union cvmx_hna_bist1 {
 #endif
 	} cn73xx;
 	struct cvmx_hna_bist1_s               cn78xx;
-	struct cvmx_hna_bist1_s               cn78xxp2;
+	struct cvmx_hna_bist1_s               cn78xxp1;
 };
 typedef union cvmx_hna_bist1 cvmx_hna_bist1_t;
 
@@ -685,7 +685,7 @@ union cvmx_hna_config {
 #endif
 	} cn73xx;
 	struct cvmx_hna_config_s              cn78xx;
-	struct cvmx_hna_config_s              cn78xxp2;
+	struct cvmx_hna_config_s              cn78xxp1;
 };
 typedef union cvmx_hna_config cvmx_hna_config_t;
 
@@ -729,7 +729,7 @@ union cvmx_hna_control {
 	} s;
 	struct cvmx_hna_control_s             cn73xx;
 	struct cvmx_hna_control_s             cn78xx;
-	struct cvmx_hna_control_s             cn78xxp2;
+	struct cvmx_hna_control_s             cn78xxp1;
 };
 typedef union cvmx_hna_control cvmx_hna_control_t;
 
@@ -763,7 +763,7 @@ union cvmx_hna_dbell {
 	} s;
 	struct cvmx_hna_dbell_s               cn73xx;
 	struct cvmx_hna_dbell_s               cn78xx;
-	struct cvmx_hna_dbell_s               cn78xxp2;
+	struct cvmx_hna_dbell_s               cn78xxp1;
 };
 typedef union cvmx_hna_dbell cvmx_hna_dbell_t;
 
@@ -813,7 +813,7 @@ union cvmx_hna_difctl {
 	} s;
 	struct cvmx_hna_difctl_s              cn73xx;
 	struct cvmx_hna_difctl_s              cn78xx;
-	struct cvmx_hna_difctl_s              cn78xxp2;
+	struct cvmx_hna_difctl_s              cn78xxp1;
 };
 typedef union cvmx_hna_difctl cvmx_hna_difctl_t;
 
@@ -849,7 +849,7 @@ union cvmx_hna_difrdptr {
 	} s;
 	struct cvmx_hna_difrdptr_s            cn73xx;
 	struct cvmx_hna_difrdptr_s            cn78xx;
-	struct cvmx_hna_difrdptr_s            cn78xxp2;
+	struct cvmx_hna_difrdptr_s            cn78xxp1;
 };
 typedef union cvmx_hna_difrdptr cvmx_hna_difrdptr_t;
 
@@ -868,7 +868,7 @@ union cvmx_hna_eco {
 #endif
 	} s;
 	struct cvmx_hna_eco_s                 cn73xx;
-	struct cvmx_hna_eco_s                 cn78xxp2;
+	struct cvmx_hna_eco_s                 cn78xx;
 };
 typedef union cvmx_hna_eco cvmx_hna_eco_t;
 
@@ -956,7 +956,7 @@ union cvmx_hna_error {
 	} s;
 	struct cvmx_hna_error_s               cn73xx;
 	struct cvmx_hna_error_s               cn78xx;
-	struct cvmx_hna_error_s               cn78xxp2;
+	struct cvmx_hna_error_s               cn78xxp1;
 };
 typedef union cvmx_hna_error cvmx_hna_error_t;
 
@@ -1010,7 +1010,7 @@ union cvmx_hna_error_capture_data {
 	} s;
 	struct cvmx_hna_error_capture_data_s  cn73xx;
 	struct cvmx_hna_error_capture_data_s  cn78xx;
-	struct cvmx_hna_error_capture_data_s  cn78xxp2;
+	struct cvmx_hna_error_capture_data_s  cn78xxp1;
 };
 typedef union cvmx_hna_error_capture_data cvmx_hna_error_capture_data_t;
 
@@ -1055,7 +1055,7 @@ union cvmx_hna_error_capture_info {
 	} s;
 	struct cvmx_hna_error_capture_info_s  cn73xx;
 	struct cvmx_hna_error_capture_info_s  cn78xx;
-	struct cvmx_hna_error_capture_info_s  cn78xxp2;
+	struct cvmx_hna_error_capture_info_s  cn78xxp1;
 };
 typedef union cvmx_hna_error_capture_info cvmx_hna_error_capture_info_t;
 
@@ -1077,7 +1077,7 @@ union cvmx_hna_hnc0_ram1x {
 	} s;
 	struct cvmx_hna_hnc0_ram1x_s          cn73xx;
 	struct cvmx_hna_hnc0_ram1x_s          cn78xx;
-	struct cvmx_hna_hnc0_ram1x_s          cn78xxp2;
+	struct cvmx_hna_hnc0_ram1x_s          cn78xxp1;
 };
 typedef union cvmx_hna_hnc0_ram1x cvmx_hna_hnc0_ram1x_t;
 
@@ -1099,7 +1099,7 @@ union cvmx_hna_hnc0_ram2x {
 	} s;
 	struct cvmx_hna_hnc0_ram2x_s          cn73xx;
 	struct cvmx_hna_hnc0_ram2x_s          cn78xx;
-	struct cvmx_hna_hnc0_ram2x_s          cn78xxp2;
+	struct cvmx_hna_hnc0_ram2x_s          cn78xxp1;
 };
 typedef union cvmx_hna_hnc0_ram2x cvmx_hna_hnc0_ram2x_t;
 
@@ -1121,7 +1121,7 @@ union cvmx_hna_hnc1_ram1x {
 	} s;
 	struct cvmx_hna_hnc1_ram1x_s          cn73xx;
 	struct cvmx_hna_hnc1_ram1x_s          cn78xx;
-	struct cvmx_hna_hnc1_ram1x_s          cn78xxp2;
+	struct cvmx_hna_hnc1_ram1x_s          cn78xxp1;
 };
 typedef union cvmx_hna_hnc1_ram1x cvmx_hna_hnc1_ram1x_t;
 
@@ -1143,7 +1143,7 @@ union cvmx_hna_hnc1_ram2x {
 	} s;
 	struct cvmx_hna_hnc1_ram2x_s          cn73xx;
 	struct cvmx_hna_hnc1_ram2x_s          cn78xx;
-	struct cvmx_hna_hnc1_ram2x_s          cn78xxp2;
+	struct cvmx_hna_hnc1_ram2x_s          cn78xxp1;
 };
 typedef union cvmx_hna_hnc1_ram2x cvmx_hna_hnc1_ram2x_t;
 
@@ -1161,7 +1161,7 @@ union cvmx_hna_hpu_csr {
 	} s;
 	struct cvmx_hna_hpu_csr_s             cn73xx;
 	struct cvmx_hna_hpu_csr_s             cn78xx;
-	struct cvmx_hna_hpu_csr_s             cn78xxp2;
+	struct cvmx_hna_hpu_csr_s             cn78xxp1;
 };
 typedef union cvmx_hna_hpu_csr cvmx_hna_hpu_csr_t;
 
@@ -1191,7 +1191,7 @@ union cvmx_hna_hpu_dbg {
 	} s;
 	struct cvmx_hna_hpu_dbg_s             cn73xx;
 	struct cvmx_hna_hpu_dbg_s             cn78xx;
-	struct cvmx_hna_hpu_dbg_s             cn78xxp2;
+	struct cvmx_hna_hpu_dbg_s             cn78xxp1;
 };
 typedef union cvmx_hna_hpu_dbg cvmx_hna_hpu_dbg_t;
 
@@ -1229,7 +1229,7 @@ union cvmx_hna_hpu_eir {
 	} s;
 	struct cvmx_hna_hpu_eir_s             cn73xx;
 	struct cvmx_hna_hpu_eir_s             cn78xx;
-	struct cvmx_hna_hpu_eir_s             cn78xxp2;
+	struct cvmx_hna_hpu_eir_s             cn78xxp1;
 };
 typedef union cvmx_hna_hpu_eir cvmx_hna_hpu_eir_t;
 
@@ -1249,7 +1249,7 @@ union cvmx_hna_pfc0_cnt {
 	} s;
 	struct cvmx_hna_pfc0_cnt_s            cn73xx;
 	struct cvmx_hna_pfc0_cnt_s            cn78xx;
-	struct cvmx_hna_pfc0_cnt_s            cn78xxp2;
+	struct cvmx_hna_pfc0_cnt_s            cn78xxp1;
 };
 typedef union cvmx_hna_pfc0_cnt cvmx_hna_pfc0_cnt_t;
 
@@ -1280,7 +1280,7 @@ union cvmx_hna_pfc0_ctl {
 	} s;
 	struct cvmx_hna_pfc0_ctl_s            cn73xx;
 	struct cvmx_hna_pfc0_ctl_s            cn78xx;
-	struct cvmx_hna_pfc0_ctl_s            cn78xxp2;
+	struct cvmx_hna_pfc0_ctl_s            cn78xxp1;
 };
 typedef union cvmx_hna_pfc0_ctl cvmx_hna_pfc0_ctl_t;
 
@@ -1300,7 +1300,7 @@ union cvmx_hna_pfc1_cnt {
 	} s;
 	struct cvmx_hna_pfc1_cnt_s            cn73xx;
 	struct cvmx_hna_pfc1_cnt_s            cn78xx;
-	struct cvmx_hna_pfc1_cnt_s            cn78xxp2;
+	struct cvmx_hna_pfc1_cnt_s            cn78xxp1;
 };
 typedef union cvmx_hna_pfc1_cnt cvmx_hna_pfc1_cnt_t;
 
@@ -1330,7 +1330,7 @@ union cvmx_hna_pfc1_ctl {
 	} s;
 	struct cvmx_hna_pfc1_ctl_s            cn73xx;
 	struct cvmx_hna_pfc1_ctl_s            cn78xx;
-	struct cvmx_hna_pfc1_ctl_s            cn78xxp2;
+	struct cvmx_hna_pfc1_ctl_s            cn78xxp1;
 };
 typedef union cvmx_hna_pfc1_ctl cvmx_hna_pfc1_ctl_t;
 
@@ -1350,7 +1350,7 @@ union cvmx_hna_pfc2_cnt {
 	} s;
 	struct cvmx_hna_pfc2_cnt_s            cn73xx;
 	struct cvmx_hna_pfc2_cnt_s            cn78xx;
-	struct cvmx_hna_pfc2_cnt_s            cn78xxp2;
+	struct cvmx_hna_pfc2_cnt_s            cn78xxp1;
 };
 typedef union cvmx_hna_pfc2_cnt cvmx_hna_pfc2_cnt_t;
 
@@ -1380,7 +1380,7 @@ union cvmx_hna_pfc2_ctl {
 	} s;
 	struct cvmx_hna_pfc2_ctl_s            cn73xx;
 	struct cvmx_hna_pfc2_ctl_s            cn78xx;
-	struct cvmx_hna_pfc2_ctl_s            cn78xxp2;
+	struct cvmx_hna_pfc2_ctl_s            cn78xxp1;
 };
 typedef union cvmx_hna_pfc2_ctl cvmx_hna_pfc2_ctl_t;
 
@@ -1400,7 +1400,7 @@ union cvmx_hna_pfc3_cnt {
 	} s;
 	struct cvmx_hna_pfc3_cnt_s            cn73xx;
 	struct cvmx_hna_pfc3_cnt_s            cn78xx;
-	struct cvmx_hna_pfc3_cnt_s            cn78xxp2;
+	struct cvmx_hna_pfc3_cnt_s            cn78xxp1;
 };
 typedef union cvmx_hna_pfc3_cnt cvmx_hna_pfc3_cnt_t;
 
@@ -1430,7 +1430,7 @@ union cvmx_hna_pfc3_ctl {
 	} s;
 	struct cvmx_hna_pfc3_ctl_s            cn73xx;
 	struct cvmx_hna_pfc3_ctl_s            cn78xx;
-	struct cvmx_hna_pfc3_ctl_s            cn78xxp2;
+	struct cvmx_hna_pfc3_ctl_s            cn78xxp1;
 };
 typedef union cvmx_hna_pfc3_ctl cvmx_hna_pfc3_ctl_t;
 
@@ -1491,7 +1491,7 @@ union cvmx_hna_pfc_gctl {
 	} s;
 	struct cvmx_hna_pfc_gctl_s            cn73xx;
 	struct cvmx_hna_pfc_gctl_s            cn78xx;
-	struct cvmx_hna_pfc_gctl_s            cn78xxp2;
+	struct cvmx_hna_pfc_gctl_s            cn78xxp1;
 };
 typedef union cvmx_hna_pfc_gctl cvmx_hna_pfc_gctl_t;
 
@@ -1513,7 +1513,7 @@ union cvmx_hna_sbd_dbg0 {
 	} s;
 	struct cvmx_hna_sbd_dbg0_s            cn73xx;
 	struct cvmx_hna_sbd_dbg0_s            cn78xx;
-	struct cvmx_hna_sbd_dbg0_s            cn78xxp2;
+	struct cvmx_hna_sbd_dbg0_s            cn78xxp1;
 };
 typedef union cvmx_hna_sbd_dbg0 cvmx_hna_sbd_dbg0_t;
 
@@ -1539,7 +1539,7 @@ union cvmx_hna_sbd_dbg1 {
 	} s;
 	struct cvmx_hna_sbd_dbg1_s            cn73xx;
 	struct cvmx_hna_sbd_dbg1_s            cn78xx;
-	struct cvmx_hna_sbd_dbg1_s            cn78xxp2;
+	struct cvmx_hna_sbd_dbg1_s            cn78xxp1;
 };
 typedef union cvmx_hna_sbd_dbg1 cvmx_hna_sbd_dbg1_t;
 
@@ -1565,7 +1565,7 @@ union cvmx_hna_sbd_dbg2 {
 	} s;
 	struct cvmx_hna_sbd_dbg2_s            cn73xx;
 	struct cvmx_hna_sbd_dbg2_s            cn78xx;
-	struct cvmx_hna_sbd_dbg2_s            cn78xxp2;
+	struct cvmx_hna_sbd_dbg2_s            cn78xxp1;
 };
 typedef union cvmx_hna_sbd_dbg2 cvmx_hna_sbd_dbg2_t;
 
@@ -1587,7 +1587,7 @@ union cvmx_hna_sbd_dbg3 {
 	} s;
 	struct cvmx_hna_sbd_dbg3_s            cn73xx;
 	struct cvmx_hna_sbd_dbg3_s            cn78xx;
-	struct cvmx_hna_sbd_dbg3_s            cn78xxp2;
+	struct cvmx_hna_sbd_dbg3_s            cn78xxp1;
 };
 typedef union cvmx_hna_sbd_dbg3 cvmx_hna_sbd_dbg3_t;
 

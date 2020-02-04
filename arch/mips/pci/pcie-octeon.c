@@ -11,8 +11,8 @@
 #include <linux/interrupt.h>
 #include <linux/time.h>
 #include <linux/delay.h>
-#include <linux/module.h>
-#include <linux/of_address.h>
+#include <linux/moduleparam.h>
+#include <linux/syscore_ops.h>
 
 #include <asm/octeon/octeon.h>
 #include <asm/octeon/cvmx-npei-defs.h>
@@ -108,7 +108,7 @@ static irqreturn_t pcie_17400_handler(int irq, void *data)
 	return IRQ_HANDLED;
 }
 
-static int __init octeon_pcie78xx_pcibios_map_irq(const struct pci_dev *dev,
+static int octeon_pcie78xx_pcibios_map_irq(const struct pci_dev *dev,
 					      u8 slot, u8 pin)
 {
 	struct octeon_pcie_interface *pcie;
@@ -210,7 +210,7 @@ EXPORT_SYMBOL(pcibus_to_node);
  *		 as it goes through each bridge.
  * Returns Interrupt number for the device
  */
-static int __init octeon_pcie_pcibios_map_irq(const struct pci_dev *dev,
+static int octeon_pcie_pcibios_map_irq(const struct pci_dev *dev,
 					      u8 slot, u8 pin)
 {
 	/*
@@ -666,20 +666,12 @@ static int octeon_pcie_write_config(struct pci_bus *bus, unsigned int devfn,
 	default:
 		return PCIBIOS_FUNC_NOT_SUPPORTED;
 	}
-#if PCI_CONFIG_SPACE_DELAY
-	/*
-	 * Delay on writes so that devices have time to come up. Some
-	 * bridges need this to allow time for the secondary busses to
-	 * work
-	 */
-	udelay(PCI_CONFIG_SPACE_DELAY);
-#endif
 	return PCIBIOS_SUCCESSFUL;
 }
 
 static struct pci_ops octeon_pcie_ops = {
-	octeon_pcie_read_config,
-	octeon_pcie_write_config,
+	.read	= octeon_pcie_read_config,
+	.write	= octeon_pcie_write_config,
 };
 
 static struct octeon_pcie_interface octeon_pcie[2][4]; /* node, port */
@@ -702,56 +694,7 @@ static void octeon_pcie_interface_init(struct octeon_pcie_interface *iface, unsi
 	iface->pem = pem;
 }
 
-int octeon_pcie_get_qlm_from_fdt(int numa_node, int pcie_port)
-{
-	struct device_node	*np;
-	const int		*qlm;
-
-	for_each_compatible_node(np, NULL, "cavium,octeon-7890-pcie") {
-		const __be32		*reg;
-		u64			addr;
-
-		reg = of_get_property(np, "reg", NULL);
-		if (reg) {
-			addr = of_translate_address(np, reg);
-			if ((numa_node == (addr >> 36 & 0x3)) &&
-			    (pcie_port == (addr >> 24 & 0x3))) {
-				qlm = of_get_property(np, "qlm", NULL);
-				return qlm ? *qlm : -1;
-			}
-		}
-	}
-
-	return -1;
-}
-EXPORT_SYMBOL(octeon_pcie_get_qlm_from_fdt);
-
-static bool octeon_pcie_is_pem_in_fdt(int gport)
-{
-	struct device_node	*node;
-	int			numa_node;
-	int			pcie_port;
-
-	numa_node = gport >> 4;
-	pcie_port = gport & 0xf;
-
-	for_each_compatible_node(node, NULL, "cavium,octeon-7890-pcie") {
-		const __be32		*reg;
-		u64			addr;
-
-		reg = of_get_property(node, "reg", NULL);
-		if (reg) {
-			addr = of_translate_address(node, reg);
-			if ((numa_node == (addr >> 36 & 0x3)) &&
-			    (pcie_port == (addr >> 24 & 0x3)))
-				return true;
-		}
-	}
-
-	return false;
-}
-
-static void __init octeon_pcie_setup_port(unsigned int node, unsigned int port)
+void octeon_pcie_setup_port(unsigned int node, unsigned int port, bool do_register)
 {
 	int result;
 	int host_mode = 0;
@@ -806,7 +749,7 @@ static void __init octeon_pcie_setup_port(unsigned int node, unsigned int port)
 				srio_war15205 += 1;
 		}
 		result = cvmx_pcie_rc_initialize(gport);
-		if (result < 0 && octeon_pcie_is_pem_in_fdt(gport) == false)
+		if (result < 0)
 			return;
 
 		/*
@@ -859,14 +802,15 @@ static void __init octeon_pcie_setup_port(unsigned int node, unsigned int port)
 		}
 		msleep(100); /* Some devices need extra time */
 		octeon_pcie[node][port].controller.index = gport;
+		if (do_register)
 		register_pci_controller(&octeon_pcie[node][port].controller);
 
 		device = cvmx_pcie_config_read32(gport, 0, 0, 0, 0);
 	} else {
 		pr_notice("PCIe: Port %d:%d in endpoint mode, skipping.\n", node, port);
 		/* CN63XX pass 1_x/2.0 errata PCIe-15205 */
-		if (OCTEON_IS_MODEL(OCTEON_CN63XX_PASS1_X) ||
-		    OCTEON_IS_MODEL(OCTEON_CN63XX_PASS2_0)) {
+		if (do_register && (OCTEON_IS_MODEL(OCTEON_CN63XX_PASS1_X) ||
+				    OCTEON_IS_MODEL(OCTEON_CN63XX_PASS2_0))) {
 			srio_war15205 += 1;
 		}
 	}
@@ -898,6 +842,36 @@ static void __init octeon_pcie_setup_port(unsigned int node, unsigned int port)
 
 }
 
+static void octeon_pcie_setup_ports(void)
+{
+	int node, port;
+
+	for_each_online_node (node)
+		for (port = 0; port < CVMX_PCIE_PORTS; port++)
+			octeon_pcie_setup_port(node, port, true);
+}
+
+static int octeon_pcie_suspend(void)
+{
+	int node, port;
+
+	for_each_online_node (node)
+		for (port = 0; port < CVMX_PCIE_PORTS; port++)
+			cvmx_pcie_rc_shutdown((node << 2) | (port & 3));
+	return 0;
+}
+
+static void octeon_pcie_teardown(void)
+{
+	octeon_pcie_suspend();
+}
+
+static struct syscore_ops updown = {
+	.suspend = octeon_pcie_suspend,
+	.resume = octeon_pcie_setup_ports,
+	.shutdown = octeon_pcie_teardown,
+};
+
 /**
  * Initialize the Octeon PCIe controllers
  *
@@ -905,9 +879,6 @@ static void __init octeon_pcie_setup_port(unsigned int node, unsigned int port)
  */
 static int __init octeon_pcie_setup(void)
 {
-	int node;
-	int port;
-
 	/* These chips don't have PCIe */
 	if (!octeon_has_feature(OCTEON_FEATURE_PCIE))
 		return 0;
@@ -934,12 +905,9 @@ static int __init octeon_pcie_setup(void)
 	ioport_resource.start = 0;
 	ioport_resource.end = (1ull << 37) - 1;
 
-	for_each_online_node (node)
-		for (port = 0; port < CVMX_PCIE_PORTS; port++)
-			octeon_pcie_setup_port(node, port);
-
-
+	octeon_pcie_setup_ports();
 	octeon_pci_dma_init();
+	register_syscore_ops(&updown);
 
 	return 0;
 }

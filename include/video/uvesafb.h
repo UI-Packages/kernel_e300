@@ -122,7 +122,6 @@ struct uvesafb_par {
 	u8 ypan;			/* 0 - nothing, 1 - ypan, 2 - ywrap */
 	u8 pmi_setpal;			/* PMI for palette changes */
 	u16 *pmi_base;			/* protected mode interface location */
-	u8 *pmi_code;			/* protected mode code location */
 	void *pmi_start;
 	void *pmi_pal;
 	u8 *vbe_state_orig;		/*
@@ -135,6 +134,7 @@ struct uvesafb_par {
 
 	int mode_idx;
 	struct vbe_crtc_ib crtc;
+	int mtrr_handle;
 };
 
 #endif /* _UVESAFB_H */

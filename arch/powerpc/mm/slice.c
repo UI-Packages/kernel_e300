@@ -30,13 +30,15 @@
 #include <linux/err.h>
 #include <linux/spinlock.h>
 #include <linux/export.h>
+#include <linux/hugetlb.h>
 #include <asm/mman.h>
 #include <asm/mmu.h>
-#include <asm/spu.h>
+#include <asm/copro.h>
+#include <asm/hugetlb.h>
 
 /* some sanity checks */
-#if (PGTABLE_RANGE >> 43) > SLICE_MASK_SIZE
-#error PGTABLE_RANGE exceeds slice_mask high_slices size
+#if (H_PGTABLE_RANGE >> 43) > SLICE_MASK_SIZE
+#error H_PGTABLE_RANGE exceeds slice_mask high_slices size
 #endif
 
 static DEFINE_SPINLOCK(slice_convert_lock);
@@ -103,7 +105,7 @@ static int slice_area_is_free(struct mm_struct *mm, unsigned long addr,
 	if ((mm->task_size - len) < addr)
 		return 0;
 	vma = find_vma(mm, addr);
-	return check_heap_stack_gap(vma, addr, len);
+	return (!vma || (addr + len) <= vm_start_gap(vma));
 }
 
 static int slice_low_has_vma(struct mm_struct *mm, unsigned long slice)
@@ -183,8 +185,7 @@ static void slice_flush_segments(void *parm)
 	if (mm != current->active_mm)
 		return;
 
-	/* update the paca copy of the context struct */
-	get_paca()->context = current->active_mm->context;
+	copy_mm_to_paca(&current->active_mm->context);
 
 	local_irq_save(flags);
 	slb_flush_and_rebolt();
@@ -232,9 +233,7 @@ static void slice_convert(struct mm_struct *mm, struct slice_mask mask, int psiz
 
 	spin_unlock_irqrestore(&slice_convert_lock, flags);
 
-#ifdef CONFIG_SPU_BASE
-	spu_flush_all_slbs(mm);
-#endif
+	copro_flush_all_slbs(mm);
 }
 
 /*
@@ -277,12 +276,6 @@ static unsigned long slice_find_area_bottomup(struct mm_struct *mm,
 	info.align_offset = 0;
 
 	addr = TASK_UNMAPPED_BASE;
-
-#ifdef CONFIG_PAX_RANDMMAP
-	if (mm->pax_flags & MF_PAX_RANDMMAP)
-		addr += mm->delta_mmap;
-#endif
-
 	while (addr < TASK_SIZE) {
 		info.low_limit = addr;
 		if (!slice_scan_available(addr, available, 1, &addr))
@@ -402,6 +395,7 @@ unsigned long slice_get_unmapped_area(unsigned long addr, unsigned long len,
 
 	/* Sanity checks */
 	BUG_ON(mm->task_size == 0);
+	VM_BUG_ON(radix_enabled());
 
 	slice_dbg("slice_get_unmapped_area(mm=%p, psize=%d...\n", mm, psize);
 	slice_dbg(" addr=%lx, len=%lx, flags=%lx, topdown=%d\n",
@@ -414,12 +408,7 @@ unsigned long slice_get_unmapped_area(unsigned long addr, unsigned long len,
 	if (fixed && (addr & ((1ul << pshift) - 1)))
 		return -EINVAL;
 	if (fixed && addr > (mm->task_size - len))
-		return -EINVAL;
-
-#ifdef CONFIG_PAX_RANDMMAP
-	if (!fixed && (mm->pax_flags & MF_PAX_RANDMMAP))
-		addr = 0;
-#endif
+		return -ENOMEM;
 
 	/* If hint, make sure it matches our alignment restrictions */
 	if (!fixed && addr) {
@@ -580,6 +569,16 @@ unsigned int get_slice_psize(struct mm_struct *mm, unsigned long addr)
 	unsigned char *hpsizes;
 	int index, mask_index;
 
+	/*
+	 * Radix doesn't use slice, but can get enabled along with MMU_SLICE
+	 */
+	if (radix_enabled()) {
+#ifdef CONFIG_PPC_64K_PAGES
+		return MMU_PAGE_64K;
+#else
+		return MMU_PAGE_4K;
+#endif
+	}
 	if (addr < SLICE_LOW_TOP) {
 		u64 lpsizes;
 		lpsizes = mm->context.low_slices_psize;
@@ -617,6 +616,7 @@ void slice_set_user_psize(struct mm_struct *mm, unsigned int psize)
 
 	slice_dbg("slice_set_user_psize(mm=%p, psize=%d)\n", mm, psize);
 
+	VM_BUG_ON(radix_enabled());
 	spin_lock_irqsave(&slice_convert_lock, flags);
 
 	old_psize = mm->context.user_psize;
@@ -656,45 +656,16 @@ void slice_set_user_psize(struct mm_struct *mm, unsigned int psize)
 	spin_unlock_irqrestore(&slice_convert_lock, flags);
 }
 
-void slice_set_psize(struct mm_struct *mm, unsigned long address,
-		     unsigned int psize)
-{
-	unsigned char *hpsizes;
-	unsigned long i, flags;
-	u64 *lpsizes;
-
-	spin_lock_irqsave(&slice_convert_lock, flags);
-	if (address < SLICE_LOW_TOP) {
-		i = GET_LOW_SLICE_INDEX(address);
-		lpsizes = &mm->context.low_slices_psize;
-		*lpsizes = (*lpsizes & ~(0xful << (i * 4))) |
-			((unsigned long) psize << (i * 4));
-	} else {
-		int index, mask_index;
-		i = GET_HIGH_SLICE_INDEX(address);
-		hpsizes = mm->context.high_slices_psize;
-		mask_index = i & 0x1;
-		index = i >> 1;
-		hpsizes[index] = (hpsizes[index] &
-				  ~(0xf << (mask_index * 4))) |
-			(((unsigned long)psize) << (mask_index * 4));
-	}
-
-	spin_unlock_irqrestore(&slice_convert_lock, flags);
-
-#ifdef CONFIG_SPU_BASE
-	spu_flush_all_slbs(mm);
-#endif
-}
-
 void slice_set_range_psize(struct mm_struct *mm, unsigned long start,
 			   unsigned long len, unsigned int psize)
 {
 	struct slice_mask mask = slice_range_to_mask(start, len);
 
+	VM_BUG_ON(radix_enabled());
 	slice_convert(mm, mask, psize);
 }
 
+#ifdef CONFIG_HUGETLB_PAGE
 /*
  * is_hugepage_only_range() is used by generic code to verify whether
  * a normal mmap mapping (non hugetlbfs) is valid on a given area.
@@ -720,6 +691,9 @@ int is_hugepage_only_range(struct mm_struct *mm, unsigned long addr,
 	struct slice_mask mask, available;
 	unsigned int psize = mm->context.user_psize;
 
+	if (radix_enabled())
+		return 0;
+
 	mask = slice_range_to_mask(addr, len);
 	available = slice_mask_for_size(mm, psize);
 #ifdef CONFIG_PPC_64K_PAGES
@@ -739,4 +713,4 @@ int is_hugepage_only_range(struct mm_struct *mm, unsigned long addr,
 #endif
 	return !slice_check_fit(mask, available);
 }
-
+#endif

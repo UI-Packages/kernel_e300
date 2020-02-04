@@ -41,5 +41,3 @@ Example:
 		 */
 		#interrupt-cells = <2>;
 	};
-
-  

@@ -342,7 +342,7 @@ static const int compat_event_type_size[] = {
 
 /* IW event code */
 
-static void wireless_nlevent_flush(void)
+void wireless_nlevent_flush(void)
 {
 	struct sk_buff *skb;
 	struct net *net;
@@ -355,6 +355,7 @@ static void wireless_nlevent_flush(void)
 				    GFP_KERNEL);
 	}
 }
+EXPORT_SYMBOL_GPL(wireless_nlevent_flush);
 
 static int wext_netdev_notifier_call(struct notifier_block *nb,
 				     unsigned long state, void *ptr)
@@ -398,7 +399,10 @@ static int __init wireless_nlevent_init(void)
 	if (err)
 		return err;
 
-	return register_netdevice_notifier(&wext_netdev_notifier);
+	err = register_netdevice_notifier(&wext_netdev_notifier);
+	if (err)
+		unregister_pernet_subsys(&wext_pernet_ops);
+	return err;
 }
 
 subsys_initcall(wireless_nlevent_init);
@@ -777,7 +781,8 @@ static int ioctl_standard_iw_point(struct iw_point *iwp, unsigned int cmd,
 		 */
 
 		/* Support for very large requests */
-		if (user_length > descr->max_tokens) {
+		if ((descr->flags & IW_DESCR_FLAG_NOMAX) &&
+		    (user_length > descr->max_tokens)) {
 			/* Allow userspace to GET more than max so
 			 * we can support any size GET requests.
 			 * There is still a limit : -ENOMEM.
@@ -814,6 +819,22 @@ static int ioctl_standard_iw_point(struct iw_point *iwp, unsigned int cmd,
 				goto out;
 			}
 		}
+	}
+
+	if (IW_IS_GET(cmd) && !(descr->flags & IW_DESCR_FLAG_NOMAX)) {
+		/*
+		 * If this is a GET, but not NOMAX, it means that the extra
+		 * data is not bounded by userspace, but by max_tokens. Thus
+		 * set the length to max_tokens. This matches the extra data
+		 * allocation.
+		 * The driver should fill it with the number of tokens it
+		 * provided, and it may check iwp->length rather than having
+		 * knowledge of max_tokens. If the driver doesn't change the
+		 * iwp->length, this ioctl just copies back max_token tokens
+		 * filled with zeroes. Hopefully the driver isn't claiming
+		 * them to be valid data.
+		 */
+		iwp->length = descr->max_tokens;
 	}
 
 	err = handler(dev, info, (union iwreq_data *) iwp, extra);

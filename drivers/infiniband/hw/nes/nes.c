@@ -68,7 +68,6 @@ MODULE_VERSION(DRV_VERSION);
 int max_mtu = 9000;
 int interrupt_mod_interval = 0;
 
-
 /* Interoperability */
 int mpa_version = 1;
 module_param(mpa_version, int, 0644);
@@ -98,7 +97,7 @@ MODULE_PARM_DESC(limit_maxrdreqsz, "Limit max read request size to 256 Bytes");
 LIST_HEAD(nes_adapter_list);
 static LIST_HEAD(nes_dev_list);
 
-atomic_unchecked_t qps_destroyed;
+atomic_t qps_destroyed;
 
 static unsigned int ee_flsh_adapter;
 static unsigned int sysfs_nonidx_addr;
@@ -269,7 +268,7 @@ static void nes_cqp_rem_ref_callback(struct nes_device *nesdev, struct nes_cqp_r
 	struct nes_qp *nesqp = cqp_request->cqp_callback_pointer;
 	struct nes_adapter *nesadapter = nesdev->nesadapter;
 
-	atomic_inc_unchecked(&qps_destroyed);
+	atomic_inc(&qps_destroyed);
 
 	/* Free the control structures */
 
@@ -675,8 +674,11 @@ static int nes_probe(struct pci_dev *pcidev, const struct pci_device_id *ent)
 	INIT_DELAYED_WORK(&nesdev->work, nes_recheck_link_status);
 
 	/* Initialize network devices */
-	if ((netdev = nes_netdev_init(nesdev, mmio_regs)) == NULL)
+	netdev = nes_netdev_init(nesdev, mmio_regs);
+	if (netdev == NULL) {
+		ret = -ENOMEM;
 		goto bail7;
+	}
 
 	/* Register network device */
 	ret = register_netdev(netdev);

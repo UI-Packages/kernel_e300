@@ -253,11 +253,11 @@ static int da9034_set_dvc_voltage_sel(struct regulator_dev *rdev,
 }
 
 static const struct regulator_linear_range da9034_ldo12_ranges[] = {
-	{ .min_uV = 1700000, .min_sel =  0, .max_sel = 7, .uV_step =  50000 },
-	{ .min_uV = 2700000, .min_sel =  8, .max_sel = 15, .uV_step =  50000 },
+	REGULATOR_LINEAR_RANGE(1700000, 0, 7, 50000),
+	REGULATOR_LINEAR_RANGE(2700000, 8, 15, 50000),
 };
 
-static struct regulator_ops da903x_regulator_ldo_ops = {
+static const struct regulator_ops da903x_regulator_ldo_ops = {
 	.set_voltage_sel = da903x_set_voltage_sel,
 	.get_voltage_sel = da903x_get_voltage_sel,
 	.list_voltage	= regulator_list_voltage_linear,
@@ -268,7 +268,7 @@ static struct regulator_ops da903x_regulator_ldo_ops = {
 };
 
 /* NOTE: this is dedicated for the insane DA9030 LDO14 */
-static struct regulator_ops da9030_regulator_ldo14_ops = {
+static const struct regulator_ops da9030_regulator_ldo14_ops = {
 	.set_voltage_sel = da903x_set_voltage_sel,
 	.get_voltage_sel = da903x_get_voltage_sel,
 	.list_voltage	= da9030_list_ldo14_voltage,
@@ -279,7 +279,7 @@ static struct regulator_ops da9030_regulator_ldo14_ops = {
 };
 
 /* NOTE: this is dedicated for the DA9030 LDO1 and LDO15 that have locks  */
-static struct regulator_ops da9030_regulator_ldo1_15_ops = {
+static const struct regulator_ops da9030_regulator_ldo1_15_ops = {
 	.set_voltage_sel = da9030_set_ldo1_15_voltage_sel,
 	.get_voltage_sel = da903x_get_voltage_sel,
 	.list_voltage	= regulator_list_voltage_linear,
@@ -289,7 +289,7 @@ static struct regulator_ops da9030_regulator_ldo1_15_ops = {
 	.is_enabled	= da903x_is_enabled,
 };
 
-static struct regulator_ops da9034_regulator_dvc_ops = {
+static const struct regulator_ops da9034_regulator_dvc_ops = {
 	.set_voltage_sel = da9034_set_dvc_voltage_sel,
 	.get_voltage_sel = da903x_get_voltage_sel,
 	.list_voltage	= regulator_list_voltage_linear,
@@ -300,7 +300,7 @@ static struct regulator_ops da9034_regulator_dvc_ops = {
 };
 
 /* NOTE: this is dedicated for the insane LDO12 */
-static struct regulator_ops da9034_regulator_ldo12_ops = {
+static const struct regulator_ops da9034_regulator_ldo12_ops = {
 	.set_voltage_sel = da903x_set_voltage_sel,
 	.get_voltage_sel = da903x_get_voltage_sel,
 	.list_voltage	= regulator_list_voltage_linear_range,
@@ -461,7 +461,7 @@ static int da903x_regulator_probe(struct platform_device *pdev)
 	config.init_data = dev_get_platdata(&pdev->dev);
 	config.driver_data = ri;
 
-	rdev = regulator_register(&ri->desc, &config);
+	rdev = devm_regulator_register(&pdev->dev, &ri->desc, &config);
 	if (IS_ERR(rdev)) {
 		dev_err(&pdev->dev, "failed to register regulator %s\n",
 				ri->desc.name);
@@ -472,21 +472,11 @@ static int da903x_regulator_probe(struct platform_device *pdev)
 	return 0;
 }
 
-static int da903x_regulator_remove(struct platform_device *pdev)
-{
-	struct regulator_dev *rdev = platform_get_drvdata(pdev);
-
-	regulator_unregister(rdev);
-	return 0;
-}
-
 static struct platform_driver da903x_regulator_driver = {
 	.driver	= {
 		.name	= "da903x-regulator",
-		.owner	= THIS_MODULE,
 	},
 	.probe		= da903x_regulator_probe,
-	.remove		= da903x_regulator_remove,
 };
 
 static int __init da903x_regulator_init(void)

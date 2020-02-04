@@ -16,6 +16,12 @@
 
 #include <linux/linkage.h>
 
+#include <asm/alternative.h>
+#include <asm/assembler.h>
+#include <asm/cache.h>
+#include <asm/cpufeature.h>
+#include <asm/sysreg.h>
+
 /*
  * Copy to user space from a kernel buffer (alignment handled by the hardware)
  *
@@ -26,39 +32,52 @@
  * Returns:
  *	x0 - bytes not copied
  */
-ENTRY(__copy_to_user)
+	.macro ldrb1 ptr, regB, val
+	ldrb  \ptr, [\regB], \val
+	.endm
+
+	.macro strb1 ptr, regB, val
+	uao_user_alternative 9998f, strb, sttrb, \ptr, \regB, \val
+	.endm
+
+	.macro ldrh1 ptr, regB, val
+	ldrh  \ptr, [\regB], \val
+	.endm
+
+	.macro strh1 ptr, regB, val
+	uao_user_alternative 9998f, strh, sttrh, \ptr, \regB, \val
+	.endm
+
+	.macro ldr1 ptr, regB, val
+	ldr \ptr, [\regB], \val
+	.endm
+
+	.macro str1 ptr, regB, val
+	uao_user_alternative 9998f, str, sttr, \ptr, \regB, \val
+	.endm
+
+	.macro ldp1 ptr, regB, regC, val
+	ldp \ptr, \regB, [\regC], \val
+	.endm
+
+	.macro stp1 ptr, regB, regC, val
+	uao_stp 9998f, \ptr, \regB, \regC, \val
+	.endm
+
+end	.req	x5
+ENTRY(__arch_copy_to_user)
+ALTERNATIVE("nop", __stringify(SET_PSTATE_PAN(0)), ARM64_ALT_PAN_NOT_UAO, \
+	    CONFIG_ARM64_PAN)
+	add	end, x0, x2
 #include "copy_template.S"
-ENDPROC(__copy_to_user)
+ALTERNATIVE("nop", __stringify(SET_PSTATE_PAN(1)), ARM64_ALT_PAN_NOT_UAO, \
+	    CONFIG_ARM64_PAN)
+	mov	x0, #0
+	ret
+ENDPROC(__arch_copy_to_user)
 
 	.section .fixup,"ax"
-	.align    2
-8:
-10:
-	/*
-	 * count is accurate
-	 */
-	mov	x0, count
-	b	.Lfinalize
-9:
-	/*
-	 * 16 bytes remain
-	 */
-	mov	x0, #16
-	b	.Lfinalize
-11:
-	/*
-	 *(count + tmp2) bytes remain
-	 * dst points to the start of the remaining bytes
-	 */
-	add	x0, count, tmp2
-	b	.Lfinalize
-12:
-13:
-	/*
-	 * (count + 128) bytes remain
-	 */
-	add	x0, count, #128
-	b	.Lfinalize
-.Lfinalize:
+	.align	2
+9998:	sub	x0, end, dst			// bytes not copied
 	ret
 	.previous

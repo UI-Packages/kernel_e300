@@ -178,7 +178,7 @@ static void rfcomm_reparent_device(struct rfcomm_dev *dev)
 	struct hci_dev *hdev;
 	struct hci_conn *conn;
 
-	hdev = hci_get_route(&dev->dst, &dev->src);
+	hdev = hci_get_route(&dev->dst, &dev->src, BDADDR_BREDR);
 	if (!hdev)
 		return;
 
@@ -752,7 +752,7 @@ static int rfcomm_tty_open(struct tty_struct *tty, struct file *filp)
 	BT_DBG("tty %p id %d", tty, tty->index);
 
 	BT_DBG("dev %p dst %pMR channel %d opened %d", dev, &dev->dst,
-	       dev->channel, atomic_read(&dev->port.count));
+	       dev->channel, dev->port.count);
 
 	err = tty_port_open(&dev->port, tty, filp);
 	if (err)
@@ -775,7 +775,7 @@ static void rfcomm_tty_close(struct tty_struct *tty, struct file *filp)
 	struct rfcomm_dev *dev = (struct rfcomm_dev *) tty->driver_data;
 
 	BT_DBG("tty %p dev %p dlc %p opened %d", tty, dev, dev->dlc,
-						atomic_read(&dev->port.count));
+						dev->port.count);
 
 	tty_port_close(&dev->port, tty, filp);
 }

@@ -48,11 +48,11 @@ static int vsc8490_probe(struct phy_device *phydev)
 	const char		*p;
 	int			rc;
 
-	dev_info = devm_kzalloc(&phydev->dev, sizeof(*dev_info), GFP_KERNEL);
+	dev_info = devm_kzalloc(&phydev->mdio.dev, sizeof(*dev_info), GFP_KERNEL);
 	if (dev_info == NULL)
 		return -ENOMEM;
 
-	rc = of_property_read_string(phydev->dev.of_node, "vitesse,phy-mode",
+	rc = of_property_read_string(phydev->mdio.dev.of_node, "vitesse,phy-mode",
 				     &p);
 	if (rc) {
 		kfree(dev_info);
@@ -77,7 +77,6 @@ static void vsc8490_remove(struct phy_device *phydev)
 {
 	struct vsc8490_phy_info *dev_info = phydev->priv;
 
-	dev_info(&phydev->dev, "%s Exiting\n", phydev->dev.of_node->full_name);
 	kfree(dev_info);
 }
 
@@ -131,9 +130,6 @@ static struct phy_driver vsc8490_driver = {
 	.config_aneg		= vsc8490_config_aneg,
 	.read_status		= vsc8490_read_status,
 	.match_phy_device	= vsc8490_match_phy_device,
-	.driver			= {
-		.owner = THIS_MODULE,
-	},
 };
 
 static int vsc8490_nexus_read(struct mii_bus *bus, int phy_id, int regnum)
@@ -180,7 +176,6 @@ static int vsc8490_nexus_probe(struct platform_device *pdev)
 		return -ENOMEM;
 
 	bus->mii_bus->priv = bus;
-	bus->mii_bus->irq = bus->phy_irq;
 	bus->mii_bus->name = "vsc8490_nexus";
 	bus_id = bus->parent_mii_bus->id;
 	len = strlen(bus_id);
@@ -241,7 +236,7 @@ static int __init vsc8490_init(void)
 	if (rc)
 		return rc;
 
-	rc = phy_driver_register(&vsc8490_driver);
+	rc = phy_driver_register(&vsc8490_driver, THIS_MODULE);
 
 	return rc;
 }

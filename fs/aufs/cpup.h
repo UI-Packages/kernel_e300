@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2005-2014 Junjiro R. Okajima
+ * Copyright (C) 2005-2017 Junjiro R. Okajima
  *
  * This program, aufs is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -58,6 +58,11 @@ struct au_cp_generic {
 						   existing entry */
 #define AuCpup_RWDST		(1 << 5)	/* force write target even if
 						   the branch is marked as RO */
+
+#ifndef CONFIG_AUFS_BR_HFSPLUS
+#undef AuCpup_HOPEN
+#define AuCpup_HOPEN		0
+#endif
 
 #define au_ftest_cpup(flags, name)	((flags) & AuCpup_##name)
 #define au_fset_cpup(flags, name) \

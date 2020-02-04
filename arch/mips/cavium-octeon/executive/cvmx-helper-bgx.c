@@ -84,6 +84,86 @@ CVMX_SHARED int(*cvmx_helper_bgx_override_autoneg)(int xiface, int index) = NULL
  */
 CVMX_SHARED int(*cvmx_helper_bgx_override_fec)(int xiface, int index) = NULL;
 
+#if defined(CONFIG_UBNT_E1000) || defined(CONFIG_UBNT_E1020)
+int get_pcs_link_status(int port)
+{
+	cvmx_bgxx_gmp_pcs_mrx_status_t gmp_pcs_mrx_status;
+	int bgx = 0, port_id = port;
+	int ret = 0;
+
+	if (port >= 4 && port < 8) {
+		bgx = 1;
+		port_id = port - 4;
+	} else if (port >= 8) {
+		return -1;
+	}
+
+	gmp_pcs_mrx_status.u64 = cvmx_read_csr_node(0, CVMX_BGXX_GMP_PCS_MRX_STATUS(port_id, bgx));
+
+	/*
+	 * Link state:
+	 * 0 = link down.
+	 * 1 = link up.
+	 * Set during autonegotiation process. Set whenever XMIT = DATA. Latching-low behavior when
+	 * link goes down. Link down value of the bit stays low until software reads the register.
+	 */
+	ret = gmp_pcs_mrx_status.s.lnk_st;
+
+	return ret;
+}
+EXPORT_SYMBOL(get_pcs_link_status);
+
+int get_serdes_link_status(int port)
+{
+	cvmx_gserx_rx_eie_detsts_t rx_eie_detsts;
+	int gserx_id =2,port_id = port;
+	int ret = 0;
+
+	if(port >= 4 && port < 8){
+		gserx_id = 3;
+		port_id = port - 4;
+	}else if ( port >= 8)
+		return -1;
+
+	rx_eie_detsts.u64 = cvmx_read_csr_node(0, CVMX_GSERX_RX_EIE_DETSTS(gserx_id));
+
+	switch(port_id){
+		case 0:
+			ret = rx_eie_detsts.s.cdrlock & 0x01;
+			break;
+		case 1:
+			ret = (rx_eie_detsts.s.cdrlock & 0x02)>>port_id;
+			break;
+		case 2:
+			ret = (rx_eie_detsts.s.cdrlock & 0x04)>>port_id;
+			break;
+		case 3:
+			ret = (rx_eie_detsts.s.cdrlock & 0x08)>port_id;
+			break;
+	}
+
+	return ret;
+}
+EXPORT_SYMBOL(get_serdes_link_status);
+
+int get_bgx_port_link_status(int bgx_id, int port)
+{
+	int ret;
+	int port_id = bgx_id*4 + port;
+
+	/* Check PCS link status in SGMII mode */
+	if (cvmx_helper_bgx_get_mode(bgx_id, port) == CVMX_HELPER_INTERFACE_MODE_SGMII) {
+		ret = get_serdes_link_status(port_id) & get_pcs_link_status(port_id);
+	} else {
+		ret = get_serdes_link_status(port_id);
+	}
+
+//	DPRINT("link status = %x \n", ret);
+	return ret;
+}
+EXPORT_SYMBOL(get_bgx_port_link_status);
+#endif /* CONFIG_UBNT_E1000 || CONFIG_UBNT_E1020*/
+
 /**
  * Delay after enabling an interface based on the mode.  Different modes take
  * different amounts of time.
@@ -114,7 +194,6 @@ __cvmx_helper_bgx_interface_enable_delay(cvmx_helper_interface_mode_t mode)
 		break;
 	}
 }
-EXPORT_SYMBOL(cvmx_helper_bgx_get_mode);
 
 /**
  * @INTERNAL
@@ -196,6 +275,7 @@ cvmx_helper_interface_mode_t cvmx_helper_bgx_get_mode(int xiface, int index)
 		break;
 	}
 }
+EXPORT_SYMBOL(cvmx_helper_bgx_get_mode);
 
 /**
  * @INTERNAL
@@ -641,7 +721,7 @@ static int __cvmx_helper_bgx_sgmii_hardware_init_link(int xiface, int index)
 
 	gmp_control.u64 = cvmx_read_csr_node(node, CVMX_BGXX_GMP_PCS_MRX_CONTROL(index, xi.interface));
 	if (cvmx_helper_get_port_phy_present(xiface, index)) {
-	gmp_control.s.pwr_dn = 0;
+		gmp_control.s.pwr_dn = 0;
 	} else {
 		gmp_control.s.spdmsb = 1;
 		gmp_control.s.spdlsb = 0;
@@ -972,6 +1052,14 @@ int cvmx_helper_set_autonegotiation(int xiface, int index, bool enable)
 	return 0;
 }
 
+#if defined(CONFIG_UBNT_E1000) || defined(CONFIG_UBNT_E1020)
+#define FIX_1G_SW_MODE
+#ifdef FIX_1G_SW_MODE
+extern int get_cs4223_link_status(int bgx_id, int port);
+extern int get_bgx_port_link_status(int bgx_id, int port);
+#endif
+#endif /* CONFIG_UBNT_E1000 || CONFIG_UBNT_E1020*/
+
 /**
  * @INTERNAL
  * Return the link state of an IPD/PKO port as returned by
@@ -1043,9 +1131,19 @@ cvmx_helper_link_info_t __cvmx_helper_bgx_sgmii_link_get(int xipd_port)
 		/* PHY Mode */
 		/* Note that this also works for 1000base-X mode */
 
+#if defined(CONFIG_UBNT_E1000) || defined(CONFIG_UBNT_E1020)
+#ifdef FIX_1G_SW_MODE
+		if (get_bgx_port_link_status(xi.interface, index)) {
+#endif
+#endif /* CONFIG_UBNT_E1000 || CONFIG_UBNT_E1020*/
 		result.s.speed = speed * 8 / 10;
 		result.s.full_duplex = 1;
 		result.s.link_up = 1;
+#if defined(CONFIG_UBNT_E1000) || defined(CONFIG_UBNT_E1020)
+#ifdef FIX_1G_SW_MODE
+		}
+#endif
+#endif /* CONFIG_UBNT_E1000 || CONFIG_UBNT_E1020*/
 		return result;
 	} else {
 		/* MAC Mode */
@@ -1488,6 +1586,38 @@ static void __cvmx_bgx_restart_training(int node, int unit, int index)
 	cvmx_write_csr_node(node, CVMX_BGXX_SPUX_BR_PMD_CONTROL(index, unit), pmd_control.u64);
 }
 
+#if defined(CONFIG_UBNT_E1000) || defined(CONFIG_UBNT_E1020)
+#define FIX_1G_SW_MODE
+#ifdef FIX_1G_SW_MODE
+int setup_sgmii_port_phy_mode(int bgx, int port)
+{
+	cvmx_bgxx_gmp_pcs_miscx_ctl_t pcs_miscx_ctl;
+	cvmx_bgxx_cmrx_config_t cmrx_config;
+	cvmx_bgxx_gmp_pcs_mrx_control_t gmp_pcs_mrx_control;
+
+	gmp_pcs_mrx_control.u64 = cvmx_read_csr_node(0, CVMX_BGXX_GMP_PCS_MRX_CONTROL(port,bgx));
+	gmp_pcs_mrx_control.s.rst_an = 1;
+	gmp_pcs_mrx_control.s.an_en =  1;
+	gmp_pcs_mrx_control.s.pwr_dn = 0;
+
+	cvmx_write_csr_node(0, CVMX_BGXX_GMP_PCS_MRX_CONTROL(port,bgx),gmp_pcs_mrx_control.u64);
+
+	cmrx_config.u64 = cvmx_read_csr_node(0,CVMX_BGXX_CMRX_CONFIG(port,bgx));
+	cmrx_config.s.enable = 1;
+    cmrx_config.s.data_pkt_tx_en = 0;
+	cmrx_config.s.data_pkt_rx_en = 0;
+	cvmx_write_csr_node(0,CVMX_BGXX_CMRX_CONFIG(port,bgx), cmrx_config.u64);
+
+	pcs_miscx_ctl.u64 = cvmx_read_csr_node(0, CVMX_BGXX_GMP_PCS_MISCX_CTL(port,bgx));
+	pcs_miscx_ctl.s.mac_phy = 1;
+	cvmx_write_csr_node(0, CVMX_BGXX_GMP_PCS_MISCX_CTL(port, bgx),pcs_miscx_ctl.u64);
+
+	return 0;
+}
+EXPORT_SYMBOL(setup_sgmii_port_phy_mode);
+#endif
+#endif /* CONFIG_UBNT_E1000 || CONFIG_UBNT_E1020 */
+
 /*
  * @INTERNAL
  * Wrapper function to configure the BGX, does not enable.
@@ -1543,6 +1673,12 @@ int __cvmx_helper_bgx_port_init(int xipd_port, int phy_pres)
 			xcv_reset.s.rx_pkt_rst_n = 0;
 			cvmx_write_csr(CVMX_XCV_RESET, xcv_reset.u64);
 		}
+#if defined(CONFIG_UBNT_E1000) || defined(CONFIG_UBNT_E1020)
+#ifdef FIX_1G_SW_MODE
+		if(xi.interface !=2)
+			setup_sgmii_port_phy_mode(xi.interface, index);
+#endif
+#endif /* CONFIG_UBNT_E1000 || CONFIG_UBNT_E1020*/
 	} else {
 		int res, cred;
 		cvmx_bgxx_smux_tx_thresh_t smu_tx_thresh;
@@ -1757,11 +1893,11 @@ static int __cvmx_helper_bgx_xaui_link_init(int index, int xiface)
 			    && pmd_control.s.train_en == 0) {
 				__cvmx_bgx_start_training(node, xi.interface, index);
 				return -1;
-			} 
+			}
 			cvmx_qlm_gser_errata_27882(node, qlm, index);
 			spu_int.u64 = cvmx_read_csr_node(node,
 						CVMX_BGXX_SPUX_INT(index, xi.interface));
-			
+
 			if (spu_int.s.training_failure && !OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X)) {
 				__cvmx_bgx_restart_training(node, xi.interface, index);
 				return -1;
@@ -2037,7 +2173,7 @@ retry_link:
 			cvmx_dprintf("%d:BGX(%d,%d): Failed to get link, retrying\n", xi.node, xi.interface, index);
 #endif
 			goto retry_link;
-			}
+		}
 
 		if (res == -1) {
 #ifdef DEBUG_BGX
@@ -2076,9 +2212,15 @@ cvmx_helper_link_info_t __cvmx_helper_bgx_xaui_link_get(int xipd_port)
 	smu_tx_ctl.u64 = cvmx_read_csr_node(xi.node, CVMX_BGXX_SMUX_TX_CTL(index, xi.interface));
 	smu_rx_ctl.u64 = cvmx_read_csr_node(xi.node, CVMX_BGXX_SMUX_RX_CTL(index, xi.interface));
 
+#if defined(CONFIG_UBNT_E1000) || defined(CONFIG_UBNT_E1020)
+	if ((smu_tx_ctl.s.ls == 0)     &&
+		(smu_rx_ctl.s.status == 0) &&
+		(spu_status1.s.rcv_lnk) && get_bgx_port_link_status(xi.interface, index)) {
+#else
 	if ((smu_tx_ctl.s.ls == 0)     &&
 	    (smu_rx_ctl.s.status == 0) &&
 	    (spu_status1.s.rcv_lnk)) {
+#endif /* CONFIG_UBNT_E1000 || CONFIG_UBNT_E1020*/
 		int lanes;
 		int qlm = cvmx_qlm_lmac(xiface, index);
 		uint64_t speed;
@@ -2123,7 +2265,7 @@ cvmx_helper_link_info_t __cvmx_helper_bgx_xaui_link_get(int xipd_port)
 		res = __cvmx_helper_bgx_xaui_link_init(index, xiface);
 		if (res == -1) {
 #ifdef DEBUG_BGX
-				cvmx_dprintf("Failed to get %d:BGX(%d,%d) link\n", xi.node, xi.interface, index);
+			cvmx_dprintf("Failed to get %d:BGX(%d,%d) link\n", xi.node, xi.interface, index);
 #endif
 			return result;
 		}
@@ -2245,7 +2387,7 @@ int __cvmx_helper_bgx_mixed_enable(int xiface)
 		/* All other lmac type call XAUI init code */
 		} else {
 			int res;
-					struct cvmx_xiface xi = cvmx_helper_xiface_to_node_interface(xiface);
+			struct cvmx_xiface xi = cvmx_helper_xiface_to_node_interface(xiface);
 			static int count[CVMX_MAX_NODES][CVMX_HELPER_MAX_IFACE][CVMX_HELPER_CFG_MAX_PORT_PER_IFACE] = {
 				[0 ... CVMX_MAX_NODES - 1][0 ... CVMX_HELPER_MAX_IFACE - 1] = {
 					[0 ... CVMX_HELPER_CFG_MAX_PORT_PER_IFACE - 1] = 0 } };
@@ -2257,7 +2399,7 @@ retry_link:
 			if ((res == -1) && (count[xi.node][xi.interface][index] < 5)) {
 				count[xi.node][xi.interface][index]++;
 				goto retry_link;
-				}
+			}
 
 			if (res == -1) {
 #ifdef DEBUG_BGX
@@ -2466,7 +2608,7 @@ void cvmx_helper_bgx_tx_options(unsigned node,
 	/* Set SMUX (XAUI/XFI) Tx options */
 	/* HRM Sec 33.3.4.3 should read 64 */
 	smu_min_pkt.u64 = 0;
-	 smu_min_pkt.s.min_size = 0x40;
+	smu_min_pkt.s.min_size = 0x40;
 	cvmx_write_csr_node(node,
 		CVMX_BGXX_SMUX_TX_MIN_PKT(index, xi.interface),
 		smu_min_pkt.u64);
@@ -3663,24 +3805,21 @@ typedef struct {
 int cvmx_dump_bgx_config_node(unsigned node, unsigned bgx)
 {
 	lmac_config_t lmac[4];
-	cvmx_bgxx_cmr_global_config_t global_config;
 	cvmx_bgxx_cmr_rx_ovr_bp_t cmr_rx_ovr_bp;
 	unsigned ind, N;
 	uint8_t mask_aneg_ovrd, mask_aneg, lmac_type, lmac_gmii;
 	uint8_t lmac_sgmii, lmac_rgmii, lmac_xaui, lmac_rxaui, lmac_10g_r, lmac_40g_r;
 	int ipd_port, qlm, gbaud_mhz;
+	int xiface = cvmx_helper_node_interface_to_xiface(node, bgx);
 
 	lmac_sgmii = lmac_rgmii = lmac_xaui = lmac_rxaui = lmac_10g_r  = lmac_40g_r = 0;
 	mask_aneg_ovrd = mask_aneg = 0;
-
-	global_config.u64 = cvmx_read_csr_node(node,
-		CVMX_BGXX_CMR_GLOBAL_CONFIG(bgx));
 
 	cvmx_dprintf("\n/*===== BGX CONFIG Parameters			BGX%d =====*/\n", bgx);
 	/* just report configured RX/Tx LMACS - don't check return */
 	cvmx_helper_bgx_number_rx_tx_lmacs(node, bgx, &N);
 
-	qlm = bgx<2 ? (global_config.s.pmux_sds_sel==1 ? bgx+2 : bgx) : bgx+2;
+	qlm = cvmx_qlm_lmac(xiface, N - 1);
 	cvmx_dprintf("NODE%d: BGX%d/lmac[0..%d] connected to QLM%d\n",
 		node, bgx, N - 1, qlm);
 
@@ -4067,25 +4206,22 @@ typedef struct {
 int cvmx_dump_bgx_status_node(unsigned node, unsigned bgx)
 {
 	lmac_status_t lmac[4];
-	cvmx_bgxx_cmr_global_config_t global_config;
 	unsigned ind, N;
 	uint8_t lmac_type;
 	uint8_t lmac_sgmii, lmac_rgmii, lmac_xaui, lmac_rxaui, lmac_10g_r, lmac_40g_r;
 	int ipd_port, qlm;
+	int xiface = cvmx_helper_node_interface_to_xiface(node, bgx);
 
 	lmac_sgmii = lmac_rgmii = lmac_xaui = lmac_rxaui = lmac_10g_r  = lmac_40g_r = 0;
-
-	global_config.u64 = cvmx_read_csr_node(node,
-		CVMX_BGXX_CMR_GLOBAL_CONFIG(bgx));
 
 	cvmx_dprintf("\n/*===== BGX Status report			BGX%d =====*/\n", bgx);
 
 	/* just report configured RX/Tx LMACS - don't check return */
 	cvmx_helper_bgx_number_rx_tx_lmacs(node, bgx, &N);
 
-	qlm = bgx<2 ? (global_config.s.pmux_sds_sel==1 ? bgx+2 : bgx) : bgx+2;
+	qlm = cvmx_qlm_lmac(xiface, N - 1);
 	cvmx_dprintf("NODE%d: BGX%d/lmac[0..%d] connected to QLM%d\n",
-		node, bgx, N - 1,qlm);
+		node, bgx, N - 1, qlm);
 
 	for (ind = 0; ind < N; ind++) {
 		lmac[ind].cmr_config.u64 = cvmx_read_csr_node(node,

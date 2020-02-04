@@ -1,7 +1,9 @@
 /*
  * Octeon Watchdog driver
  *
- * Copyright (C) 2007 - 2016 Cavium, Inc.
+ * Copyright (C) 2007 - 2017 Cavium, Inc.
+ *
+ * Converted to use WATCHDOG_CORE by Aaro Koskinen <aaro.koskinen@iki.fi>.
  *
  * Some parts derived from wdt.c
  *
@@ -79,7 +81,7 @@
 /* Watchdog interrupt major block number (8 MSBs of intsn) */
 #define WD_BLOCK_NUMBER		0x01
 
-static int counter;
+static int divisor;
 
 /* The count needed to achieve timeout_sec. */
 static unsigned int timeout_cnt;
@@ -100,24 +102,22 @@ static cpumask_t irq_enabled_cpus;
 #define WD_TIMO 60			/* Default heartbeat = 60 seconds */
 
 static int heartbeat = WD_TIMO;
-module_param(heartbeat, int, S_IRUGO);
+module_param(heartbeat, int, 0444);
 MODULE_PARM_DESC(heartbeat,
 	"Watchdog heartbeat in seconds. (0 < heartbeat, default="
 				__MODULE_STRING(WD_TIMO) ")");
 
 static bool nowayout = WATCHDOG_NOWAYOUT;
-module_param(nowayout, bool, S_IRUGO);
+module_param(nowayout, bool, 0444);
 MODULE_PARM_DESC(nowayout,
 	"Watchdog cannot be stopped once started (default="
 				__MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
 
 static int disable;
-module_param(disable, int, S_IRUGO);
+module_param(disable, int, 0444);
 MODULE_PARM_DESC(disable,
 	"Disable the watchdog entirely (default=0)");
 
-static unsigned long octeon_wdt_is_open;
-static char expect_close;
 static struct cvmx_boot_vector_element *octeon_wdt_bootvector;
 
 void octeon_wdt_nmi_stage2(void);
@@ -187,6 +187,7 @@ static void octeon_wdt_write_hex(u64 value, int digits)
 {
 	int d;
 	int v;
+
 	for (d = 0; d < digits; d++) {
 		v = (value >> ((digits - d - 1) * 4)) & 0xf;
 		if (v >= 10)
@@ -196,7 +197,7 @@ static void octeon_wdt_write_hex(u64 value, int digits)
 	}
 }
 
-const char *reg_name[] = {
+static const char reg_name[][3] = {
 	"$0", "at", "v0", "v1", "a0", "a1", "a2", "a3",
 	"a4", "a5", "a6", "a7", "t0", "t1", "t2", "t3",
 	"s0", "s1", "s2", "s3", "s4", "s5", "s6", "s7",
@@ -363,7 +364,7 @@ static void octeon_wdt_setup_interrupt(int cpu)
 	core = cpu2core(cpu);
 	node = cpu_to_node(cpu);
 
-	octeon_wdt_bootvector[core].target_ptr = (uint64_t)octeon_wdt_nmi_stage2;
+	octeon_wdt_bootvector[core].target_ptr = (u64)octeon_wdt_nmi_stage2;
 
 	/* Disable it before doing anything with the interrupts. */
 	ciu_wdog.u64 = 0;
@@ -378,6 +379,8 @@ static void octeon_wdt_setup_interrupt(int cpu)
 		/* Get a irq for the wd intsn (hardware interrupt) */
 		hwirq = WD_BLOCK_NUMBER << 12 | 0x200 | core;
 		irq = irq_create_mapping(domain, hwirq);
+		irqd_set_trigger_type(irq_get_irq_data(irq),
+                                      IRQ_TYPE_EDGE_RISING);
 	} else
 		irq = OCTEON_IRQ_WDOG0 + core;
 
@@ -411,7 +414,7 @@ static int octeon_wdt_cpu_callback(struct notifier_block *nfb,
 {
 	unsigned int cpu = (unsigned long)hcpu;
 
-	switch (action) {
+	switch (action & ~CPU_TASKS_FROZEN) {
 	case CPU_DOWN_PREPARE:
 		octeon_wdt_disable_interrupt(cpu);
 		break;
@@ -425,14 +428,14 @@ static int octeon_wdt_cpu_callback(struct notifier_block *nfb,
 	return NOTIFY_OK;
 }
 
-static void octeon_wdt_ping(void)
+static int octeon_wdt_ping(struct watchdog_device __always_unused *wdog)
 {
 	int cpu;
 	int coreid;
 	int node;
 
 	if (disable)
-		return;
+		return 0;
 
 	for_each_online_cpu(cpu) {
 		coreid = cpu2core(cpu);
@@ -446,6 +449,7 @@ static void octeon_wdt_ping(void)
 			cpumask_set_cpu(cpu, &irq_enabled_cpus);
 		}
 	}
+	return 0;
 }
 
 static void octeon_wdt_calc_parameters(int t)
@@ -471,10 +475,11 @@ static void octeon_wdt_calc_parameters(int t)
 
 	countdown_reset = periods > 2 ? periods - 2 : 0;
 	heartbeat = t;
-	timeout_cnt = ((octeon_get_io_clock_rate() / counter) * timeout_sec) >> 8;
+	timeout_cnt = ((octeon_get_io_clock_rate() / divisor) * timeout_sec) >> 8;
 }
 
-static int octeon_wdt_set_heartbeat(int t)
+static int octeon_wdt_set_timeout(struct watchdog_device *wdog,
+				  unsigned int t)
 {
 	int cpu;
 	int coreid;
@@ -499,158 +504,45 @@ static int octeon_wdt_set_heartbeat(int t)
 		cvmx_write_csr_node(node, CVMX_CIU_WDOGX(coreid), ciu_wdog.u64);
 		cvmx_write_csr_node(node, CVMX_CIU_PP_POKEX(coreid), 1);
 	}
-	octeon_wdt_ping(); /* Get the irqs back on. */
+	octeon_wdt_ping(wdog); /* Get the irqs back on. */
 	return 0;
 }
 
-/**
- *	octeon_wdt_write:
- *	@file: file handle to the watchdog
- *	@buf: buffer to write (unused as data does not matter here
- *	@count: count of bytes
- *	@ppos: pointer to the position to write. No seeks allowed
- *
- *	A write to a watchdog device is defined as a keepalive signal. Any
- *	write of data will do, as we we don't define content meaning.
- */
-
-static ssize_t octeon_wdt_write(struct file *file, const char __user *buf,
-				size_t count, loff_t *ppos)
+static int octeon_wdt_start(struct watchdog_device *wdog)
 {
-	if (count) {
-		if (!nowayout) {
-			size_t i;
-
-			/* In case it was set long ago */
-			expect_close = 0;
-
-			for (i = 0; i != count; i++) {
-				char c;
-				if (get_user(c, buf + i))
-					return -EFAULT;
-				if (c == 'V')
-					expect_close = 1;
-			}
-		}
-		octeon_wdt_ping();
-	}
-	return count;
-}
-
-/**
- *	octeon_wdt_ioctl:
- *	@file: file handle to the device
- *	@cmd: watchdog command
- *	@arg: argument pointer
- *
- *	The watchdog API defines a common set of functions for all
- *	watchdogs according to their available features. We only
- *	actually usefully support querying capabilities and setting
- *	the timeout.
- */
-
-static long octeon_wdt_ioctl(struct file *file, unsigned int cmd,
-			     unsigned long arg)
-{
-	void __user *argp = (void __user *)arg;
-	int __user *p = argp;
-	int new_heartbeat;
-
-	static struct watchdog_info ident = {
-		.options =		WDIOF_SETTIMEOUT|
-					WDIOF_MAGICCLOSE|
-					WDIOF_KEEPALIVEPING,
-		.firmware_version =	1,
-		.identity =		"OCTEON",
-	};
-
-	switch (cmd) {
-	case WDIOC_GETSUPPORT:
-		return copy_to_user(argp, &ident, sizeof(ident)) ? -EFAULT : 0;
-	case WDIOC_GETSTATUS:
-	case WDIOC_GETBOOTSTATUS:
-		return put_user(0, p);
-	case WDIOC_KEEPALIVE:
-		octeon_wdt_ping();
-		return 0;
-	case WDIOC_SETTIMEOUT:
-		if (get_user(new_heartbeat, p))
-			return -EFAULT;
-		if (octeon_wdt_set_heartbeat(new_heartbeat))
-			return -EINVAL;
-		/* Fall through. */
-	case WDIOC_GETTIMEOUT:
-		return put_user(heartbeat, p);
-	default:
-		return -ENOTTY;
-	}
-}
-
-/**
- *	octeon_wdt_open:
- *	@inode: inode of device
- *	@file: file handle to device
- *
- *	The watchdog device has been opened. The watchdog device is single
- *	open and on opening we do a ping to reset the counters.
- */
-
-static int octeon_wdt_open(struct inode *inode, struct file *file)
-{
-	if (test_and_set_bit(0, &octeon_wdt_is_open))
-		return -EBUSY;
-	/*
-	 *	Activate
-	 */
-	octeon_wdt_ping();
-	do_countdown = true;
-	return nonseekable_open(inode, file);
-}
-
-/**
- *	octeon_wdt_release:
- *	@inode: inode to board
- *	@file: file handle to board
- *
- *	The watchdog has a configurable API. There is a religious dispute
- *	between people who want their watchdog to be able to shut down and
- *	those who want to be sure if the watchdog manager dies the machine
- *	reboots. In the former case we disable the counters, in the latter
- *	case you have to open it again very soon.
- */
-
-static int octeon_wdt_release(struct inode *inode, struct file *file)
-{
-	if (expect_close) {
-		do_countdown = false;
-		octeon_wdt_ping();
-	} else {
-		pr_crit("WDT device closed unexpectedly.  WDT will not stop!\n");
-	}
-	clear_bit(0, &octeon_wdt_is_open);
-	expect_close = 0;
+	octeon_wdt_ping(wdog);
+	do_countdown = 1;
 	return 0;
 }
 
-static const struct file_operations octeon_wdt_fops = {
-	.owner		= THIS_MODULE,
-	.llseek		= no_llseek,
-	.write		= octeon_wdt_write,
-	.unlocked_ioctl	= octeon_wdt_ioctl,
-	.open		= octeon_wdt_open,
-	.release	= octeon_wdt_release,
-};
-
-static struct miscdevice octeon_wdt_miscdev = {
-	.minor	= WATCHDOG_MINOR,
-	.name	= "watchdog",
-	.fops	= &octeon_wdt_fops,
-};
+static int octeon_wdt_stop(struct watchdog_device *wdog)
+{
+	do_countdown = 0;
+	octeon_wdt_ping(wdog);
+	return 0;
+}
 
 static struct notifier_block octeon_wdt_cpu_notifier = {
 	.notifier_call = octeon_wdt_cpu_callback,
 };
 
+static const struct watchdog_info octeon_wdt_info = {
+	.options = WDIOF_SETTIMEOUT | WDIOF_MAGICCLOSE | WDIOF_KEEPALIVEPING,
+	.identity = "OCTEON",
+};
+
+static const struct watchdog_ops octeon_wdt_ops = {
+	.owner		= THIS_MODULE,
+	.start		= octeon_wdt_start,
+	.stop		= octeon_wdt_stop,
+	.ping		= octeon_wdt_ping,
+	.set_timeout	= octeon_wdt_set_timeout,
+};
+
+static struct watchdog_device octeon_wdt = {
+	.info	= &octeon_wdt_info,
+	.ops	= &octeon_wdt_ops,
+};
 
 /**
  * Module/ driver initialization.
@@ -669,16 +561,16 @@ static int __init octeon_wdt_init(void)
 	}
 
 	if (OCTEON_IS_MODEL(OCTEON_CN68XX))
-		counter = (0x1 << 9);
+		divisor = 0x200;
 	else if (OCTEON_IS_MODEL(OCTEON_CN78XX))
-		counter = 0x400;
+		divisor = 0x400;
 	else
-		counter = (0x1 << 8);
+		divisor = 0x100;
 
 	/*
 	 * Watchdog time expiration length = The 16 bits of LEN
 	 * represent the most significant bits of a 24 bit decrementer
-	 * that decrements every counter cycles.
+	 * that decrements every divisor cycles.
 	 *
 	 * Try for a timeout of 5 sec, if that fails a smaller number
 	 * of even seconds,
@@ -686,7 +578,7 @@ static int __init octeon_wdt_init(void)
 	max_timeout_sec = 6;
 	do {
 		max_timeout_sec--;
-		timeout_cnt = ((octeon_get_io_clock_rate() / counter) * max_timeout_sec) >> 8;
+		timeout_cnt = ((octeon_get_io_clock_rate() / divisor) * max_timeout_sec) >> 8;
 	} while (timeout_cnt > 65535);
 
 	BUG_ON(timeout_cnt == 0);
@@ -695,11 +587,15 @@ static int __init octeon_wdt_init(void)
 
 	pr_info("Initial granularity %d Sec\n", timeout_sec);
 
-	ret = misc_register(&octeon_wdt_miscdev);
+	octeon_wdt.timeout	= timeout_sec;
+	octeon_wdt.max_timeout	= UINT_MAX;
+
+	watchdog_set_nowayout(&octeon_wdt, nowayout);
+
+	ret = watchdog_register_device(&octeon_wdt);
 	if (ret) {
-		pr_err("cannot register miscdev on minor=%d (err=%d)\n",
-		       WATCHDOG_MINOR, ret);
-		goto out;
+		pr_err("watchdog_register_device() failed: %d\n", ret);
+		return ret;
 	}
 
 	if (disable) {
@@ -709,12 +605,14 @@ static int __init octeon_wdt_init(void)
 
 	cpumask_clear(&irq_enabled_cpus);
 
+	cpu_notifier_register_begin();
 	for_each_online_cpu(cpu)
 		octeon_wdt_setup_interrupt(cpu);
 
-	register_hotcpu_notifier(&octeon_wdt_cpu_notifier);
-out:
-	return ret;
+	__register_hotcpu_notifier(&octeon_wdt_cpu_notifier);
+	cpu_notifier_register_done();
+
+	return 0;
 }
 
 /**
@@ -728,12 +626,14 @@ static void __exit octeon_wdt_cleanup(void)
 	struct irq_domain *domain;
 	int hwirq;
 
-	misc_deregister(&octeon_wdt_miscdev);
+	watchdog_unregister_device(&octeon_wdt);
+
+	cpu_notifier_register_begin();
 
 	if (disable)
 		return;
 
-	unregister_hotcpu_notifier(&octeon_wdt_cpu_notifier);
+	__unregister_hotcpu_notifier(&octeon_wdt_cpu_notifier);
 
 	for_each_online_cpu(cpu) {
 		int core = cpu2core(cpu);
@@ -751,6 +651,9 @@ static void __exit octeon_wdt_cleanup(void)
 			irq = OCTEON_IRQ_WDOG0 + core;
 		free_irq(irq, octeon_wdt_poke_irq);
 	}
+
+	cpu_notifier_register_done();
+
 	/*
 	 * Disable the boot-bus memory, the code it points to is soon
 	 * to go missing.

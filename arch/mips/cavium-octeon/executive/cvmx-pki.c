@@ -1054,7 +1054,7 @@ void cvmx_pki_show_pcam_entries(int node)
 	int index;
 	int bank;
 
-	for (cluster = 0; cluster < 4; cluster++) {
+	for (cluster = 0; cluster < (int)CVMX_PKI_NUM_CLUSTER; cluster++) {
 		for (bank = 0; bank < 2; bank++) {
 			cvmx_dprintf("\n--------------Cluster %1d Bank %1d-------------\n",
 				cluster, bank);
@@ -1090,7 +1090,7 @@ void cvmx_pki_show_valid_pcam_entries(int node)
 	cvmx_pki_clx_pcamx_matchx_t	match;
 	cvmx_pki_clx_pcamx_actionx_t act;
 
-	for (cluster = 0; cluster < 4; cluster++) {
+	for (cluster = 0; cluster < (int)CVMX_PKI_NUM_CLUSTER; cluster++) {
 		for (bank = 0; bank < 2; bank++) {
 			cvmx_dprintf("\n--------------Cluster %1d Bank %1d---------------------\n",
 				cluster, bank);

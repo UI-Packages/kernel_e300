@@ -8,54 +8,12 @@
 
 #include <linux/interrupt.h>
 #include <linux/cpumask.h>
-#include <linux/bitmap.h>
 #include <linux/kernel.h>
 #include <linux/mutex.h>
-#include <linux/slab.h>
-#include <linux/msi.h>
 
 #include <asm/io.h>
 
-#define MBOX_BITS_PER_CPU 3
-
-struct mipsvz_irq_chip {
-	u32	version;	/* version of irq-chip implementation */
-	u32	numbits;	/* # of supported interrupt bits */
-	u32	numcpus;	/* # of supported CPUs */
-	u32	bm_length;	/* length as u32 of used bitmaps */
-	u32	bm_size;	/* size of used bitmaps */
-
-	void __iomem *base;
-
-	/* per CPU irq-source bitmaps to signal interrupt to guest */
-	unsigned long cpu_irq_src_bitmap;
-	/*
-	 * All other bitmaps defined in kvm_mips_vz.h are not directly
-	 * accessed by guest code, instead writes are done using below
-	 * defined register offsets.
-	 */
-} para_irq_chip;
-
-#define KVM_MIPSVZ_IC_REG_NUM_BITS	0	/* number of IRQs supported */
-#define KVM_MIPSVZ_IC_REG_NUM_CPUS	4	/* number of CPUs supported */
-#define KVM_MIPSVZ_IC_REG_VERSION	8	/* version of this irq_chip */
-#define KVM_MIPSVZ_IC_REG_FEATURES	0xc	/* feature flags (if any) */
-
-#define KVM_MIPSVZ_IC_REG_IRQ_SET 0x10	/* set irq pending (except MBOX) */
-#define KVM_MIPSVZ_IC_REG_IRQ_CLR 0x14	/* clear irq pending (except MBOX) */
-#define KVM_MIPSVZ_IC_REG_IRQ_EN  0x18	/* enable irq globally (except MBOX) */
-#define KVM_MIPSVZ_IC_REG_IRQ_DIS 0x1c	/* disable irq globally (except MBOX) */
-
-#define KVM_MIPSVZ_IC_REG_CPU_IRQ_SET	0x20	/* set irq pending (MBOX) */
-#define KVM_MIPSVZ_IC_REG_CPU_IRQ_CLR	0x24	/* clear irq pending (MBOX) */
-#define KVM_MIPSVZ_IC_REG_CPU_IRQ_EN	0x28	/* enable irq per CPU */
-#define KVM_MIPSVZ_IC_REG_CPU_IRQ_DIS	0x2c	/* disable irq per CPU */
-
-/* mipsvz_irq_chip MMIO area containing bitmaps */
-#define KVM_MIPSVZ_IC_BM_AREA		0x40
-
-unsigned long *irq_msi_map;
-DEFINE_SPINLOCK(irq_msi_map_lock);
+#define MBOX_BITS_PER_CPU 2
 
 static int cpunum_for_cpu(int cpu)
 {
@@ -143,17 +101,7 @@ static void irq_core_bus_sync_unlock(struct irq_data *data)
 	struct core_chip_data *cd = irq_data_get_irq_chip_data(data);
 
 	if (cd->desired_en != cd->current_en) {
-		/*
-		 * Can be called in early init when on_each_cpu() will
-		 * unconditionally enable irqs, so handle the case
-		 * where only a single CPU is online specially, and
-		 * directly call.
-		 */
-		if (num_online_cpus() == 1)
-			irq_core_set_enable_local(data);
-		else
-			on_each_cpu(irq_core_set_enable_local, data, 1);
-
+		on_each_cpu(irq_core_set_enable_local, data, 1);
 		cd->current_en = cd->desired_en;
 	}
 
@@ -204,46 +152,36 @@ static void __init irq_init_core(void)
 						 handle_percpu_irq);
 			break;
 		default:
-			irq_reserve_irq(irq);
+			break;
 		}
 	}
 }
 
+static void __iomem *mips_irq_chip;
+#define MIPS_IRQ_CHIP_NUM_BITS 0
+#define MIPS_IRQ_CHIP_REGS 8
 
-
-/* XXX - to be reviewed
- * (0) enable irq (PCI/MSI) globally
- * (1) enable irq for at least 1 CPU (default CPU0)
- * (2) "hardware" sets pending bit
- * (3) set irq_src for CPU(s) and raise guest irq
- * (4) guest handles irq and clears pending bit
- *
- * for MIPSVZ_IRQ_CHIP_REG_IRQ_{EN,DIS} pass
- *       (irq)                  as parameter
- *
- * for MIPSVZ_IRQ_CHIP_REG_CPU_IRQ_EN & friends pass
- *       (cpu << 20 | irq)      as parameter
- *
- * to set an irq:
- *      cpu_irq_src[irq] = irq_en[irq] & cpu_irq_en[irq];
- * to clear an irq
- *      cpu_irq_src[irq] = 0;
- * to mask an irq
- *      cpu_irq_en[irq] = 0;    (MBOX)
- *      irq_en[irq] = 0;        (PCI/MSI)
- * to unmask an irq
- *      cpu_irq_en[irq] = 1;    (MBOX)
- *      irq_en[irq] = 1;        (PCI/MSI)
- */
+static int mips_irq_cpu_stride;
+static int mips_irq_chip_reg_raw;
+static int mips_irq_chip_reg_src;
+static int mips_irq_chip_reg_en;
+static int mips_irq_chip_reg_raw_w1s;
+static int mips_irq_chip_reg_raw_w1c;
+static int mips_irq_chip_reg_en_w1s;
+static int mips_irq_chip_reg_en_w1c;
 
 static void irq_pci_enable(struct irq_data *data)
 {
-	__raw_writel(data->irq, para_irq_chip.base + KVM_MIPSVZ_IC_REG_IRQ_EN);
+	u32 mask = 1u << data->irq;
+
+	__raw_writel(mask, mips_irq_chip + mips_irq_chip_reg_en_w1s);
 }
 
 static void irq_pci_disable(struct irq_data *data)
 {
-	__raw_writel(data->irq, para_irq_chip.base + KVM_MIPSVZ_IC_REG_IRQ_DIS);
+	u32 mask = 1u << data->irq;
+
+	__raw_writel(mask, mips_irq_chip + mips_irq_chip_reg_en_w1c);
 }
 
 static void irq_pci_ack(struct irq_data *data)
@@ -252,12 +190,16 @@ static void irq_pci_ack(struct irq_data *data)
 
 static void irq_pci_mask(struct irq_data *data)
 {
-	__raw_writel(data->irq, para_irq_chip.base + KVM_MIPSVZ_IC_REG_IRQ_DIS);
+	u32 mask = 1u << data->irq;
+
+	__raw_writel(mask, mips_irq_chip + mips_irq_chip_reg_en_w1c);
 }
 
 static void irq_pci_unmask(struct irq_data *data)
 {
-	__raw_writel(data->irq, para_irq_chip.base + KVM_MIPSVZ_IC_REG_IRQ_EN);
+	u32 mask = 1u << data->irq;
+
+	__raw_writel(mask, mips_irq_chip + mips_irq_chip_reg_en_w1s);
 }
 
 static struct irq_chip irq_chip_pci = {
@@ -269,104 +211,74 @@ static struct irq_chip irq_chip_pci = {
 	.irq_unmask = irq_pci_unmask,
 };
 
-static void irq_pci_msi_enable(struct irq_data *data)
+static void irq_mbox_all(struct irq_data *data,  void __iomem *base)
 {
-	__raw_writel(data->irq, para_irq_chip.base + KVM_MIPSVZ_IC_REG_IRQ_EN);
-}
+	int cpu;
+	unsigned int mbox = data->irq - MIPS_IRQ_MBOX0;
+	u32 mask;
 
-static void irq_pci_msi_disable(struct irq_data *data)
-{
-	__raw_writel(data->irq, para_irq_chip.base + KVM_MIPSVZ_IC_REG_IRQ_DIS);
-}
+	WARN_ON(mbox >= MBOX_BITS_PER_CPU);
 
-static void irq_pci_msi_ack(struct irq_data *data)
-{
-	__raw_writel(data->irq, para_irq_chip.base + KVM_MIPSVZ_IC_REG_IRQ_CLR);
+	for_each_online_cpu(cpu) {
+		unsigned int cpuid = cpunum_for_cpu(cpu);
+		mask = 1 << (cpuid * MBOX_BITS_PER_CPU + mbox);
+		__raw_writel(mask, base + (cpuid * mips_irq_cpu_stride));
+	}
 }
-
-static void irq_pci_msi_mask(struct irq_data *data)
-{
-	__raw_writel(data->irq, para_irq_chip.base + KVM_MIPSVZ_IC_REG_IRQ_DIS);
-}
-
-static void irq_pci_msi_unmask(struct irq_data *data)
-{
-	__raw_writel(data->irq, para_irq_chip.base + KVM_MIPSVZ_IC_REG_IRQ_EN);
-}
-
-static struct irq_chip irq_chip_pci_msi = {
-	.name = "PCI-MSI",
-	.irq_enable = irq_pci_msi_enable,
-	.irq_disable = irq_pci_msi_disable,
-	.irq_ack = irq_pci_msi_ack,
-	.irq_mask = irq_pci_msi_mask,
-	.irq_unmask = irq_pci_msi_unmask,
-};
 
 static void irq_mbox_enable(struct irq_data *data)
 {
-	int cpu;
-	u32 val;
-
-	for_each_online_cpu(cpu) {
-		val = ((u32)cpunum_for_cpu(cpu) << 20) | data->irq;
-		__raw_writel(val, para_irq_chip.base + KVM_MIPSVZ_IC_REG_CPU_IRQ_EN);
-	}
+	irq_mbox_all(data, mips_irq_chip + mips_irq_chip_reg_en_w1s + sizeof(u32));
 }
 
 static void irq_mbox_disable(struct irq_data *data)
 {
-	int cpu;
-	u32 val;
-
-	for_each_online_cpu(cpu) {
-		val = ((u32)cpunum_for_cpu(cpu) << 20) | data->irq;
-		__raw_writel(val, para_irq_chip.base + KVM_MIPSVZ_IC_REG_CPU_IRQ_DIS);
-	}
+	irq_mbox_all(data, mips_irq_chip + mips_irq_chip_reg_en_w1c + sizeof(u32));
 }
 
-/* per CPU only */
 static void irq_mbox_ack(struct irq_data *data)
 {
-	u32 val = (get_ebase_cpunum() << 20) | data->irq;
-	__raw_writel(val, para_irq_chip.base + KVM_MIPSVZ_IC_REG_CPU_IRQ_CLR);
+	u32 mask;
+	unsigned int mbox = data->irq - MIPS_IRQ_MBOX0;
+
+	WARN_ON(mbox >= MBOX_BITS_PER_CPU);
+
+	mask = 1 << (get_ebase_cpunum() * MBOX_BITS_PER_CPU + mbox);
+	__raw_writel(mask, mips_irq_chip + mips_irq_chip_reg_raw_w1c + sizeof(u32));
 }
 
-/* per CPU only */
-void irq_mbox_ipi(int cpu, unsigned int action)
+void irq_mbox_ipi(int cpu, unsigned int actions)
 {
-	u32 val = (u32)cpunum_for_cpu(cpu) << 20;
+	unsigned int cpuid = cpunum_for_cpu(cpu);
+	u32 mask;
 
-	switch (action) {
-	case SMP_RESCHEDULE_YOURSELF:
-		val |= MIPS_IRQ_MBOX0;
-		break;
-	case SMP_CALL_FUNCTION:
-		val |= MIPS_IRQ_MBOX1;
-		break;
-	case SMP_ICACHE_FLUSH:
-		val |= MIPS_IRQ_MBOX2;
-		break;
-	default:
-		pr_err("%s: Unhandled action: %u\n", __func__, action);
-		return;
-	}
+	WARN_ON(actions >= (1 << MBOX_BITS_PER_CPU));
 
-	__raw_writel(val, para_irq_chip.base + KVM_MIPSVZ_IC_REG_CPU_IRQ_SET);
+	mask = actions << (cpuid * MBOX_BITS_PER_CPU);
+	__raw_writel(mask, mips_irq_chip + mips_irq_chip_reg_raw_w1s + sizeof(u32));
 }
 
-/* per CPU only */
+static void irq_mbox_cpu_onoffline(struct irq_data *data,  void __iomem *base)
+{
+	unsigned int mbox = data->irq - MIPS_IRQ_MBOX0;
+	unsigned int cpuid = get_ebase_cpunum();
+	u32 mask;
+
+	WARN_ON(mbox >= MBOX_BITS_PER_CPU);
+
+	mask = 1 << (cpuid * MBOX_BITS_PER_CPU + mbox);
+	__raw_writel(mask, base + (cpuid * mips_irq_cpu_stride));
+
+}
+
 static void irq_mbox_cpu_online(struct irq_data *data)
 {
-	u32 val = (get_ebase_cpunum() << 20) | data->irq;
-	__raw_writel(val, para_irq_chip.base + KVM_MIPSVZ_IC_REG_CPU_IRQ_EN);
+	irq_mbox_cpu_onoffline(data, mips_irq_chip + mips_irq_chip_reg_en_w1s + sizeof(u32));
 }
 
-/* per CPU only */
 static void irq_mbox_cpu_offline(struct irq_data *data)
 {
-	u32 val = (get_ebase_cpunum() << 20) | data->irq;
-	__raw_writel(val, para_irq_chip.base + KVM_MIPSVZ_IC_REG_CPU_IRQ_DIS);
+	irq_mbox_cpu_onoffline(data, mips_irq_chip + mips_irq_chip_reg_en_w1c + sizeof(u32));
 }
 
 static struct irq_chip irq_chip_mbox = {
@@ -379,99 +291,63 @@ static struct irq_chip irq_chip_mbox = {
 	.flags = IRQCHIP_ONOFFLINE_ENABLED,
 };
 
-static inline unsigned long cpu_irq_src_bitmap(int cpu)
-{
-	return para_irq_chip.cpu_irq_src_bitmap + (cpu * para_irq_chip.bm_size);
-}
-
 static void __init irq_pci_init(void)
 {
-	int i;
-	struct mipsvz_irq_chip *ic = &para_irq_chip;
+	int i, stride;
+	u32 num_bits;
 
-	ic->base = ioremap(0x1e010000, 4096);
+	mips_irq_chip = ioremap(0x1e010000, 4096);
 
-	ic->numbits = __raw_readl(ic->base + KVM_MIPSVZ_IC_REG_NUM_BITS);
-	ic->numcpus = __raw_readl(ic->base + KVM_MIPSVZ_IC_REG_NUM_CPUS);
-	ic->version = __raw_readl(ic->base + KVM_MIPSVZ_IC_REG_VERSION);
-	ic->bm_length = (ic->numbits + 32 - 1) / 32;
-	ic->bm_size = ic->bm_length * 4;
+	num_bits = __raw_readl(mips_irq_chip + MIPS_IRQ_CHIP_NUM_BITS);
+	stride = 8 * (1 + ((num_bits - 1) / 64));
 
-	ic->cpu_irq_src_bitmap = (unsigned long)ic->base + KVM_MIPSVZ_IC_BM_AREA;
 
-	pr_info("(%s) numbits: %d, numcpus: %d, version: %d\n",
-		__func__, ic->numbits, ic->numcpus, ic->version);
+	pr_notice("mips_irq_chip: %u bits, reg stride: %d\n", num_bits, stride);
+	mips_irq_chip_reg_raw		= MIPS_IRQ_CHIP_REGS + 0 * stride;
+	mips_irq_chip_reg_raw_w1s	= MIPS_IRQ_CHIP_REGS + 1 * stride;
+	mips_irq_chip_reg_raw_w1c	= MIPS_IRQ_CHIP_REGS + 2 * stride;
+	mips_irq_chip_reg_src		= MIPS_IRQ_CHIP_REGS + 3 * stride;
+	mips_irq_chip_reg_en		= MIPS_IRQ_CHIP_REGS + 4 * stride;
+	mips_irq_chip_reg_en_w1s	= MIPS_IRQ_CHIP_REGS + 5 * stride;
+	mips_irq_chip_reg_en_w1c	= MIPS_IRQ_CHIP_REGS + 6 * stride;
+	mips_irq_cpu_stride		= stride * 4;
 
-	for (i = MIPS_IRQ_PCI_BASE; i <= MIPS_IRQ_PCI_MAX; i++) {
-		irq_set_chip_and_handler(i, &irq_chip_pci, handle_level_irq);
-		/* enable PCI irqs on CPU0 */
-		__raw_writel(i, para_irq_chip.base + KVM_MIPSVZ_IC_REG_CPU_IRQ_EN);
-	}
+	for (i = 0; i < 4; i++)
+		irq_set_chip_and_handler(i + MIPS_IRQ_PCIA, &irq_chip_pci, handle_level_irq);
 
-	for (i = MIPS_IRQ_MBOX0; i <= MIPS_IRQ_MBOX_MAX ; i++)
-		irq_set_chip_and_handler(i, &irq_chip_mbox, handle_percpu_irq);
+	for (i = 0; i < 2; i++)
+		irq_set_chip_and_handler(i + MIPS_IRQ_MBOX0, &irq_chip_mbox, handle_percpu_irq);
 
-	for (i = MIPS_IRQ_MSI_BASE; i < ic->numbits; i++) {
-		irq_set_chip_and_handler(i, &irq_chip_pci_msi, handle_level_irq);
-		/* enable MSI irqs on CPU0 */
-		__raw_writel(i, para_irq_chip.base + KVM_MIPSVZ_IC_REG_CPU_IRQ_EN);
-	}
 
 	set_c0_status(STATUSF_IP2);
 }
 
-static void __init irq_msi_init(void)
-{
-	struct mipsvz_irq_chip *ic = &para_irq_chip;
-	int i;
-
-	irq_msi_map = kzalloc(BITS_TO_LONGS(ic->numbits) * sizeof(long),
-				GFP_KERNEL);
-	if (!irq_msi_map)
-		return;
-
-	for (i=0; i < MIPS_IRQ_MSI_BASE; i++)
-		set_bit(i, irq_msi_map);
-}
-
-static unsigned int irq_chip_bm_ffs(unsigned long bitmap)
-{
-	unsigned int i, ret = 0;
-	u64 v, h, l;
-
-	for (i = 0; i < para_irq_chip.bm_length / 2; i++) {
-		h = __raw_readl((void *)(bitmap + i * 4));
-		l = __raw_readl((void *)(bitmap + (i + 1) * 4));
-		v = h << 32 | l;
-
-		if (!v)
-			continue;
-
-		ret = __ffs(v);
-		break;
-	}
-
-	return ret;
-}
-
 static void irq_pci_dispatch(void)
 {
-	unsigned int irq;
-	struct mipsvz_irq_chip *ic = &para_irq_chip;
+	unsigned int cpuid = get_ebase_cpunum();
+	u32 en;
 
-	irq = irq_chip_bm_ffs(cpu_irq_src_bitmap(get_ebase_cpunum()));
+	en = __raw_readl(mips_irq_chip + mips_irq_chip_reg_src +
+			(cpuid * mips_irq_cpu_stride));
 
-	if (9 <= irq && irq < ic->numbits)
-		do_IRQ(irq);
-	else
-		spurious_interrupt();
+	if (!en) {
+		en = __raw_readl(mips_irq_chip + mips_irq_chip_reg_src + (cpuid * mips_irq_cpu_stride) + sizeof(u32));
+		en = (en >> (2 * cpuid)) & 3;
+
+		if (!en)
+			spurious_interrupt();
+		else
+			do_IRQ(__ffs(en) + MIPS_IRQ_MBOX0);	/* MBOX type */
+	} else {
+		do_IRQ(__ffs(en));
+	}
 }
+
 
 void __init arch_init_irq(void)
 {
 	irq_init_core();
 	irq_pci_init();
-	irq_msi_init();
 }
 
 asmlinkage void plat_irq_dispatch(void)
@@ -489,57 +365,4 @@ asmlinkage void plat_irq_dispatch(void)
 		irq_pci_dispatch();
 	else
 		do_IRQ(MIPS_CPU_IRQ_BASE + ip);
-}
-
-static int get_msi_nr(void)
-{
-	struct mipsvz_irq_chip *ic = &para_irq_chip;
-	int irq;
-	unsigned long flags;
-
-	spin_lock_irqsave(&irq_msi_map_lock, flags);
-	irq = find_first_zero_bit(irq_msi_map, ic->numbits);
-	if (irq == ic->numbits)
-		return -ENOSPC;
-	set_bit(irq, irq_msi_map);
-	spin_unlock_irqrestore(&irq_msi_map_lock, flags);
-
-	return irq;
-}
-
-static void put_msi_nr(int irq)
-{
-	struct mipsvz_irq_chip *ic = &para_irq_chip;
-	unsigned long flags;
-
-	if (irq < MIPS_IRQ_MSI_BASE || irq >= ic->numbits)
-		return;
-
-	spin_lock_irqsave(&irq_msi_map_lock, flags);
-	clear_bit(irq, irq_msi_map);
-	spin_unlock_irqrestore(&irq_msi_map_lock, flags);
-}
-
-int arch_setup_msi_irq(struct pci_dev *dev, struct msi_desc *desc)
-{
-	struct msi_msg msg;
-	int irq;
-
-	irq = get_msi_nr();
-	if (irq < 0)
-		return -ENOSPC;
-
-	pr_info("Setting up irq %d for MSI\n", irq);
-
-	irq_set_msi_desc(irq, desc);
-	msg.data = irq;
-	write_msi_msg(irq, &msg);
-
-	return 0;
-}
-
-void arch_teardown_msi_irq(unsigned int irq)
-{
-	pr_info("Releasing MSI irq %d\n", irq);
-	put_msi_nr(irq);
 }

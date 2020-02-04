@@ -777,7 +777,8 @@ isdn_readbchan(int di, int channel, u_char *buf, u_char *fp, int len, wait_queue
 		return 0;
 	if (skb_queue_empty(&dev->drv[di]->rpqueue[channel])) {
 		if (sleep)
-			interruptible_sleep_on(sleep);
+			wait_event_interruptible(*sleep,
+				!skb_queue_empty(&dev->drv[di]->rpqueue[channel]));
 		else
 			return 0;
 	}
@@ -1072,7 +1073,8 @@ isdn_read(struct file *file, char __user *buf, size_t count, loff_t *off)
 				retval = -EAGAIN;
 				goto out;
 			}
-			interruptible_sleep_on(&(dev->info_waitq));
+			wait_event_interruptible(dev->info_waitq,
+						 file->private_data);
 		}
 		p = isdn_statstr();
 		file->private_data = NULL;
@@ -1128,7 +1130,8 @@ isdn_read(struct file *file, char __user *buf, size_t count, loff_t *off)
 				retval = -EAGAIN;
 				goto out;
 			}
-			interruptible_sleep_on(&(dev->drv[drvidx]->st_waitq));
+			wait_event_interruptible(dev->drv[drvidx]->st_waitq,
+						 dev->drv[drvidx]->stavail);
 		}
 		if (dev->drv[drvidx]->interface->readstat) {
 			if (count > dev->drv[drvidx]->stavail)
@@ -1188,8 +1191,8 @@ isdn_write(struct file *file, const char __user *buf, size_t count, loff_t *off)
 			goto out;
 		}
 		chidx = isdn_minor2chan(minor);
-		while ((retval = isdn_writebuf_stub(drvidx, chidx, buf, count)) == 0)
-			interruptible_sleep_on(&dev->drv[drvidx]->snd_waitq[chidx]);
+		wait_event_interruptible(dev->drv[drvidx]->snd_waitq[chidx],
+			(retval = isdn_writebuf_stub(drvidx, chidx, buf, count)));
 		goto out;
 	}
 	if (minor <= ISDN_MINOR_CTRLMAX) {
@@ -1376,6 +1379,7 @@ isdn_ioctl(struct file *file, uint cmd, ulong arg)
 			if (arg) {
 				if (copy_from_user(bname, argp, sizeof(bname) - 1))
 					return -EFAULT;
+				bname[sizeof(bname)-1] = 0;
 			} else
 				return -EINVAL;
 			ret = mutex_lock_interruptible(&dev->mtx);
@@ -1651,8 +1655,6 @@ isdn_ioctl(struct file *file, uint cmd, ulong arg)
 			} else
 				return -EINVAL;
 		case IIOCDBGVAR:
-			if (!capable(CAP_SYS_RAWIO))
-				return -EPERM;
 			if (arg) {
 				if (copy_to_user(argp, &dev, sizeof(ulong)))
 					return -EFAULT;
@@ -2380,7 +2382,7 @@ static void __exit isdn_exit(void)
 	}
 	isdn_tty_exit();
 	unregister_chrdev(ISDN_MAJOR, "isdn");
-	del_timer(&dev->timer);
+	del_timer_sync(&dev->timer);
 	/* call vfree with interrupts enabled, else it will hang */
 	vfree(dev);
 	printk(KERN_NOTICE "ISDN-subsystem unloaded\n");

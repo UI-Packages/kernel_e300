@@ -50,6 +50,8 @@
 #include <linux/module.h>
 #include <asm/octeon/octeon.h>
 #include <asm/octeon/cvmx.h>
+//#include <asm/octeon/cvmx-error.h>
+//#include <asm/octeon/cvmx-csr-typedefs.h>
 #else
 #include "cvmx.h"
 #include "cvmx-error.h"

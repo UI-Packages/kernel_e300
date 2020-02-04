@@ -137,7 +137,6 @@ void init_gssp_clnt(struct sunrpc_net *sn)
 {
 	mutex_init(&sn->gssp_lock);
 	sn->gssp_clnt = NULL;
-	init_waitqueue_head(&sn->gssp_wq);
 }
 
 int set_gssp_clnt(struct net *net)
@@ -154,7 +153,6 @@ int set_gssp_clnt(struct net *net)
 		sn->gssp_clnt = clnt;
 	}
 	mutex_unlock(&sn->gssp_lock);
-	wake_up(&sn->gssp_wq);
 	return ret;
 }
 
@@ -219,6 +217,8 @@ static void gssp_free_receive_pages(struct gssx_arg_accept_sec_context *arg)
 
 	for (i = 0; i < arg->npages && arg->pages[i]; i++)
 		__free_page(arg->pages[i]);
+
+	kfree(arg->pages);
 }
 
 static int gssp_alloc_receive_pages(struct gssx_arg_accept_sec_context *arg)
@@ -298,7 +298,8 @@ int gssp_accept_sec_context_upcall(struct net *net,
 	if (res.context_handle) {
 		data->out_handle = rctxh.exported_context_token;
 		data->mech_oid.len = rctxh.mech.len;
-		memcpy(data->mech_oid.data, rctxh.mech.data,
+		if (rctxh.mech.data)
+			memcpy(data->mech_oid.data, rctxh.mech.data,
 						data->mech_oid.len);
 		client_name = rctxh.src_name.display_name;
 	}
@@ -324,6 +325,9 @@ int gssp_accept_sec_context_upcall(struct net *net,
 	/* convert to GSS_NT_HOSTBASED_SERVICE form and set into creds */
 	if (data->found_creds && client_name.data != NULL) {
 		char *c;
+
+		data->creds.cr_raw_principal = kstrndup(client_name.data,
+						client_name.len, GFP_KERNEL);
 
 		data->creds.cr_principal = kstrndup(client_name.data,
 						client_name.len, GFP_KERNEL);

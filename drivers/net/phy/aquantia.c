@@ -1,157 +1,184 @@
 /*
- * This file is subject to the terms and conditions of the GNU General Public
- * License.  See the file "COPYING" in the main directory of this archive
- * for more details.
+ * Driver for Aquantia PHY
  *
- * Copyright (C) 2015 Cavium, Inc.
+ * Author: Shaohui Xie <Shaohui.Xie@freescale.com>
+ *
+ * Copyright 2015 Freescale Semiconductor, Inc.
+ *
+ * This file is licensed under the terms of the GNU General Public License
+ * version 2.  This program is licensed "as is" without any warranty of any
+ * kind, whether express or implied.
  */
 
+#include <linux/kernel.h>
 #include <linux/module.h>
+#include <linux/delay.h>
+#include <linux/mii.h>
+#include <linux/ethtool.h>
 #include <linux/phy.h>
+#include <linux/mdio.h>
 
-#define PHY_ID_AQR105			0x03a1b4a0
+#define PHY_ID_AQ1202	0x03a1b445
+#define PHY_ID_AQ2104	0x03a1b460
+#define PHY_ID_AQR105	0x03a1b4a2
+#define PHY_ID_AQR405	0x03a1b4b0
 
-#define PMA_RECEIVE_VENDOR_STATE_1	(MII_ADDR_C45 | 0x01 << 16 | 0xe800)
+#define PHY_AQUANTIA_FEATURES	(SUPPORTED_10000baseT_Full | \
+				 SUPPORTED_1000baseT_Full | \
+				 SUPPORTED_100baseT_Full | \
+				 PHY_DEFAULT_FEATURES)
 
-#define AN_TX_VENDOR_ALARMS_2		(MII_ADDR_C45 | 0x07 << 16 | 0xcc01)
-#define AN_VENDOR_STATUS_1		(MII_ADDR_C45 | 0x07 << 16 | 0xc800)
-#define AN_TX_VENDOR_INT_MASK_2		(MII_ADDR_C45 | 0x07 << 16 | 0xd401)
-
-#define GLOBAL_CW_VENDOR_INT_FLAGS	(MII_ADDR_C45 | 0x1e << 16 | 0xfc01)
-#define GLOBAL_INT_CW_VENDOR_MASK	(MII_ADDR_C45 | 0x1e << 16 | 0xff01)
-
-
-static int aqr105_config_aneg(struct phy_device *phydev)
+static int aquantia_config_aneg(struct phy_device *phydev)
 {
-	return 0;
-}
-
-static int aqr105_read_status(struct phy_device *phydev)
-{
-	int	reg;
-
-	reg = phy_read(phydev, PMA_RECEIVE_VENDOR_STATE_1);
-	/* Set the link state */
-	if ((reg & 1) == 0)
-		phydev->link = 0;
-	else {
-		phydev->link = 1;
-
-		reg = phy_read(phydev, AN_VENDOR_STATUS_1);
-		/* Set the duplex mode */
-		if ((reg & 1) == 0)
-			phydev->duplex = 0;
-		else
-			phydev->duplex = 1;
-
-		/* Set the speed */
-		reg = (reg >> 1) & 7;
-		switch (reg) {
-		case 0:
-			phydev->speed = 10;
-			break;
-		case 1:
-			phydev->speed = 100;
-			break;
-		case 2:
-			phydev->speed = 1000;
-			break;
-		case 3:
-			phydev->speed = 10000;
-			break;
-		case 4:
-			phydev->speed = 2500;
-			break;
-		case 5:
-			phydev->speed = 5000;
-			break;
-		default:
-			phydev->speed = -1;
-			break;
-		}
-	}
+	phydev->supported = PHY_AQUANTIA_FEATURES;
+	phydev->advertising = phydev->supported;
 
 	return 0;
 }
 
-static int  aqr105_ack_interrupt(struct phy_device *phydev)
+static int aquantia_aneg_done(struct phy_device *phydev)
 {
-	int	reg;
+	int reg;
 
-	reg = phy_read(phydev, AN_TX_VENDOR_ALARMS_2);
-
-	return 0;
+	reg = phy_read_mmd(phydev, MDIO_MMD_AN, MDIO_STAT1);
+	return (reg < 0) ? reg : (reg & BMSR_ANEGCOMPLETE);
 }
 
-static int aqr105_config_intr(struct phy_device *phydev)
+static int aquantia_config_intr(struct phy_device *phydev)
 {
-	int	reg;
+	int err;
 
 	if (phydev->interrupts == PHY_INTERRUPT_ENABLED) {
-		reg = phy_read(phydev, AN_TX_VENDOR_INT_MASK_2);
-		reg |= 0x1;
-		phy_write(phydev, AN_TX_VENDOR_INT_MASK_2, reg);
+		err = phy_write_mmd(phydev, MDIO_MMD_AN, 0xd401, 1);
+		if (err < 0)
+			return err;
 
-		reg = phy_read(phydev, GLOBAL_INT_CW_VENDOR_MASK);
-		reg |= 0x1000;
-		phy_write(phydev, GLOBAL_INT_CW_VENDOR_MASK, reg);
+		err = phy_write_mmd(phydev, MDIO_MMD_VEND1, 0xff00, 1);
+		if (err < 0)
+			return err;
+
+		err = phy_write_mmd(phydev, MDIO_MMD_VEND1, 0xff01, 0x1001);
 	} else {
-		reg = phy_read(phydev, GLOBAL_INT_CW_VENDOR_MASK);
-		reg &= ~0x1000;
-		phy_write(phydev, GLOBAL_INT_CW_VENDOR_MASK, reg);
+		err = phy_write_mmd(phydev, MDIO_MMD_AN, 0xd401, 0);
+		if (err < 0)
+			return err;
 
-		reg = phy_read(phydev, AN_TX_VENDOR_INT_MASK_2);
-		reg &= ~0x1;
-		phy_write(phydev, AN_TX_VENDOR_INT_MASK_2, reg);
+		err = phy_write_mmd(phydev, MDIO_MMD_VEND1, 0xff00, 0);
+		if (err < 0)
+			return err;
+
+		err = phy_write_mmd(phydev, MDIO_MMD_VEND1, 0xff01, 0);
 	}
 
+	return err;
+}
+
+static int aquantia_ack_interrupt(struct phy_device *phydev)
+{
+	int reg;
+
+	reg = phy_read_mmd(phydev, MDIO_MMD_AN, 0xcc01);
+	return (reg < 0) ? reg : 0;
+}
+
+static int aquantia_read_status(struct phy_device *phydev)
+{
+	int reg;
+
+	reg = phy_read_mmd(phydev, MDIO_MMD_AN, MDIO_STAT1);
+	reg = phy_read_mmd(phydev, MDIO_MMD_AN, MDIO_STAT1);
+	if (reg & MDIO_STAT1_LSTATUS)
+		phydev->link = 1;
+	else
+		phydev->link = 0;
+
+	reg = phy_read_mmd(phydev, MDIO_MMD_AN, 0xc800);
+	mdelay(10);
+	reg = phy_read_mmd(phydev, MDIO_MMD_AN, 0xc800);
+
+	switch (reg) {
+	case 0x9:
+		phydev->speed = SPEED_2500;
+		break;
+	case 0x5:
+		phydev->speed = SPEED_1000;
+		break;
+	case 0x3:
+		phydev->speed = SPEED_100;
+		break;
+	case 0x7:
+	default:
+		phydev->speed = SPEED_10000;
+		break;
+	}
+	phydev->duplex = DUPLEX_FULL;
+
 	return 0;
 }
 
-static int aqr105_did_interrupt(struct phy_device *phydev)
+static struct phy_driver aquantia_driver[] = {
 {
-	int	reg;
-
-	reg = phy_read(phydev, GLOBAL_CW_VENDOR_INT_FLAGS);
-	if (reg & 0x1000)
-		return 1;
-
-	return 0;
-}
-
-static int aqr105_match_phy_device(struct phy_device *phydev)
+	.phy_id		= PHY_ID_AQ1202,
+	.phy_id_mask	= 0xfffffff0,
+	.name		= "Aquantia AQ1202",
+	.features	= PHY_AQUANTIA_FEATURES,
+	.flags		= PHY_HAS_INTERRUPT,
+	.aneg_done	= aquantia_aneg_done,
+	.config_aneg    = aquantia_config_aneg,
+	.config_intr	= aquantia_config_intr,
+	.ack_interrupt	= aquantia_ack_interrupt,
+	.read_status	= aquantia_read_status,
+},
 {
-	return (phydev->c45_ids.device_ids[1] & 0xfffffff0) == PHY_ID_AQR105;
-}
-
-static struct phy_driver aqr105_driver[] = {
+	.phy_id		= PHY_ID_AQ2104,
+	.phy_id_mask	= 0xfffffff0,
+	.name		= "Aquantia AQ2104",
+	.features	= PHY_AQUANTIA_FEATURES,
+	.flags		= PHY_HAS_INTERRUPT,
+	.aneg_done	= aquantia_aneg_done,
+	.config_aneg    = aquantia_config_aneg,
+	.config_intr	= aquantia_config_intr,
+	.ack_interrupt	= aquantia_ack_interrupt,
+	.read_status	= aquantia_read_status,
+},
 {
-	.phy_id			= 0,
-	.phy_id_mask		= 0,
-	.name			= "Aquantia aqr105",
-	.flags			= PHY_HAS_INTERRUPT,
-	.config_aneg		= aqr105_config_aneg,
-	.read_status		= aqr105_read_status,
-	.ack_interrupt		= aqr105_ack_interrupt,
-	.config_intr		= aqr105_config_intr,
-	.did_interrupt		= aqr105_did_interrupt,
-	.match_phy_device 	= aqr105_match_phy_device,
-	.driver			= {
-		.owner = THIS_MODULE,
-	},
-} };
-
-static int __init aquantia_init(void)
+	.phy_id		= PHY_ID_AQR105,
+	.phy_id_mask	= 0xfffffff0,
+	.name		= "Aquantia AQR105",
+	.features	= PHY_AQUANTIA_FEATURES,
+	.flags		= PHY_HAS_INTERRUPT,
+	.aneg_done	= aquantia_aneg_done,
+	.config_aneg    = aquantia_config_aneg,
+	.config_intr	= aquantia_config_intr,
+	.ack_interrupt	= aquantia_ack_interrupt,
+	.read_status	= aquantia_read_status,
+},
 {
-	return phy_drivers_register(aqr105_driver, ARRAY_SIZE(aqr105_driver));
-}
-module_init(aquantia_init);
+	.phy_id		= PHY_ID_AQR405,
+	.phy_id_mask	= 0xfffffff0,
+	.name		= "Aquantia AQR405",
+	.features	= PHY_AQUANTIA_FEATURES,
+	.flags		= PHY_HAS_INTERRUPT,
+	.aneg_done	= aquantia_aneg_done,
+	.config_aneg    = aquantia_config_aneg,
+	.config_intr	= aquantia_config_intr,
+	.ack_interrupt	= aquantia_ack_interrupt,
+	.read_status	= aquantia_read_status,
+},
+};
 
-static void __exit aquantia_exit(void)
-{
-	phy_drivers_unregister(aqr105_driver, ARRAY_SIZE(aqr105_driver));
-}
-module_exit(aquantia_exit);
+module_phy_driver(aquantia_driver);
 
-MODULE_AUTHOR("Carlos Munoz <cmunoz@caviumnetworks.com>");
-MODULE_LICENSE("GPL");
+static struct mdio_device_id __maybe_unused aquantia_tbl[] = {
+	{ PHY_ID_AQ1202, 0xfffffff0 },
+	{ PHY_ID_AQ2104, 0xfffffff0 },
+	{ PHY_ID_AQR105, 0xfffffff0 },
+	{ PHY_ID_AQR405, 0xfffffff0 },
+	{ }
+};
+
+MODULE_DEVICE_TABLE(mdio, aquantia_tbl);
+
+MODULE_DESCRIPTION("Aquantia PHY driver");
+MODULE_AUTHOR("Shaohui Xie <Shaohui.Xie@freescale.com>");
+MODULE_LICENSE("GPL v2");

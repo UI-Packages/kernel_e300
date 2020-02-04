@@ -7,6 +7,7 @@
 #include <linux/sched.h>
 #include <linux/syscalls.h>
 #include <asm/uaccess.h>
+#include <asm/ptrace-abi.h>
 #include <os.h>
 #include <skas.h>
 #include <sysdep/tls.h>
@@ -260,7 +261,7 @@ out:
 	if (unlikely(task == current &&
 		     !t->arch.tls_array[idx - GDT_ENTRY_TLS_MIN].flushed)) {
 		printk(KERN_ERR "get_tls_entry: task with pid %d got here "
-				"without flushed TLS.", task_pid_nr(current));
+				"without flushed TLS.", current->pid);
 	}
 
 	return 0;

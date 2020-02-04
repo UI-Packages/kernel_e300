@@ -1,5 +1,5 @@
 /***********************license start***************
- * Copyright (c) 2003-2015  Cavium Inc. (support@cavium.com). All rights
+ * Copyright (c) 2003-2017  Cavium Inc. (support@cavium.com). All rights
  * reserved.
  *
  *
@@ -57,8 +57,8 @@ static inline uint64_t CVMX_GSERX_ANA_ATEST(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 6))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 13))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 8)))))
 		cvmx_warn("CVMX_GSERX_ANA_ATEST(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180090000800ull) + ((offset) & 15) * 0x1000000ull;
@@ -71,8 +71,8 @@ static inline uint64_t CVMX_GSERX_ANA_SEL(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 6))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 13))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 8)))))
 		cvmx_warn("CVMX_GSERX_ANA_SEL(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180090000808ull) + ((offset) & 15) * 0x1000000ull;
@@ -85,8 +85,8 @@ static inline uint64_t CVMX_GSERX_BR_RXX_CTL(unsigned long offset, unsigned long
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 6)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id <= 8))))))
 		cvmx_warn("CVMX_GSERX_BR_RXX_CTL(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x0001180090000400ull) + (((offset) & 3) + ((block_id) & 15) * 0x20000ull) * 128;
@@ -99,8 +99,8 @@ static inline uint64_t CVMX_GSERX_BR_RXX_EER(unsigned long offset, unsigned long
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 6)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id <= 8))))))
 		cvmx_warn("CVMX_GSERX_BR_RXX_EER(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x0001180090000418ull) + (((offset) & 3) + ((block_id) & 15) * 0x20000ull) * 128;
@@ -113,8 +113,8 @@ static inline uint64_t CVMX_GSERX_BR_TXX_CTL(unsigned long offset, unsigned long
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 6)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id <= 8))))))
 		cvmx_warn("CVMX_GSERX_BR_TXX_CTL(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x0001180090000420ull) + (((offset) & 3) + ((block_id) & 15) * 0x20000ull) * 128;
@@ -127,8 +127,8 @@ static inline uint64_t CVMX_GSERX_BR_TXX_CUR(unsigned long offset, unsigned long
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 6)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id <= 8))))))
 		cvmx_warn("CVMX_GSERX_BR_TXX_CUR(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x0001180090000438ull) + (((offset) & 3) + ((block_id) & 15) * 0x20000ull) * 128;
@@ -165,8 +165,8 @@ static inline uint64_t CVMX_GSERX_CFG(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 6))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 13))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 8)))))
 		cvmx_warn("CVMX_GSERX_CFG(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180090000080ull) + ((offset) & 15) * 0x1000000ull;
@@ -179,8 +179,8 @@ static inline uint64_t CVMX_GSERX_DBG(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 6))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 13))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 8)))))
 		cvmx_warn("CVMX_GSERX_DBG(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180090000098ull) + ((offset) & 15) * 0x1000000ull;
@@ -545,8 +545,8 @@ static inline uint64_t CVMX_GSERX_EQ_WAIT_TIME(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 6))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 13))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 8)))))
 		cvmx_warn("CVMX_GSERX_EQ_WAIT_TIME(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800904E0000ull) + ((offset) & 15) * 0x1000000ull;
@@ -559,8 +559,8 @@ static inline uint64_t CVMX_GSERX_GLBL_MISC_CONFIG_1(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 6))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 13))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 8)))))
 		cvmx_warn("CVMX_GSERX_GLBL_MISC_CONFIG_1(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180090460030ull) + ((offset) & 15) * 0x1000000ull;
@@ -573,8 +573,8 @@ static inline uint64_t CVMX_GSERX_GLBL_PLL_CFG_0(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 6))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 13))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 8)))))
 		cvmx_warn("CVMX_GSERX_GLBL_PLL_CFG_0(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180090460000ull) + ((offset) & 15) * 0x1000000ull;
@@ -587,8 +587,8 @@ static inline uint64_t CVMX_GSERX_GLBL_PLL_CFG_1(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 6))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 13))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 8)))))
 		cvmx_warn("CVMX_GSERX_GLBL_PLL_CFG_1(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180090460008ull) + ((offset) & 15) * 0x1000000ull;
@@ -601,8 +601,8 @@ static inline uint64_t CVMX_GSERX_GLBL_PLL_CFG_2(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 6))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 13))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 8)))))
 		cvmx_warn("CVMX_GSERX_GLBL_PLL_CFG_2(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180090460010ull) + ((offset) & 15) * 0x1000000ull;
@@ -615,8 +615,8 @@ static inline uint64_t CVMX_GSERX_GLBL_PLL_CFG_3(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 6))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 13))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 8)))))
 		cvmx_warn("CVMX_GSERX_GLBL_PLL_CFG_3(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180090460018ull) + ((offset) & 15) * 0x1000000ull;
@@ -629,8 +629,8 @@ static inline uint64_t CVMX_GSERX_GLBL_PLL_MONITOR(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 6))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 13))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 8)))))
 		cvmx_warn("CVMX_GSERX_GLBL_PLL_MONITOR(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180090460100ull) + ((offset) & 15) * 0x1000000ull;
@@ -643,8 +643,8 @@ static inline uint64_t CVMX_GSERX_GLBL_TAD(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 6))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 13))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 8)))))
 		cvmx_warn("CVMX_GSERX_GLBL_TAD(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180090460400ull) + ((offset) & 15) * 0x1000000ull;
@@ -657,8 +657,8 @@ static inline uint64_t CVMX_GSERX_GLBL_TM_ADMON(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 6))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 13))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 8)))))
 		cvmx_warn("CVMX_GSERX_GLBL_TM_ADMON(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180090460408ull) + ((offset) & 15) * 0x1000000ull;
@@ -671,8 +671,8 @@ static inline uint64_t CVMX_GSERX_IDDQ_MODE(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 6))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 13))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 8)))))
 		cvmx_warn("CVMX_GSERX_IDDQ_MODE(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180090000018ull) + ((offset) & 15) * 0x1000000ull;
@@ -685,8 +685,8 @@ static inline uint64_t CVMX_GSERX_LANEX_LBERT_CFG(unsigned long offset, unsigned
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 6)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id <= 8))))))
 		cvmx_warn("CVMX_GSERX_LANEX_LBERT_CFG(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800904C0020ull) + (((offset) & 3) + ((block_id) & 15) * 0x10ull) * 1048576;
@@ -699,8 +699,8 @@ static inline uint64_t CVMX_GSERX_LANEX_LBERT_ECNT(unsigned long offset, unsigne
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 6)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id <= 8))))))
 		cvmx_warn("CVMX_GSERX_LANEX_LBERT_ECNT(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800904C0028ull) + (((offset) & 3) + ((block_id) & 15) * 0x10ull) * 1048576;
@@ -713,8 +713,8 @@ static inline uint64_t CVMX_GSERX_LANEX_LBERT_PAT_CFG(unsigned long offset, unsi
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 6)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id <= 8))))))
 		cvmx_warn("CVMX_GSERX_LANEX_LBERT_PAT_CFG(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800904C0018ull) + (((offset) & 3) + ((block_id) & 15) * 0x10ull) * 1048576;
@@ -727,8 +727,8 @@ static inline uint64_t CVMX_GSERX_LANEX_MISC_CFG_0(unsigned long offset, unsigne
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 6)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id <= 8))))))
 		cvmx_warn("CVMX_GSERX_LANEX_MISC_CFG_0(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800904C0000ull) + (((offset) & 3) + ((block_id) & 15) * 0x10ull) * 1048576;
@@ -741,8 +741,8 @@ static inline uint64_t CVMX_GSERX_LANEX_MISC_CFG_1(unsigned long offset, unsigne
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 6)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id <= 8))))))
 		cvmx_warn("CVMX_GSERX_LANEX_MISC_CFG_1(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800904C0008ull) + (((offset) & 3) + ((block_id) & 15) * 0x10ull) * 1048576;
@@ -755,8 +755,8 @@ static inline uint64_t CVMX_GSERX_LANEX_PCS_CTLIFC_0(unsigned long offset, unsig
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 6)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id <= 8))))))
 		cvmx_warn("CVMX_GSERX_LANEX_PCS_CTLIFC_0(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800904C0060ull) + (((offset) & 3) + ((block_id) & 15) * 0x10ull) * 1048576;
@@ -769,8 +769,8 @@ static inline uint64_t CVMX_GSERX_LANEX_PCS_CTLIFC_1(unsigned long offset, unsig
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 6)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id <= 8))))))
 		cvmx_warn("CVMX_GSERX_LANEX_PCS_CTLIFC_1(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800904C0068ull) + (((offset) & 3) + ((block_id) & 15) * 0x10ull) * 1048576;
@@ -783,8 +783,8 @@ static inline uint64_t CVMX_GSERX_LANEX_PCS_CTLIFC_2(unsigned long offset, unsig
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 6)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id <= 8))))))
 		cvmx_warn("CVMX_GSERX_LANEX_PCS_CTLIFC_2(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800904C0070ull) + (((offset) & 3) + ((block_id) & 15) * 0x10ull) * 1048576;
@@ -797,8 +797,8 @@ static inline uint64_t CVMX_GSERX_LANEX_PCS_MACIFC_MON_0(unsigned long offset, u
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 6)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id <= 8))))))
 		cvmx_warn("CVMX_GSERX_LANEX_PCS_MACIFC_MON_0(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800904C0108ull) + (((offset) & 3) + ((block_id) & 15) * 0x10ull) * 1048576;
@@ -811,8 +811,8 @@ static inline uint64_t CVMX_GSERX_LANEX_PCS_MACIFC_MON_2(unsigned long offset, u
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 6)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id <= 8))))))
 		cvmx_warn("CVMX_GSERX_LANEX_PCS_MACIFC_MON_2(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800904C0118ull) + (((offset) & 3) + ((block_id) & 15) * 0x10ull) * 1048576;
@@ -825,8 +825,8 @@ static inline uint64_t CVMX_GSERX_LANEX_PMA_LOOPBACK_CTRL(unsigned long offset, 
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 6)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id <= 8))))))
 		cvmx_warn("CVMX_GSERX_LANEX_PMA_LOOPBACK_CTRL(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800904400D0ull) + (((offset) & 3) + ((block_id) & 15) * 0x10ull) * 1048576;
@@ -839,8 +839,8 @@ static inline uint64_t CVMX_GSERX_LANEX_PWR_CTRL(unsigned long offset, unsigned 
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 6)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id <= 8))))))
 		cvmx_warn("CVMX_GSERX_LANEX_PWR_CTRL(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800904400D8ull) + (((offset) & 3) + ((block_id) & 15) * 0x10ull) * 1048576;
@@ -853,8 +853,8 @@ static inline uint64_t CVMX_GSERX_LANEX_RX_AEQ_OUT_0(unsigned long offset, unsig
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 6)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id <= 8))))))
 		cvmx_warn("CVMX_GSERX_LANEX_RX_AEQ_OUT_0(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x0001180090440280ull) + (((offset) & 3) + ((block_id) & 15) * 0x10ull) * 1048576;
@@ -867,8 +867,8 @@ static inline uint64_t CVMX_GSERX_LANEX_RX_AEQ_OUT_1(unsigned long offset, unsig
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 6)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id <= 8))))))
 		cvmx_warn("CVMX_GSERX_LANEX_RX_AEQ_OUT_1(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x0001180090440288ull) + (((offset) & 3) + ((block_id) & 15) * 0x10ull) * 1048576;
@@ -881,8 +881,8 @@ static inline uint64_t CVMX_GSERX_LANEX_RX_AEQ_OUT_2(unsigned long offset, unsig
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 6)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id <= 8))))))
 		cvmx_warn("CVMX_GSERX_LANEX_RX_AEQ_OUT_2(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x0001180090440290ull) + (((offset) & 3) + ((block_id) & 15) * 0x10ull) * 1048576;
@@ -895,8 +895,8 @@ static inline uint64_t CVMX_GSERX_LANEX_RX_CDR_CTRL_1(unsigned long offset, unsi
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 6)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id <= 8))))))
 		cvmx_warn("CVMX_GSERX_LANEX_RX_CDR_CTRL_1(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x0001180090440038ull) + (((offset) & 3) + ((block_id) & 15) * 0x10ull) * 1048576;
@@ -909,8 +909,8 @@ static inline uint64_t CVMX_GSERX_LANEX_RX_CDR_CTRL_2(unsigned long offset, unsi
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 6)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id <= 8))))))
 		cvmx_warn("CVMX_GSERX_LANEX_RX_CDR_CTRL_2(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x0001180090440040ull) + (((offset) & 3) + ((block_id) & 15) * 0x10ull) * 1048576;
@@ -923,8 +923,8 @@ static inline uint64_t CVMX_GSERX_LANEX_RX_CDR_MISC_CTRL_0(unsigned long offset,
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 6)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id <= 8))))))
 		cvmx_warn("CVMX_GSERX_LANEX_RX_CDR_MISC_CTRL_0(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x0001180090440208ull) + (((offset) & 3) + ((block_id) & 15) * 0x10ull) * 1048576;
@@ -937,8 +937,8 @@ static inline uint64_t CVMX_GSERX_LANEX_RX_CDR_STATUS_1(unsigned long offset, un
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 6)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id <= 8))))))
 		cvmx_warn("CVMX_GSERX_LANEX_RX_CDR_STATUS_1(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800904402D0ull) + (((offset) & 3) + ((block_id) & 15) * 0x10ull) * 1048576;
@@ -951,8 +951,8 @@ static inline uint64_t CVMX_GSERX_LANEX_RX_CDR_STATUS_2(unsigned long offset, un
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 6)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id <= 8))))))
 		cvmx_warn("CVMX_GSERX_LANEX_RX_CDR_STATUS_2(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800904402D8ull) + (((offset) & 3) + ((block_id) & 15) * 0x10ull) * 1048576;
@@ -965,8 +965,8 @@ static inline uint64_t CVMX_GSERX_LANEX_RX_CFG_0(unsigned long offset, unsigned 
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 6)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id <= 8))))))
 		cvmx_warn("CVMX_GSERX_LANEX_RX_CFG_0(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x0001180090440000ull) + (((offset) & 3) + ((block_id) & 15) * 0x10ull) * 1048576;
@@ -979,8 +979,8 @@ static inline uint64_t CVMX_GSERX_LANEX_RX_CFG_1(unsigned long offset, unsigned 
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 6)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id <= 8))))))
 		cvmx_warn("CVMX_GSERX_LANEX_RX_CFG_1(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x0001180090440008ull) + (((offset) & 3) + ((block_id) & 15) * 0x10ull) * 1048576;
@@ -993,8 +993,8 @@ static inline uint64_t CVMX_GSERX_LANEX_RX_CFG_2(unsigned long offset, unsigned 
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 6)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id <= 8))))))
 		cvmx_warn("CVMX_GSERX_LANEX_RX_CFG_2(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x0001180090440010ull) + (((offset) & 3) + ((block_id) & 15) * 0x10ull) * 1048576;
@@ -1007,8 +1007,8 @@ static inline uint64_t CVMX_GSERX_LANEX_RX_CFG_3(unsigned long offset, unsigned 
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 6)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id <= 8))))))
 		cvmx_warn("CVMX_GSERX_LANEX_RX_CFG_3(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x0001180090440018ull) + (((offset) & 3) + ((block_id) & 15) * 0x10ull) * 1048576;
@@ -1021,8 +1021,8 @@ static inline uint64_t CVMX_GSERX_LANEX_RX_CFG_4(unsigned long offset, unsigned 
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 6)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id <= 8))))))
 		cvmx_warn("CVMX_GSERX_LANEX_RX_CFG_4(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x0001180090440020ull) + (((offset) & 3) + ((block_id) & 15) * 0x10ull) * 1048576;
@@ -1035,8 +1035,8 @@ static inline uint64_t CVMX_GSERX_LANEX_RX_CFG_5(unsigned long offset, unsigned 
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 6)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id <= 8))))))
 		cvmx_warn("CVMX_GSERX_LANEX_RX_CFG_5(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x0001180090440028ull) + (((offset) & 3) + ((block_id) & 15) * 0x10ull) * 1048576;
@@ -1049,8 +1049,8 @@ static inline uint64_t CVMX_GSERX_LANEX_RX_CTLE_CTRL(unsigned long offset, unsig
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 6)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id <= 8))))))
 		cvmx_warn("CVMX_GSERX_LANEX_RX_CTLE_CTRL(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x0001180090440058ull) + (((offset) & 3) + ((block_id) & 15) * 0x10ull) * 1048576;
@@ -1059,12 +1059,40 @@ static inline uint64_t CVMX_GSERX_LANEX_RX_CTLE_CTRL(unsigned long offset, unsig
 #define CVMX_GSERX_LANEX_RX_CTLE_CTRL(offset, block_id) (CVMX_ADD_IO_SEG(0x0001180090440058ull) + (((offset) & 3) + ((block_id) & 15) * 0x10ull) * 1048576)
 #endif
 #if CVMX_ENABLE_CSR_ADDRESS_CHECKING
+static inline uint64_t CVMX_GSERX_LANEX_RX_DELTA_PM_0(unsigned long offset, unsigned long block_id)
+{
+	if (!(
+	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 6)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id <= 8))))))
+		cvmx_warn("CVMX_GSERX_LANEX_RX_DELTA_PM_0(%lu,%lu) is invalid on this chip\n", offset, block_id);
+	return CVMX_ADD_IO_SEG(0x0001180090440080ull) + (((offset) & 3) + ((block_id) & 15) * 0x10ull) * 1048576;
+}
+#else
+#define CVMX_GSERX_LANEX_RX_DELTA_PM_0(offset, block_id) (CVMX_ADD_IO_SEG(0x0001180090440080ull) + (((offset) & 3) + ((block_id) & 15) * 0x10ull) * 1048576)
+#endif
+#if CVMX_ENABLE_CSR_ADDRESS_CHECKING
+static inline uint64_t CVMX_GSERX_LANEX_RX_DELTA_PM_1(unsigned long offset, unsigned long block_id)
+{
+	if (!(
+	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 6)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id <= 8))))))
+		cvmx_warn("CVMX_GSERX_LANEX_RX_DELTA_PM_1(%lu,%lu) is invalid on this chip\n", offset, block_id);
+	return CVMX_ADD_IO_SEG(0x0001180090440088ull) + (((offset) & 3) + ((block_id) & 15) * 0x10ull) * 1048576;
+}
+#else
+#define CVMX_GSERX_LANEX_RX_DELTA_PM_1(offset, block_id) (CVMX_ADD_IO_SEG(0x0001180090440088ull) + (((offset) & 3) + ((block_id) & 15) * 0x10ull) * 1048576)
+#endif
+#if CVMX_ENABLE_CSR_ADDRESS_CHECKING
 static inline uint64_t CVMX_GSERX_LANEX_RX_LOOP_CTRL(unsigned long offset, unsigned long block_id)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 6)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id <= 8))))))
 		cvmx_warn("CVMX_GSERX_LANEX_RX_LOOP_CTRL(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x0001180090440048ull) + (((offset) & 3) + ((block_id) & 15) * 0x10ull) * 1048576;
@@ -1077,8 +1105,8 @@ static inline uint64_t CVMX_GSERX_LANEX_RX_MISC_CTRL(unsigned long offset, unsig
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 6)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id <= 8))))))
 		cvmx_warn("CVMX_GSERX_LANEX_RX_MISC_CTRL(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x0001180090440050ull) + (((offset) & 3) + ((block_id) & 15) * 0x10ull) * 1048576;
@@ -1091,8 +1119,8 @@ static inline uint64_t CVMX_GSERX_LANEX_RX_MISC_OVRRD(unsigned long offset, unsi
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 6)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id <= 8))))))
 		cvmx_warn("CVMX_GSERX_LANEX_RX_MISC_OVRRD(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x0001180090440258ull) + (((offset) & 3) + ((block_id) & 15) * 0x10ull) * 1048576;
@@ -1105,8 +1133,8 @@ static inline uint64_t CVMX_GSERX_LANEX_RX_OS_MVALBBD_1(unsigned long offset, un
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 6)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id <= 8))))))
 		cvmx_warn("CVMX_GSERX_LANEX_RX_OS_MVALBBD_1(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x0001180090440230ull) + (((offset) & 3) + ((block_id) & 15) * 0x10ull) * 1048576;
@@ -1119,8 +1147,8 @@ static inline uint64_t CVMX_GSERX_LANEX_RX_OS_MVALBBD_2(unsigned long offset, un
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 6)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id <= 8))))))
 		cvmx_warn("CVMX_GSERX_LANEX_RX_OS_MVALBBD_2(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x0001180090440238ull) + (((offset) & 3) + ((block_id) & 15) * 0x10ull) * 1048576;
@@ -1133,8 +1161,8 @@ static inline uint64_t CVMX_GSERX_LANEX_RX_OS_OUT_1(unsigned long offset, unsign
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 6)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id <= 8))))))
 		cvmx_warn("CVMX_GSERX_LANEX_RX_OS_OUT_1(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800904402A0ull) + (((offset) & 3) + ((block_id) & 15) * 0x10ull) * 1048576;
@@ -1147,8 +1175,8 @@ static inline uint64_t CVMX_GSERX_LANEX_RX_OS_OUT_2(unsigned long offset, unsign
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 6)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id <= 8))))))
 		cvmx_warn("CVMX_GSERX_LANEX_RX_OS_OUT_2(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800904402A8ull) + (((offset) & 3) + ((block_id) & 15) * 0x10ull) * 1048576;
@@ -1161,8 +1189,8 @@ static inline uint64_t CVMX_GSERX_LANEX_RX_OS_OUT_3(unsigned long offset, unsign
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 6)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id <= 8))))))
 		cvmx_warn("CVMX_GSERX_LANEX_RX_OS_OUT_3(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800904402B0ull) + (((offset) & 3) + ((block_id) & 15) * 0x10ull) * 1048576;
@@ -1175,8 +1203,8 @@ static inline uint64_t CVMX_GSERX_LANEX_RX_PRECORR_CTRL(unsigned long offset, un
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 6)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id <= 8))))))
 		cvmx_warn("CVMX_GSERX_LANEX_RX_PRECORR_CTRL(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x0001180090440060ull) + (((offset) & 3) + ((block_id) & 15) * 0x10ull) * 1048576;
@@ -1189,8 +1217,8 @@ static inline uint64_t CVMX_GSERX_LANEX_RX_PRECORR_VAL(unsigned long offset, uns
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 6)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id <= 8))))))
 		cvmx_warn("CVMX_GSERX_LANEX_RX_PRECORR_VAL(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x0001180090440078ull) + (((offset) & 3) + ((block_id) & 15) * 0x10ull) * 1048576;
@@ -1203,8 +1231,8 @@ static inline uint64_t CVMX_GSERX_LANEX_RX_VALBBD_CTRL_0(unsigned long offset, u
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 6)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id <= 8))))))
 		cvmx_warn("CVMX_GSERX_LANEX_RX_VALBBD_CTRL_0(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x0001180090440240ull) + (((offset) & 3) + ((block_id) & 15) * 0x10ull) * 1048576;
@@ -1217,8 +1245,8 @@ static inline uint64_t CVMX_GSERX_LANEX_RX_VALBBD_CTRL_1(unsigned long offset, u
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 6)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id <= 8))))))
 		cvmx_warn("CVMX_GSERX_LANEX_RX_VALBBD_CTRL_1(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x0001180090440248ull) + (((offset) & 3) + ((block_id) & 15) * 0x10ull) * 1048576;
@@ -1231,8 +1259,8 @@ static inline uint64_t CVMX_GSERX_LANEX_RX_VALBBD_CTRL_2(unsigned long offset, u
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 6)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id <= 8))))))
 		cvmx_warn("CVMX_GSERX_LANEX_RX_VALBBD_CTRL_2(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x0001180090440250ull) + (((offset) & 3) + ((block_id) & 15) * 0x10ull) * 1048576;
@@ -1245,8 +1273,8 @@ static inline uint64_t CVMX_GSERX_LANEX_RX_VMA_CTRL(unsigned long offset, unsign
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 6)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id <= 8))))))
 		cvmx_warn("CVMX_GSERX_LANEX_RX_VMA_CTRL(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x0001180090440200ull) + (((offset) & 3) + ((block_id) & 15) * 0x10ull) * 1048576;
@@ -1259,8 +1287,8 @@ static inline uint64_t CVMX_GSERX_LANEX_RX_VMA_STATUS_0(unsigned long offset, un
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 6)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id <= 8))))))
 		cvmx_warn("CVMX_GSERX_LANEX_RX_VMA_STATUS_0(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800904402B8ull) + (((offset) & 3) + ((block_id) & 15) * 0x10ull) * 1048576;
@@ -1273,8 +1301,8 @@ static inline uint64_t CVMX_GSERX_LANEX_RX_VMA_STATUS_1(unsigned long offset, un
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 6)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id <= 8))))))
 		cvmx_warn("CVMX_GSERX_LANEX_RX_VMA_STATUS_1(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800904402C0ull) + (((offset) & 3) + ((block_id) & 15) * 0x10ull) * 1048576;
@@ -1326,8 +1354,8 @@ static inline uint64_t CVMX_GSERX_LANEX_TX_CFG_0(unsigned long offset, unsigned 
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 6)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id <= 8))))))
 		cvmx_warn("CVMX_GSERX_LANEX_TX_CFG_0(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800904400A8ull) + (((offset) & 3) + ((block_id) & 15) * 0x10ull) * 1048576;
@@ -1340,8 +1368,8 @@ static inline uint64_t CVMX_GSERX_LANEX_TX_CFG_1(unsigned long offset, unsigned 
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 6)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id <= 8))))))
 		cvmx_warn("CVMX_GSERX_LANEX_TX_CFG_1(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800904400B0ull) + (((offset) & 3) + ((block_id) & 15) * 0x10ull) * 1048576;
@@ -1354,8 +1382,8 @@ static inline uint64_t CVMX_GSERX_LANEX_TX_CFG_2(unsigned long offset, unsigned 
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 6)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id <= 8))))))
 		cvmx_warn("CVMX_GSERX_LANEX_TX_CFG_2(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800904400B8ull) + (((offset) & 3) + ((block_id) & 15) * 0x10ull) * 1048576;
@@ -1368,8 +1396,8 @@ static inline uint64_t CVMX_GSERX_LANEX_TX_CFG_3(unsigned long offset, unsigned 
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 6)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id <= 8))))))
 		cvmx_warn("CVMX_GSERX_LANEX_TX_CFG_3(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800904400C0ull) + (((offset) & 3) + ((block_id) & 15) * 0x10ull) * 1048576;
@@ -1382,8 +1410,8 @@ static inline uint64_t CVMX_GSERX_LANEX_TX_PRE_EMPHASIS(unsigned long offset, un
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 6)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id <= 8))))))
 		cvmx_warn("CVMX_GSERX_LANEX_TX_PRE_EMPHASIS(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800904400C8ull) + (((offset) & 3) + ((block_id) & 15) * 0x10ull) * 1048576;
@@ -1396,8 +1424,8 @@ static inline uint64_t CVMX_GSERX_LANE_LPBKEN(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 6))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 13))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 8)))))
 		cvmx_warn("CVMX_GSERX_LANE_LPBKEN(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180090000110ull) + ((offset) & 15) * 0x1000000ull;
@@ -1410,8 +1438,8 @@ static inline uint64_t CVMX_GSERX_LANE_MODE(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 6))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 13))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 8)))))
 		cvmx_warn("CVMX_GSERX_LANE_MODE(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180090000118ull) + ((offset) & 15) * 0x1000000ull;
@@ -1424,8 +1452,8 @@ static inline uint64_t CVMX_GSERX_LANE_POFF(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 6))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 13))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 8)))))
 		cvmx_warn("CVMX_GSERX_LANE_POFF(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180090000108ull) + ((offset) & 15) * 0x1000000ull;
@@ -1438,8 +1466,8 @@ static inline uint64_t CVMX_GSERX_LANE_PX_MODE_0(unsigned long offset, unsigned 
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 11)) && ((block_id <= 6)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 11)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 11)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 11)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 11)) && ((block_id <= 8))))))
 		cvmx_warn("CVMX_GSERX_LANE_PX_MODE_0(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800904E0040ull) + (((offset) & 15) + ((block_id) & 15) * 0x80000ull) * 32;
@@ -1452,8 +1480,8 @@ static inline uint64_t CVMX_GSERX_LANE_PX_MODE_1(unsigned long offset, unsigned 
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 11)) && ((block_id <= 6)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 11)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 11)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 11)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 11)) && ((block_id <= 8))))))
 		cvmx_warn("CVMX_GSERX_LANE_PX_MODE_1(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800904E0048ull) + (((offset) & 15) + ((block_id) & 15) * 0x80000ull) * 32;
@@ -1466,8 +1494,8 @@ static inline uint64_t CVMX_GSERX_LANE_SRST(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 6))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 13))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 8)))))
 		cvmx_warn("CVMX_GSERX_LANE_SRST(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180090000100ull) + ((offset) & 15) * 0x1000000ull;
@@ -1480,8 +1508,8 @@ static inline uint64_t CVMX_GSERX_LANE_VMA_COARSE_CTRL_0(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 6))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 13))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 8)))))
 		cvmx_warn("CVMX_GSERX_LANE_VMA_COARSE_CTRL_0(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800904E01B0ull) + ((offset) & 15) * 0x1000000ull;
@@ -1494,8 +1522,8 @@ static inline uint64_t CVMX_GSERX_LANE_VMA_COARSE_CTRL_1(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 6))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 13))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 8)))))
 		cvmx_warn("CVMX_GSERX_LANE_VMA_COARSE_CTRL_1(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800904E01B8ull) + ((offset) & 15) * 0x1000000ull;
@@ -1508,8 +1536,8 @@ static inline uint64_t CVMX_GSERX_LANE_VMA_COARSE_CTRL_2(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 6))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 13))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 8)))))
 		cvmx_warn("CVMX_GSERX_LANE_VMA_COARSE_CTRL_2(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800904E01C0ull) + ((offset) & 15) * 0x1000000ull;
@@ -1522,8 +1550,8 @@ static inline uint64_t CVMX_GSERX_LANE_VMA_FINE_CTRL_0(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 6))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 13))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 8)))))
 		cvmx_warn("CVMX_GSERX_LANE_VMA_FINE_CTRL_0(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800904E01C8ull) + ((offset) & 15) * 0x1000000ull;
@@ -1536,8 +1564,8 @@ static inline uint64_t CVMX_GSERX_LANE_VMA_FINE_CTRL_1(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 6))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 13))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 8)))))
 		cvmx_warn("CVMX_GSERX_LANE_VMA_FINE_CTRL_1(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800904E01D0ull) + ((offset) & 15) * 0x1000000ull;
@@ -1550,8 +1578,8 @@ static inline uint64_t CVMX_GSERX_LANE_VMA_FINE_CTRL_2(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 6))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 13))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 8)))))
 		cvmx_warn("CVMX_GSERX_LANE_VMA_FINE_CTRL_2(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800904E01D8ull) + ((offset) & 15) * 0x1000000ull;
@@ -1949,8 +1977,8 @@ static inline uint64_t CVMX_GSERX_PHY_CTL(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 6))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 13))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 8)))))
 		cvmx_warn("CVMX_GSERX_PHY_CTL(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180090000000ull) + ((offset) & 15) * 0x1000000ull;
@@ -1963,8 +1991,8 @@ static inline uint64_t CVMX_GSERX_PIPE_LPBK(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 6))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 13))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 8)))))
 		cvmx_warn("CVMX_GSERX_PIPE_LPBK(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180090000200ull) + ((offset) & 15) * 0x1000000ull;
@@ -1977,8 +2005,8 @@ static inline uint64_t CVMX_GSERX_PLL_PX_MODE_0(unsigned long offset, unsigned l
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 11)) && ((block_id <= 6)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 11)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 11)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 11)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 11)) && ((block_id <= 8))))))
 		cvmx_warn("CVMX_GSERX_PLL_PX_MODE_0(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800904E0030ull) + (((offset) & 15) + ((block_id) & 15) * 0x80000ull) * 32;
@@ -1991,8 +2019,8 @@ static inline uint64_t CVMX_GSERX_PLL_PX_MODE_1(unsigned long offset, unsigned l
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 11)) && ((block_id <= 6)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 11)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 11)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 11)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 11)) && ((block_id <= 8))))))
 		cvmx_warn("CVMX_GSERX_PLL_PX_MODE_1(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800904E0038ull) + (((offset) & 15) + ((block_id) & 15) * 0x80000ull) * 32;
@@ -2005,8 +2033,8 @@ static inline uint64_t CVMX_GSERX_PLL_STAT(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 6))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 13))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 8)))))
 		cvmx_warn("CVMX_GSERX_PLL_STAT(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180090000010ull) + ((offset) & 15) * 0x1000000ull;
@@ -2019,8 +2047,8 @@ static inline uint64_t CVMX_GSERX_QLM_STAT(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 6))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 13))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 8)))))
 		cvmx_warn("CVMX_GSERX_QLM_STAT(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800900000A0ull) + ((offset) & 15) * 0x1000000ull;
@@ -2033,8 +2061,8 @@ static inline uint64_t CVMX_GSERX_RDET_TIME(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 6))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 13))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 8)))))
 		cvmx_warn("CVMX_GSERX_RDET_TIME(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800904E0008ull) + ((offset) & 15) * 0x1000000ull;
@@ -2073,8 +2101,8 @@ static inline uint64_t CVMX_GSERX_REFCLK_SEL(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 6))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 13))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 8)))))
 		cvmx_warn("CVMX_GSERX_REFCLK_SEL(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180090000008ull) + ((offset) & 15) * 0x1000000ull;
@@ -2087,8 +2115,8 @@ static inline uint64_t CVMX_GSERX_RX_COAST(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 6))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 13))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 8)))))
 		cvmx_warn("CVMX_GSERX_RX_COAST(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180090000138ull) + ((offset) & 15) * 0x1000000ull;
@@ -2101,8 +2129,8 @@ static inline uint64_t CVMX_GSERX_RX_EIE_DETEN(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 6))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 13))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 8)))))
 		cvmx_warn("CVMX_GSERX_RX_EIE_DETEN(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180090000148ull) + ((offset) & 15) * 0x1000000ull;
@@ -2115,8 +2143,8 @@ static inline uint64_t CVMX_GSERX_RX_EIE_DETSTS(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 6))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 13))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 8)))))
 		cvmx_warn("CVMX_GSERX_RX_EIE_DETSTS(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180090000150ull) + ((offset) & 15) * 0x1000000ull;
@@ -2129,8 +2157,8 @@ static inline uint64_t CVMX_GSERX_RX_EIE_FILTER(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 6))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 13))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 8)))))
 		cvmx_warn("CVMX_GSERX_RX_EIE_FILTER(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180090000158ull) + ((offset) & 15) * 0x1000000ull;
@@ -2143,8 +2171,8 @@ static inline uint64_t CVMX_GSERX_RX_POLARITY(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 6))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 13))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 8)))))
 		cvmx_warn("CVMX_GSERX_RX_POLARITY(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180090000160ull) + ((offset) & 15) * 0x1000000ull;
@@ -2157,8 +2185,8 @@ static inline uint64_t CVMX_GSERX_RX_PWR_CTRL_P1(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 6))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 13))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 8)))))
 		cvmx_warn("CVMX_GSERX_RX_PWR_CTRL_P1(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800904600B0ull) + ((offset) & 15) * 0x1000000ull;
@@ -2171,8 +2199,8 @@ static inline uint64_t CVMX_GSERX_RX_PWR_CTRL_P2(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 6))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 13))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 8)))))
 		cvmx_warn("CVMX_GSERX_RX_PWR_CTRL_P2(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800904600B8ull) + ((offset) & 15) * 0x1000000ull;
@@ -2185,8 +2213,8 @@ static inline uint64_t CVMX_GSERX_RX_TXDIR_CTRL_0(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 6))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 13))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 8)))))
 		cvmx_warn("CVMX_GSERX_RX_TXDIR_CTRL_0(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800904600E8ull) + ((offset) & 15) * 0x1000000ull;
@@ -2199,8 +2227,8 @@ static inline uint64_t CVMX_GSERX_RX_TXDIR_CTRL_1(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 6))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 13))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 8)))))
 		cvmx_warn("CVMX_GSERX_RX_TXDIR_CTRL_1(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800904600F0ull) + ((offset) & 15) * 0x1000000ull;
@@ -2213,8 +2241,8 @@ static inline uint64_t CVMX_GSERX_RX_TXDIR_CTRL_2(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 6))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 13))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 8)))))
 		cvmx_warn("CVMX_GSERX_RX_TXDIR_CTRL_2(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800904600F8ull) + ((offset) & 15) * 0x1000000ull;
@@ -2463,8 +2491,8 @@ static inline uint64_t CVMX_GSERX_SCRATCH(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 6))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 13))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 8)))))
 		cvmx_warn("CVMX_GSERX_SCRATCH(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180090000020ull) + ((offset) & 15) * 0x1000000ull;
@@ -2476,108 +2504,135 @@ static inline uint64_t CVMX_GSERX_SCRATCH(unsigned long offset)
 static inline uint64_t CVMX_GSERX_SLICEX_CEI_6G_SR_MODE(unsigned long offset, unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 1)) && ((block_id <= 6))))))
+	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 1)) && ((block_id <= 6)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 1)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 1)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 1)) && ((block_id <= 8))))))
 		cvmx_warn("CVMX_GSERX_SLICEX_CEI_6G_SR_MODE(%lu,%lu) is invalid on this chip\n", offset, block_id);
-	return CVMX_ADD_IO_SEG(0x0001180090460268ull) + (((offset) & 1) + ((block_id) & 7) * 0x8ull) * 2097152;
+	return CVMX_ADD_IO_SEG(0x0001180090460268ull) + (((offset) & 1) + ((block_id) & 15) * 0x8ull) * 2097152;
 }
 #else
-#define CVMX_GSERX_SLICEX_CEI_6G_SR_MODE(offset, block_id) (CVMX_ADD_IO_SEG(0x0001180090460268ull) + (((offset) & 1) + ((block_id) & 7) * 0x8ull) * 2097152)
+#define CVMX_GSERX_SLICEX_CEI_6G_SR_MODE(offset, block_id) (CVMX_ADD_IO_SEG(0x0001180090460268ull) + (((offset) & 1) + ((block_id) & 15) * 0x8ull) * 2097152)
 #endif
 #if CVMX_ENABLE_CSR_ADDRESS_CHECKING
 static inline uint64_t CVMX_GSERX_SLICEX_KR_MODE(unsigned long offset, unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 1)) && ((block_id <= 6))))))
+	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 1)) && ((block_id <= 6)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 1)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 1)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 1)) && ((block_id <= 8))))))
 		cvmx_warn("CVMX_GSERX_SLICEX_KR_MODE(%lu,%lu) is invalid on this chip\n", offset, block_id);
-	return CVMX_ADD_IO_SEG(0x0001180090460250ull) + (((offset) & 1) + ((block_id) & 7) * 0x8ull) * 2097152;
+	return CVMX_ADD_IO_SEG(0x0001180090460250ull) + (((offset) & 1) + ((block_id) & 15) * 0x8ull) * 2097152;
 }
 #else
-#define CVMX_GSERX_SLICEX_KR_MODE(offset, block_id) (CVMX_ADD_IO_SEG(0x0001180090460250ull) + (((offset) & 1) + ((block_id) & 7) * 0x8ull) * 2097152)
+#define CVMX_GSERX_SLICEX_KR_MODE(offset, block_id) (CVMX_ADD_IO_SEG(0x0001180090460250ull) + (((offset) & 1) + ((block_id) & 15) * 0x8ull) * 2097152)
 #endif
 #if CVMX_ENABLE_CSR_ADDRESS_CHECKING
 static inline uint64_t CVMX_GSERX_SLICEX_KX4_MODE(unsigned long offset, unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 1)) && ((block_id <= 6))))))
+	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 1)) && ((block_id <= 6)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 1)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 1)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 1)) && ((block_id <= 8))))))
 		cvmx_warn("CVMX_GSERX_SLICEX_KX4_MODE(%lu,%lu) is invalid on this chip\n", offset, block_id);
-	return CVMX_ADD_IO_SEG(0x0001180090460248ull) + (((offset) & 1) + ((block_id) & 7) * 0x8ull) * 2097152;
+	return CVMX_ADD_IO_SEG(0x0001180090460248ull) + (((offset) & 1) + ((block_id) & 15) * 0x8ull) * 2097152;
 }
 #else
-#define CVMX_GSERX_SLICEX_KX4_MODE(offset, block_id) (CVMX_ADD_IO_SEG(0x0001180090460248ull) + (((offset) & 1) + ((block_id) & 7) * 0x8ull) * 2097152)
+#define CVMX_GSERX_SLICEX_KX4_MODE(offset, block_id) (CVMX_ADD_IO_SEG(0x0001180090460248ull) + (((offset) & 1) + ((block_id) & 15) * 0x8ull) * 2097152)
 #endif
 #if CVMX_ENABLE_CSR_ADDRESS_CHECKING
 static inline uint64_t CVMX_GSERX_SLICEX_KX_MODE(unsigned long offset, unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 1)) && ((block_id <= 6))))))
+	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 1)) && ((block_id <= 6)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 1)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 1)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 1)) && ((block_id <= 8))))))
 		cvmx_warn("CVMX_GSERX_SLICEX_KX_MODE(%lu,%lu) is invalid on this chip\n", offset, block_id);
-	return CVMX_ADD_IO_SEG(0x0001180090460240ull) + (((offset) & 1) + ((block_id) & 7) * 0x8ull) * 2097152;
+	return CVMX_ADD_IO_SEG(0x0001180090460240ull) + (((offset) & 1) + ((block_id) & 15) * 0x8ull) * 2097152;
 }
 #else
-#define CVMX_GSERX_SLICEX_KX_MODE(offset, block_id) (CVMX_ADD_IO_SEG(0x0001180090460240ull) + (((offset) & 1) + ((block_id) & 7) * 0x8ull) * 2097152)
+#define CVMX_GSERX_SLICEX_KX_MODE(offset, block_id) (CVMX_ADD_IO_SEG(0x0001180090460240ull) + (((offset) & 1) + ((block_id) & 15) * 0x8ull) * 2097152)
 #endif
 #if CVMX_ENABLE_CSR_ADDRESS_CHECKING
 static inline uint64_t CVMX_GSERX_SLICEX_PCIE1_MODE(unsigned long offset, unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 1)) && ((block_id <= 6))))))
+	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 1)) && ((block_id <= 6)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 1)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 1)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 1)) && ((block_id <= 8))))))
 		cvmx_warn("CVMX_GSERX_SLICEX_PCIE1_MODE(%lu,%lu) is invalid on this chip\n", offset, block_id);
-	return CVMX_ADD_IO_SEG(0x0001180090460228ull) + (((offset) & 1) + ((block_id) & 7) * 0x8ull) * 2097152;
+	return CVMX_ADD_IO_SEG(0x0001180090460228ull) + (((offset) & 1) + ((block_id) & 15) * 0x8ull) * 2097152;
 }
 #else
-#define CVMX_GSERX_SLICEX_PCIE1_MODE(offset, block_id) (CVMX_ADD_IO_SEG(0x0001180090460228ull) + (((offset) & 1) + ((block_id) & 7) * 0x8ull) * 2097152)
+#define CVMX_GSERX_SLICEX_PCIE1_MODE(offset, block_id) (CVMX_ADD_IO_SEG(0x0001180090460228ull) + (((offset) & 1) + ((block_id) & 15) * 0x8ull) * 2097152)
 #endif
 #if CVMX_ENABLE_CSR_ADDRESS_CHECKING
 static inline uint64_t CVMX_GSERX_SLICEX_PCIE2_MODE(unsigned long offset, unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 1)) && ((block_id <= 6))))))
+	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 1)) && ((block_id <= 6)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 1)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 1)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 1)) && ((block_id <= 8))))))
 		cvmx_warn("CVMX_GSERX_SLICEX_PCIE2_MODE(%lu,%lu) is invalid on this chip\n", offset, block_id);
-	return CVMX_ADD_IO_SEG(0x0001180090460230ull) + (((offset) & 1) + ((block_id) & 7) * 0x8ull) * 2097152;
+	return CVMX_ADD_IO_SEG(0x0001180090460230ull) + (((offset) & 1) + ((block_id) & 15) * 0x8ull) * 2097152;
 }
 #else
-#define CVMX_GSERX_SLICEX_PCIE2_MODE(offset, block_id) (CVMX_ADD_IO_SEG(0x0001180090460230ull) + (((offset) & 1) + ((block_id) & 7) * 0x8ull) * 2097152)
+#define CVMX_GSERX_SLICEX_PCIE2_MODE(offset, block_id) (CVMX_ADD_IO_SEG(0x0001180090460230ull) + (((offset) & 1) + ((block_id) & 15) * 0x8ull) * 2097152)
 #endif
 #if CVMX_ENABLE_CSR_ADDRESS_CHECKING
 static inline uint64_t CVMX_GSERX_SLICEX_PCIE3_MODE(unsigned long offset, unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 1)) && ((block_id <= 6))))))
+	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 1)) && ((block_id <= 6)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 1)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 1)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 1)) && ((block_id <= 8))))))
 		cvmx_warn("CVMX_GSERX_SLICEX_PCIE3_MODE(%lu,%lu) is invalid on this chip\n", offset, block_id);
-	return CVMX_ADD_IO_SEG(0x0001180090460238ull) + (((offset) & 1) + ((block_id) & 7) * 0x8ull) * 2097152;
+	return CVMX_ADD_IO_SEG(0x0001180090460238ull) + (((offset) & 1) + ((block_id) & 15) * 0x8ull) * 2097152;
 }
 #else
-#define CVMX_GSERX_SLICEX_PCIE3_MODE(offset, block_id) (CVMX_ADD_IO_SEG(0x0001180090460238ull) + (((offset) & 1) + ((block_id) & 7) * 0x8ull) * 2097152)
+#define CVMX_GSERX_SLICEX_PCIE3_MODE(offset, block_id) (CVMX_ADD_IO_SEG(0x0001180090460238ull) + (((offset) & 1) + ((block_id) & 15) * 0x8ull) * 2097152)
 #endif
 #if CVMX_ENABLE_CSR_ADDRESS_CHECKING
 static inline uint64_t CVMX_GSERX_SLICEX_QSGMII_MODE(unsigned long offset, unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 1)) && ((block_id <= 6))))))
+	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 1)) && ((block_id <= 6)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 1)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 1)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 1)) && ((block_id <= 8))))))
 		cvmx_warn("CVMX_GSERX_SLICEX_QSGMII_MODE(%lu,%lu) is invalid on this chip\n", offset, block_id);
-	return CVMX_ADD_IO_SEG(0x0001180090460260ull) + (((offset) & 1) + ((block_id) & 7) * 0x8ull) * 2097152;
+	return CVMX_ADD_IO_SEG(0x0001180090460260ull) + (((offset) & 1) + ((block_id) & 15) * 0x8ull) * 2097152;
 }
 #else
-#define CVMX_GSERX_SLICEX_QSGMII_MODE(offset, block_id) (CVMX_ADD_IO_SEG(0x0001180090460260ull) + (((offset) & 1) + ((block_id) & 7) * 0x8ull) * 2097152)
+#define CVMX_GSERX_SLICEX_QSGMII_MODE(offset, block_id) (CVMX_ADD_IO_SEG(0x0001180090460260ull) + (((offset) & 1) + ((block_id) & 15) * 0x8ull) * 2097152)
 #endif
 #if CVMX_ENABLE_CSR_ADDRESS_CHECKING
 static inline uint64_t CVMX_GSERX_SLICEX_RX_LDLL_CTRL(unsigned long offset, unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 1)) && ((block_id <= 6))))))
+	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 1)) && ((block_id <= 6)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 1)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 1)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 1)) && ((block_id <= 8))))))
 		cvmx_warn("CVMX_GSERX_SLICEX_RX_LDLL_CTRL(%lu,%lu) is invalid on this chip\n", offset, block_id);
-	return CVMX_ADD_IO_SEG(0x0001180090460218ull) + (((offset) & 1) + ((block_id) & 7) * 0x8ull) * 2097152;
+	return CVMX_ADD_IO_SEG(0x0001180090460218ull) + (((offset) & 1) + ((block_id) & 15) * 0x8ull) * 2097152;
 }
 #else
-#define CVMX_GSERX_SLICEX_RX_LDLL_CTRL(offset, block_id) (CVMX_ADD_IO_SEG(0x0001180090460218ull) + (((offset) & 1) + ((block_id) & 7) * 0x8ull) * 2097152)
+#define CVMX_GSERX_SLICEX_RX_LDLL_CTRL(offset, block_id) (CVMX_ADD_IO_SEG(0x0001180090460218ull) + (((offset) & 1) + ((block_id) & 15) * 0x8ull) * 2097152)
 #endif
 #if CVMX_ENABLE_CSR_ADDRESS_CHECKING
 static inline uint64_t CVMX_GSERX_SLICEX_RX_SDLL_CTRL(unsigned long offset, unsigned long block_id)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 1)) && ((block_id <= 6)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 1)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 1)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 1)) && ((block_id <= 13)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 1)) && ((block_id <= 8))))))
 		cvmx_warn("CVMX_GSERX_SLICEX_RX_SDLL_CTRL(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x0001180090460220ull) + (((offset) & 1) + ((block_id) & 15) * 0x8ull) * 2097152;
@@ -2589,20 +2644,23 @@ static inline uint64_t CVMX_GSERX_SLICEX_RX_SDLL_CTRL(unsigned long offset, unsi
 static inline uint64_t CVMX_GSERX_SLICEX_SGMII_MODE(unsigned long offset, unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 1)) && ((block_id <= 6))))))
+	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 1)) && ((block_id <= 6)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 1)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 1)) && ((block_id <= 13)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 1)) && ((block_id <= 8))))))
 		cvmx_warn("CVMX_GSERX_SLICEX_SGMII_MODE(%lu,%lu) is invalid on this chip\n", offset, block_id);
-	return CVMX_ADD_IO_SEG(0x0001180090460258ull) + (((offset) & 1) + ((block_id) & 7) * 0x8ull) * 2097152;
+	return CVMX_ADD_IO_SEG(0x0001180090460258ull) + (((offset) & 1) + ((block_id) & 15) * 0x8ull) * 2097152;
 }
 #else
-#define CVMX_GSERX_SLICEX_SGMII_MODE(offset, block_id) (CVMX_ADD_IO_SEG(0x0001180090460258ull) + (((offset) & 1) + ((block_id) & 7) * 0x8ull) * 2097152)
+#define CVMX_GSERX_SLICEX_SGMII_MODE(offset, block_id) (CVMX_ADD_IO_SEG(0x0001180090460258ull) + (((offset) & 1) + ((block_id) & 15) * 0x8ull) * 2097152)
 #endif
 #if CVMX_ENABLE_CSR_ADDRESS_CHECKING
 static inline uint64_t CVMX_GSERX_SLICE_CFG(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 6))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 13))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 8)))))
 		cvmx_warn("CVMX_GSERX_SLICE_CFG(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180090460060ull) + ((offset) & 15) * 0x1000000ull;
@@ -2615,8 +2673,8 @@ static inline uint64_t CVMX_GSERX_SPD(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 6))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 13))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 8)))))
 		cvmx_warn("CVMX_GSERX_SPD(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180090000088ull) + ((offset) & 15) * 0x1000000ull;
@@ -2651,8 +2709,8 @@ static inline uint64_t CVMX_GSERX_SRST(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 6))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 13))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 8)))))
 		cvmx_warn("CVMX_GSERX_SRST(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180090000090ull) + ((offset) & 15) * 0x1000000ull;
@@ -2691,8 +2749,8 @@ static inline uint64_t CVMX_GSERX_TX_VBOOST(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 6))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 13))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 13))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 8)))))
 		cvmx_warn("CVMX_GSERX_TX_VBOOST(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180090000130ull) + ((offset) & 15) * 0x1000000ull;
@@ -2725,7 +2783,7 @@ union cvmx_gserx_ana_atest {
 	} s;
 	struct cvmx_gserx_ana_atest_s         cn73xx;
 	struct cvmx_gserx_ana_atest_s         cn78xx;
-	struct cvmx_gserx_ana_atest_s         cn78xxp2;
+	struct cvmx_gserx_ana_atest_s         cn78xxp1;
 	struct cvmx_gserx_ana_atest_s         cnf75xx;
 };
 typedef union cvmx_gserx_ana_atest cvmx_gserx_ana_atest_t;
@@ -2757,7 +2815,7 @@ union cvmx_gserx_ana_sel {
 	} s;
 	struct cvmx_gserx_ana_sel_s           cn73xx;
 	struct cvmx_gserx_ana_sel_s           cn78xx;
-	struct cvmx_gserx_ana_sel_s           cn78xxp2;
+	struct cvmx_gserx_ana_sel_s           cn78xxp1;
 	struct cvmx_gserx_ana_sel_s           cnf75xx;
 };
 typedef union cvmx_gserx_ana_sel cvmx_gserx_ana_sel_t;
@@ -2803,7 +2861,8 @@ union cvmx_gserx_br_rxx_ctl {
 #endif
 	} s;
 	struct cvmx_gserx_br_rxx_ctl_s        cn73xx;
-	struct cvmx_gserx_br_rxx_ctl_cn78xx {
+	struct cvmx_gserx_br_rxx_ctl_s        cn78xx;
+	struct cvmx_gserx_br_rxx_ctl_cn78xxp1 {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_3_63                : 61;
 	uint64_t rxt_swm                      : 1;  /**< Set when RX BASE-R link training is to be performed under software control.
@@ -2828,8 +2887,7 @@ union cvmx_gserx_br_rxx_ctl {
 	uint64_t rxt_swm                      : 1;
 	uint64_t reserved_3_63                : 61;
 #endif
-	} cn78xx;
-	struct cvmx_gserx_br_rxx_ctl_s        cn78xxp2;
+	} cn78xxp1;
 	struct cvmx_gserx_br_rxx_ctl_s        cnf75xx;
 };
 typedef union cvmx_gserx_br_rxx_ctl cvmx_gserx_br_rxx_ctl_t;
@@ -2886,7 +2944,7 @@ union cvmx_gserx_br_rxx_eer {
 	} s;
 	struct cvmx_gserx_br_rxx_eer_s        cn73xx;
 	struct cvmx_gserx_br_rxx_eer_s        cn78xx;
-	struct cvmx_gserx_br_rxx_eer_s        cn78xxp2;
+	struct cvmx_gserx_br_rxx_eer_s        cn78xxp1;
 	struct cvmx_gserx_br_rxx_eer_s        cnf75xx;
 };
 typedef union cvmx_gserx_br_rxx_eer cvmx_gserx_br_rxx_eer_t;
@@ -2908,7 +2966,7 @@ union cvmx_gserx_br_txx_ctl {
 	} s;
 	struct cvmx_gserx_br_txx_ctl_s        cn73xx;
 	struct cvmx_gserx_br_txx_ctl_s        cn78xx;
-	struct cvmx_gserx_br_txx_ctl_s        cn78xxp2;
+	struct cvmx_gserx_br_txx_ctl_s        cn78xxp1;
 	struct cvmx_gserx_br_txx_ctl_s        cnf75xx;
 };
 typedef union cvmx_gserx_br_txx_ctl cvmx_gserx_br_txx_ctl_t;
@@ -2935,7 +2993,7 @@ union cvmx_gserx_br_txx_cur {
 	} s;
 	struct cvmx_gserx_br_txx_cur_s        cn73xx;
 	struct cvmx_gserx_br_txx_cur_s        cn78xx;
-	struct cvmx_gserx_br_txx_cur_s        cn78xxp2;
+	struct cvmx_gserx_br_txx_cur_s        cn78xxp1;
 	struct cvmx_gserx_br_txx_cur_s        cnf75xx;
 };
 typedef union cvmx_gserx_br_txx_cur cvmx_gserx_br_txx_cur_t;
@@ -2975,7 +3033,7 @@ union cvmx_gserx_br_txx_ini {
 	uint64_t reserved_14_63               : 50;
 #endif
 	} s;
-	struct cvmx_gserx_br_txx_ini_s        cn78xxp2;
+	struct cvmx_gserx_br_txx_ini_s        cn78xx;
 };
 typedef union cvmx_gserx_br_txx_ini cvmx_gserx_br_txx_ini_t;
 
@@ -3007,7 +3065,7 @@ union cvmx_gserx_br_txx_tap {
 #endif
 	} s;
 	struct cvmx_gserx_br_txx_tap_s        cn73xx;
-	struct cvmx_gserx_br_txx_tap_s        cn78xxp2;
+	struct cvmx_gserx_br_txx_tap_s        cn78xx;
 	struct cvmx_gserx_br_txx_tap_s        cnf75xx;
 };
 typedef union cvmx_gserx_br_txx_tap cvmx_gserx_br_txx_tap_t;
@@ -3025,7 +3083,9 @@ union cvmx_gserx_cfg {
 	uint64_t rmac                         : 1;  /**< When set, indicates the GSER is configured for RMAC mode. [RMAC] must not be set
                                                          when any of [BGX,PCIE,SRIO] are set. [RMAC] must only be set for DLM6, DLM7, and
                                                          DLM8 (i.e. GSER6, GSER7, and GSER8). */
-	uint64_t srio                         : 1;  /**< When set, indicates the GSER is configured for SRIO mode. [SRIO] must not be set
+	uint64_t srio                         : 1;  /**< For CNF73XX, this field is reserved.
+                                                         For CNF75XX, when set, indicates the GSER is configured for SRIO mode. [SRIO] must not be
+                                                         set
                                                          when any of [BGX,PCIE,RMAC] are set. [SRIO] must only be set for QLM2 and QLM3
                                                          (i.e. GSER2 and GSER3). */
 	uint64_t sata                         : 1;  /**< Unused. */
@@ -3113,7 +3173,7 @@ union cvmx_gserx_cfg {
 	uint64_t reserved_5_63                : 59;
 #endif
 	} cn78xx;
-	struct cvmx_gserx_cfg_cn78xx          cn78xxp2;
+	struct cvmx_gserx_cfg_cn78xx          cn78xxp1;
 	struct cvmx_gserx_cfg_s               cnf75xx;
 };
 typedef union cvmx_gserx_cfg cvmx_gserx_cfg_t;
@@ -3135,7 +3195,7 @@ union cvmx_gserx_dbg {
 	} s;
 	struct cvmx_gserx_dbg_s               cn73xx;
 	struct cvmx_gserx_dbg_s               cn78xx;
-	struct cvmx_gserx_dbg_s               cn78xxp2;
+	struct cvmx_gserx_dbg_s               cn78xxp1;
 	struct cvmx_gserx_dbg_s               cnf75xx;
 };
 typedef union cvmx_gserx_dbg cvmx_gserx_dbg_t;
@@ -4021,7 +4081,7 @@ union cvmx_gserx_eq_wait_time {
 	} s;
 	struct cvmx_gserx_eq_wait_time_s      cn73xx;
 	struct cvmx_gserx_eq_wait_time_s      cn78xx;
-	struct cvmx_gserx_eq_wait_time_s      cn78xxp2;
+	struct cvmx_gserx_eq_wait_time_s      cn78xxp1;
 	struct cvmx_gserx_eq_wait_time_s      cnf75xx;
 };
 typedef union cvmx_gserx_eq_wait_time cvmx_gserx_eq_wait_time_t;
@@ -4060,7 +4120,7 @@ union cvmx_gserx_glbl_misc_config_1 {
 	} s;
 	struct cvmx_gserx_glbl_misc_config_1_s cn73xx;
 	struct cvmx_gserx_glbl_misc_config_1_s cn78xx;
-	struct cvmx_gserx_glbl_misc_config_1_s cn78xxp2;
+	struct cvmx_gserx_glbl_misc_config_1_s cn78xxp1;
 	struct cvmx_gserx_glbl_misc_config_1_s cnf75xx;
 };
 typedef union cvmx_gserx_glbl_misc_config_1 cvmx_gserx_glbl_misc_config_1_t;
@@ -4099,7 +4159,7 @@ union cvmx_gserx_glbl_pll_cfg_0 {
 	} s;
 	struct cvmx_gserx_glbl_pll_cfg_0_s    cn73xx;
 	struct cvmx_gserx_glbl_pll_cfg_0_s    cn78xx;
-	struct cvmx_gserx_glbl_pll_cfg_0_s    cn78xxp2;
+	struct cvmx_gserx_glbl_pll_cfg_0_s    cn78xxp1;
 	struct cvmx_gserx_glbl_pll_cfg_0_s    cnf75xx;
 };
 typedef union cvmx_gserx_glbl_pll_cfg_0 cvmx_gserx_glbl_pll_cfg_0_t;
@@ -4138,7 +4198,7 @@ union cvmx_gserx_glbl_pll_cfg_1 {
 	} s;
 	struct cvmx_gserx_glbl_pll_cfg_1_s    cn73xx;
 	struct cvmx_gserx_glbl_pll_cfg_1_s    cn78xx;
-	struct cvmx_gserx_glbl_pll_cfg_1_s    cn78xxp2;
+	struct cvmx_gserx_glbl_pll_cfg_1_s    cn78xxp1;
 	struct cvmx_gserx_glbl_pll_cfg_1_s    cnf75xx;
 };
 typedef union cvmx_gserx_glbl_pll_cfg_1 cvmx_gserx_glbl_pll_cfg_1_t;
@@ -4204,7 +4264,7 @@ union cvmx_gserx_glbl_pll_cfg_2 {
 	} s;
 	struct cvmx_gserx_glbl_pll_cfg_2_s    cn73xx;
 	struct cvmx_gserx_glbl_pll_cfg_2_s    cn78xx;
-	struct cvmx_gserx_glbl_pll_cfg_2_s    cn78xxp2;
+	struct cvmx_gserx_glbl_pll_cfg_2_s    cn78xxp1;
 	struct cvmx_gserx_glbl_pll_cfg_2_s    cnf75xx;
 };
 typedef union cvmx_gserx_glbl_pll_cfg_2 cvmx_gserx_glbl_pll_cfg_2_t;
@@ -4249,7 +4309,7 @@ union cvmx_gserx_glbl_pll_cfg_3 {
 	} s;
 	struct cvmx_gserx_glbl_pll_cfg_3_s    cn73xx;
 	struct cvmx_gserx_glbl_pll_cfg_3_s    cn78xx;
-	struct cvmx_gserx_glbl_pll_cfg_3_s    cn78xxp2;
+	struct cvmx_gserx_glbl_pll_cfg_3_s    cn78xxp1;
 	struct cvmx_gserx_glbl_pll_cfg_3_s    cnf75xx;
 };
 typedef union cvmx_gserx_glbl_pll_cfg_3 cvmx_gserx_glbl_pll_cfg_3_t;
@@ -4285,7 +4345,7 @@ union cvmx_gserx_glbl_pll_monitor {
 	} s;
 	struct cvmx_gserx_glbl_pll_monitor_s  cn73xx;
 	struct cvmx_gserx_glbl_pll_monitor_s  cn78xx;
-	struct cvmx_gserx_glbl_pll_monitor_s  cn78xxp2;
+	struct cvmx_gserx_glbl_pll_monitor_s  cn78xxp1;
 	struct cvmx_gserx_glbl_pll_monitor_s  cnf75xx;
 };
 typedef union cvmx_gserx_glbl_pll_monitor cvmx_gserx_glbl_pll_monitor_t;
@@ -4357,7 +4417,7 @@ union cvmx_gserx_glbl_tad {
 	} s;
 	struct cvmx_gserx_glbl_tad_s          cn73xx;
 	struct cvmx_gserx_glbl_tad_s          cn78xx;
-	struct cvmx_gserx_glbl_tad_s          cn78xxp2;
+	struct cvmx_gserx_glbl_tad_s          cn78xxp1;
 	struct cvmx_gserx_glbl_tad_s          cnf75xx;
 };
 typedef union cvmx_gserx_glbl_tad cvmx_gserx_glbl_tad_t;
@@ -4411,8 +4471,8 @@ union cvmx_gserx_glbl_tm_admon {
 	uint64_t reserved_8_63                : 56;
 #endif
 	} cn73xx;
-	struct cvmx_gserx_glbl_tm_admon_s     cn78xx;
-	struct cvmx_gserx_glbl_tm_admon_cn73xx cn78xxp2;
+	struct cvmx_gserx_glbl_tm_admon_cn73xx cn78xx;
+	struct cvmx_gserx_glbl_tm_admon_s     cn78xxp1;
 	struct cvmx_gserx_glbl_tm_admon_cn73xx cnf75xx;
 };
 typedef union cvmx_gserx_glbl_tm_admon cvmx_gserx_glbl_tm_admon_t;
@@ -4436,7 +4496,7 @@ union cvmx_gserx_iddq_mode {
 	} s;
 	struct cvmx_gserx_iddq_mode_s         cn73xx;
 	struct cvmx_gserx_iddq_mode_s         cn78xx;
-	struct cvmx_gserx_iddq_mode_s         cn78xxp2;
+	struct cvmx_gserx_iddq_mode_s         cn78xxp1;
 	struct cvmx_gserx_iddq_mode_s         cnf75xx;
 };
 typedef union cvmx_gserx_iddq_mode cvmx_gserx_iddq_mode_t;
@@ -4513,7 +4573,7 @@ union cvmx_gserx_lanex_lbert_cfg {
 	} s;
 	struct cvmx_gserx_lanex_lbert_cfg_s   cn73xx;
 	struct cvmx_gserx_lanex_lbert_cfg_s   cn78xx;
-	struct cvmx_gserx_lanex_lbert_cfg_s   cn78xxp2;
+	struct cvmx_gserx_lanex_lbert_cfg_s   cn78xxp1;
 	struct cvmx_gserx_lanex_lbert_cfg_s   cnf75xx;
 };
 typedef union cvmx_gserx_lanex_lbert_cfg cvmx_gserx_lanex_lbert_cfg_t;
@@ -4535,7 +4595,7 @@ union cvmx_gserx_lanex_lbert_ecnt {
 	uint64_t lbert_err_ovbit14            : 1;  /**< If this bit is set, multiply [LBERT_ERR_CNT] by 128.
                                                          If this bit is set and [LBERT_ERR_CNT] = 2^15-1, signals
                                                          overflow of the counter. */
-	uint64_t lbert_err_cnt                : 15; /**< Current error count.
+	uint64_t lbert_err_cnt                : 15; /**< Current bit error count.
                                                          If [LBERT_ERR_OVBIT14] is active, then multiply
                                                          count by 128. */
 #else
@@ -4546,7 +4606,7 @@ union cvmx_gserx_lanex_lbert_ecnt {
 	} s;
 	struct cvmx_gserx_lanex_lbert_ecnt_s  cn73xx;
 	struct cvmx_gserx_lanex_lbert_ecnt_s  cn78xx;
-	struct cvmx_gserx_lanex_lbert_ecnt_s  cn78xxp2;
+	struct cvmx_gserx_lanex_lbert_ecnt_s  cn78xxp1;
 	struct cvmx_gserx_lanex_lbert_ecnt_s  cnf75xx;
 };
 typedef union cvmx_gserx_lanex_lbert_ecnt cvmx_gserx_lanex_lbert_ecnt_t;
@@ -4572,7 +4632,7 @@ union cvmx_gserx_lanex_lbert_pat_cfg {
 	} s;
 	struct cvmx_gserx_lanex_lbert_pat_cfg_s cn73xx;
 	struct cvmx_gserx_lanex_lbert_pat_cfg_s cn78xx;
-	struct cvmx_gserx_lanex_lbert_pat_cfg_s cn78xxp2;
+	struct cvmx_gserx_lanex_lbert_pat_cfg_s cn78xxp1;
 	struct cvmx_gserx_lanex_lbert_pat_cfg_s cnf75xx;
 };
 typedef union cvmx_gserx_lanex_lbert_pat_cfg cvmx_gserx_lanex_lbert_pat_cfg_t;
@@ -4621,7 +4681,7 @@ union cvmx_gserx_lanex_misc_cfg_0 {
 	} s;
 	struct cvmx_gserx_lanex_misc_cfg_0_s  cn73xx;
 	struct cvmx_gserx_lanex_misc_cfg_0_s  cn78xx;
-	struct cvmx_gserx_lanex_misc_cfg_0_s  cn78xxp2;
+	struct cvmx_gserx_lanex_misc_cfg_0_s  cn78xxp1;
 	struct cvmx_gserx_lanex_misc_cfg_0_s  cnf75xx;
 };
 typedef union cvmx_gserx_lanex_misc_cfg_0 cvmx_gserx_lanex_misc_cfg_0_t;
@@ -4685,8 +4745,8 @@ union cvmx_gserx_lanex_misc_cfg_1 {
 	uint64_t reserved_13_63               : 51;
 #endif
 	} cn73xx;
-	struct cvmx_gserx_lanex_misc_cfg_1_s  cn78xx;
-	struct cvmx_gserx_lanex_misc_cfg_1_cn73xx cn78xxp2;
+	struct cvmx_gserx_lanex_misc_cfg_1_cn73xx cn78xx;
+	struct cvmx_gserx_lanex_misc_cfg_1_s  cn78xxp1;
 	struct cvmx_gserx_lanex_misc_cfg_1_cn73xx cnf75xx;
 };
 typedef union cvmx_gserx_lanex_misc_cfg_1 cvmx_gserx_lanex_misc_cfg_1_t;
@@ -4741,7 +4801,7 @@ union cvmx_gserx_lanex_pcs_ctlifc_0 {
 	} s;
 	struct cvmx_gserx_lanex_pcs_ctlifc_0_s cn73xx;
 	struct cvmx_gserx_lanex_pcs_ctlifc_0_s cn78xx;
-	struct cvmx_gserx_lanex_pcs_ctlifc_0_s cn78xxp2;
+	struct cvmx_gserx_lanex_pcs_ctlifc_0_s cn78xxp1;
 	struct cvmx_gserx_lanex_pcs_ctlifc_0_s cnf75xx;
 };
 typedef union cvmx_gserx_lanex_pcs_ctlifc_0 cvmx_gserx_lanex_pcs_ctlifc_0_t;
@@ -4793,8 +4853,8 @@ union cvmx_gserx_lanex_pcs_ctlifc_1 {
 	uint64_t reserved_9_63                : 55;
 #endif
 	} cn73xx;
-	struct cvmx_gserx_lanex_pcs_ctlifc_1_s cn78xx;
-	struct cvmx_gserx_lanex_pcs_ctlifc_1_cn73xx cn78xxp2;
+	struct cvmx_gserx_lanex_pcs_ctlifc_1_cn73xx cn78xx;
+	struct cvmx_gserx_lanex_pcs_ctlifc_1_s cn78xxp1;
 	struct cvmx_gserx_lanex_pcs_ctlifc_1_cn73xx cnf75xx;
 };
 typedef union cvmx_gserx_lanex_pcs_ctlifc_1 cvmx_gserx_lanex_pcs_ctlifc_1_t;
@@ -4918,8 +4978,8 @@ union cvmx_gserx_lanex_pcs_ctlifc_2 {
 	uint64_t reserved_16_63               : 48;
 #endif
 	} cn73xx;
-	struct cvmx_gserx_lanex_pcs_ctlifc_2_s cn78xx;
-	struct cvmx_gserx_lanex_pcs_ctlifc_2_cn73xx cn78xxp2;
+	struct cvmx_gserx_lanex_pcs_ctlifc_2_cn73xx cn78xx;
+	struct cvmx_gserx_lanex_pcs_ctlifc_2_s cn78xxp1;
 	struct cvmx_gserx_lanex_pcs_ctlifc_2_cn73xx cnf75xx;
 };
 typedef union cvmx_gserx_lanex_pcs_ctlifc_2 cvmx_gserx_lanex_pcs_ctlifc_2_t;
@@ -4967,7 +5027,7 @@ union cvmx_gserx_lanex_pcs_macifc_mon_0 {
 	} s;
 	struct cvmx_gserx_lanex_pcs_macifc_mon_0_s cn73xx;
 	struct cvmx_gserx_lanex_pcs_macifc_mon_0_s cn78xx;
-	struct cvmx_gserx_lanex_pcs_macifc_mon_0_s cn78xxp2;
+	struct cvmx_gserx_lanex_pcs_macifc_mon_0_s cn78xxp1;
 	struct cvmx_gserx_lanex_pcs_macifc_mon_0_s cnf75xx;
 };
 typedef union cvmx_gserx_lanex_pcs_macifc_mon_0 cvmx_gserx_lanex_pcs_macifc_mon_0_t;
@@ -4987,8 +5047,8 @@ union cvmx_gserx_lanex_pcs_macifc_mon_2 {
 	uint64_t tx_coeff_req                 : 1;  /**< Current state of the MAC to PCS TX coefficient request input. */
 	uint64_t tx_vboost_en                 : 1;  /**< Current state of the MAC to PCS TX Vboost enable input. */
 	uint64_t tx_swing                     : 5;  /**< Current state of the MAC to PCS TX equalizer swing<4:0> input. */
-	uint64_t tx_pre                       : 4;  /**< Current state of the MAC to PCS TX equalizer pre emphasis<3:0> input. */
-	uint64_t tx_post                      : 5;  /**< Current state of the MAC to PCS TX equalizer post emphasis<4:0> input. */
+	uint64_t tx_pre                       : 4;  /**< Current state of the MAC to PCS TX equalizer preemphasis<3:0> input. */
+	uint64_t tx_post                      : 5;  /**< Current state of the MAC to PCS TX equalizer postemphasis<4:0> input. */
 #else
 	uint64_t tx_post                      : 5;
 	uint64_t tx_pre                       : 4;
@@ -5000,7 +5060,7 @@ union cvmx_gserx_lanex_pcs_macifc_mon_2 {
 	} s;
 	struct cvmx_gserx_lanex_pcs_macifc_mon_2_s cn73xx;
 	struct cvmx_gserx_lanex_pcs_macifc_mon_2_s cn78xx;
-	struct cvmx_gserx_lanex_pcs_macifc_mon_2_s cn78xxp2;
+	struct cvmx_gserx_lanex_pcs_macifc_mon_2_s cn78xxp1;
 	struct cvmx_gserx_lanex_pcs_macifc_mon_2_s cnf75xx;
 };
 typedef union cvmx_gserx_lanex_pcs_macifc_mon_2 cvmx_gserx_lanex_pcs_macifc_mon_2_t;
@@ -5027,7 +5087,7 @@ union cvmx_gserx_lanex_pma_loopback_ctrl {
 	} s;
 	struct cvmx_gserx_lanex_pma_loopback_ctrl_s cn73xx;
 	struct cvmx_gserx_lanex_pma_loopback_ctrl_s cn78xx;
-	struct cvmx_gserx_lanex_pma_loopback_ctrl_s cn78xxp2;
+	struct cvmx_gserx_lanex_pma_loopback_ctrl_s cn78xxp1;
 	struct cvmx_gserx_lanex_pma_loopback_ctrl_s cnf75xx;
 };
 typedef union cvmx_gserx_lanex_pma_loopback_ctrl cvmx_gserx_lanex_pma_loopback_ctrl_t;
@@ -5070,10 +5130,10 @@ union cvmx_gserx_lanex_pwr_ctrl {
                                                          control signal. When set, the power down control signal is
                                                          specified by GSER()_LANE()_RX_CFG_1[RX_CHPD_OVRRD_VAL]. */
 	uint64_t tx_tristate_en_ovrrd_en      : 1;  /**< Override TX power state machine TX tristate
-                                                         control signal.  When set, TX tristate control signal is specified
+                                                         control signal. When set, TX tristate control signal is specified
                                                          in GSER()_LANE()_TX_CFG_0[TX_TRISTATE_EN_OVRRD_VAL]. */
 	uint64_t tx_pcs_reset_ovrrd_en        : 1;  /**< Override TX power state machine reset control
-                                                         signal.  When set, reset control signals is specified in
+                                                         signal. When set, reset control signals is specified in
                                                          [TX_PCS_RESET_OVRRD_VAL]. */
 	uint64_t tx_elec_idle_ovrrd_en        : 1;  /**< Override mac_pcs_txX_elec_idle signal
                                                          When set, TX electrical idle is controlled from
@@ -5134,10 +5194,10 @@ union cvmx_gserx_lanex_pwr_ctrl {
                                                          control signal. When set, the power down control signal is
                                                          specified by GSER()_LANE()_RX_CFG_1[RX_CHPD_OVRRD_VAL]. */
 	uint64_t tx_tristate_en_ovrrd_en      : 1;  /**< Override TX power state machine TX tristate
-                                                         control signal.  When set, TX tristate control signal is specified
+                                                         control signal. When set, TX tristate control signal is specified
                                                          in GSER()_LANE()_TX_CFG_0[TX_TRISTATE_EN_OVRRD_VAL]. */
 	uint64_t tx_pcs_reset_ovrrd_en        : 1;  /**< Override TX power state machine reset control
-                                                         signal.  When set, reset control signals is specified in
+                                                         signal. When set, reset control signals is specified in
                                                          [TX_PCS_RESET_OVRRD_VAL]. */
 	uint64_t tx_elec_idle_ovrrd_en        : 1;  /**< Override mac_pcs_txX_elec_idle signal
                                                          When set, TX electrical idle is controlled from
@@ -5169,8 +5229,8 @@ union cvmx_gserx_lanex_pwr_ctrl {
 	uint64_t reserved_15_63               : 49;
 #endif
 	} cn73xx;
-	struct cvmx_gserx_lanex_pwr_ctrl_s    cn78xx;
-	struct cvmx_gserx_lanex_pwr_ctrl_cn73xx cn78xxp2;
+	struct cvmx_gserx_lanex_pwr_ctrl_cn73xx cn78xx;
+	struct cvmx_gserx_lanex_pwr_ctrl_s    cn78xxp1;
 	struct cvmx_gserx_lanex_pwr_ctrl_cn73xx cnf75xx;
 };
 typedef union cvmx_gserx_lanex_pwr_ctrl cvmx_gserx_lanex_pwr_ctrl_t;
@@ -5196,7 +5256,7 @@ union cvmx_gserx_lanex_rx_aeq_out_0 {
 	} s;
 	struct cvmx_gserx_lanex_rx_aeq_out_0_s cn73xx;
 	struct cvmx_gserx_lanex_rx_aeq_out_0_s cn78xx;
-	struct cvmx_gserx_lanex_rx_aeq_out_0_s cn78xxp2;
+	struct cvmx_gserx_lanex_rx_aeq_out_0_s cn78xxp1;
 	struct cvmx_gserx_lanex_rx_aeq_out_0_s cnf75xx;
 };
 typedef union cvmx_gserx_lanex_rx_aeq_out_0 cvmx_gserx_lanex_rx_aeq_out_0_t;
@@ -5223,7 +5283,7 @@ union cvmx_gserx_lanex_rx_aeq_out_1 {
 	} s;
 	struct cvmx_gserx_lanex_rx_aeq_out_1_s cn73xx;
 	struct cvmx_gserx_lanex_rx_aeq_out_1_s cn78xx;
-	struct cvmx_gserx_lanex_rx_aeq_out_1_s cn78xxp2;
+	struct cvmx_gserx_lanex_rx_aeq_out_1_s cn78xxp1;
 	struct cvmx_gserx_lanex_rx_aeq_out_1_s cnf75xx;
 };
 typedef union cvmx_gserx_lanex_rx_aeq_out_1 cvmx_gserx_lanex_rx_aeq_out_1_t;
@@ -5250,7 +5310,7 @@ union cvmx_gserx_lanex_rx_aeq_out_2 {
 	} s;
 	struct cvmx_gserx_lanex_rx_aeq_out_2_s cn73xx;
 	struct cvmx_gserx_lanex_rx_aeq_out_2_s cn78xx;
-	struct cvmx_gserx_lanex_rx_aeq_out_2_s cn78xxp2;
+	struct cvmx_gserx_lanex_rx_aeq_out_2_s cn78xxp1;
 	struct cvmx_gserx_lanex_rx_aeq_out_2_s cnf75xx;
 };
 typedef union cvmx_gserx_lanex_rx_aeq_out_2 cvmx_gserx_lanex_rx_aeq_out_2_t;
@@ -5281,7 +5341,7 @@ union cvmx_gserx_lanex_rx_cdr_ctrl_1 {
 	} s;
 	struct cvmx_gserx_lanex_rx_cdr_ctrl_1_s cn73xx;
 	struct cvmx_gserx_lanex_rx_cdr_ctrl_1_s cn78xx;
-	struct cvmx_gserx_lanex_rx_cdr_ctrl_1_s cn78xxp2;
+	struct cvmx_gserx_lanex_rx_cdr_ctrl_1_s cn78xxp1;
 	struct cvmx_gserx_lanex_rx_cdr_ctrl_1_s cnf75xx;
 };
 typedef union cvmx_gserx_lanex_rx_cdr_ctrl_1 cvmx_gserx_lanex_rx_cdr_ctrl_1_t;
@@ -5311,7 +5371,7 @@ union cvmx_gserx_lanex_rx_cdr_ctrl_2 {
 	} s;
 	struct cvmx_gserx_lanex_rx_cdr_ctrl_2_s cn73xx;
 	struct cvmx_gserx_lanex_rx_cdr_ctrl_2_s cn78xx;
-	struct cvmx_gserx_lanex_rx_cdr_ctrl_2_s cn78xxp2;
+	struct cvmx_gserx_lanex_rx_cdr_ctrl_2_s cn78xxp1;
 	struct cvmx_gserx_lanex_rx_cdr_ctrl_2_s cnf75xx;
 };
 typedef union cvmx_gserx_lanex_rx_cdr_ctrl_2 cvmx_gserx_lanex_rx_cdr_ctrl_2_t;
@@ -5341,7 +5401,7 @@ union cvmx_gserx_lanex_rx_cdr_misc_ctrl_0 {
 	} s;
 	struct cvmx_gserx_lanex_rx_cdr_misc_ctrl_0_s cn73xx;
 	struct cvmx_gserx_lanex_rx_cdr_misc_ctrl_0_s cn78xx;
-	struct cvmx_gserx_lanex_rx_cdr_misc_ctrl_0_s cn78xxp2;
+	struct cvmx_gserx_lanex_rx_cdr_misc_ctrl_0_s cn78xxp1;
 	struct cvmx_gserx_lanex_rx_cdr_misc_ctrl_0_s cnf75xx;
 };
 typedef union cvmx_gserx_lanex_rx_cdr_misc_ctrl_0 cvmx_gserx_lanex_rx_cdr_misc_ctrl_0_t;
@@ -5369,7 +5429,7 @@ union cvmx_gserx_lanex_rx_cdr_status_1 {
 	} s;
 	struct cvmx_gserx_lanex_rx_cdr_status_1_s cn73xx;
 	struct cvmx_gserx_lanex_rx_cdr_status_1_s cn78xx;
-	struct cvmx_gserx_lanex_rx_cdr_status_1_s cn78xxp2;
+	struct cvmx_gserx_lanex_rx_cdr_status_1_s cn78xxp1;
 	struct cvmx_gserx_lanex_rx_cdr_status_1_s cnf75xx;
 };
 typedef union cvmx_gserx_lanex_rx_cdr_status_1 cvmx_gserx_lanex_rx_cdr_status_1_t;
@@ -5396,7 +5456,7 @@ union cvmx_gserx_lanex_rx_cdr_status_2 {
 	} s;
 	struct cvmx_gserx_lanex_rx_cdr_status_2_s cn73xx;
 	struct cvmx_gserx_lanex_rx_cdr_status_2_s cn78xx;
-	struct cvmx_gserx_lanex_rx_cdr_status_2_s cn78xxp2;
+	struct cvmx_gserx_lanex_rx_cdr_status_2_s cn78xxp1;
 	struct cvmx_gserx_lanex_rx_cdr_status_2_s cnf75xx;
 };
 typedef union cvmx_gserx_lanex_rx_cdr_status_2 cvmx_gserx_lanex_rx_cdr_status_2_t;
@@ -5430,7 +5490,7 @@ union cvmx_gserx_lanex_rx_cfg_0 {
                                                          0x1 = 1/2 data rate.
                                                          0x2 = 1/4 data rate.
                                                          0x3 = 1/8 data rate. */
-	uint64_t cfg_rx_pol_invert            : 1;  /**< Invert the receive data.  Allies with GSER()_LANE()_MISC_CFG_0[USE_PMA_POLARITY]
+	uint64_t cfg_rx_pol_invert            : 1;  /**< Invert the receive data. Allies with GSER()_LANE()_MISC_CFG_0[USE_PMA_POLARITY]
                                                          is deasserted. */
 	uint64_t rx_subblk_pd_ovrrd_val       : 5;  /**< Not supported. */
 #else
@@ -5465,7 +5525,7 @@ union cvmx_gserx_lanex_rx_cfg_0 {
                                                          0x1 = 1/2 data rate.
                                                          0x2 = 1/4 data rate.
                                                          0x3 = 1/8 data rate. */
-	uint64_t cfg_rx_pol_invert            : 1;  /**< Invert the receive data.  Allies with GSER()_LANE()_MISC_CFG_0[USE_PMA_POLARITY]
+	uint64_t cfg_rx_pol_invert            : 1;  /**< Invert the receive data. Allies with GSER()_LANE()_MISC_CFG_0[USE_PMA_POLARITY]
                                                          is deasserted. */
 	uint64_t rx_subblk_pd_ovrrd_val       : 5;  /**< Not supported. */
 #else
@@ -5500,7 +5560,7 @@ union cvmx_gserx_lanex_rx_cfg_0 {
                                                          0x1 = 1/2 data rate.
                                                          0x2 = 1/4 data rate.
                                                          0x3 = 1/8 data rate. */
-	uint64_t cfg_rx_pol_invert            : 1;  /**< Invert the receive data.  Allies with GSER()_LANE()_MISC_CFG_0[USE_PMA_POLARITY]
+	uint64_t cfg_rx_pol_invert            : 1;  /**< Invert the receive data. Allies with GSER()_LANE()_MISC_CFG_0[USE_PMA_POLARITY]
                                                          is deasserted. */
 	uint64_t rx_subblk_pd_ovrrd_val       : 5;  /**< Not supported. */
 #else
@@ -5515,7 +5575,7 @@ union cvmx_gserx_lanex_rx_cfg_0 {
 	uint64_t reserved_16_63               : 48;
 #endif
 	} cn78xx;
-	struct cvmx_gserx_lanex_rx_cfg_0_cn78xx cn78xxp2;
+	struct cvmx_gserx_lanex_rx_cfg_0_cn78xx cn78xxp1;
 	struct cvmx_gserx_lanex_rx_cfg_0_cn73xx cnf75xx;
 };
 typedef union cvmx_gserx_lanex_rx_cfg_0 cvmx_gserx_lanex_rx_cfg_0_t;
@@ -5564,7 +5624,7 @@ union cvmx_gserx_lanex_rx_cfg_1 {
 	} s;
 	struct cvmx_gserx_lanex_rx_cfg_1_s    cn73xx;
 	struct cvmx_gserx_lanex_rx_cfg_1_s    cn78xx;
-	struct cvmx_gserx_lanex_rx_cfg_1_s    cn78xxp2;
+	struct cvmx_gserx_lanex_rx_cfg_1_s    cn78xxp1;
 	struct cvmx_gserx_lanex_rx_cfg_1_s    cnf75xx;
 };
 typedef union cvmx_gserx_lanex_rx_cfg_1 cvmx_gserx_lanex_rx_cfg_1_t;
@@ -5621,7 +5681,7 @@ union cvmx_gserx_lanex_rx_cfg_2 {
 	} s;
 	struct cvmx_gserx_lanex_rx_cfg_2_s    cn73xx;
 	struct cvmx_gserx_lanex_rx_cfg_2_s    cn78xx;
-	struct cvmx_gserx_lanex_rx_cfg_2_s    cn78xxp2;
+	struct cvmx_gserx_lanex_rx_cfg_2_s    cn78xxp1;
 	struct cvmx_gserx_lanex_rx_cfg_2_s    cnf75xx;
 };
 typedef union cvmx_gserx_lanex_rx_cfg_2 cvmx_gserx_lanex_rx_cfg_2_t;
@@ -5659,7 +5719,7 @@ union cvmx_gserx_lanex_rx_cfg_3 {
 	} s;
 	struct cvmx_gserx_lanex_rx_cfg_3_s    cn73xx;
 	struct cvmx_gserx_lanex_rx_cfg_3_s    cn78xx;
-	struct cvmx_gserx_lanex_rx_cfg_3_s    cn78xxp2;
+	struct cvmx_gserx_lanex_rx_cfg_3_s    cn78xxp1;
 	struct cvmx_gserx_lanex_rx_cfg_3_s    cnf75xx;
 };
 typedef union cvmx_gserx_lanex_rx_cfg_3 cvmx_gserx_lanex_rx_cfg_3_t;
@@ -5697,7 +5757,7 @@ union cvmx_gserx_lanex_rx_cfg_4 {
 	} s;
 	struct cvmx_gserx_lanex_rx_cfg_4_s    cn73xx;
 	struct cvmx_gserx_lanex_rx_cfg_4_s    cn78xx;
-	struct cvmx_gserx_lanex_rx_cfg_4_s    cn78xxp2;
+	struct cvmx_gserx_lanex_rx_cfg_4_s    cn78xxp1;
 	struct cvmx_gserx_lanex_rx_cfg_4_s    cnf75xx;
 };
 typedef union cvmx_gserx_lanex_rx_cfg_4 cvmx_gserx_lanex_rx_cfg_4_t;
@@ -5746,7 +5806,7 @@ union cvmx_gserx_lanex_rx_cfg_5 {
 	} s;
 	struct cvmx_gserx_lanex_rx_cfg_5_s    cn73xx;
 	struct cvmx_gserx_lanex_rx_cfg_5_s    cn78xx;
-	struct cvmx_gserx_lanex_rx_cfg_5_s    cn78xxp2;
+	struct cvmx_gserx_lanex_rx_cfg_5_s    cn78xxp1;
 	struct cvmx_gserx_lanex_rx_cfg_5_s    cnf75xx;
 };
 typedef union cvmx_gserx_lanex_rx_cfg_5 cvmx_gserx_lanex_rx_cfg_5_t;
@@ -5805,10 +5865,69 @@ union cvmx_gserx_lanex_rx_ctle_ctrl {
 	} s;
 	struct cvmx_gserx_lanex_rx_ctle_ctrl_s cn73xx;
 	struct cvmx_gserx_lanex_rx_ctle_ctrl_s cn78xx;
-	struct cvmx_gserx_lanex_rx_ctle_ctrl_s cn78xxp2;
+	struct cvmx_gserx_lanex_rx_ctle_ctrl_s cn78xxp1;
 	struct cvmx_gserx_lanex_rx_ctle_ctrl_s cnf75xx;
 };
 typedef union cvmx_gserx_lanex_rx_ctle_ctrl cvmx_gserx_lanex_rx_ctle_ctrl_t;
+
+/**
+ * cvmx_gser#_lane#_rx_delta_pm_0
+ *
+ * These are the RAW PCS per-lane RX VMA performance metric 0 register. These registers are for
+ * diagnostic use only.
+ * These registers are reset by hardware only during chip cold reset. The values of the CSR
+ * fields in these registers do not change during chip warm or soft resets.
+ */
+union cvmx_gserx_lanex_rx_delta_pm_0 {
+	uint64_t u64;
+	struct cvmx_gserx_lanex_rx_delta_pm_0_s {
+#ifdef __BIG_ENDIAN_BITFIELD
+	uint64_t reserved_6_63                : 58;
+	uint64_t sds_pcs_rx_vma_delta_pm_max  : 6;  /**< RX VMA Delta performance metric.
+                                                         <5:3> = Inverted delta.
+                                                         <2:0> = VMA window count upper bits <18:16>.
+                                                                 Lower bits in GSER()_LANE()_RX_DELTA_PM_1
+                                                                 [SDS_PCS_RX_VMA_DELTA_PM_MAX]. */
+#else
+	uint64_t sds_pcs_rx_vma_delta_pm_max  : 6;
+	uint64_t reserved_6_63                : 58;
+#endif
+	} s;
+	struct cvmx_gserx_lanex_rx_delta_pm_0_s cn73xx;
+	struct cvmx_gserx_lanex_rx_delta_pm_0_s cn78xx;
+	struct cvmx_gserx_lanex_rx_delta_pm_0_s cn78xxp1;
+	struct cvmx_gserx_lanex_rx_delta_pm_0_s cnf75xx;
+};
+typedef union cvmx_gserx_lanex_rx_delta_pm_0 cvmx_gserx_lanex_rx_delta_pm_0_t;
+
+/**
+ * cvmx_gser#_lane#_rx_delta_pm_1
+ *
+ * These are the RAW PCS per-lane RX VMA performance metric 0 register. These registers are for
+ * diagnostic use only.
+ * These registers are reset by hardware only during chip cold reset. The values of the CSR
+ * fields in these registers do not change during chip warm or soft resets.
+ */
+union cvmx_gserx_lanex_rx_delta_pm_1 {
+	uint64_t u64;
+	struct cvmx_gserx_lanex_rx_delta_pm_1_s {
+#ifdef __BIG_ENDIAN_BITFIELD
+	uint64_t reserved_16_63               : 48;
+	uint64_t sds_pcs_rx_vma_delta_pm_max  : 16; /**< RX VMA Delta performance metric.
+                                                         VMA window count lower bits <15:0>.
+                                                         Upper bits in GSER()_LANE()_RX_DELTA_PM_0
+                                                         [SDS_PCS_RX_VMA_DELTA_PM_MAX]. */
+#else
+	uint64_t sds_pcs_rx_vma_delta_pm_max  : 16;
+	uint64_t reserved_16_63               : 48;
+#endif
+	} s;
+	struct cvmx_gserx_lanex_rx_delta_pm_1_s cn73xx;
+	struct cvmx_gserx_lanex_rx_delta_pm_1_s cn78xx;
+	struct cvmx_gserx_lanex_rx_delta_pm_1_s cn78xxp1;
+	struct cvmx_gserx_lanex_rx_delta_pm_1_s cnf75xx;
+};
+typedef union cvmx_gserx_lanex_rx_delta_pm_1 cvmx_gserx_lanex_rx_delta_pm_1_t;
 
 /**
  * cvmx_gser#_lane#_rx_loop_ctrl
@@ -5855,7 +5974,7 @@ union cvmx_gserx_lanex_rx_loop_ctrl {
 	} s;
 	struct cvmx_gserx_lanex_rx_loop_ctrl_s cn73xx;
 	struct cvmx_gserx_lanex_rx_loop_ctrl_s cn78xx;
-	struct cvmx_gserx_lanex_rx_loop_ctrl_s cn78xxp2;
+	struct cvmx_gserx_lanex_rx_loop_ctrl_s cn78xxp1;
 	struct cvmx_gserx_lanex_rx_loop_ctrl_s cnf75xx;
 };
 typedef union cvmx_gserx_lanex_rx_loop_ctrl cvmx_gserx_lanex_rx_loop_ctrl_t;
@@ -5887,7 +6006,7 @@ union cvmx_gserx_lanex_rx_misc_ctrl {
 	} s;
 	struct cvmx_gserx_lanex_rx_misc_ctrl_s cn73xx;
 	struct cvmx_gserx_lanex_rx_misc_ctrl_s cn78xx;
-	struct cvmx_gserx_lanex_rx_misc_ctrl_s cn78xxp2;
+	struct cvmx_gserx_lanex_rx_misc_ctrl_s cn78xxp1;
 	struct cvmx_gserx_lanex_rx_misc_ctrl_s cnf75xx;
 };
 typedef union cvmx_gserx_lanex_rx_misc_ctrl cvmx_gserx_lanex_rx_misc_ctrl_t;
@@ -5983,7 +6102,8 @@ union cvmx_gserx_lanex_rx_misc_ovrrd {
 	uint64_t reserved_14_63               : 50;
 #endif
 	} cn73xx;
-	struct cvmx_gserx_lanex_rx_misc_ovrrd_cn78xx {
+	struct cvmx_gserx_lanex_rx_misc_ovrrd_cn73xx cn78xx;
+	struct cvmx_gserx_lanex_rx_misc_ovrrd_cn78xxp1 {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_14_63               : 50;
 	uint64_t cfg_rx_oob_clk_en_ovrrd_val  : 1;  /**< Not supported. */
@@ -6020,8 +6140,7 @@ union cvmx_gserx_lanex_rx_misc_ovrrd {
 	uint64_t cfg_rx_oob_clk_en_ovrrd_val  : 1;
 	uint64_t reserved_14_63               : 50;
 #endif
-	} cn78xx;
-	struct cvmx_gserx_lanex_rx_misc_ovrrd_cn73xx cn78xxp2;
+	} cn78xxp1;
 	struct cvmx_gserx_lanex_rx_misc_ovrrd_cn73xx cnf75xx;
 };
 typedef union cvmx_gserx_lanex_rx_misc_ovrrd cvmx_gserx_lanex_rx_misc_ovrrd_t;
@@ -6051,7 +6170,7 @@ union cvmx_gserx_lanex_rx_os_mvalbbd_1 {
 	} s;
 	struct cvmx_gserx_lanex_rx_os_mvalbbd_1_s cn73xx;
 	struct cvmx_gserx_lanex_rx_os_mvalbbd_1_s cn78xx;
-	struct cvmx_gserx_lanex_rx_os_mvalbbd_1_s cn78xxp2;
+	struct cvmx_gserx_lanex_rx_os_mvalbbd_1_s cn78xxp1;
 	struct cvmx_gserx_lanex_rx_os_mvalbbd_1_s cnf75xx;
 };
 typedef union cvmx_gserx_lanex_rx_os_mvalbbd_1 cvmx_gserx_lanex_rx_os_mvalbbd_1_t;
@@ -6080,7 +6199,7 @@ union cvmx_gserx_lanex_rx_os_mvalbbd_2 {
 	} s;
 	struct cvmx_gserx_lanex_rx_os_mvalbbd_2_s cn73xx;
 	struct cvmx_gserx_lanex_rx_os_mvalbbd_2_s cn78xx;
-	struct cvmx_gserx_lanex_rx_os_mvalbbd_2_s cn78xxp2;
+	struct cvmx_gserx_lanex_rx_os_mvalbbd_2_s cn78xxp1;
 	struct cvmx_gserx_lanex_rx_os_mvalbbd_2_s cnf75xx;
 };
 typedef union cvmx_gserx_lanex_rx_os_mvalbbd_2 cvmx_gserx_lanex_rx_os_mvalbbd_2_t;
@@ -6107,7 +6226,7 @@ union cvmx_gserx_lanex_rx_os_out_1 {
 	} s;
 	struct cvmx_gserx_lanex_rx_os_out_1_s cn73xx;
 	struct cvmx_gserx_lanex_rx_os_out_1_s cn78xx;
-	struct cvmx_gserx_lanex_rx_os_out_1_s cn78xxp2;
+	struct cvmx_gserx_lanex_rx_os_out_1_s cn78xxp1;
 	struct cvmx_gserx_lanex_rx_os_out_1_s cnf75xx;
 };
 typedef union cvmx_gserx_lanex_rx_os_out_1 cvmx_gserx_lanex_rx_os_out_1_t;
@@ -6134,7 +6253,7 @@ union cvmx_gserx_lanex_rx_os_out_2 {
 	} s;
 	struct cvmx_gserx_lanex_rx_os_out_2_s cn73xx;
 	struct cvmx_gserx_lanex_rx_os_out_2_s cn78xx;
-	struct cvmx_gserx_lanex_rx_os_out_2_s cn78xxp2;
+	struct cvmx_gserx_lanex_rx_os_out_2_s cn78xxp1;
 	struct cvmx_gserx_lanex_rx_os_out_2_s cnf75xx;
 };
 typedef union cvmx_gserx_lanex_rx_os_out_2 cvmx_gserx_lanex_rx_os_out_2_t;
@@ -6161,7 +6280,7 @@ union cvmx_gserx_lanex_rx_os_out_3 {
 	} s;
 	struct cvmx_gserx_lanex_rx_os_out_3_s cn73xx;
 	struct cvmx_gserx_lanex_rx_os_out_3_s cn78xx;
-	struct cvmx_gserx_lanex_rx_os_out_3_s cn78xxp2;
+	struct cvmx_gserx_lanex_rx_os_out_3_s cn78xxp1;
 	struct cvmx_gserx_lanex_rx_os_out_3_s cnf75xx;
 };
 typedef union cvmx_gserx_lanex_rx_os_out_3 cvmx_gserx_lanex_rx_os_out_3_t;
@@ -6197,7 +6316,7 @@ union cvmx_gserx_lanex_rx_precorr_ctrl {
 	} s;
 	struct cvmx_gserx_lanex_rx_precorr_ctrl_s cn73xx;
 	struct cvmx_gserx_lanex_rx_precorr_ctrl_s cn78xx;
-	struct cvmx_gserx_lanex_rx_precorr_ctrl_s cn78xxp2;
+	struct cvmx_gserx_lanex_rx_precorr_ctrl_s cn78xxp1;
 	struct cvmx_gserx_lanex_rx_precorr_ctrl_s cnf75xx;
 };
 typedef union cvmx_gserx_lanex_rx_precorr_ctrl cvmx_gserx_lanex_rx_precorr_ctrl_t;
@@ -6225,7 +6344,7 @@ union cvmx_gserx_lanex_rx_precorr_val {
 	} s;
 	struct cvmx_gserx_lanex_rx_precorr_val_s cn73xx;
 	struct cvmx_gserx_lanex_rx_precorr_val_s cn78xx;
-	struct cvmx_gserx_lanex_rx_precorr_val_s cn78xxp2;
+	struct cvmx_gserx_lanex_rx_precorr_val_s cn78xxp1;
 	struct cvmx_gserx_lanex_rx_precorr_val_s cnf75xx;
 };
 typedef union cvmx_gserx_lanex_rx_precorr_val cvmx_gserx_lanex_rx_precorr_val_t;
@@ -6303,7 +6422,7 @@ union cvmx_gserx_lanex_rx_valbbd_ctrl_0 {
 	} s;
 	struct cvmx_gserx_lanex_rx_valbbd_ctrl_0_s cn73xx;
 	struct cvmx_gserx_lanex_rx_valbbd_ctrl_0_s cn78xx;
-	struct cvmx_gserx_lanex_rx_valbbd_ctrl_0_s cn78xxp2;
+	struct cvmx_gserx_lanex_rx_valbbd_ctrl_0_s cn78xxp1;
 	struct cvmx_gserx_lanex_rx_valbbd_ctrl_0_s cnf75xx;
 };
 typedef union cvmx_gserx_lanex_rx_valbbd_ctrl_0 cvmx_gserx_lanex_rx_valbbd_ctrl_0_t;
@@ -6403,7 +6522,7 @@ union cvmx_gserx_lanex_rx_valbbd_ctrl_1 {
 	} s;
 	struct cvmx_gserx_lanex_rx_valbbd_ctrl_1_s cn73xx;
 	struct cvmx_gserx_lanex_rx_valbbd_ctrl_1_s cn78xx;
-	struct cvmx_gserx_lanex_rx_valbbd_ctrl_1_s cn78xxp2;
+	struct cvmx_gserx_lanex_rx_valbbd_ctrl_1_s cn78xxp1;
 	struct cvmx_gserx_lanex_rx_valbbd_ctrl_1_s cnf75xx;
 };
 typedef union cvmx_gserx_lanex_rx_valbbd_ctrl_1 cvmx_gserx_lanex_rx_valbbd_ctrl_1_t;
@@ -6506,7 +6625,7 @@ union cvmx_gserx_lanex_rx_valbbd_ctrl_2 {
 	} s;
 	struct cvmx_gserx_lanex_rx_valbbd_ctrl_2_s cn73xx;
 	struct cvmx_gserx_lanex_rx_valbbd_ctrl_2_s cn78xx;
-	struct cvmx_gserx_lanex_rx_valbbd_ctrl_2_s cn78xxp2;
+	struct cvmx_gserx_lanex_rx_valbbd_ctrl_2_s cn78xxp1;
 	struct cvmx_gserx_lanex_rx_valbbd_ctrl_2_s cnf75xx;
 };
 typedef union cvmx_gserx_lanex_rx_valbbd_ctrl_2 cvmx_gserx_lanex_rx_valbbd_ctrl_2_t;
@@ -6549,7 +6668,7 @@ union cvmx_gserx_lanex_rx_vma_ctrl {
 	} s;
 	struct cvmx_gserx_lanex_rx_vma_ctrl_s cn73xx;
 	struct cvmx_gserx_lanex_rx_vma_ctrl_s cn78xx;
-	struct cvmx_gserx_lanex_rx_vma_ctrl_s cn78xxp2;
+	struct cvmx_gserx_lanex_rx_vma_ctrl_s cn78xxp1;
 	struct cvmx_gserx_lanex_rx_vma_ctrl_s cnf75xx;
 };
 typedef union cvmx_gserx_lanex_rx_vma_ctrl cvmx_gserx_lanex_rx_vma_ctrl_t;
@@ -6577,7 +6696,7 @@ union cvmx_gserx_lanex_rx_vma_status_0 {
 	} s;
 	struct cvmx_gserx_lanex_rx_vma_status_0_s cn73xx;
 	struct cvmx_gserx_lanex_rx_vma_status_0_s cn78xx;
-	struct cvmx_gserx_lanex_rx_vma_status_0_s cn78xxp2;
+	struct cvmx_gserx_lanex_rx_vma_status_0_s cn78xxp1;
 	struct cvmx_gserx_lanex_rx_vma_status_0_s cnf75xx;
 };
 typedef union cvmx_gserx_lanex_rx_vma_status_0 cvmx_gserx_lanex_rx_vma_status_0_t;
@@ -6612,7 +6731,7 @@ union cvmx_gserx_lanex_rx_vma_status_1 {
 	} s;
 	struct cvmx_gserx_lanex_rx_vma_status_1_s cn73xx;
 	struct cvmx_gserx_lanex_rx_vma_status_1_s cn78xx;
-	struct cvmx_gserx_lanex_rx_vma_status_1_s cn78xxp2;
+	struct cvmx_gserx_lanex_rx_vma_status_1_s cn78xxp1;
 	struct cvmx_gserx_lanex_rx_vma_status_1_s cnf75xx;
 };
 typedef union cvmx_gserx_lanex_rx_vma_status_1 cvmx_gserx_lanex_rx_vma_status_1_t;
@@ -6690,7 +6809,7 @@ union cvmx_gserx_lanex_sds_pin_mon_0 {
 	uint64_t reserved_10_63               : 54;
 #endif
 	} cn73xx;
-	struct cvmx_gserx_lanex_sds_pin_mon_0_cn73xx cn78xxp2;
+	struct cvmx_gserx_lanex_sds_pin_mon_0_cn73xx cn78xx;
 	struct cvmx_gserx_lanex_sds_pin_mon_0_cn73xx cnf75xx;
 };
 typedef union cvmx_gserx_lanex_sds_pin_mon_0 cvmx_gserx_lanex_sds_pin_mon_0_t;
@@ -6739,7 +6858,7 @@ union cvmx_gserx_lanex_sds_pin_mon_1 {
 #endif
 	} s;
 	struct cvmx_gserx_lanex_sds_pin_mon_1_s cn73xx;
-	struct cvmx_gserx_lanex_sds_pin_mon_1_s cn78xxp2;
+	struct cvmx_gserx_lanex_sds_pin_mon_1_s cn78xx;
 	struct cvmx_gserx_lanex_sds_pin_mon_1_s cnf75xx;
 };
 typedef union cvmx_gserx_lanex_sds_pin_mon_1 cvmx_gserx_lanex_sds_pin_mon_1_t;
@@ -6760,8 +6879,8 @@ union cvmx_gserx_lanex_sds_pin_mon_2 {
 	uint64_t pcs_sds_tx_turbos_en         : 1;  /**< TX turbo mode enable signal, increases swing of TX
                                                          through current mode. */
 	uint64_t pcs_sds_premptap             : 9;  /**< Preemphasis control.
-                                                         <8:4> = Post-cursor.
-                                                         <3:0> = Pre-cursor. */
+                                                         <8:4> = Postcursor.
+                                                         <3:0> = Precursor. */
 #else
 	uint64_t pcs_sds_premptap             : 9;
 	uint64_t pcs_sds_tx_turbos_en         : 1;
@@ -6770,7 +6889,7 @@ union cvmx_gserx_lanex_sds_pin_mon_2 {
 #endif
 	} s;
 	struct cvmx_gserx_lanex_sds_pin_mon_2_s cn73xx;
-	struct cvmx_gserx_lanex_sds_pin_mon_2_s cn78xxp2;
+	struct cvmx_gserx_lanex_sds_pin_mon_2_s cn78xx;
 	struct cvmx_gserx_lanex_sds_pin_mon_2_s cnf75xx;
 };
 typedef union cvmx_gserx_lanex_sds_pin_mon_2 cvmx_gserx_lanex_sds_pin_mon_2_t;
@@ -6778,8 +6897,8 @@ typedef union cvmx_gserx_lanex_sds_pin_mon_2 cvmx_gserx_lanex_sds_pin_mon_2_t;
 /**
  * cvmx_gser#_lane#_tx_cfg_0
  *
- * These registers are for diagnostic use only. These registers are reset by hardware only during
- * chip cold reset. The values of the CSR fields in these registers do not change during chip
+ * These registers are reset by hardware only during chip cold reset. The
+ * values of the CSR fields in these registers do not change during chip
  * warm or soft resets.
  */
 union cvmx_gserx_lanex_tx_cfg_0 {
@@ -6798,23 +6917,16 @@ union cvmx_gserx_lanex_tx_cfg_0 {
 	uint64_t cfg_tx_swing                 : 5;  /**< TX output swing control.
                                                          Default swing encoding when GSER()_LANE()_TX_CFG_1[TX_SWING_OVRRD_EN] is
                                                          asserted.
-                                                         Recommended settings:
-                                                         When auto-negotiated link training is not present, including XFI and all
-                                                         protocols <= 6.25Gbaud except PCIe, the transmit swing should be manually
-                                                         over-ridden. GSER()_LANE()_TX_CFG_1[TX_SWING_OVRRD_EN] should be set
-                                                         and [CFG_TX_SWING] configures the swing. A transmit swing change should be
-                                                         followed by a control interface configuration over-ride to force the
-                                                         new setting - see GSER()_LANE()_PCS_CTLIFC_2[CTLIFC_OVRRD_REQ].
-                                                         [CFG_TX_SWING] should be derived from signal integrity simulations
-                                                         with the IBIS-AMI model supplied by Cavium when auto-negotiated link
-                                                         training is not present and link speed <= 6.25 Gbaud.
-                                                         <pre>
-                                                             Frequency          Possibly useful [CFG_TX_SWING] value
-                                                             --------------------------------------------------------
-                                                              6.25 Gbaud             0xa
-                                                              10.3125 Gbaud          0xd
-                                                              other                  0x7
-                                                         </pre> */
+                                                         It is recommended to not use the GSER()_LANE()_TX_CFG_0[CFG_TX_SWING],
+                                                         GSER()_LANE()_TX_CFG_1[TX_SWING_OVRRD_EN,TX_PREMPTAP_OVRRD_VAL], or
+                                                         GSER()_LANE()_TX_PRE_EMPHASIS[CFG_TX_PREMPTAP] override registers for 10BASE-KR,
+                                                         SRIO or PCIe links in which the transmitter is adapted by the respective
+                                                         hardware-controlled link training protocols.
+                                                         The [CFG_TX_SWING] value for transmitter swing should be derived from
+                                                         signal integrity simulations with IBIS-AMI models supplied by Cavium.
+                                                         A transmit swing change should be followed by a control interface configuration
+                                                         over-ride to force the new setting - see
+                                                         GSER()_LANE()_PCS_CTLIFC_2[CTLIFC_OVRRD_REQ]. */
 	uint64_t fast_rdet_mode               : 1;  /**< Assert to enable fast RX detection. For simulation purposes only. */
 	uint64_t fast_tristate_mode           : 1;  /**< Assert to enable fast tristate power up. For simulation purposes only. */
 	uint64_t reserved_0_0                 : 1;
@@ -6871,8 +6983,8 @@ union cvmx_gserx_lanex_tx_cfg_0 {
 	uint64_t reserved_16_63               : 48;
 #endif
 	} cn73xx;
-	struct cvmx_gserx_lanex_tx_cfg_0_s    cn78xx;
-	struct cvmx_gserx_lanex_tx_cfg_0_cn73xx cn78xxp2;
+	struct cvmx_gserx_lanex_tx_cfg_0_cn73xx cn78xx;
+	struct cvmx_gserx_lanex_tx_cfg_0_s    cn78xxp1;
 	struct cvmx_gserx_lanex_tx_cfg_0_cn73xx cnf75xx;
 };
 typedef union cvmx_gserx_lanex_tx_cfg_0 cvmx_gserx_lanex_tx_cfg_0_t;
@@ -6880,8 +6992,8 @@ typedef union cvmx_gserx_lanex_tx_cfg_0 cvmx_gserx_lanex_tx_cfg_0_t;
 /**
  * cvmx_gser#_lane#_tx_cfg_1
  *
- * These registers are for diagnostic use only. These registers are reset by hardware only during
- * chip cold reset. The values of the CSR fields in these registers do not change during chip
+ * These registers are reset by hardware only during chip cold reset. The
+ * values of the CSR fields in these registers do not change during chip
  * warm or soft resets.
  */
 union cvmx_gserx_lanex_tx_cfg_1 {
@@ -6897,21 +7009,26 @@ union cvmx_gserx_lanex_tx_cfg_1 {
                                                          0x3 = 20-bit. */
 	uint64_t tx_vboost_en_ovrrd_en        : 1;  /**< Override enable for pcs_sds_txX_vboost_en, TX  vboost mode enable. */
 	uint64_t tx_turbo_en_ovrrd_en         : 1;  /**< Override enable for pcs_sds_txX_turbo_en, Turbo mode enable. */
-	uint64_t tx_swing_ovrrd_en            : 1;  /**< Override enable for pcs_sds_txX_swing, TX swing.
-                                                         Recommended settings:
-                                                         When auto-negotiated link training is not present, including XFI and all
-                                                         protocols <= 6.25Gbaud except PCIe, the transmit swing should be manually
-                                                         over-ridden. [TX_SWING_OVRRD_EN] should be set and
-                                                         GSER()_LANE()_TX_CFG_0[CFG_TX_SWING] configures the swing. A transmit swing
-                                                         change should be followed by a control interface configuration over-ride to
-                                                         force the new setting - see GSER()_LANE()_PCS_CTLIFC_2[CTLIFC_OVRRD_REQ]. */
-	uint64_t tx_premptap_ovrrd_val        : 1;  /**< Override enable for pcs_sds_txX_preemptap, preemphasis control.
-                                                         Recommended settings:
-                                                         When auto-negotiated link training is not present, including XFI and all
-                                                         protocols <= 6.25Gbaud except PCIe, the transmit preemphasis pre and post
-                                                         cursor values should be manually over-ridden.  [TX_PREMPTAP_OVRRD_VAL] should
-                                                         be set and GSER()_LANE()_TX_PRE_EMPHASIS[CFG_TX_PREMPTAP] has the pre and post
-                                                         cursor values. A preemphasis control change should be followed by a control
+	uint64_t tx_swing_ovrrd_en            : 1;  /**< Override enable for pcs_sds_txX_swing, TX swing. See
+                                                         GSER()_LANE()_TX_CFG_0[CFG_TX_SWING].
+                                                         It is recommended to not use the GSER()_LANE()_TX_CFG_0[CFG_TX_SWING],
+                                                         GSER()_LANE()_TX_CFG_1[TX_SWING_OVRRD_EN,TX_PREMPTAP_OVRRD_VAL], or
+                                                         GSER()_LANE()_TX_PRE_EMPHASIS[CFG_TX_PREMPTAP] override registers for 10BASE-KR,
+                                                         SRIO or PCIe links in which the transmitter is adapted by the respective
+                                                         hardware-controlled link training protocols.
+                                                         A transmit swing change should be followed by a control interface
+                                                         configuration over-ride to force the new setting - see
+                                                         GSER()_LANE()_PCS_CTLIFC_2[CTLIFC_OVRRD_REQ]. */
+	uint64_t tx_premptap_ovrrd_val        : 1;  /**< Override enable for pcs_sds_txX_preemptap, preemphasis control. When
+                                                         over-riding,  [TX_PREMPTAP_OVRRD_VAL] should be set and
+                                                         GSER()_LANE()_TX_PRE_EMPHASIS[CFG_TX_PREMPTAP] has the precursor and
+                                                         postcursor values.
+                                                         It is recommended to not use the GSER()_LANE()_TX_CFG_0[CFG_TX_SWING],
+                                                         GSER()_LANE()_TX_CFG_1[TX_SWING_OVRRD_EN,TX_PREMPTAP_OVRRD_VAL], or
+                                                         GSER()_LANE()_TX_PRE_EMPHASIS[CFG_TX_PREMPTAP] override registers for 10BASE-KR,
+                                                         SRIO or PCIe links in which the transmitter is adapted by the respective
+                                                         hardware-controlled link training protocols.
+                                                         A preemphasis control change should be followed by a control
                                                          interface configuration override to force the new setting - see
                                                          GSER()_LANE()_PCS_CTLIFC_2[CTLIFC_OVRRD_REQ]. */
 	uint64_t tx_elec_idle_ovrrd_en        : 1;  /**< Override enable for pcs_sds_txX_elec_idle, TX electrical idle. */
@@ -6951,7 +7068,7 @@ union cvmx_gserx_lanex_tx_cfg_1 {
 	} s;
 	struct cvmx_gserx_lanex_tx_cfg_1_s    cn73xx;
 	struct cvmx_gserx_lanex_tx_cfg_1_s    cn78xx;
-	struct cvmx_gserx_lanex_tx_cfg_1_s    cn78xxp2;
+	struct cvmx_gserx_lanex_tx_cfg_1_s    cn78xxp1;
 	struct cvmx_gserx_lanex_tx_cfg_1_s    cnf75xx;
 };
 typedef union cvmx_gserx_lanex_tx_cfg_1 cvmx_gserx_lanex_tx_cfg_1_t;
@@ -7001,8 +7118,8 @@ union cvmx_gserx_lanex_tx_cfg_2 {
 	uint64_t reserved_16_63               : 48;
 #endif
 	} cn73xx;
-	struct cvmx_gserx_lanex_tx_cfg_2_s    cn78xx;
-	struct cvmx_gserx_lanex_tx_cfg_2_cn73xx cn78xxp2;
+	struct cvmx_gserx_lanex_tx_cfg_2_cn73xx cn78xx;
+	struct cvmx_gserx_lanex_tx_cfg_2_s    cn78xxp1;
 	struct cvmx_gserx_lanex_tx_cfg_2_cn73xx cnf75xx;
 };
 typedef union cvmx_gserx_lanex_tx_cfg_2 cvmx_gserx_lanex_tx_cfg_2_t;
@@ -7052,8 +7169,8 @@ union cvmx_gserx_lanex_tx_cfg_3 {
 	uint64_t reserved_15_63               : 49;
 #endif
 	} cn73xx;
-	struct cvmx_gserx_lanex_tx_cfg_3_s    cn78xx;
-	struct cvmx_gserx_lanex_tx_cfg_3_cn73xx cn78xxp2;
+	struct cvmx_gserx_lanex_tx_cfg_3_cn73xx cn78xx;
+	struct cvmx_gserx_lanex_tx_cfg_3_s    cn78xxp1;
 	struct cvmx_gserx_lanex_tx_cfg_3_cn73xx cnf75xx;
 };
 typedef union cvmx_gserx_lanex_tx_cfg_3 cvmx_gserx_lanex_tx_cfg_3_t;
@@ -7061,8 +7178,8 @@ typedef union cvmx_gserx_lanex_tx_cfg_3 cvmx_gserx_lanex_tx_cfg_3_t;
 /**
  * cvmx_gser#_lane#_tx_pre_emphasis
  *
- * These registers are for diagnostic use only. These registers are reset by hardware only during
- * chip cold reset. The values of the CSR fields in these registers do not change during chip
+ * These registers are reset by hardware only during chip cold reset. The
+ * values of the CSR fields in these registers do not change during chip
  * warm or soft resets.
  */
 union cvmx_gserx_lanex_tx_pre_emphasis {
@@ -7071,28 +7188,20 @@ union cvmx_gserx_lanex_tx_pre_emphasis {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_9_63                : 55;
 	uint64_t cfg_tx_premptap              : 9;  /**< Override preemphasis control. Applies when
-                                                         GSER()_LANE()_TX_CFG_3[TX_PREMPTAP_OVRRD_EN] is asserted.
-                                                         <8:4> = Post-cursor.
-                                                         <3:0> = Pre-cursor.
-                                                         Recommended settings:
-                                                         When auto-negotiated link training is not present, including XFI and all
-                                                         protocols <= 6.25Gbaud except PCIe, the transmit preemphasis pre and post
-                                                         cursor values should be manually over-ridden.
-                                                         GSER()_LANE()_TX_CFG_1[TX_PREMPTAP_OVRRD_VAL] should be set
-                                                         and [CFG_TX_PREMPTAP] has the pre and post cursor values. A preemphasis
-                                                         control change should be followed by a control interface configuration
-                                                         over-ride to force the new setting - see
-                                                         GSER()_LANE()_PCS_CTLIFC_2[CTLIFC_OVRRD_REQ].
-                                                         [CFG_TX_PREMPTAP] should be derived from signal integrity simulations
-                                                         with the IBIS-AMI model supplied by Cavium when auto-negotiated link
-                                                         training is not present and link speed <= 6.25 Gbaud.
-                                                         <pre>
-                                                            Frequency        Possibly useful [CFG_TX_PREMPTAP] value
-                                                            --------------------------------------------------------
-                                                             6,25 Gbaud            0xa0
-                                                             10.3125 Gbaud         0xd0
-                                                             other                 0xf0
-                                                         </pre> */
+                                                         GSER()_LANE()_TX_CFG_1[TX_PREMPTAP_OVRRD_VAL] is asserted.
+                                                         <8:4> = Postcursor.
+                                                         <3:0> = Precursor.
+                                                         It is recommended to not use the GSER()_LANE()_TX_CFG_0[CFG_TX_SWING],
+                                                         GSER()_LANE()_TX_CFG_1[TX_SWING_OVRRD_EN,TX_PREMPTAP_OVRRD_VAL], or
+                                                         GSER()_LANE()_TX_PRE_EMPHASIS[CFG_TX_PREMPTAP] override registers for 10BASE-KR,
+                                                         SRIO or PCIe links in which the transmitter is adapted by the respective
+                                                         hardware-controlled link training protocols.
+                                                         The [CFG_TX_PREEMPTAP] value for transmitter preemphasis and
+                                                         postemphasis should be derived from signal integrity simulations
+                                                         with IBIS-AMI models supplied by Cavium.
+                                                         A preemphasis control change should be followed by a control interface
+                                                         configuration over-ride to force the new setting - see
+                                                         GSER()_LANE()_PCS_CTLIFC_2[CTLIFC_OVRRD_REQ]. */
 #else
 	uint64_t cfg_tx_premptap              : 9;
 	uint64_t reserved_9_63                : 55;
@@ -7100,7 +7209,7 @@ union cvmx_gserx_lanex_tx_pre_emphasis {
 	} s;
 	struct cvmx_gserx_lanex_tx_pre_emphasis_s cn73xx;
 	struct cvmx_gserx_lanex_tx_pre_emphasis_s cn78xx;
-	struct cvmx_gserx_lanex_tx_pre_emphasis_s cn78xxp2;
+	struct cvmx_gserx_lanex_tx_pre_emphasis_s cn78xxp1;
 	struct cvmx_gserx_lanex_tx_pre_emphasis_s cnf75xx;
 };
 typedef union cvmx_gserx_lanex_tx_pre_emphasis cvmx_gserx_lanex_tx_pre_emphasis_t;
@@ -7129,7 +7238,7 @@ union cvmx_gserx_lane_lpbken {
 	} s;
 	struct cvmx_gserx_lane_lpbken_s       cn73xx;
 	struct cvmx_gserx_lane_lpbken_s       cn78xx;
-	struct cvmx_gserx_lane_lpbken_s       cn78xxp2;
+	struct cvmx_gserx_lane_lpbken_s       cn78xxp1;
 	struct cvmx_gserx_lane_lpbken_s       cnf75xx;
 };
 typedef union cvmx_gserx_lane_lpbken cvmx_gserx_lane_lpbken_t;
@@ -7183,7 +7292,7 @@ union cvmx_gserx_lane_mode {
 	} s;
 	struct cvmx_gserx_lane_mode_s         cn73xx;
 	struct cvmx_gserx_lane_mode_s         cn78xx;
-	struct cvmx_gserx_lane_mode_s         cn78xxp2;
+	struct cvmx_gserx_lane_mode_s         cn78xxp1;
 	struct cvmx_gserx_lane_mode_s         cnf75xx;
 };
 typedef union cvmx_gserx_lane_mode cvmx_gserx_lane_mode_t;
@@ -7225,21 +7334,21 @@ union cvmx_gserx_lane_px_mode_0 {
 	uint64_t pcie                         : 1;  /**< Selects between RX terminations.
                                                          0 = Differential termination.
                                                          1 = Termination between pad and SDS_VDDS.
-                                                          Recommended settings:
-                                                          <pre>
-                                                          _ R_25G_REFCLK100:          0x1
-                                                          _ R_5G_REFCLK100:           0x1
-                                                          _ R_8G_REFCLK100:           0x0
-                                                          _ R_125G_REFCLK15625_KX:    0x0
-                                                          _ R_3125G_REFCLK15625_XAUI: 0x0
-                                                          _ R_103125G_REFCLK15625_KR: 0x0
-                                                          _ R_125G_REFCLK15625_SGMII: 0x0
-                                                          _ R_5G_REFCLK15625_QSGMII:  0x0
-                                                          _ R_625G_REFCLK15625_RXAUI: 0x0
-                                                          _ R_25G_REFCLK125:          0x1
-                                                          _ R_5G_REFCLK125:           0x1
-                                                          _ R_8G_REFCLK125:           0x0
-                                                          </pre> */
+                                                         Recommended settings:
+                                                         <pre>
+                                                         _ R_25G_REFCLK100:          0x1
+                                                         _ R_5G_REFCLK100:           0x1
+                                                         _ R_8G_REFCLK100:           0x0
+                                                         _ R_125G_REFCLK15625_KX:    0x0
+                                                         _ R_3125G_REFCLK15625_XAUI: 0x0
+                                                         _ R_103125G_REFCLK15625_KR: 0x0
+                                                         _ R_125G_REFCLK15625_SGMII: 0x0
+                                                         _ R_5G_REFCLK15625_QSGMII:  0x0
+                                                         _ R_625G_REFCLK15625_RXAUI: 0x0
+                                                         _ R_25G_REFCLK125:          0x1
+                                                         _ R_5G_REFCLK125:           0x1
+                                                         _ R_8G_REFCLK125:           0x0
+                                                         </pre> */
 	uint64_t tx_ldiv                      : 2;  /**< Configures clock divider used to determine the receive rate.
                                                          0x0 = full data rate.
                                                          0x1 = 1/2 data rate.
@@ -7318,7 +7427,7 @@ union cvmx_gserx_lane_px_mode_0 {
 	} s;
 	struct cvmx_gserx_lane_px_mode_0_s    cn73xx;
 	struct cvmx_gserx_lane_px_mode_0_s    cn78xx;
-	struct cvmx_gserx_lane_px_mode_0_s    cn78xxp2;
+	struct cvmx_gserx_lane_px_mode_0_s    cn78xxp1;
 	struct cvmx_gserx_lane_px_mode_0_s    cnf75xx;
 };
 typedef union cvmx_gserx_lane_px_mode_0 cvmx_gserx_lane_px_mode_0_t;
@@ -7387,7 +7496,7 @@ union cvmx_gserx_lane_px_mode_1 {
 	} s;
 	struct cvmx_gserx_lane_px_mode_1_s    cn73xx;
 	struct cvmx_gserx_lane_px_mode_1_s    cn78xx;
-	struct cvmx_gserx_lane_px_mode_1_s    cn78xxp2;
+	struct cvmx_gserx_lane_px_mode_1_s    cn78xxp1;
 	struct cvmx_gserx_lane_px_mode_1_s    cnf75xx;
 };
 typedef union cvmx_gserx_lane_px_mode_1 cvmx_gserx_lane_px_mode_1_t;
@@ -7416,7 +7525,7 @@ union cvmx_gserx_lane_poff {
 	} s;
 	struct cvmx_gserx_lane_poff_s         cn73xx;
 	struct cvmx_gserx_lane_poff_s         cn78xx;
-	struct cvmx_gserx_lane_poff_s         cn78xxp2;
+	struct cvmx_gserx_lane_poff_s         cn78xxp1;
 	struct cvmx_gserx_lane_poff_s         cnf75xx;
 };
 typedef union cvmx_gserx_lane_poff cvmx_gserx_lane_poff_t;
@@ -7444,7 +7553,7 @@ union cvmx_gserx_lane_srst {
 	} s;
 	struct cvmx_gserx_lane_srst_s         cn73xx;
 	struct cvmx_gserx_lane_srst_s         cn78xx;
-	struct cvmx_gserx_lane_srst_s         cn78xxp2;
+	struct cvmx_gserx_lane_srst_s         cn78xxp1;
 	struct cvmx_gserx_lane_srst_s         cnf75xx;
 };
 typedef union cvmx_gserx_lane_srst cvmx_gserx_lane_srst_t;
@@ -7478,7 +7587,7 @@ union cvmx_gserx_lane_vma_coarse_ctrl_0 {
 	} s;
 	struct cvmx_gserx_lane_vma_coarse_ctrl_0_s cn73xx;
 	struct cvmx_gserx_lane_vma_coarse_ctrl_0_s cn78xx;
-	struct cvmx_gserx_lane_vma_coarse_ctrl_0_s cn78xxp2;
+	struct cvmx_gserx_lane_vma_coarse_ctrl_0_s cn78xxp1;
 	struct cvmx_gserx_lane_vma_coarse_ctrl_0_s cnf75xx;
 };
 typedef union cvmx_gserx_lane_vma_coarse_ctrl_0 cvmx_gserx_lane_vma_coarse_ctrl_0_t;
@@ -7507,7 +7616,7 @@ union cvmx_gserx_lane_vma_coarse_ctrl_1 {
 	} s;
 	struct cvmx_gserx_lane_vma_coarse_ctrl_1_s cn73xx;
 	struct cvmx_gserx_lane_vma_coarse_ctrl_1_s cn78xx;
-	struct cvmx_gserx_lane_vma_coarse_ctrl_1_s cn78xxp2;
+	struct cvmx_gserx_lane_vma_coarse_ctrl_1_s cn78xxp1;
 	struct cvmx_gserx_lane_vma_coarse_ctrl_1_s cnf75xx;
 };
 typedef union cvmx_gserx_lane_vma_coarse_ctrl_1 cvmx_gserx_lane_vma_coarse_ctrl_1_t;
@@ -7536,7 +7645,7 @@ union cvmx_gserx_lane_vma_coarse_ctrl_2 {
 	} s;
 	struct cvmx_gserx_lane_vma_coarse_ctrl_2_s cn73xx;
 	struct cvmx_gserx_lane_vma_coarse_ctrl_2_s cn78xx;
-	struct cvmx_gserx_lane_vma_coarse_ctrl_2_s cn78xxp2;
+	struct cvmx_gserx_lane_vma_coarse_ctrl_2_s cn78xxp1;
 	struct cvmx_gserx_lane_vma_coarse_ctrl_2_s cnf75xx;
 };
 typedef union cvmx_gserx_lane_vma_coarse_ctrl_2 cvmx_gserx_lane_vma_coarse_ctrl_2_t;
@@ -7579,7 +7688,7 @@ union cvmx_gserx_lane_vma_fine_ctrl_0 {
 	} s;
 	struct cvmx_gserx_lane_vma_fine_ctrl_0_s cn73xx;
 	struct cvmx_gserx_lane_vma_fine_ctrl_0_s cn78xx;
-	struct cvmx_gserx_lane_vma_fine_ctrl_0_s cn78xxp2;
+	struct cvmx_gserx_lane_vma_fine_ctrl_0_s cn78xxp1;
 	struct cvmx_gserx_lane_vma_fine_ctrl_0_s cnf75xx;
 };
 typedef union cvmx_gserx_lane_vma_fine_ctrl_0 cvmx_gserx_lane_vma_fine_ctrl_0_t;
@@ -7611,7 +7720,7 @@ union cvmx_gserx_lane_vma_fine_ctrl_1 {
 	} s;
 	struct cvmx_gserx_lane_vma_fine_ctrl_1_s cn73xx;
 	struct cvmx_gserx_lane_vma_fine_ctrl_1_s cn78xx;
-	struct cvmx_gserx_lane_vma_fine_ctrl_1_s cn78xxp2;
+	struct cvmx_gserx_lane_vma_fine_ctrl_1_s cn78xxp1;
 	struct cvmx_gserx_lane_vma_fine_ctrl_1_s cnf75xx;
 };
 typedef union cvmx_gserx_lane_vma_fine_ctrl_1 cvmx_gserx_lane_vma_fine_ctrl_1_t;
@@ -7643,7 +7752,7 @@ union cvmx_gserx_lane_vma_fine_ctrl_2 {
 	} s;
 	struct cvmx_gserx_lane_vma_fine_ctrl_2_s cn73xx;
 	struct cvmx_gserx_lane_vma_fine_ctrl_2_s cn78xx;
-	struct cvmx_gserx_lane_vma_fine_ctrl_2_s cn78xxp2;
+	struct cvmx_gserx_lane_vma_fine_ctrl_2_s cn78xxp1;
 	struct cvmx_gserx_lane_vma_fine_ctrl_2_s cnf75xx;
 };
 typedef union cvmx_gserx_lane_vma_fine_ctrl_2 cvmx_gserx_lane_vma_fine_ctrl_2_t;
@@ -8816,7 +8925,7 @@ union cvmx_gserx_phy_ctl {
 	} s;
 	struct cvmx_gserx_phy_ctl_s           cn73xx;
 	struct cvmx_gserx_phy_ctl_s           cn78xx;
-	struct cvmx_gserx_phy_ctl_s           cn78xxp2;
+	struct cvmx_gserx_phy_ctl_s           cn78xxp1;
 	struct cvmx_gserx_phy_ctl_s           cnf75xx;
 };
 typedef union cvmx_gserx_phy_ctl cvmx_gserx_phy_ctl_t;
@@ -8838,7 +8947,7 @@ union cvmx_gserx_pipe_lpbk {
 	} s;
 	struct cvmx_gserx_pipe_lpbk_s         cn73xx;
 	struct cvmx_gserx_pipe_lpbk_s         cn78xx;
-	struct cvmx_gserx_pipe_lpbk_s         cn78xxp2;
+	struct cvmx_gserx_pipe_lpbk_s         cn78xxp1;
 	struct cvmx_gserx_pipe_lpbk_s         cnf75xx;
 };
 typedef union cvmx_gserx_pipe_lpbk cvmx_gserx_pipe_lpbk_t;
@@ -8909,7 +9018,7 @@ union cvmx_gserx_pll_px_mode_0 {
 	} s;
 	struct cvmx_gserx_pll_px_mode_0_s     cn73xx;
 	struct cvmx_gserx_pll_px_mode_0_s     cn78xx;
-	struct cvmx_gserx_pll_px_mode_0_s     cn78xxp2;
+	struct cvmx_gserx_pll_px_mode_0_s     cn78xxp1;
 	struct cvmx_gserx_pll_px_mode_0_s     cnf75xx;
 };
 typedef union cvmx_gserx_pll_px_mode_0 cvmx_gserx_pll_px_mode_0_t;
@@ -8990,7 +9099,7 @@ union cvmx_gserx_pll_px_mode_1 {
 	} s;
 	struct cvmx_gserx_pll_px_mode_1_s     cn73xx;
 	struct cvmx_gserx_pll_px_mode_1_s     cn78xx;
-	struct cvmx_gserx_pll_px_mode_1_s     cn78xxp2;
+	struct cvmx_gserx_pll_px_mode_1_s     cn78xxp1;
 	struct cvmx_gserx_pll_px_mode_1_s     cnf75xx;
 };
 typedef union cvmx_gserx_pll_px_mode_1 cvmx_gserx_pll_px_mode_1_t;
@@ -9011,7 +9120,7 @@ union cvmx_gserx_pll_stat {
 	} s;
 	struct cvmx_gserx_pll_stat_s          cn73xx;
 	struct cvmx_gserx_pll_stat_s          cn78xx;
-	struct cvmx_gserx_pll_stat_s          cn78xxp2;
+	struct cvmx_gserx_pll_stat_s          cn78xxp1;
 	struct cvmx_gserx_pll_stat_s          cnf75xx;
 };
 typedef union cvmx_gserx_pll_stat cvmx_gserx_pll_stat_t;
@@ -9035,7 +9144,7 @@ union cvmx_gserx_qlm_stat {
 	} s;
 	struct cvmx_gserx_qlm_stat_s          cn73xx;
 	struct cvmx_gserx_qlm_stat_s          cn78xx;
-	struct cvmx_gserx_qlm_stat_s          cn78xxp2;
+	struct cvmx_gserx_qlm_stat_s          cn78xxp1;
 	struct cvmx_gserx_qlm_stat_s          cnf75xx;
 };
 typedef union cvmx_gserx_qlm_stat cvmx_gserx_qlm_stat_t;
@@ -9066,7 +9175,7 @@ union cvmx_gserx_rdet_time {
 	} s;
 	struct cvmx_gserx_rdet_time_s         cn73xx;
 	struct cvmx_gserx_rdet_time_s         cn78xx;
-	struct cvmx_gserx_rdet_time_s         cn78xxp2;
+	struct cvmx_gserx_rdet_time_s         cn78xxp1;
 	struct cvmx_gserx_rdet_time_s         cnf75xx;
 };
 typedef union cvmx_gserx_rdet_time cvmx_gserx_rdet_time_t;
@@ -9092,7 +9201,7 @@ union cvmx_gserx_refclk_evt_cntr {
 #endif
 	} s;
 	struct cvmx_gserx_refclk_evt_cntr_s   cn73xx;
-	struct cvmx_gserx_refclk_evt_cntr_s   cn78xxp2;
+	struct cvmx_gserx_refclk_evt_cntr_s   cn78xx;
 	struct cvmx_gserx_refclk_evt_cntr_s   cnf75xx;
 };
 typedef union cvmx_gserx_refclk_evt_cntr cvmx_gserx_refclk_evt_cntr_t;
@@ -9115,7 +9224,7 @@ union cvmx_gserx_refclk_evt_ctrl {
 #endif
 	} s;
 	struct cvmx_gserx_refclk_evt_ctrl_s   cn73xx;
-	struct cvmx_gserx_refclk_evt_ctrl_s   cn78xxp2;
+	struct cvmx_gserx_refclk_evt_ctrl_s   cn78xx;
 	struct cvmx_gserx_refclk_evt_ctrl_s   cnf75xx;
 };
 typedef union cvmx_gserx_refclk_evt_ctrl cvmx_gserx_refclk_evt_ctrl_t;
@@ -9134,10 +9243,7 @@ union cvmx_gserx_refclk_sel {
 	struct cvmx_gserx_refclk_sel_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_3_63                : 61;
-	uint64_t pcie_refclk125               : 1;  /**< For bootable PCIe links, this is loaded with
-                                                         PCIE0/2_REFCLK_125 at cold reset and indicates a 125 MHz reference clock when set. For
-                                                         non-bootable PCIe links, this bit is set to zero at cold reset and indicates a 100 MHz
-                                                         reference clock. It is not used for non-PCIe links. */
+	uint64_t pcie_refclk125               : 1;  /**< Reserved. */
 	uint64_t com_clk_sel                  : 1;  /**< When set, the reference clock is sourced from the external clock mux. */
 	uint64_t use_com1                     : 1;  /**< This bit controls the external mux select. When set, QLMC_REF_CLK1_N/P
                                                          are selected as the reference clock. When clear, QLMC_REF_CLK0_N/P are selected as the
@@ -9151,7 +9257,7 @@ union cvmx_gserx_refclk_sel {
 	} s;
 	struct cvmx_gserx_refclk_sel_s        cn73xx;
 	struct cvmx_gserx_refclk_sel_s        cn78xx;
-	struct cvmx_gserx_refclk_sel_s        cn78xxp2;
+	struct cvmx_gserx_refclk_sel_s        cn78xxp1;
 	struct cvmx_gserx_refclk_sel_s        cnf75xx;
 };
 typedef union cvmx_gserx_refclk_sel cvmx_gserx_refclk_sel_t;
@@ -9184,7 +9290,7 @@ union cvmx_gserx_rx_coast {
 	} s;
 	struct cvmx_gserx_rx_coast_s          cn73xx;
 	struct cvmx_gserx_rx_coast_s          cn78xx;
-	struct cvmx_gserx_rx_coast_s          cn78xxp2;
+	struct cvmx_gserx_rx_coast_s          cn78xxp1;
 	struct cvmx_gserx_rx_coast_s          cnf75xx;
 };
 typedef union cvmx_gserx_rx_coast cvmx_gserx_rx_coast_t;
@@ -9216,7 +9322,7 @@ union cvmx_gserx_rx_eie_deten {
 	} s;
 	struct cvmx_gserx_rx_eie_deten_s      cn73xx;
 	struct cvmx_gserx_rx_eie_deten_s      cn78xx;
-	struct cvmx_gserx_rx_eie_deten_s      cn78xxp2;
+	struct cvmx_gserx_rx_eie_deten_s      cn78xxp1;
 	struct cvmx_gserx_rx_eie_deten_s      cnf75xx;
 };
 typedef union cvmx_gserx_rx_eie_deten cvmx_gserx_rx_eie_deten_t;
@@ -9267,7 +9373,7 @@ union cvmx_gserx_rx_eie_detsts {
 	} s;
 	struct cvmx_gserx_rx_eie_detsts_s     cn73xx;
 	struct cvmx_gserx_rx_eie_detsts_s     cn78xx;
-	struct cvmx_gserx_rx_eie_detsts_s     cn78xxp2;
+	struct cvmx_gserx_rx_eie_detsts_s     cn78xxp1;
 	struct cvmx_gserx_rx_eie_detsts_s     cnf75xx;
 };
 typedef union cvmx_gserx_rx_eie_detsts cvmx_gserx_rx_eie_detsts_t;
@@ -9305,7 +9411,7 @@ union cvmx_gserx_rx_eie_filter {
 	} s;
 	struct cvmx_gserx_rx_eie_filter_s     cn73xx;
 	struct cvmx_gserx_rx_eie_filter_s     cn78xx;
-	struct cvmx_gserx_rx_eie_filter_s     cn78xxp2;
+	struct cvmx_gserx_rx_eie_filter_s     cn78xxp1;
 	struct cvmx_gserx_rx_eie_filter_s     cnf75xx;
 };
 typedef union cvmx_gserx_rx_eie_filter cvmx_gserx_rx_eie_filter_t;
@@ -9335,7 +9441,7 @@ union cvmx_gserx_rx_polarity {
 	} s;
 	struct cvmx_gserx_rx_polarity_s       cn73xx;
 	struct cvmx_gserx_rx_polarity_s       cn78xx;
-	struct cvmx_gserx_rx_polarity_s       cn78xxp2;
+	struct cvmx_gserx_rx_polarity_s       cn78xxp1;
 	struct cvmx_gserx_rx_polarity_s       cnf75xx;
 };
 typedef union cvmx_gserx_rx_polarity cvmx_gserx_rx_polarity_t;
@@ -9385,7 +9491,7 @@ union cvmx_gserx_rx_pwr_ctrl_p1 {
 	} s;
 	struct cvmx_gserx_rx_pwr_ctrl_p1_s    cn73xx;
 	struct cvmx_gserx_rx_pwr_ctrl_p1_s    cn78xx;
-	struct cvmx_gserx_rx_pwr_ctrl_p1_s    cn78xxp2;
+	struct cvmx_gserx_rx_pwr_ctrl_p1_s    cn78xxp1;
 	struct cvmx_gserx_rx_pwr_ctrl_p1_s    cnf75xx;
 };
 typedef union cvmx_gserx_rx_pwr_ctrl_p1 cvmx_gserx_rx_pwr_ctrl_p1_t;
@@ -9435,7 +9541,7 @@ union cvmx_gserx_rx_pwr_ctrl_p2 {
 	} s;
 	struct cvmx_gserx_rx_pwr_ctrl_p2_s    cn73xx;
 	struct cvmx_gserx_rx_pwr_ctrl_p2_s    cn78xx;
-	struct cvmx_gserx_rx_pwr_ctrl_p2_s    cn78xxp2;
+	struct cvmx_gserx_rx_pwr_ctrl_p2_s    cn78xxp1;
 	struct cvmx_gserx_rx_pwr_ctrl_p2_s    cnf75xx;
 };
 typedef union cvmx_gserx_rx_pwr_ctrl_p2 cvmx_gserx_rx_pwr_ctrl_p2_t;
@@ -9481,7 +9587,7 @@ union cvmx_gserx_rx_txdir_ctrl_0 {
 	} s;
 	struct cvmx_gserx_rx_txdir_ctrl_0_s   cn73xx;
 	struct cvmx_gserx_rx_txdir_ctrl_0_s   cn78xx;
-	struct cvmx_gserx_rx_txdir_ctrl_0_s   cn78xxp2;
+	struct cvmx_gserx_rx_txdir_ctrl_0_s   cn78xxp1;
 	struct cvmx_gserx_rx_txdir_ctrl_0_s   cnf75xx;
 };
 typedef union cvmx_gserx_rx_txdir_ctrl_0 cvmx_gserx_rx_txdir_ctrl_0_t;
@@ -9524,7 +9630,7 @@ union cvmx_gserx_rx_txdir_ctrl_1 {
 	} s;
 	struct cvmx_gserx_rx_txdir_ctrl_1_s   cn73xx;
 	struct cvmx_gserx_rx_txdir_ctrl_1_s   cn78xx;
-	struct cvmx_gserx_rx_txdir_ctrl_1_s   cn78xxp2;
+	struct cvmx_gserx_rx_txdir_ctrl_1_s   cn78xxp1;
 	struct cvmx_gserx_rx_txdir_ctrl_1_s   cnf75xx;
 };
 typedef union cvmx_gserx_rx_txdir_ctrl_1 cvmx_gserx_rx_txdir_ctrl_1_t;
@@ -9561,7 +9667,7 @@ union cvmx_gserx_rx_txdir_ctrl_2 {
 	} s;
 	struct cvmx_gserx_rx_txdir_ctrl_2_s   cn73xx;
 	struct cvmx_gserx_rx_txdir_ctrl_2_s   cn78xx;
-	struct cvmx_gserx_rx_txdir_ctrl_2_s   cn78xxp2;
+	struct cvmx_gserx_rx_txdir_ctrl_2_s   cn78xxp1;
 	struct cvmx_gserx_rx_txdir_ctrl_2_s   cnf75xx;
 };
 typedef union cvmx_gserx_rx_txdir_ctrl_2 cvmx_gserx_rx_txdir_ctrl_2_t;
@@ -9629,7 +9735,7 @@ union cvmx_gserx_sata_lanex_tx_preemphx {
 	struct cvmx_gserx_sata_lanex_tx_preemphx_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_7_63                : 57;
-	uint64_t tx_preemph                   : 7;  /**< This static value sets the TX driver de-emphasis value in the
+	uint64_t tx_preemph                   : 7;  /**< This static value sets the TX driver deemphasis value in the
                                                          case where the PHY is running at the Gen1, Gen2, and Gen3
                                                          rates. Used for tuning at the board level for RX eye compliance.
                                                          This register is used for SATA lanes only for GSER(4). */
@@ -9706,7 +9812,7 @@ union cvmx_gserx_sata_p0_tx_preemph_genx {
 	struct cvmx_gserx_sata_p0_tx_preemph_genx_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_6_63                : 58;
-	uint64_t tx_preemph                   : 6;  /**< This static value sets the TX driver de-emphasis value in the
+	uint64_t tx_preemph                   : 6;  /**< This static value sets the TX driver deemphasis value in the
                                                          case where the PHY is running at the Gen1, Gen2, and Gen3
                                                          rates. Used for tuning at the board level for RX eye compliance. */
 #else
@@ -9998,7 +10104,7 @@ union cvmx_gserx_scratch {
 	} s;
 	struct cvmx_gserx_scratch_s           cn73xx;
 	struct cvmx_gserx_scratch_s           cn78xx;
-	struct cvmx_gserx_scratch_s           cn78xxp2;
+	struct cvmx_gserx_scratch_s           cn78xxp1;
 	struct cvmx_gserx_scratch_s           cnf75xx;
 };
 typedef union cvmx_gserx_scratch cvmx_gserx_scratch_t;
@@ -10010,7 +10116,7 @@ typedef union cvmx_gserx_scratch cvmx_gserx_scratch_t;
  * These registers are reset by hardware only during chip cold reset.
  * The values of the CSR fields in these registers do not change during chip warm or soft resets.
  *
- * Slice 1 does not exist on GSER4, GSER5, or GSER6.
+ * Slice 1 does not exist on GSER0, GSER1, GSER4, GSER5, GSER6, GSER7, and GSER8.
  */
 union cvmx_gserx_slicex_cei_6g_sr_mode {
 	uint64_t u64;
@@ -10065,6 +10171,9 @@ union cvmx_gserx_slicex_cei_6g_sr_mode {
 #endif
 	} s;
 	struct cvmx_gserx_slicex_cei_6g_sr_mode_s cn73xx;
+	struct cvmx_gserx_slicex_cei_6g_sr_mode_s cn78xx;
+	struct cvmx_gserx_slicex_cei_6g_sr_mode_s cn78xxp1;
+	struct cvmx_gserx_slicex_cei_6g_sr_mode_s cnf75xx;
 };
 typedef union cvmx_gserx_slicex_cei_6g_sr_mode cvmx_gserx_slicex_cei_6g_sr_mode_t;
 
@@ -10075,7 +10184,7 @@ typedef union cvmx_gserx_slicex_cei_6g_sr_mode cvmx_gserx_slicex_cei_6g_sr_mode_
  * These registers are reset by hardware only during chip cold reset.
  * The values of the CSR fields in these registers do not change during chip warm or soft resets.
  *
- * Slice 1 does not exist on GSER4, GSER5, or GSER6.
+ * Slice 1 does not exist on GSER0, GSER1, GSER4, GSER5, GSER6, GSER7, and GSER8.
  */
 union cvmx_gserx_slicex_kr_mode {
 	uint64_t u64;
@@ -10130,6 +10239,9 @@ union cvmx_gserx_slicex_kr_mode {
 #endif
 	} s;
 	struct cvmx_gserx_slicex_kr_mode_s    cn73xx;
+	struct cvmx_gserx_slicex_kr_mode_s    cn78xx;
+	struct cvmx_gserx_slicex_kr_mode_s    cn78xxp1;
+	struct cvmx_gserx_slicex_kr_mode_s    cnf75xx;
 };
 typedef union cvmx_gserx_slicex_kr_mode cvmx_gserx_slicex_kr_mode_t;
 
@@ -10140,7 +10252,7 @@ typedef union cvmx_gserx_slicex_kr_mode cvmx_gserx_slicex_kr_mode_t;
  * These registers are reset by hardware only during chip cold reset.
  * The values of the CSR fields in these registers do not change during chip warm or soft resets.
  *
- * Slice 1 does not exist on GSER4, GSER5, or GSER6.
+ * Slice 1 does not exist on GSER0, GSER1, GSER4, GSER5, GSER6, GSER7, and GSER8.
  */
 union cvmx_gserx_slicex_kx4_mode {
 	uint64_t u64;
@@ -10169,7 +10281,7 @@ union cvmx_gserx_slicex_kx4_mode {
 	uint64_t rx_ldll_bwsel                : 3;  /**< Controls capacitors in delay line for different data rates; should be set
                                                          based on the PLL clock frequency as follows:
                                                          0x0 = 2.5 GHz.
-                                                         0x1 = 3.125 GHz.
+                                                         0x1 = 3.125 GHz, or SATA mode.
                                                          0x3 = 4 GHz.
                                                          0x5 = 5.15625 GHz.
                                                          0x6 = 5.65 GHz.
@@ -10178,7 +10290,7 @@ union cvmx_gserx_slicex_kx4_mode {
 	uint64_t rx_sdll_bwsel                : 3;  /**< Controls capacitors in delay line for different data rates; should be set
                                                          based on the PLL clock frequency as follows:
                                                          0x0 = 2.5 GHz.
-                                                         0x1 = 3.125 GHz.
+                                                         0x1 = 3.125 GHz, or SATA mode.
                                                          0x3 = 4 GHz.
                                                          0x5 = 5.15625 GHz.
                                                          0x6 = 5.65 GHz.
@@ -10195,6 +10307,9 @@ union cvmx_gserx_slicex_kx4_mode {
 #endif
 	} s;
 	struct cvmx_gserx_slicex_kx4_mode_s   cn73xx;
+	struct cvmx_gserx_slicex_kx4_mode_s   cn78xx;
+	struct cvmx_gserx_slicex_kx4_mode_s   cn78xxp1;
+	struct cvmx_gserx_slicex_kx4_mode_s   cnf75xx;
 };
 typedef union cvmx_gserx_slicex_kx4_mode cvmx_gserx_slicex_kx4_mode_t;
 
@@ -10205,7 +10320,7 @@ typedef union cvmx_gserx_slicex_kx4_mode cvmx_gserx_slicex_kx4_mode_t;
  * These registers are reset by hardware only during chip cold reset.
  * The values of the CSR fields in these registers do not change during chip warm or soft resets.
  *
- * Slice 1 does not exist on GSER4, GSER5, or GSER6.
+ * Slice 1 does not exist on GSER0, GSER1, GSER4, GSER5, GSER6, GSER7, and GSER8.
  */
 union cvmx_gserx_slicex_kx_mode {
 	uint64_t u64;
@@ -10234,7 +10349,7 @@ union cvmx_gserx_slicex_kx_mode {
 	uint64_t rx_ldll_bwsel                : 3;  /**< Controls capacitors in delay line for different data rates; should be set
                                                          based on the PLL clock frequency as follows:
                                                          0x0 = 2.5 GHz.
-                                                         0x1 = 3.125 GHz.
+                                                         0x1 = 3.125 GHz, or SATA mode.
                                                          0x3 = 4 GHz.
                                                          0x5 = 5.15625 GHz.
                                                          0x6 = 5.65 GHz.
@@ -10243,7 +10358,7 @@ union cvmx_gserx_slicex_kx_mode {
 	uint64_t rx_sdll_bwsel                : 3;  /**< Controls capacitors in delay line for different data rates; should be set
                                                          based on the PLL clock frequency as follows:
                                                          0x0 = 2.5 GHz.
-                                                         0x1 = 3.125 GHz.
+                                                         0x1 = 3.125 GHz, or SATA mode.
                                                          0x3 = 4 GHz.
                                                          0x5 = 5.15625 GHz.
                                                          0x6 = 5.65 GHz.
@@ -10260,6 +10375,9 @@ union cvmx_gserx_slicex_kx_mode {
 #endif
 	} s;
 	struct cvmx_gserx_slicex_kx_mode_s    cn73xx;
+	struct cvmx_gserx_slicex_kx_mode_s    cn78xx;
+	struct cvmx_gserx_slicex_kx_mode_s    cn78xxp1;
+	struct cvmx_gserx_slicex_kx_mode_s    cnf75xx;
 };
 typedef union cvmx_gserx_slicex_kx_mode cvmx_gserx_slicex_kx_mode_t;
 
@@ -10270,7 +10388,7 @@ typedef union cvmx_gserx_slicex_kx_mode cvmx_gserx_slicex_kx_mode_t;
  * These registers are reset by hardware only during chip cold reset.
  * The values of the CSR fields in these registers do not change during chip warm or soft resets.
  *
- * Slice 1 does not exist on GSER4, GSER5, or GSER6.
+ * Slice 1 does not exist on GSER0, GSER1, GSER4, GSER5, GSER6, GSER7, and GSER8.
  */
 union cvmx_gserx_slicex_pcie1_mode {
 	uint64_t u64;
@@ -10295,8 +10413,7 @@ union cvmx_gserx_slicex_pcie1_mode {
                                                          0x1 = 3.125 GHz.
                                                          0x6 = 4 GHz.
                                                          0x7 = 5.15625 GHz.
-                                                         All other values in this field are reserved.
-                                                         In SATA Mode program RX_PI_BWSEL = 0x1. */
+                                                         All other values in this field are reserved. */
 	uint64_t rx_ldll_bwsel                : 3;  /**< Controls capacitors in delay line for different data rates; should be set
                                                          based on the PLL clock frequency as follows:
                                                          0x0 = 2.5 GHz.
@@ -10305,8 +10422,7 @@ union cvmx_gserx_slicex_pcie1_mode {
                                                          0x5 = 5.15625 GHz.
                                                          0x6 = 5.65 GHz.
                                                          0x7 = 6.25 GHz.
-                                                         All other values in this field are reserved.
-                                                         In SATA Mode program RX_LDLL_BWSEL = 0x1. */
+                                                         All other values in this field are reserved. */
 	uint64_t rx_sdll_bwsel                : 3;  /**< Controls capacitors in delay line for different data rates; should be set
                                                          based on the PLL clock frequency as follows:
                                                          0x0 = 2.5 GHz.
@@ -10315,8 +10431,7 @@ union cvmx_gserx_slicex_pcie1_mode {
                                                          0x5 = 5.15625 GHz.
                                                          0x6 = 5.65 GHz.
                                                          0x7 = 6.25 GHz.
-                                                         All other values in this field are reserved.
-                                                         In SATA Mode program RX_SDLL_BWSEL = 0x1. */
+                                                         All other values in this field are reserved. */
 #else
 	uint64_t rx_sdll_bwsel                : 3;
 	uint64_t rx_ldll_bwsel                : 3;
@@ -10328,6 +10443,9 @@ union cvmx_gserx_slicex_pcie1_mode {
 #endif
 	} s;
 	struct cvmx_gserx_slicex_pcie1_mode_s cn73xx;
+	struct cvmx_gserx_slicex_pcie1_mode_s cn78xx;
+	struct cvmx_gserx_slicex_pcie1_mode_s cn78xxp1;
+	struct cvmx_gserx_slicex_pcie1_mode_s cnf75xx;
 };
 typedef union cvmx_gserx_slicex_pcie1_mode cvmx_gserx_slicex_pcie1_mode_t;
 
@@ -10338,7 +10456,7 @@ typedef union cvmx_gserx_slicex_pcie1_mode cvmx_gserx_slicex_pcie1_mode_t;
  * These registers are reset by hardware only during chip cold reset.
  * The values of the CSR fields in these registers do not change during chip warm or soft resets.
  *
- * Slice 1 does not exist on GSER4, GSER5, or GSER6.
+ * Slice 1 does not exist on GSER0, GSER1, GSER4, GSER5, GSER6, GSER7, and GSER8.
  */
 union cvmx_gserx_slicex_pcie2_mode {
 	uint64_t u64;
@@ -10363,8 +10481,7 @@ union cvmx_gserx_slicex_pcie2_mode {
                                                          0x1 = 3.125 GHz.
                                                          0x6 = 4 GHz.
                                                          0x7 = 5.15625 GHz.
-                                                         All other values in this field are reserved.
-                                                         In SATA Mode program RX_PI_BWSEL = 0x1. */
+                                                         All other values in this field are reserved. */
 	uint64_t rx_ldll_bwsel                : 3;  /**< Controls capacitors in delay line for different data rates; should be set
                                                          based on the PLL clock frequency as follows:
                                                          0x0 = 2.5 GHz.
@@ -10373,8 +10490,7 @@ union cvmx_gserx_slicex_pcie2_mode {
                                                          0x5 = 5.15625 GHz.
                                                          0x6 = 5.65 GHz.
                                                          0x7 = 6.25 GHz.
-                                                         All other values in this field are reserved.
-                                                         In SATA Mode program RX_LDLL_BWSEL = 0x1. */
+                                                         All other values in this field are reserved. */
 	uint64_t rx_sdll_bwsel                : 3;  /**< Controls capacitors in delay line for different data rates; should be set
                                                          based on the PLL clock frequency as follows:
                                                          0x0 = 2.5 GHz.
@@ -10383,8 +10499,7 @@ union cvmx_gserx_slicex_pcie2_mode {
                                                          0x5 = 5.15625 GHz.
                                                          0x6 = 5.65 GHz.
                                                          0x7 = 6.25 GHz.
-                                                         All other values in this field are reserved.
-                                                         In SATA Mode program RX_SDLL_BWSEL = 0x1. */
+                                                         All other values in this field are reserved. */
 #else
 	uint64_t rx_sdll_bwsel                : 3;
 	uint64_t rx_ldll_bwsel                : 3;
@@ -10396,6 +10511,9 @@ union cvmx_gserx_slicex_pcie2_mode {
 #endif
 	} s;
 	struct cvmx_gserx_slicex_pcie2_mode_s cn73xx;
+	struct cvmx_gserx_slicex_pcie2_mode_s cn78xx;
+	struct cvmx_gserx_slicex_pcie2_mode_s cn78xxp1;
+	struct cvmx_gserx_slicex_pcie2_mode_s cnf75xx;
 };
 typedef union cvmx_gserx_slicex_pcie2_mode cvmx_gserx_slicex_pcie2_mode_t;
 
@@ -10406,7 +10524,7 @@ typedef union cvmx_gserx_slicex_pcie2_mode cvmx_gserx_slicex_pcie2_mode_t;
  * These registers are reset by hardware only during chip cold reset.
  * The values of the CSR fields in these registers do not change during chip warm or soft resets.
  *
- * Slice 1 does not exist on GSER4, GSER5, or GSER6.
+ * Slice 1 does not exist on GSER0, GSER1, GSER4, GSER5, GSER6, GSER7, and GSER8.
  */
 union cvmx_gserx_slicex_pcie3_mode {
 	uint64_t u64;
@@ -10431,28 +10549,25 @@ union cvmx_gserx_slicex_pcie3_mode {
                                                          0x1 = 3.125 GHz.
                                                          0x6 = 4 GHz.
                                                          0x7 = 5.15625 GHz.
-                                                         All other values in this field are reserved.
-                                                         In SATA Mode program RX_PI_BWSEL = 0x1. */
+                                                         All other values in this field are reserved. */
 	uint64_t rx_ldll_bwsel                : 3;  /**< Controls capacitors in delay line for different data rates; should be set
                                                          based on the PLL clock frequency as follows:
                                                          0x0 = 2.5 GHz.
-                                                         0x1 = 3.125 GHz.
+                                                         0x1 = 3.125 GHz, or SATA mode.
                                                          0x3 = 4 GHz.
                                                          0x5 = 5.15625 GHz.
                                                          0x6 = 5.65 GHz.
                                                          0x7 = 6.25 GHz.
-                                                         All other values in this field are reserved.
-                                                         In SATA Mode program RX_LDLL_BWSEL = 0x1. */
+                                                         All other values in this field are reserved. */
 	uint64_t rx_sdll_bwsel                : 3;  /**< Controls capacitors in delay line for different data rates; should be set
                                                          based on the PLL clock frequency as follows:
                                                          0x0 = 2.5 GHz.
-                                                         0x1 = 3.125 GHz.
+                                                         0x1 = 3.125 GHz, or SATA mode.
                                                          0x3 = 4 GHz.
                                                          0x5 = 5.15625 GHz.
                                                          0x6 = 5.65 GHz.
                                                          0x7 = 6.25 GHz.
-                                                         All other values in this field are reserved.
-                                                         In SATA Mode program RX_SDLL_BWSEL = 0x1. */
+                                                         All other values in this field are reserved. */
 #else
 	uint64_t rx_sdll_bwsel                : 3;
 	uint64_t rx_ldll_bwsel                : 3;
@@ -10464,6 +10579,9 @@ union cvmx_gserx_slicex_pcie3_mode {
 #endif
 	} s;
 	struct cvmx_gserx_slicex_pcie3_mode_s cn73xx;
+	struct cvmx_gserx_slicex_pcie3_mode_s cn78xx;
+	struct cvmx_gserx_slicex_pcie3_mode_s cn78xxp1;
+	struct cvmx_gserx_slicex_pcie3_mode_s cnf75xx;
 };
 typedef union cvmx_gserx_slicex_pcie3_mode cvmx_gserx_slicex_pcie3_mode_t;
 
@@ -10474,7 +10592,7 @@ typedef union cvmx_gserx_slicex_pcie3_mode cvmx_gserx_slicex_pcie3_mode_t;
  * These registers are reset by hardware only during chip cold reset.
  * The values of the CSR fields in these registers do not change during chip warm or soft resets.
  *
- * Slice 1 does not exist on GSER4, GSER5, or GSER6.
+ * Slice 1 does not exist on GSER0, GSER1, GSER4, GSER5, GSER6, GSER7, and GSER8.
  */
 union cvmx_gserx_slicex_qsgmii_mode {
 	uint64_t u64;
@@ -10529,6 +10647,9 @@ union cvmx_gserx_slicex_qsgmii_mode {
 #endif
 	} s;
 	struct cvmx_gserx_slicex_qsgmii_mode_s cn73xx;
+	struct cvmx_gserx_slicex_qsgmii_mode_s cn78xx;
+	struct cvmx_gserx_slicex_qsgmii_mode_s cn78xxp1;
+	struct cvmx_gserx_slicex_qsgmii_mode_s cnf75xx;
 };
 typedef union cvmx_gserx_slicex_qsgmii_mode cvmx_gserx_slicex_qsgmii_mode_t;
 
@@ -10539,7 +10660,7 @@ typedef union cvmx_gserx_slicex_qsgmii_mode cvmx_gserx_slicex_qsgmii_mode_t;
  * These registers are reset by hardware only during chip cold reset.
  * The values of the CSR fields in these registers do not change during chip warm or soft resets.
  *
- * Slice 1 does not exist on GSER4, GSER5, or GSER6.
+ * Slice 1 does not exist on GSER0, GSER1, GSER4, GSER5, GSER6, GSER7, and GSER8.
  */
 union cvmx_gserx_slicex_rx_ldll_ctrl {
 	uint64_t u64;
@@ -10574,6 +10695,9 @@ union cvmx_gserx_slicex_rx_ldll_ctrl {
 #endif
 	} s;
 	struct cvmx_gserx_slicex_rx_ldll_ctrl_s cn73xx;
+	struct cvmx_gserx_slicex_rx_ldll_ctrl_s cn78xx;
+	struct cvmx_gserx_slicex_rx_ldll_ctrl_s cn78xxp1;
+	struct cvmx_gserx_slicex_rx_ldll_ctrl_s cnf75xx;
 };
 typedef union cvmx_gserx_slicex_rx_ldll_ctrl cvmx_gserx_slicex_rx_ldll_ctrl_t;
 
@@ -10646,8 +10770,8 @@ union cvmx_gserx_slicex_rx_sdll_ctrl {
 	uint64_t reserved_16_63               : 48;
 #endif
 	} cn73xx;
-	struct cvmx_gserx_slicex_rx_sdll_ctrl_s cn78xx;
-	struct cvmx_gserx_slicex_rx_sdll_ctrl_cn73xx cn78xxp2;
+	struct cvmx_gserx_slicex_rx_sdll_ctrl_cn73xx cn78xx;
+	struct cvmx_gserx_slicex_rx_sdll_ctrl_s cn78xxp1;
 	struct cvmx_gserx_slicex_rx_sdll_ctrl_cn73xx cnf75xx;
 };
 typedef union cvmx_gserx_slicex_rx_sdll_ctrl cvmx_gserx_slicex_rx_sdll_ctrl_t;
@@ -10659,7 +10783,7 @@ typedef union cvmx_gserx_slicex_rx_sdll_ctrl cvmx_gserx_slicex_rx_sdll_ctrl_t;
  * These registers are reset by hardware only during chip cold reset.
  * The values of the CSR fields in these registers do not change during chip warm or soft resets.
  *
- * Slice 1 does not exist on GSER4, GSER5, or GSER6.
+ * Slice 1 does not exist on GSER0, GSER1, GSER4, GSER5, GSER6, GSER7, and GSER8.
  */
 union cvmx_gserx_slicex_sgmii_mode {
 	uint64_t u64;
@@ -10714,6 +10838,9 @@ union cvmx_gserx_slicex_sgmii_mode {
 #endif
 	} s;
 	struct cvmx_gserx_slicex_sgmii_mode_s cn73xx;
+	struct cvmx_gserx_slicex_sgmii_mode_s cn78xx;
+	struct cvmx_gserx_slicex_sgmii_mode_s cn78xxp1;
+	struct cvmx_gserx_slicex_sgmii_mode_s cnf75xx;
 };
 typedef union cvmx_gserx_slicex_sgmii_mode cvmx_gserx_slicex_sgmii_mode_t;
 
@@ -10764,8 +10891,8 @@ union cvmx_gserx_slice_cfg {
 	uint64_t reserved_12_63               : 52;
 #endif
 	} cn73xx;
-	struct cvmx_gserx_slice_cfg_s         cn78xx;
-	struct cvmx_gserx_slice_cfg_cn73xx    cn78xxp2;
+	struct cvmx_gserx_slice_cfg_cn73xx    cn78xx;
+	struct cvmx_gserx_slice_cfg_s         cn78xxp1;
 	struct cvmx_gserx_slice_cfg_cn73xx    cnf75xx;
 };
 typedef union cvmx_gserx_slice_cfg cvmx_gserx_slice_cfg_t;
@@ -10785,31 +10912,27 @@ union cvmx_gserx_spd {
                                                          pins during chip cold reset. For non-CCPI links, this field is not used.
                                                          For SPD settings that configure a non-default reference clock, hardware updates the PLL
                                                          settings of the specific lane mode (LMODE) table entry to derive the correct link rate.
-                                                         (changed for pass 2)
                                                          <pre>
                                                                REFCLK  Link Rate
-                                                         SPD   (MHz)   (Gb)     Train  LMODE
-                                                         ----  ------  ------   -----  -----------------------
-                                                         0x0:  100     5        TS     R_5G_REFCLK100
-                                                         0x1:  100     2.5      --     R_25G_REFCLK100
-                                                         0x2:  100     5        --     R_5G_REFCLK100
-                                                         0x3:  100     8        --     R_8G_REFCLK100
-                                                         0x4:  100     8        TS     R_8G_REFCLK100
-                                                         0x5:  100     8        KR     R_8G_REFCLK100
-                                                         0x6:  125     3.125    --     R_3125G_REFCLK15625_XAUI
-                                                         0x7:  125     5        --     R_5G_REFCLK125
-                                                         0x8:  125     6.25     --     R_625G_REFCLK15625_RXAUI
-                                                         0x9:  125     8        --     R_8G_REFCLK125
-                                                         0xA:  156.25  10.3125  TS     R_103125G_REFCLK15625_KR
-                                                         0xB:  156.25  3.125    --     R_3125G_REFCLK15625_XAUI
-                                                         0xC:  156.25  5        TS     R_5G_REFCLK125
-                                                         0xD:  156.25  6.25     TS     R_625G_REFCLK15625_RXAUI
-                                                         0xE:  156.25  10.3125  KR     R_103125G_REFCLK15625_KR
-                                                         0xF:                          SW_MODE
+                                                         SPD   (MHz)   (Gb)      LMODE
+                                                         ----  ------  ------    -----------------------
+                                                         0x0:  100     1.25      R_125G_REFCLK15625_KX
+                                                         0x1:  100     2.5       R_25G_REFCLK100
+                                                         0x2:  100     5         R_5G_REFCLK100
+                                                         0x3:  100     8         R_8G_REFCLK100
+                                                         0x4:  125     1.25      R_125G_REFCLK15625_KX
+                                                         0x5:  125     2.5       R_25G_REFCLK125
+                                                         0x6:  125     3.125     R_3125G_REFCLK15625_XAUI
+                                                         0x7:  125     5         R_5G_REFCLK125
+                                                         0x8:  125     6.25      R_625G_REFCLK15625_RXAUI
+                                                         0x9:  125     8         R_8G_REFCLK125
+                                                         0xA:  156.25  2.5       R_25G_REFCLK100
+                                                         0xB:  156.25  3.125     R_3125G_REFCLK15625_XAUI
+                                                         0xC:  156.25  5         R_5G_REFCLK125
+                                                         0xD:  156.25  6.25      R_625G_REFCLK15625_RXAUI
+                                                         0xE:  156.25  10.3125   R_103125G_REFCLK15625_KR
+                                                         0xF:                    SW_MODE
                                                          </pre>
-                                                         Train column indicates training method.  TS indicates short training, i.e., local RX
-                                                         equalization only.  KR indicates KR training, i.e., local RX equalization and link
-                                                         partner TX equalizer adaptation.  -- indicates not applicable.
                                                          Note that a value of 0xF is called SW_MODE. The CCPI link does not come up configured in
                                                          SW_MODE.
                                                          (Software must do all the CCPI GSER configuration to use CCPI in the case of SW_MODE.)
@@ -10837,7 +10960,7 @@ union cvmx_gserx_spd {
 #endif
 	} cn73xx;
 	struct cvmx_gserx_spd_s               cn78xx;
-	struct cvmx_gserx_spd_s               cn78xxp2;
+	struct cvmx_gserx_spd_s               cn78xxp1;
 	struct cvmx_gserx_spd_cn73xx          cnf75xx;
 };
 typedef union cvmx_gserx_spd cvmx_gserx_spd_t;
@@ -10946,7 +11069,7 @@ union cvmx_gserx_srst {
 	} s;
 	struct cvmx_gserx_srst_s              cn73xx;
 	struct cvmx_gserx_srst_s              cn78xx;
-	struct cvmx_gserx_srst_s              cn78xxp2;
+	struct cvmx_gserx_srst_s              cn78xxp1;
 	struct cvmx_gserx_srst_s              cnf75xx;
 };
 typedef union cvmx_gserx_srst cvmx_gserx_srst_t;
@@ -10975,7 +11098,7 @@ union cvmx_gserx_tx_vboost {
 	} s;
 	struct cvmx_gserx_tx_vboost_s         cn73xx;
 	struct cvmx_gserx_tx_vboost_s         cn78xx;
-	struct cvmx_gserx_tx_vboost_s         cn78xxp2;
+	struct cvmx_gserx_tx_vboost_s         cn78xxp1;
 	struct cvmx_gserx_tx_vboost_s         cnf75xx;
 };
 typedef union cvmx_gserx_tx_vboost cvmx_gserx_tx_vboost_t;
@@ -11001,7 +11124,7 @@ union cvmx_gserx_txclk_evt_cntr {
 #endif
 	} s;
 	struct cvmx_gserx_txclk_evt_cntr_s    cn73xx;
-	struct cvmx_gserx_txclk_evt_cntr_s    cn78xxp2;
+	struct cvmx_gserx_txclk_evt_cntr_s    cn78xx;
 	struct cvmx_gserx_txclk_evt_cntr_s    cnf75xx;
 };
 typedef union cvmx_gserx_txclk_evt_cntr cvmx_gserx_txclk_evt_cntr_t;
@@ -11024,7 +11147,7 @@ union cvmx_gserx_txclk_evt_ctrl {
 #endif
 	} s;
 	struct cvmx_gserx_txclk_evt_ctrl_s    cn73xx;
-	struct cvmx_gserx_txclk_evt_ctrl_s    cn78xxp2;
+	struct cvmx_gserx_txclk_evt_ctrl_s    cn78xx;
 	struct cvmx_gserx_txclk_evt_ctrl_s    cnf75xx;
 };
 typedef union cvmx_gserx_txclk_evt_ctrl cvmx_gserx_txclk_evt_ctrl_t;

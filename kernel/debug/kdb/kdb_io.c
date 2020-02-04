@@ -349,7 +349,7 @@ poll_again:
 			}
 			kdb_printf("\n");
 			for (i = 0; i < count; i++) {
-				if (kallsyms_symbol_next(p_tmp, i) < 0)
+				if (WARN_ON(!kallsyms_symbol_next(p_tmp, i)))
 					break;
 				kdb_printf("%s ", p_tmp);
 				*(p_tmp + len) = '\0';
@@ -439,7 +439,7 @@ poll_again:
  *	substituted for %d, %x or %o in the prompt.
  */
 
-char *kdb_getstr(char *buffer, size_t bufsize, char *prompt)
+char *kdb_getstr(char *buffer, size_t bufsize, const char *prompt)
 {
 	if (prompt && kdb_prompt_str != prompt)
 		strncpy(kdb_prompt_str, prompt, CMD_BUFLEN);
@@ -548,12 +548,13 @@ static int kdb_search_string(char *searched, char *searchfor)
 	return 0;
 }
 
-int vkdb_printf(const char *fmt, va_list ap)
+int vkdb_printf(enum kdb_msgsrc src, const char *fmt, va_list ap)
 {
 	int diag;
 	int linecount;
 	int colcount;
 	int logging, saved_loglevel = 0;
+	int saved_trap_printk;
 	int got_printf_lock = 0;
 	int retlen = 0;
 	int fnd, len;
@@ -564,6 +565,8 @@ int vkdb_printf(const char *fmt, va_list ap)
 	unsigned long uninitialized_var(flags);
 
 	preempt_disable();
+	saved_trap_printk = kdb_trap_printk;
+	kdb_trap_printk = 0;
 
 	/* Serialize kdb_printf if multiple cpus try to write at once.
 	 * But if any cpu goes recursive in kdb, just print the output,
@@ -677,6 +680,12 @@ int vkdb_printf(const char *fmt, va_list ap)
 			size_avail = sizeof(kdb_buffer) - len;
 			goto kdb_print_out;
 		}
+		if (kdb_grepping_flag >= KDB_GREPPING_FLAG_SEARCH)
+			/*
+			 * This was a interactive search (using '/' at more
+			 * prompt) and it has completed. Clear the flag.
+			 */
+			kdb_grepping_flag = 0;
 		/*
 		 * at this point the string is a full line and
 		 * should be printed, up to the null.
@@ -688,27 +697,31 @@ kdb_printit:
 	 * Write to all consoles.
 	 */
 	retlen = strlen(kdb_buffer);
+	cp = (char *) printk_skip_level(kdb_buffer);
 	if (!dbg_kdb_mode && kgdb_connected) {
-		gdbstub_msg_write(kdb_buffer, retlen);
+		gdbstub_msg_write(cp, retlen - (cp - kdb_buffer));
 	} else {
 		if (dbg_io_ops && !dbg_io_ops->is_console) {
-			len = retlen;
-			cp = kdb_buffer;
+			len = retlen - (cp - kdb_buffer);
+			cp2 = cp;
 			while (len--) {
-				dbg_io_ops->write_char(*cp);
-				cp++;
+				dbg_io_ops->write_char(*cp2);
+				cp2++;
 			}
 		}
 		while (c) {
-			c->write(c, kdb_buffer, retlen);
+			c->write(c, cp, retlen - (cp - kdb_buffer));
 			touch_nmi_watchdog();
 			c = c->next;
 		}
 	}
 	if (logging) {
 		saved_loglevel = console_loglevel;
-		console_loglevel = 0;
-		printk(KERN_INFO "%s", kdb_buffer);
+		console_loglevel = CONSOLE_LOGLEVEL_SILENT;
+		if (printk_get_level(kdb_buffer) || src == KDB_MSGSRC_PRINTK)
+			printk("%s", kdb_buffer);
+		else
+			pr_info("%s", kdb_buffer);
 	}
 
 	if (KDB_STATE(PAGER)) {
@@ -791,11 +804,23 @@ kdb_printit:
 			kdb_nextline = linecount - 1;
 			kdb_printf("\r");
 			suspend_grep = 1; /* for this recursion */
+		} else if (buf1[0] == '/' && !kdb_grepping_flag) {
+			kdb_printf("\r");
+			kdb_getstr(kdb_grep_string, KDB_GREP_STRLEN,
+				   kdbgetenv("SEARCHPROMPT") ?: "search> ");
+			*strchrnul(kdb_grep_string, '\n') = '\0';
+			kdb_grepping_flag += KDB_GREPPING_FLAG_SEARCH;
+			suspend_grep = 1; /* for this recursion */
 		} else if (buf1[0] && buf1[0] != '\n') {
 			/* user hit something other than enter */
 			suspend_grep = 1; /* for this recursion */
-			kdb_printf("\nOnly 'q' or 'Q' are processed at more "
-				   "prompt, input ignored\n");
+			if (buf1[0] != '/')
+				kdb_printf(
+				    "\nOnly 'q', 'Q' or '/' are processed at "
+				    "more prompt, input ignored\n");
+			else
+				kdb_printf("\n'/' cannot be used during | "
+					   "grep filtering, input ignored\n");
 		} else if (kdb_grepping_flag) {
 			/* user hit enter */
 			suspend_grep = 1; /* for this recursion */
@@ -830,6 +855,7 @@ kdb_print_out:
 	} else {
 		__release(kdb_printf_lock);
 	}
+	kdb_trap_printk = saved_trap_printk;
 	preempt_enable();
 	return retlen;
 }
@@ -839,11 +865,9 @@ int kdb_printf(const char *fmt, ...)
 	va_list ap;
 	int r;
 
-	kdb_trap_printk++;
 	va_start(ap, fmt);
-	r = vkdb_printf(fmt, ap);
+	r = vkdb_printf(KDB_MSGSRC_INTERNAL, fmt, ap);
 	va_end(ap);
-	kdb_trap_printk--;
 
 	return r;
 }

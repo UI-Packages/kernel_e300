@@ -54,7 +54,6 @@
 
 #include <asm/uaccess.h>
 #include <asm/io.h>
-#include <asm/local.h>
 
 #include <linux/sonypi.h>
 
@@ -491,7 +490,7 @@ static struct sonypi_device {
 	spinlock_t fifo_lock;
 	wait_queue_head_t fifo_proc_list;
 	struct fasync_struct *fifo_async;
-	local_t open_count;
+	int open_count;
 	int model;
 	struct input_dev *input_jog_dev;
 	struct input_dev *input_key_dev;
@@ -877,11 +876,6 @@ found:
 	if (useinput)
 		sonypi_report_input_event(event);
 
-#ifdef CONFIG_ACPI
-	if (sonypi_acpi_device)
-		acpi_bus_generate_proc_event(sonypi_acpi_device, 1, event);
-#endif
-
 	kfifo_in_locked(&sonypi_device.fifo, (unsigned char *)&event,
 			sizeof(event), &sonypi_device.fifo_lock);
 	kill_fasync(&sonypi_device.fifo_async, SIGIO, POLL_IN);
@@ -898,7 +892,7 @@ static int sonypi_misc_fasync(int fd, struct file *filp, int on)
 static int sonypi_misc_release(struct inode *inode, struct file *file)
 {
 	mutex_lock(&sonypi_device.lock);
-	local_dec(&sonypi_device.open_count);
+	sonypi_device.open_count--;
 	mutex_unlock(&sonypi_device.lock);
 	return 0;
 }
@@ -907,9 +901,9 @@ static int sonypi_misc_open(struct inode *inode, struct file *file)
 {
 	mutex_lock(&sonypi_device.lock);
 	/* Flush input queue on first open */
-	if (!local_read(&sonypi_device.open_count))
+	if (!sonypi_device.open_count)
 		kfifo_reset(&sonypi_device.fifo);
-	local_inc(&sonypi_device.open_count);
+	sonypi_device.open_count++;
 	mutex_unlock(&sonypi_device.lock);
 
 	return 0;
@@ -940,7 +934,7 @@ static ssize_t sonypi_misc_read(struct file *file, char __user *buf,
 
 	if (ret > 0) {
 		struct inode *inode = file_inode(file);
-		inode->i_atime = current_fs_time(inode->i_sb);
+		inode->i_atime = current_time(inode);
 	}
 
 	return ret;
@@ -1488,7 +1482,6 @@ static void sonypi_shutdown(struct platform_device *dev)
 static struct platform_driver sonypi_driver = {
 	.driver		= {
 		.name	= "sonypi",
-		.owner	= THIS_MODULE,
 		.pm	= SONYPI_PM,
 	},
 	.probe		= sonypi_probe,

@@ -14,6 +14,7 @@
 #include <linux/security.h>
 #include <linux/signal.h>
 #include <linux/tracehook.h>
+#include <linux/audit.h>
 
 #include <asm/uaccess.h>
 #include <asm/pgtable.h>
@@ -156,14 +157,16 @@ put_reg(struct task_struct *task, unsigned long regno, unsigned long data)
 static inline int
 read_int(struct task_struct *task, unsigned long addr, int * data)
 {
-	int copied = access_process_vm(task, addr, data, sizeof(int), 0);
+	int copied = access_process_vm(task, addr, data, sizeof(int),
+			FOLL_FORCE);
 	return (copied == sizeof(int)) ? 0 : -EIO;
 }
 
 static inline int
 write_int(struct task_struct *task, unsigned long addr, int data)
 {
-	int copied = access_process_vm(task, addr, &data, sizeof(int), 1);
+	int copied = access_process_vm(task, addr, &data, sizeof(int),
+			FOLL_FORCE | FOLL_WRITE);
 	return (copied == sizeof(int)) ? 0 : -EIO;
 }
 
@@ -280,7 +283,8 @@ long arch_ptrace(struct task_struct *child, long request,
 	/* When I and D space are separate, these will need to be fixed.  */
 	case PTRACE_PEEKTEXT: /* read word at location addr. */
 	case PTRACE_PEEKDATA:
-		copied = access_process_vm(child, addr, &tmp, sizeof(tmp), 0);
+		copied = ptrace_access_vm(child, addr, &tmp, sizeof(tmp),
+				FOLL_FORCE);
 		ret = -EIO;
 		if (copied != sizeof(tmp))
 			break;
@@ -316,15 +320,18 @@ long arch_ptrace(struct task_struct *child, long request,
 asmlinkage unsigned long syscall_trace_enter(void)
 {
 	unsigned long ret = 0;
+	struct pt_regs *regs = current_pt_regs();
 	if (test_thread_flag(TIF_SYSCALL_TRACE) &&
 	    tracehook_report_syscall_entry(current_pt_regs()))
 		ret = -1UL;
+	audit_syscall_entry(regs->r0, regs->r16, regs->r17, regs->r18, regs->r19);
 	return ret ?: current_pt_regs()->r0;
 }
 
 asmlinkage void
 syscall_trace_leave(void)
 {
+	audit_syscall_exit(current_pt_regs());
 	if (test_thread_flag(TIF_SYSCALL_TRACE))
 		tracehook_report_syscall_exit(current_pt_regs(), 0);
 }

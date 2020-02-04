@@ -1,5 +1,5 @@
 /***********************license start***************
- * Copyright (c) 2003-2015  Cavium Inc. (support@cavium.com). All rights
+ * Copyright (c) 2003-2017  Cavium Inc. (support@cavium.com). All rights
  * reserved.
  *
  *
@@ -359,7 +359,7 @@ union cvmx_osm_ase_rate_limit_ctrl {
 #endif
 	} s;
 	struct cvmx_osm_ase_rate_limit_ctrl_s cn78xx;
-	struct cvmx_osm_ase_rate_limit_ctrl_s cn78xxp2;
+	struct cvmx_osm_ase_rate_limit_ctrl_s cn78xxp1;
 };
 typedef union cvmx_osm_ase_rate_limit_ctrl cvmx_osm_ase_rate_limit_ctrl_t;
 
@@ -392,7 +392,7 @@ union cvmx_osm_bankx_ctrl {
 	} s;
 	struct cvmx_osm_bankx_ctrl_s          cn73xx;
 	struct cvmx_osm_bankx_ctrl_s          cn78xx;
-	struct cvmx_osm_bankx_ctrl_s          cn78xxp2;
+	struct cvmx_osm_bankx_ctrl_s          cn78xxp1;
 };
 typedef union cvmx_osm_bankx_ctrl cvmx_osm_bankx_ctrl_t;
 
@@ -442,7 +442,7 @@ union cvmx_osm_ecc_ctrl {
 	} s;
 	struct cvmx_osm_ecc_ctrl_s            cn73xx;
 	struct cvmx_osm_ecc_ctrl_s            cn78xx;
-	struct cvmx_osm_ecc_ctrl_s            cn78xxp2;
+	struct cvmx_osm_ecc_ctrl_s            cn78xxp1;
 };
 typedef union cvmx_osm_ecc_ctrl cvmx_osm_ecc_ctrl_t;
 
@@ -464,7 +464,7 @@ union cvmx_osm_eco {
 	} s;
 	struct cvmx_osm_eco_s                 cn73xx;
 	struct cvmx_osm_eco_s                 cn78xx;
-	struct cvmx_osm_eco_s                 cn78xxp2;
+	struct cvmx_osm_eco_s                 cn78xxp1;
 };
 typedef union cvmx_osm_eco cvmx_osm_eco_t;
 
@@ -493,7 +493,7 @@ union cvmx_osm_int_info_addr {
 	} s;
 	struct cvmx_osm_int_info_addr_s       cn73xx;
 	struct cvmx_osm_int_info_addr_s       cn78xx;
-	struct cvmx_osm_int_info_addr_s       cn78xxp2;
+	struct cvmx_osm_int_info_addr_s       cn78xxp1;
 };
 typedef union cvmx_osm_int_info_addr cvmx_osm_int_info_addr_t;
 
@@ -523,7 +523,7 @@ union cvmx_osm_int_info_ecc {
 	} s;
 	struct cvmx_osm_int_info_ecc_s        cn73xx;
 	struct cvmx_osm_int_info_ecc_s        cn78xx;
-	struct cvmx_osm_int_info_ecc_s        cn78xxp2;
+	struct cvmx_osm_int_info_ecc_s        cn78xxp1;
 };
 typedef union cvmx_osm_int_info_ecc cvmx_osm_int_info_ecc_t;
 
@@ -612,7 +612,7 @@ union cvmx_osm_int_stat {
 #endif
 	} cn73xx;
 	struct cvmx_osm_int_stat_s            cn78xx;
-	struct cvmx_osm_int_stat_s            cn78xxp2;
+	struct cvmx_osm_int_stat_s            cn78xxp1;
 };
 typedef union cvmx_osm_int_stat cvmx_osm_int_stat_t;
 
@@ -644,7 +644,7 @@ union cvmx_osm_memx_bist_status {
 #endif
 	} cn73xx;
 	struct cvmx_osm_memx_bist_status_s    cn78xx;
-	struct cvmx_osm_memx_bist_status_s    cn78xxp2;
+	struct cvmx_osm_memx_bist_status_s    cn78xxp1;
 };
 typedef union cvmx_osm_memx_bist_status cvmx_osm_memx_bist_status_t;
 

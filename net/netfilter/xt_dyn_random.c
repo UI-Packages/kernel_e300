@@ -61,7 +61,7 @@ static ssize_t _write_proc(struct file *file, const char __user *buf,
 	if (copy_from_user(tmp, buf, count))
 		return -EFAULT;
 
-	sticky_iv = net_random();
+	sticky_iv = prandom_u32();
 
 	p = simple_strtoul(tmp, NULL, 10);
 
@@ -104,7 +104,7 @@ static bool dyn_rand_mt(const struct sk_buff *skb, struct xt_action_param *par)
 	}
 
 	if (!sticky) {
-		hv = net_random();
+		hv = prandom_u32();
 		goto done;
 	}
 

@@ -24,6 +24,5 @@
 #define MIPS_CAVIUM_XKPHYS_READ  2010	/* XKPHYS */
 #define MIPS_CAVIUM_XKPHYS_WRITE 2011	/* XKPHYS */
 #define MIPS_CAVIUM_ARM_TIMER	 2012	/* Add a work queue entry to a timer */
-#define MIPS_CAVIUM_DISARM_TIMER 2013	/* Delete a wqe from a timer */
 
 #endif /* _ASM_SYSMIPS_H */

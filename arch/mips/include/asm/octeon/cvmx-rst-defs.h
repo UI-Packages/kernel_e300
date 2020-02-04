@@ -1,5 +1,5 @@
 /***********************license start***************
- * Copyright (c) 2003-2015  Cavium Inc. (support@cavium.com). All rights
+ * Copyright (c) 2003-2017  Cavium Inc. (support@cavium.com). All rights
  * reserved.
  *
  *
@@ -126,8 +126,8 @@ static inline uint64_t CVMX_RST_CTLX(unsigned long offset)
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset <= 2))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 3))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 3))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 3)))))
 		cvmx_warn("CVMX_RST_CTLX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180006001640ull) + ((offset) & 3) * 8;
@@ -251,8 +251,8 @@ static inline uint64_t CVMX_RST_SOFT_PRSTX(unsigned long offset)
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset <= 2))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 3))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 3))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 3)))))
 		cvmx_warn("CVMX_RST_SOFT_PRSTX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800060016C0ull) + ((offset) & 3) * 8;
@@ -300,7 +300,7 @@ union cvmx_rst_bist_timer {
 #endif
 	} s;
 	struct cvmx_rst_bist_timer_s          cn73xx;
-	struct cvmx_rst_bist_timer_s          cn78xxp2;
+	struct cvmx_rst_bist_timer_s          cn78xx;
 	struct cvmx_rst_bist_timer_s          cnf75xx;
 };
 typedef union cvmx_rst_bist_timer cvmx_rst_bist_timer_t;
@@ -334,7 +334,8 @@ union cvmx_rst_boot {
                                                          'ref-clock speed' should always be 50MHz. */
 	uint64_t reserved_21_23               : 3;
 	uint64_t lboot_oci                    : 3;  /**< Reserved. */
-	uint64_t lboot_ext                    : 6;  /**< Last boot cause mask; resets only with DCOK.
+	uint64_t lboot_ext                    : 6;  /**< For CNF73XX, this field is reserved.
+                                                         For CNF75XX, the last boot cause mask; resets only with DCOK.
                                                          <17> = Warm reset due to Cntl3 link-down or hot-reset.
                                                          <16> = Warm reset due to Cntl2 link-down or hot-reset.
                                                          <15> = Cntl3 reset due to PERST3_L pin.
@@ -377,7 +378,7 @@ union cvmx_rst_boot {
 	struct cvmx_rst_boot_s                cn70xxp1;
 	struct cvmx_rst_boot_s                cn73xx;
 	struct cvmx_rst_boot_s                cn78xx;
-	struct cvmx_rst_boot_s                cn78xxp2;
+	struct cvmx_rst_boot_s                cn78xxp1;
 	struct cvmx_rst_boot_s                cnf75xx;
 };
 typedef union cvmx_rst_boot cvmx_rst_boot_t;
@@ -454,7 +455,7 @@ union cvmx_rst_cfg {
 #endif
 	} cn73xx;
 	struct cvmx_rst_cfg_cn70xx            cn78xx;
-	struct cvmx_rst_cfg_cn70xx            cn78xxp2;
+	struct cvmx_rst_cfg_cn70xx            cn78xxp1;
 	struct cvmx_rst_cfg_cn73xx            cnf75xx;
 };
 typedef union cvmx_rst_cfg cvmx_rst_cfg_t;
@@ -478,7 +479,7 @@ union cvmx_rst_ckill {
 	struct cvmx_rst_ckill_s               cn70xxp1;
 	struct cvmx_rst_ckill_s               cn73xx;
 	struct cvmx_rst_ckill_s               cn78xx;
-	struct cvmx_rst_ckill_s               cn78xxp2;
+	struct cvmx_rst_ckill_s               cn78xxp1;
 	struct cvmx_rst_ckill_s               cnf75xx;
 };
 typedef union cvmx_rst_ckill cvmx_rst_ckill_t;
@@ -497,7 +498,7 @@ union cvmx_rst_cold_datax {
 #endif
 	} s;
 	struct cvmx_rst_cold_datax_s          cn73xx;
-	struct cvmx_rst_cold_datax_s          cn78xxp2;
+	struct cvmx_rst_cold_datax_s          cn78xx;
 	struct cvmx_rst_cold_datax_s          cnf75xx;
 };
 typedef union cvmx_rst_cold_datax cvmx_rst_cold_datax_t;
@@ -510,23 +511,28 @@ union cvmx_rst_ctlx {
 	struct cvmx_rst_ctlx_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_10_63               : 54;
-	uint64_t prst_link                    : 1;  /**< Controls whether corresponding controller link-down or hot-reset causes the assertion of
-                                                         RST_SOFT_PRST()[SOFT_PRST].
+	uint64_t prst_link                    : 1;  /**< PEM reset on link down.
+                                                         0 = Link-down or hot-reset will set RST_INT[RST_LINK] for the corresponding
+                                                         controller, and (provided properly configured) the link should come back up
+                                                         automatically.
+                                                         1 = Link-down or hot-reset will set RST_INT[RST_LINK] for the corresponding
+                                                         controller, and set RST_SOFT_PRST()[SOFT_PRST]. This will hold the link in reset
+                                                         until software clears RST_SOFT_PRST()[SOFT_PRST].
                                                          A warm/soft reset does not change this field. On cold reset, this field is initialized to
                                                          0. */
 	uint64_t rst_done                     : 1;  /**< Read-only access to controller reset status. RST_DONE is always zero (i.e. the controller
                                                          is held in reset) when:
                                                          * RST_SOFT_PRST()[SOFT_PRST] = 1, or
                                                          * RST_RCV = 1 and PERST*_L pin is asserted. */
-	uint64_t rst_link                     : 1;  /**< Reset link. Controls whether corresponding controller link-down reset or hot reset causes
-                                                         a warm chip reset. On cold reset, this field is initialized as follows:
+	uint64_t rst_link                     : 1;  /**< Reset on link down. When set, a corresponding controller link-down reset or hot
+                                                         reset causes a warm chip reset.
+                                                         On cold reset, this field is initialized as follows:
                                                          _ 0 when RST_CTL()[HOST_MODE] = 1.
                                                          _ 1 when RST_CTL()[HOST_MODE] = 0.
                                                          Note that a link-down or hot-reset event can never cause a warm chip reset when the
                                                          controller is in reset (i.e. can never cause a warm reset when [RST_DONE] = 0). */
 	uint64_t host_mode                    : 1;  /**< Read-only access to the corresponding PEM()_CFG[HOSTMD] field indicating PEMn is root
-                                                         complex (host). For controllers 0 and 2  the initial value is determined by straps. For
-                                                         controllers 1 and 3 this field is initially set as host. */
+                                                         complex (host). */
 	uint64_t reserved_4_5                 : 2;
 	uint64_t rst_drv                      : 1;  /**< Controls whether PERST*_L is driven. A warm/soft reset does not change this field. On cold
                                                          reset, this field is initialized as follows:
@@ -570,7 +576,7 @@ union cvmx_rst_ctlx {
 	struct cvmx_rst_ctlx_s                cn70xxp1;
 	struct cvmx_rst_ctlx_s                cn73xx;
 	struct cvmx_rst_ctlx_s                cn78xx;
-	struct cvmx_rst_ctlx_s                cn78xxp2;
+	struct cvmx_rst_ctlx_s                cn78xxp1;
 	struct cvmx_rst_ctlx_s                cnf75xx;
 };
 typedef union cvmx_rst_ctlx cvmx_rst_ctlx_t;
@@ -589,7 +595,7 @@ union cvmx_rst_debug {
 	uint64_t reserved_1_63                : 63;
 #endif
 	} s;
-	struct cvmx_rst_debug_s               cn78xxp2;
+	struct cvmx_rst_debug_s               cn78xx;
 	struct cvmx_rst_debug_s               cnf75xx;
 };
 typedef union cvmx_rst_debug cvmx_rst_debug_t;
@@ -620,7 +626,7 @@ union cvmx_rst_delay {
 	struct cvmx_rst_delay_s               cn70xxp1;
 	struct cvmx_rst_delay_s               cn73xx;
 	struct cvmx_rst_delay_s               cn78xx;
-	struct cvmx_rst_delay_s               cn78xxp2;
+	struct cvmx_rst_delay_s               cn78xxp1;
 	struct cvmx_rst_delay_s               cnf75xx;
 };
 typedef union cvmx_rst_delay cvmx_rst_delay_t;
@@ -640,7 +646,7 @@ union cvmx_rst_eco {
 #endif
 	} s;
 	struct cvmx_rst_eco_s                 cn73xx;
-	struct cvmx_rst_eco_s                 cn78xxp2;
+	struct cvmx_rst_eco_s                 cn78xx;
 	struct cvmx_rst_eco_s                 cnf75xx;
 };
 typedef union cvmx_rst_eco cvmx_rst_eco_t;
@@ -683,7 +689,7 @@ union cvmx_rst_int {
 	struct cvmx_rst_int_cn70xx            cn70xxp1;
 	struct cvmx_rst_int_s                 cn73xx;
 	struct cvmx_rst_int_s                 cn78xx;
-	struct cvmx_rst_int_s                 cn78xxp2;
+	struct cvmx_rst_int_s                 cn78xxp1;
 	struct cvmx_rst_int_s                 cnf75xx;
 };
 typedef union cvmx_rst_int cvmx_rst_int_t;
@@ -709,7 +715,7 @@ union cvmx_rst_int_w1s {
 #endif
 	} s;
 	struct cvmx_rst_int_w1s_s             cn73xx;
-	struct cvmx_rst_int_w1s_s             cn78xxp2;
+	struct cvmx_rst_int_w1s_s             cn78xx;
 	struct cvmx_rst_int_w1s_s             cnf75xx;
 };
 typedef union cvmx_rst_int_w1s cvmx_rst_int_w1s_t;
@@ -725,15 +731,14 @@ union cvmx_rst_ocx {
 	uint64_t rst_link                     : 3;  /**< Controls whether corresponding OCX link going down causes a chip reset. A warm/soft reset
                                                          does not change this field. On cold reset, this field is initialized to 0. See
                                                          OCX_COM_LINK()_CTL for a description of what events can contribute to the link_down
-                                                         condition.
-                                                         Made readable in pass 2. */
+                                                         condition. */
 #else
 	uint64_t rst_link                     : 3;
 	uint64_t reserved_3_63                : 61;
 #endif
 	} s;
 	struct cvmx_rst_ocx_s                 cn78xx;
-	struct cvmx_rst_ocx_s                 cn78xxp2;
+	struct cvmx_rst_ocx_s                 cn78xxp1;
 };
 typedef union cvmx_rst_ocx cvmx_rst_ocx_t;
 
@@ -775,7 +780,7 @@ union cvmx_rst_power_dbg {
 	} s;
 	struct cvmx_rst_power_dbg_s           cn73xx;
 	struct cvmx_rst_power_dbg_s           cn78xx;
-	struct cvmx_rst_power_dbg_s           cn78xxp2;
+	struct cvmx_rst_power_dbg_s           cn78xxp1;
 	struct cvmx_rst_power_dbg_s           cnf75xx;
 };
 typedef union cvmx_rst_power_dbg cvmx_rst_power_dbg_t;
@@ -794,7 +799,9 @@ union cvmx_rst_pp_power {
 	uint64_t gate                         : 48; /**< Powerdown enable. When both a bit and the corresponding CIU_PP_RST bit are set, the core
                                                          has voltage removed to save power. In typical operation these bits are setup during
                                                          initialization and PP resets are controlled through CIU_PP_RST. These bits may only be
-                                                         changed when the corresponding core is in reset using CIU_PP_RST. */
+                                                         changed when the corresponding core is in reset using CIU_PP_RST.
+                                                         The upper bits of this field remain accessible but will have no effect if the cores
+                                                         are disabled. The number of bits cleared in CIU_FUSE[FUSE] indicate the number of cores. */
 #else
 	uint64_t gate                         : 48;
 	uint64_t reserved_48_63               : 16;
@@ -816,14 +823,16 @@ union cvmx_rst_pp_power {
 	uint64_t gate                         : 16; /**< Powerdown enable. When both a bit and the corresponding CIU_PP_RST bit are set, the core
                                                          has voltage removed to save power. In typical operation these bits are setup during
                                                          initialization and PP resets are controlled through CIU_PP_RST. These bits may only be
-                                                         changed when the corresponding core is in reset using CIU_PP_RST. */
+                                                         changed when the corresponding core is in reset using CIU_PP_RST.
+                                                         The upper bits of this field remain accessible but will have no effect if the cores
+                                                         are disabled. The number of bits cleared in CIU_FUSE[FUSE] indicate the number of cores. */
 #else
 	uint64_t gate                         : 16;
 	uint64_t reserved_16_63               : 48;
 #endif
 	} cn73xx;
 	struct cvmx_rst_pp_power_s            cn78xx;
-	struct cvmx_rst_pp_power_s            cn78xxp2;
+	struct cvmx_rst_pp_power_s            cn78xxp1;
 	struct cvmx_rst_pp_power_cn73xx       cnf75xx;
 };
 typedef union cvmx_rst_pp_power cvmx_rst_pp_power_t;
@@ -843,7 +852,7 @@ union cvmx_rst_ref_cntr {
 #endif
 	} s;
 	struct cvmx_rst_ref_cntr_s            cn73xx;
-	struct cvmx_rst_ref_cntr_s            cn78xxp2;
+	struct cvmx_rst_ref_cntr_s            cn78xx;
 	struct cvmx_rst_ref_cntr_s            cnf75xx;
 };
 typedef union cvmx_rst_ref_cntr cvmx_rst_ref_cntr_t;
@@ -871,7 +880,7 @@ union cvmx_rst_soft_prstx {
 	struct cvmx_rst_soft_prstx_s          cn70xxp1;
 	struct cvmx_rst_soft_prstx_s          cn73xx;
 	struct cvmx_rst_soft_prstx_s          cn78xx;
-	struct cvmx_rst_soft_prstx_s          cn78xxp2;
+	struct cvmx_rst_soft_prstx_s          cn78xxp1;
 	struct cvmx_rst_soft_prstx_s          cnf75xx;
 };
 typedef union cvmx_rst_soft_prstx cvmx_rst_soft_prstx_t;
@@ -895,7 +904,7 @@ union cvmx_rst_soft_rst {
 	struct cvmx_rst_soft_rst_s            cn70xxp1;
 	struct cvmx_rst_soft_rst_s            cn73xx;
 	struct cvmx_rst_soft_rst_s            cn78xx;
-	struct cvmx_rst_soft_rst_s            cn78xxp2;
+	struct cvmx_rst_soft_rst_s            cn78xxp1;
 	struct cvmx_rst_soft_rst_s            cnf75xx;
 };
 typedef union cvmx_rst_soft_rst cvmx_rst_soft_rst_t;

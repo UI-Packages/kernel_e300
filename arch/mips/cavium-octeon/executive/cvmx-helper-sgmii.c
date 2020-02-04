@@ -638,6 +638,10 @@ cvmx_helper_link_info_t __cvmx_helper_sgmii_link_get(int ipd_port)
 	int speed = 1000;
 	int qlm;
 
+#if defined(CONFIG_UBNT_E1000) || defined(CONFIG_UBNT_E1020)
+	union cvmx_pcsx_anx_results_reg pcs_anx_results;
+#endif /* CONFIG_UBNT_E1000 || CONFIG_UBNT_E1020*/
+
 	result.u64 = 0;
 
 	if (!cvmx_helper_is_port_valid(interface, index))
@@ -682,6 +686,14 @@ cvmx_helper_link_info_t __cvmx_helper_sgmii_link_get(int ipd_port)
 
 	pcsx_miscx_ctl_reg.u64 =
 		cvmx_read_csr(CVMX_PCSX_MISCX_CTL_REG(index, interface));
+#if defined(CONFIG_UBNT_E1000) || defined(CONFIG_UBNT_E1020)
+	if (pcsx_miscx_ctl_reg.s.mac_phy) {
+		pcs_anx_results.u64 = cvmx_read_csr(CVMX_PCSX_ANX_RESULTS_REG(index, interface));
+		result.s.speed = speed;
+		result.s.full_duplex = 1;
+		result.s.link_up = pcs_anx_results.s.link_ok;
+		return result;
+#else
 	if (pcsx_miscx_ctl_reg.s.mac_phy ||
 	    cvmx_helper_get_port_force_link_up(interface, index)) {
 		/* PHY Mode */
@@ -691,6 +703,7 @@ cvmx_helper_link_info_t __cvmx_helper_sgmii_link_get(int ipd_port)
 		result.s.full_duplex = 1;
 		result.s.link_up = 1;
 		return result;
+#endif /* CONFIG_UBNT_E1000 || CONFIG_UBNT_E1020*/
 	} else {
 		/* MAC Mode */
 		result = __cvmx_helper_board_link_get(ipd_port);

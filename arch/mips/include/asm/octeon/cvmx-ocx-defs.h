@@ -1,5 +1,5 @@
 /***********************license start***************
- * Copyright (c) 2003-2015  Cavium Inc. (support@cavium.com). All rights
+ * Copyright (c) 2003-2017  Cavium Inc. (support@cavium.com). All rights
  * reserved.
  *
  *
@@ -89,8 +89,8 @@ static inline uint64_t CVMX_OCX_COM_INT_FUNC(void)
 static inline uint64_t CVMX_OCX_COM_LINKX_CTL(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 2))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 2)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 2))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 2)))))
 		cvmx_warn("CVMX_OCX_COM_LINKX_CTL(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180011000020ull) + ((offset) & 3) * 8;
 }
@@ -101,8 +101,8 @@ static inline uint64_t CVMX_OCX_COM_LINKX_CTL(unsigned long offset)
 static inline uint64_t CVMX_OCX_COM_LINKX_INT(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 2))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 2)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 2))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 2)))))
 		cvmx_warn("CVMX_OCX_COM_LINKX_INT(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180011000120ull) + ((offset) & 3) * 8;
 }
@@ -135,8 +135,8 @@ static inline uint64_t CVMX_OCX_COM_NODE_FUNC(void)
 static inline uint64_t CVMX_OCX_DLLX_STATUS(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1)))))
 		cvmx_warn("CVMX_OCX_DLLX_STATUS(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180011000080ull) + ((offset) & 1) * 8;
 }
@@ -147,8 +147,8 @@ static inline uint64_t CVMX_OCX_DLLX_STATUS(unsigned long offset)
 static inline uint64_t CVMX_OCX_FRCX_STAT0(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 5))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 5)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 5))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 5)))))
 		cvmx_warn("CVMX_OCX_FRCX_STAT0(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x000118001100FA00ull) + ((offset) & 7) * 8;
 }
@@ -159,8 +159,8 @@ static inline uint64_t CVMX_OCX_FRCX_STAT0(unsigned long offset)
 static inline uint64_t CVMX_OCX_FRCX_STAT1(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 5))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 5)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 5))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 5)))))
 		cvmx_warn("CVMX_OCX_FRCX_STAT1(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x000118001100FA80ull) + ((offset) & 7) * 8;
 }
@@ -171,8 +171,8 @@ static inline uint64_t CVMX_OCX_FRCX_STAT1(unsigned long offset)
 static inline uint64_t CVMX_OCX_FRCX_STAT2(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 5))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 5)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 5))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 5)))))
 		cvmx_warn("CVMX_OCX_FRCX_STAT2(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x000118001100FB00ull) + ((offset) & 7) * 8;
 }
@@ -183,8 +183,8 @@ static inline uint64_t CVMX_OCX_FRCX_STAT2(unsigned long offset)
 static inline uint64_t CVMX_OCX_FRCX_STAT3(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 5))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 5)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 5))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 5)))))
 		cvmx_warn("CVMX_OCX_FRCX_STAT3(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x000118001100FB80ull) + ((offset) & 7) * 8;
 }
@@ -195,8 +195,8 @@ static inline uint64_t CVMX_OCX_FRCX_STAT3(unsigned long offset)
 static inline uint64_t CVMX_OCX_LNEX_BAD_CNT(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 23))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 23)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 23))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 23)))))
 		cvmx_warn("CVMX_OCX_LNEX_BAD_CNT(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180011008028ull) + ((offset) & 31) * 256;
 }
@@ -207,8 +207,8 @@ static inline uint64_t CVMX_OCX_LNEX_BAD_CNT(unsigned long offset)
 static inline uint64_t CVMX_OCX_LNEX_CFG(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 23))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 23)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 23))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 23)))))
 		cvmx_warn("CVMX_OCX_LNEX_CFG(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180011008000ull) + ((offset) & 31) * 256;
 }
@@ -219,8 +219,8 @@ static inline uint64_t CVMX_OCX_LNEX_CFG(unsigned long offset)
 static inline uint64_t CVMX_OCX_LNEX_INT(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 23))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 23)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 23))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 23)))))
 		cvmx_warn("CVMX_OCX_LNEX_INT(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180011008018ull) + ((offset) & 31) * 256;
 }
@@ -231,8 +231,8 @@ static inline uint64_t CVMX_OCX_LNEX_INT(unsigned long offset)
 static inline uint64_t CVMX_OCX_LNEX_INT_EN(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 23))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 23)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 23))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 23)))))
 		cvmx_warn("CVMX_OCX_LNEX_INT_EN(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180011008020ull) + ((offset) & 31) * 256;
 }
@@ -243,8 +243,8 @@ static inline uint64_t CVMX_OCX_LNEX_INT_EN(unsigned long offset)
 static inline uint64_t CVMX_OCX_LNEX_STAT00(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 23))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 23)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 23))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 23)))))
 		cvmx_warn("CVMX_OCX_LNEX_STAT00(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180011008040ull) + ((offset) & 31) * 256;
 }
@@ -255,8 +255,8 @@ static inline uint64_t CVMX_OCX_LNEX_STAT00(unsigned long offset)
 static inline uint64_t CVMX_OCX_LNEX_STAT01(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 23))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 23)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 23))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 23)))))
 		cvmx_warn("CVMX_OCX_LNEX_STAT01(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180011008048ull) + ((offset) & 31) * 256;
 }
@@ -267,8 +267,8 @@ static inline uint64_t CVMX_OCX_LNEX_STAT01(unsigned long offset)
 static inline uint64_t CVMX_OCX_LNEX_STAT02(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 23))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 23)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 23))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 23)))))
 		cvmx_warn("CVMX_OCX_LNEX_STAT02(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180011008050ull) + ((offset) & 31) * 256;
 }
@@ -279,8 +279,8 @@ static inline uint64_t CVMX_OCX_LNEX_STAT02(unsigned long offset)
 static inline uint64_t CVMX_OCX_LNEX_STAT03(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 23))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 23)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 23))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 23)))))
 		cvmx_warn("CVMX_OCX_LNEX_STAT03(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180011008058ull) + ((offset) & 31) * 256;
 }
@@ -291,8 +291,8 @@ static inline uint64_t CVMX_OCX_LNEX_STAT03(unsigned long offset)
 static inline uint64_t CVMX_OCX_LNEX_STAT04(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 23))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 23)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 23))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 23)))))
 		cvmx_warn("CVMX_OCX_LNEX_STAT04(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180011008060ull) + ((offset) & 31) * 256;
 }
@@ -303,8 +303,8 @@ static inline uint64_t CVMX_OCX_LNEX_STAT04(unsigned long offset)
 static inline uint64_t CVMX_OCX_LNEX_STAT05(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 23))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 23)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 23))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 23)))))
 		cvmx_warn("CVMX_OCX_LNEX_STAT05(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180011008068ull) + ((offset) & 31) * 256;
 }
@@ -315,8 +315,8 @@ static inline uint64_t CVMX_OCX_LNEX_STAT05(unsigned long offset)
 static inline uint64_t CVMX_OCX_LNEX_STAT06(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 23))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 23)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 23))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 23)))))
 		cvmx_warn("CVMX_OCX_LNEX_STAT06(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180011008070ull) + ((offset) & 31) * 256;
 }
@@ -327,8 +327,8 @@ static inline uint64_t CVMX_OCX_LNEX_STAT06(unsigned long offset)
 static inline uint64_t CVMX_OCX_LNEX_STAT07(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 23))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 23)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 23))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 23)))))
 		cvmx_warn("CVMX_OCX_LNEX_STAT07(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180011008078ull) + ((offset) & 31) * 256;
 }
@@ -339,8 +339,8 @@ static inline uint64_t CVMX_OCX_LNEX_STAT07(unsigned long offset)
 static inline uint64_t CVMX_OCX_LNEX_STAT08(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 23))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 23)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 23))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 23)))))
 		cvmx_warn("CVMX_OCX_LNEX_STAT08(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180011008080ull) + ((offset) & 31) * 256;
 }
@@ -351,8 +351,8 @@ static inline uint64_t CVMX_OCX_LNEX_STAT08(unsigned long offset)
 static inline uint64_t CVMX_OCX_LNEX_STAT09(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 23))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 23)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 23))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 23)))))
 		cvmx_warn("CVMX_OCX_LNEX_STAT09(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180011008088ull) + ((offset) & 31) * 256;
 }
@@ -363,8 +363,8 @@ static inline uint64_t CVMX_OCX_LNEX_STAT09(unsigned long offset)
 static inline uint64_t CVMX_OCX_LNEX_STAT10(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 23))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 23)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 23))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 23)))))
 		cvmx_warn("CVMX_OCX_LNEX_STAT10(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180011008090ull) + ((offset) & 31) * 256;
 }
@@ -375,8 +375,8 @@ static inline uint64_t CVMX_OCX_LNEX_STAT10(unsigned long offset)
 static inline uint64_t CVMX_OCX_LNEX_STAT11(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 23))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 23)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 23))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 23)))))
 		cvmx_warn("CVMX_OCX_LNEX_STAT11(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180011008098ull) + ((offset) & 31) * 256;
 }
@@ -387,8 +387,8 @@ static inline uint64_t CVMX_OCX_LNEX_STAT11(unsigned long offset)
 static inline uint64_t CVMX_OCX_LNEX_STAT12(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 23))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 23)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 23))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 23)))))
 		cvmx_warn("CVMX_OCX_LNEX_STAT12(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800110080A0ull) + ((offset) & 31) * 256;
 }
@@ -399,8 +399,8 @@ static inline uint64_t CVMX_OCX_LNEX_STAT12(unsigned long offset)
 static inline uint64_t CVMX_OCX_LNEX_STAT13(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 23))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 23)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 23))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 23)))))
 		cvmx_warn("CVMX_OCX_LNEX_STAT13(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800110080A8ull) + ((offset) & 31) * 256;
 }
@@ -411,8 +411,8 @@ static inline uint64_t CVMX_OCX_LNEX_STAT13(unsigned long offset)
 static inline uint64_t CVMX_OCX_LNEX_STAT14(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 23))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 23)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 23))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 23)))))
 		cvmx_warn("CVMX_OCX_LNEX_STAT14(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800110080B0ull) + ((offset) & 31) * 256;
 }
@@ -423,8 +423,8 @@ static inline uint64_t CVMX_OCX_LNEX_STAT14(unsigned long offset)
 static inline uint64_t CVMX_OCX_LNEX_STATUS(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 23))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 23)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 23))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 23)))))
 		cvmx_warn("CVMX_OCX_LNEX_STATUS(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180011008008ull) + ((offset) & 31) * 256;
 }
@@ -435,8 +435,8 @@ static inline uint64_t CVMX_OCX_LNEX_STATUS(unsigned long offset)
 static inline uint64_t CVMX_OCX_LNEX_STS_MSG(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 23))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 23)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 23))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 23)))))
 		cvmx_warn("CVMX_OCX_LNEX_STS_MSG(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180011008010ull) + ((offset) & 31) * 256;
 }
@@ -447,8 +447,8 @@ static inline uint64_t CVMX_OCX_LNEX_STS_MSG(unsigned long offset)
 static inline uint64_t CVMX_OCX_LNEX_TRN_CTL(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 23))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 23)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 23))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 23)))))
 		cvmx_warn("CVMX_OCX_LNEX_TRN_CTL(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800110080D0ull) + ((offset) & 31) * 256;
 }
@@ -459,8 +459,8 @@ static inline uint64_t CVMX_OCX_LNEX_TRN_CTL(unsigned long offset)
 static inline uint64_t CVMX_OCX_LNEX_TRN_LD(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 23))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 23)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 23))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 23)))))
 		cvmx_warn("CVMX_OCX_LNEX_TRN_LD(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800110080C0ull) + ((offset) & 31) * 256;
 }
@@ -471,8 +471,8 @@ static inline uint64_t CVMX_OCX_LNEX_TRN_LD(unsigned long offset)
 static inline uint64_t CVMX_OCX_LNEX_TRN_LP(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 23))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 23)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 23))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 23)))))
 		cvmx_warn("CVMX_OCX_LNEX_TRN_LP(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800110080C8ull) + ((offset) & 31) * 256;
 }
@@ -494,8 +494,8 @@ static inline uint64_t CVMX_OCX_LNE_DBG_FUNC(void)
 static inline uint64_t CVMX_OCX_LNKX_CFG(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 2))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 2)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 2))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 2)))))
 		cvmx_warn("CVMX_OCX_LNKX_CFG(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x000118001100F900ull) + ((offset) & 3) * 8;
 }
@@ -539,8 +539,8 @@ static inline uint64_t CVMX_OCX_PP_WR_DATA_FUNC(void)
 static inline uint64_t CVMX_OCX_QLMX_CFG(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 5))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 5)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 5))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 5)))))
 		cvmx_warn("CVMX_OCX_QLMX_CFG(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x000118001100F800ull) + ((offset) & 7) * 8;
 }
@@ -551,8 +551,8 @@ static inline uint64_t CVMX_OCX_QLMX_CFG(unsigned long offset)
 static inline uint64_t CVMX_OCX_RLKX_ALIGN(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 2))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 2)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 2))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 2)))))
 		cvmx_warn("CVMX_OCX_RLKX_ALIGN(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180011018060ull) + ((offset) & 3) * 8192;
 }
@@ -563,8 +563,8 @@ static inline uint64_t CVMX_OCX_RLKX_ALIGN(unsigned long offset)
 static inline uint64_t CVMX_OCX_RLKX_BLK_ERR(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 2))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 2)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 2))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 2)))))
 		cvmx_warn("CVMX_OCX_RLKX_BLK_ERR(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180011018050ull) + ((offset) & 3) * 8192;
 }
@@ -575,8 +575,8 @@ static inline uint64_t CVMX_OCX_RLKX_BLK_ERR(unsigned long offset)
 static inline uint64_t CVMX_OCX_RLKX_ECC_CTL(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 2))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 2)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 2))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 2)))))
 		cvmx_warn("CVMX_OCX_RLKX_ECC_CTL(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180011018018ull) + ((offset) & 3) * 8192;
 }
@@ -587,8 +587,8 @@ static inline uint64_t CVMX_OCX_RLKX_ECC_CTL(unsigned long offset)
 static inline uint64_t CVMX_OCX_RLKX_ENABLES(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 2))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 2)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 2))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 2)))))
 		cvmx_warn("CVMX_OCX_RLKX_ENABLES(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180011018000ull) + ((offset) & 3) * 8192;
 }
@@ -599,8 +599,8 @@ static inline uint64_t CVMX_OCX_RLKX_ENABLES(unsigned long offset)
 static inline uint64_t CVMX_OCX_RLKX_FIFOX_CNT(unsigned long offset, unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 13)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 13)) && ((block_id <= 2))))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 13)) && ((block_id <= 2)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 13)) && ((block_id <= 2))))))
 		cvmx_warn("CVMX_OCX_RLKX_FIFOX_CNT(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x0001180011018100ull) + (((offset) & 15) + ((block_id) & 3) * 0x400ull) * 8;
 }
@@ -611,8 +611,8 @@ static inline uint64_t CVMX_OCX_RLKX_FIFOX_CNT(unsigned long offset, unsigned lo
 static inline uint64_t CVMX_OCX_RLKX_LNK_DATA(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 2))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 2)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 2))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 2)))))
 		cvmx_warn("CVMX_OCX_RLKX_LNK_DATA(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180011018028ull) + ((offset) & 3) * 8192;
 }
@@ -623,8 +623,8 @@ static inline uint64_t CVMX_OCX_RLKX_LNK_DATA(unsigned long offset)
 static inline uint64_t CVMX_OCX_RLKX_MCD_CTL(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 2))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 2)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 2))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 2)))))
 		cvmx_warn("CVMX_OCX_RLKX_MCD_CTL(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180011018020ull) + ((offset) & 3) * 8192;
 }
@@ -646,8 +646,8 @@ static inline uint64_t CVMX_OCX_STRAP_FUNC(void)
 static inline uint64_t CVMX_OCX_TLKX_BIST_STATUS(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 2))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 2)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 2))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 2)))))
 		cvmx_warn("CVMX_OCX_TLKX_BIST_STATUS(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180011010008ull) + ((offset) & 3) * 8192;
 }
@@ -669,8 +669,8 @@ static inline uint64_t CVMX_OCX_TLKX_BYP_CTL(unsigned long offset)
 static inline uint64_t CVMX_OCX_TLKX_ECC_CTL(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 2))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 2)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 2))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 2)))))
 		cvmx_warn("CVMX_OCX_TLKX_ECC_CTL(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180011010018ull) + ((offset) & 3) * 8192;
 }
@@ -681,8 +681,8 @@ static inline uint64_t CVMX_OCX_TLKX_ECC_CTL(unsigned long offset)
 static inline uint64_t CVMX_OCX_TLKX_FIFOX_CNT(unsigned long offset, unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 13)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 13)) && ((block_id <= 2))))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 13)) && ((block_id <= 2)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 13)) && ((block_id <= 2))))))
 		cvmx_warn("CVMX_OCX_TLKX_FIFOX_CNT(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x0001180011010100ull) + (((offset) & 15) + ((block_id) & 3) * 0x400ull) * 8;
 }
@@ -693,8 +693,8 @@ static inline uint64_t CVMX_OCX_TLKX_FIFOX_CNT(unsigned long offset, unsigned lo
 static inline uint64_t CVMX_OCX_TLKX_LNK_DATA(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 2))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 2)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 2))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 2)))))
 		cvmx_warn("CVMX_OCX_TLKX_LNK_DATA(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180011010028ull) + ((offset) & 3) * 8192;
 }
@@ -705,8 +705,8 @@ static inline uint64_t CVMX_OCX_TLKX_LNK_DATA(unsigned long offset)
 static inline uint64_t CVMX_OCX_TLKX_LNK_VCX_CNT(unsigned long offset, unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 13)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 13)) && ((block_id <= 2))))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 13)) && ((block_id <= 2)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 13)) && ((block_id <= 2))))))
 		cvmx_warn("CVMX_OCX_TLKX_LNK_VCX_CNT(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x0001180011010200ull) + (((offset) & 15) + ((block_id) & 3) * 0x400ull) * 8;
 }
@@ -717,8 +717,8 @@ static inline uint64_t CVMX_OCX_TLKX_LNK_VCX_CNT(unsigned long offset, unsigned 
 static inline uint64_t CVMX_OCX_TLKX_MCD_CTL(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 2))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 2)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 2))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 2)))))
 		cvmx_warn("CVMX_OCX_TLKX_MCD_CTL(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180011010020ull) + ((offset) & 3) * 8192;
 }
@@ -729,8 +729,8 @@ static inline uint64_t CVMX_OCX_TLKX_MCD_CTL(unsigned long offset)
 static inline uint64_t CVMX_OCX_TLKX_RTN_VCX_CNT(unsigned long offset, unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 13)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 13)) && ((block_id <= 2))))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 13)) && ((block_id <= 2)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 13)) && ((block_id <= 2))))))
 		cvmx_warn("CVMX_OCX_TLKX_RTN_VCX_CNT(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x0001180011010300ull) + (((offset) & 15) + ((block_id) & 3) * 0x400ull) * 8;
 }
@@ -741,8 +741,8 @@ static inline uint64_t CVMX_OCX_TLKX_RTN_VCX_CNT(unsigned long offset, unsigned 
 static inline uint64_t CVMX_OCX_TLKX_STATUS(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 2))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 2)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 2))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 2)))))
 		cvmx_warn("CVMX_OCX_TLKX_STATUS(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180011010000ull) + ((offset) & 3) * 8192;
 }
@@ -753,8 +753,8 @@ static inline uint64_t CVMX_OCX_TLKX_STATUS(unsigned long offset)
 static inline uint64_t CVMX_OCX_TLKX_STAT_CTL(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 2))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 2)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 2))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 2)))))
 		cvmx_warn("CVMX_OCX_TLKX_STAT_CTL(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180011010040ull) + ((offset) & 3) * 8192;
 }
@@ -765,8 +765,8 @@ static inline uint64_t CVMX_OCX_TLKX_STAT_CTL(unsigned long offset)
 static inline uint64_t CVMX_OCX_TLKX_STAT_DATA_CNT(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 2))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 2)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 2))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 2)))))
 		cvmx_warn("CVMX_OCX_TLKX_STAT_DATA_CNT(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180011010408ull) + ((offset) & 3) * 8192;
 }
@@ -777,8 +777,8 @@ static inline uint64_t CVMX_OCX_TLKX_STAT_DATA_CNT(unsigned long offset)
 static inline uint64_t CVMX_OCX_TLKX_STAT_ERR_CNT(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 2))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 2)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 2))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 2)))))
 		cvmx_warn("CVMX_OCX_TLKX_STAT_ERR_CNT(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180011010420ull) + ((offset) & 3) * 8192;
 }
@@ -789,8 +789,8 @@ static inline uint64_t CVMX_OCX_TLKX_STAT_ERR_CNT(unsigned long offset)
 static inline uint64_t CVMX_OCX_TLKX_STAT_IDLE_CNT(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 2))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 2)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 2))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 2)))))
 		cvmx_warn("CVMX_OCX_TLKX_STAT_IDLE_CNT(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180011010400ull) + ((offset) & 3) * 8192;
 }
@@ -801,8 +801,8 @@ static inline uint64_t CVMX_OCX_TLKX_STAT_IDLE_CNT(unsigned long offset)
 static inline uint64_t CVMX_OCX_TLKX_STAT_MATCHX(unsigned long offset, unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 2))))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 2))))))
 		cvmx_warn("CVMX_OCX_TLKX_STAT_MATCHX(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x0001180011010080ull) + (((offset) & 3) + ((block_id) & 3) * 0x400ull) * 8;
 }
@@ -813,8 +813,8 @@ static inline uint64_t CVMX_OCX_TLKX_STAT_MATCHX(unsigned long offset, unsigned 
 static inline uint64_t CVMX_OCX_TLKX_STAT_MATX_CNT(unsigned long offset, unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 2))))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 2))))))
 		cvmx_warn("CVMX_OCX_TLKX_STAT_MATX_CNT(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x0001180011010440ull) + (((offset) & 3) + ((block_id) & 3) * 0x400ull) * 8;
 }
@@ -825,8 +825,8 @@ static inline uint64_t CVMX_OCX_TLKX_STAT_MATX_CNT(unsigned long offset, unsigne
 static inline uint64_t CVMX_OCX_TLKX_STAT_RETRY_CNT(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 2))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 2)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 2))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 2)))))
 		cvmx_warn("CVMX_OCX_TLKX_STAT_RETRY_CNT(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180011010418ull) + ((offset) & 3) * 8192;
 }
@@ -837,8 +837,8 @@ static inline uint64_t CVMX_OCX_TLKX_STAT_RETRY_CNT(unsigned long offset)
 static inline uint64_t CVMX_OCX_TLKX_STAT_SYNC_CNT(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 2))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 2)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 2))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 2)))))
 		cvmx_warn("CVMX_OCX_TLKX_STAT_SYNC_CNT(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180011010410ull) + ((offset) & 3) * 8192;
 }
@@ -849,8 +849,8 @@ static inline uint64_t CVMX_OCX_TLKX_STAT_SYNC_CNT(unsigned long offset)
 static inline uint64_t CVMX_OCX_TLKX_STAT_VCX_CMD(unsigned long offset, unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 5)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 5)) && ((block_id <= 2))))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 5)) && ((block_id <= 2)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 5)) && ((block_id <= 2))))))
 		cvmx_warn("CVMX_OCX_TLKX_STAT_VCX_CMD(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x0001180011010480ull) + (((offset) & 7) + ((block_id) & 3) * 0x400ull) * 8;
 }
@@ -861,8 +861,8 @@ static inline uint64_t CVMX_OCX_TLKX_STAT_VCX_CMD(unsigned long offset, unsigned
 static inline uint64_t CVMX_OCX_TLKX_STAT_VCX_CON(unsigned long offset, unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 13)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 13)) && ((block_id <= 2))))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 13)) && ((block_id <= 2)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 13)) && ((block_id <= 2))))))
 		cvmx_warn("CVMX_OCX_TLKX_STAT_VCX_CON(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x0001180011010580ull) + (((offset) & 15) + ((block_id) & 3) * 0x400ull) * 8;
 }
@@ -873,8 +873,8 @@ static inline uint64_t CVMX_OCX_TLKX_STAT_VCX_CON(unsigned long offset, unsigned
 static inline uint64_t CVMX_OCX_TLKX_STAT_VCX_PKT(unsigned long offset, unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 13)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 13)) && ((block_id <= 2))))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 13)) && ((block_id <= 2)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 13)) && ((block_id <= 2))))))
 		cvmx_warn("CVMX_OCX_TLKX_STAT_VCX_PKT(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x0001180011010500ull) + (((offset) & 15) + ((block_id) & 3) * 0x400ull) * 8;
 }
@@ -945,7 +945,7 @@ union cvmx_ocx_com_bist_status {
 #endif
 	} s;
 	struct cvmx_ocx_com_bist_status_s     cn78xx;
-	struct cvmx_ocx_com_bist_status_s     cn78xxp2;
+	struct cvmx_ocx_com_bist_status_s     cn78xxp1;
 };
 typedef union cvmx_ocx_com_bist_status cvmx_ocx_com_bist_status_t;
 
@@ -968,7 +968,7 @@ union cvmx_ocx_com_dual_sort {
 #endif
 	} s;
 	struct cvmx_ocx_com_dual_sort_s       cn78xx;
-	struct cvmx_ocx_com_dual_sort_s       cn78xxp2;
+	struct cvmx_ocx_com_dual_sort_s       cn78xxp1;
 };
 typedef union cvmx_ocx_com_dual_sort cvmx_ocx_com_dual_sort_t;
 
@@ -981,21 +981,27 @@ union cvmx_ocx_com_int {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_55_63               : 9;
 	uint64_t io_badid                     : 1;  /**< I/O request or response cannot be sent because a link was not found with a packet node ID
-                                                         matching the OCX_COM_LINK(0..2)_CTL[ID]
-                                                         with OCX_COM_LINK(0..2)_CTL[VALID] bit set. Transaction has been dropped. */
+                                                         matching the OCX_COM_LINK(0..2)_CTL[ID] with OCX_COM_LINK(0..2)_CTL[VALID] bit set.
+                                                         Transaction has been dropped.  Should not occur during normal operation. This may indicate
+                                                         a software/configuration failure and may be considered fatal. */
 	uint64_t mem_badid                    : 1;  /**< Memory request or response cannot be sent because a link was not found with a packet node
-                                                         ID matching the OCX_COM_LINK(0..2)_CTL[ID]
-                                                         with OCX_COM_LINK(0..2)_CTL[VALID] bit set. Transaction has been dropped. */
+                                                         ID matching the OCX_COM_LINK(0..2)_CTL[ID] with OCX_COM_LINK(0..2)_CTL[VALID] bit set.
+                                                         Transaction has been dropped.  Should not occur during normal operation. This may indicate
+                                                         a software/configuration failure and may be considered fatal. */
 	uint64_t copr_badid                   : 1;  /**< Scheduler add work or buffer pool return cannot be sent because a link was not found with
-                                                         a node ID matching the
-                                                         OCX_COM_LINK(0..2)_CTL[ID] with OCX_COM_LINK(0..2)_CTL[VALID] bit set.  Transaction has
-                                                         been dropped. */
+                                                         a node ID matching the OCX_COM_LINK(0..2)_CTL[ID] with OCX_COM_LINK(0..2)_CTL[VALID] bit
+                                                         set.
+                                                         Transaction has been dropped.  Should not occur during normal operation. This may indicate
+                                                         a software/configuration failure and may be considered fatal. */
 	uint64_t win_req_badid                : 1;  /**< Window request specified in SLI_WIN_RD_ADDR, SLI_WIN_WR_ADDR, OCX_WIN_CMD or OCX_PP_CMD
                                                          cannot be sent because a link was not found with a request node ID matching the
-                                                         OCX_COM_LINK(0..2)_CTL[ID]
-                                                         with OCX_COM_LINK(0..2)_CTL[VALID] bit set.  Transaction has been dropped. */
+                                                         OCX_COM_LINK(0..2)_CTL[ID] with OCX_COM_LINK(0..2)_CTL[VALID] bit set.  Transaction has
+                                                         been
+                                                         dropped.  Should not occur during normal operation. This may indicate a
+                                                         software/configuration failure and may be considered fatal. */
 	uint64_t win_req_tout                 : 1;  /**< Window or core request was dropped because it could not be send during the period
-                                                         specified by OCX_WIN_TIMER. */
+                                                         specified by OCX_WIN_TIMER.  Should not occur during normal operation. This may indicate a
+                                                         software/configuration failure and may be considered fatal. */
 	uint64_t win_req_xmit                 : 1;  /**< Window request specified in SLI_WIN_RD_ADDR, SLI_WIN_WR_ADDR, OCX_WIN_CMD or OCX_PP_CMD
                                                          has been scheduled for transmission. If the command was not expecting a response, then a
                                                          new command may be issued. */
@@ -1017,7 +1023,7 @@ union cvmx_ocx_com_int {
 #endif
 	} s;
 	struct cvmx_ocx_com_int_s             cn78xx;
-	struct cvmx_ocx_com_int_s             cn78xxp2;
+	struct cvmx_ocx_com_int_s             cn78xxp1;
 };
 typedef union cvmx_ocx_com_int cvmx_ocx_com_int_t;
 
@@ -1078,7 +1084,7 @@ union cvmx_ocx_com_linkx_ctl {
 #endif
 	} s;
 	struct cvmx_ocx_com_linkx_ctl_s       cn78xx;
-	struct cvmx_ocx_com_linkx_ctl_s       cn78xxp2;
+	struct cvmx_ocx_com_linkx_ctl_s       cn78xxp1;
 };
 typedef union cvmx_ocx_com_linkx_ctl cvmx_ocx_com_linkx_ctl_t;
 
@@ -1090,25 +1096,38 @@ union cvmx_ocx_com_linkx_int {
 	struct cvmx_ocx_com_linkx_int_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_14_63               : 50;
-	uint64_t bad_word                     : 1;  /**< Illegal word decoded on at least one lane of link. */
-	uint64_t align_fail                   : 1;  /**< Link lanes failed to align. */
-	uint64_t align_done                   : 1;  /**< Link lane alignment is complete. */
+	uint64_t bad_word                     : 1;  /**< Illegal word decoded on at least one lane of link. These receive errors may occur during
+                                                         normal operation, and may likely occur during link bringup. Hardware normally will
+                                                         automatically correct the error. Software may choose to count the number of these errors. */
+	uint64_t align_fail                   : 1;  /**< Link lanes failed to align. These receive errors may occur during normal operation, and
+                                                         may likely occur during link bringup. Hardware normally will automatically correct the
+                                                         error. Software may choose to count the number of these errors. */
+	uint64_t align_done                   : 1;  /**< Link lane alignment is complete. These may occur during normal operation, and will occur
+                                                         during link bringup. Software should disable reception of these interrupts during normal
+                                                         operation. */
 	uint64_t up                           : 1;  /**< Link initialization is complete and is ready to pass traffic. Note this state occurs some
                                                          time after the link starts exchanging information as indicated in
-                                                         OCX_COM_LINK(0..2)_CTL[UP]. */
+                                                         OCX_COM_LINK(0..2)_CTL[UP]. These should not occur during normal operation. */
 	uint64_t stop                         : 1;  /**< Link has stopped operating. Link retry count has reached threshold specified in
                                                          OCX_COM_LINK_TIMER; outgoing traffic has been dropped and an initialization request has
-                                                         been reissued. */
-	uint64_t blk_err                      : 1;  /**< Link block error count has reached threshold specified in OCX_RLK(0..2)_BLK_ERR[LIMIT]. */
-	uint64_t reinit                       : 1;  /**< Link has received a initialization request from link partner after link has been established. */
+                                                         been reissued. These should not occur during normal operation. This may be considered
+                                                         fatal. */
+	uint64_t blk_err                      : 1;  /**< Link block error count has reached threshold specified in OCX_RLK(0..2)_BLK_ERR[LIMIT].
+                                                         These receive errors may occur during normal operation. Hardware normally will
+                                                         automatically correct the error. Software may choose to count the number of these errors. */
+	uint64_t reinit                       : 1;  /**< Link has received a initialization request from link partner after link has been
+                                                         established. These should not occur during normal operation */
 	uint64_t lnk_data                     : 1;  /**< Set by hardware when a link data block is received in OCX_RLK(0..2)_LNK_DATA. It
                                                          software's responsibility to clear the bit after reading the data. */
-	uint64_t rxfifo_dbe                   : 1;  /**< Double-bit error detected in FIFO RAMs. */
-	uint64_t rxfifo_sbe                   : 1;  /**< Single-bit error detected/corrected in FIFO RAMs. */
-	uint64_t txfifo_dbe                   : 1;  /**< Double-bit error detected in TX FIFO RAMs. */
-	uint64_t txfifo_sbe                   : 1;  /**< Single-bit error detected/corrected in TX FIFO RAMs. */
-	uint64_t replay_dbe                   : 1;  /**< Double-bit error detected in REPLAY BUFFER RAMs. */
-	uint64_t replay_sbe                   : 1;  /**< Single-bit error detected/corrected in REPLAY BUFFER RAMs. */
+	uint64_t rxfifo_dbe                   : 1;  /**< Double-bit error detected in FIFO RAMs. This error may be considered fatal. */
+	uint64_t rxfifo_sbe                   : 1;  /**< Single-bit error detected/corrected in FIFO RAMs. Hardware automatically corrected the
+                                                         error. Software may choose to count the number of these single-bit errors. */
+	uint64_t txfifo_dbe                   : 1;  /**< Double-bit error detected in TX FIFO RAMs. This error may be considered fatal. */
+	uint64_t txfifo_sbe                   : 1;  /**< Single-bit error detected/corrected in TX FIFO RAMs. Hardware automatically corrected the
+                                                         error. Software may choose to count the number of these single-bit errors. */
+	uint64_t replay_dbe                   : 1;  /**< Double-bit error detected in REPLAY BUFFER RAMs. This error may be considered fatal. */
+	uint64_t replay_sbe                   : 1;  /**< Single-bit error detected/corrected in REPLAY BUFFER RAMs. Hardware automatically
+                                                         corrected the error. Software may choose to count the number of these single-bit errors. */
 #else
 	uint64_t replay_sbe                   : 1;
 	uint64_t replay_dbe                   : 1;
@@ -1128,7 +1147,7 @@ union cvmx_ocx_com_linkx_int {
 #endif
 	} s;
 	struct cvmx_ocx_com_linkx_int_s       cn78xx;
-	struct cvmx_ocx_com_linkx_int_s       cn78xxp2;
+	struct cvmx_ocx_com_linkx_int_s       cn78xxp1;
 };
 typedef union cvmx_ocx_com_linkx_int cvmx_ocx_com_linkx_int_t;
 
@@ -1148,7 +1167,7 @@ union cvmx_ocx_com_link_timer {
 #endif
 	} s;
 	struct cvmx_ocx_com_link_timer_s      cn78xx;
-	struct cvmx_ocx_com_link_timer_s      cn78xxp2;
+	struct cvmx_ocx_com_link_timer_s      cn78xxp1;
 };
 typedef union cvmx_ocx_com_link_timer cvmx_ocx_com_link_timer_t;
 
@@ -1183,7 +1202,7 @@ union cvmx_ocx_com_node {
 #endif
 	} s;
 	struct cvmx_ocx_com_node_s            cn78xx;
-	struct cvmx_ocx_com_node_s            cn78xxp2;
+	struct cvmx_ocx_com_node_s            cn78xxp1;
 };
 typedef union cvmx_ocx_com_node cvmx_ocx_com_node_t;
 
@@ -1222,14 +1241,14 @@ union cvmx_ocx_dllx_status {
 	uint64_t reserved_60_63               : 4;
 #endif
 	} s;
-	struct cvmx_ocx_dllx_status_cn78xx {
+	struct cvmx_ocx_dllx_status_s         cn78xx;
+	struct cvmx_ocx_dllx_status_cn78xxp1 {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_0_63                : 64;
 #else
 	uint64_t reserved_0_63                : 64;
 #endif
-	} cn78xx;
-	struct cvmx_ocx_dllx_status_s         cn78xxp2;
+	} cn78xxp1;
 };
 typedef union cvmx_ocx_dllx_status cvmx_ocx_dllx_status_t;
 
@@ -1249,7 +1268,7 @@ union cvmx_ocx_frcx_stat0 {
 #endif
 	} s;
 	struct cvmx_ocx_frcx_stat0_s          cn78xx;
-	struct cvmx_ocx_frcx_stat0_s          cn78xxp2;
+	struct cvmx_ocx_frcx_stat0_s          cn78xxp1;
 };
 typedef union cvmx_ocx_frcx_stat0 cvmx_ocx_frcx_stat0_t;
 
@@ -1269,7 +1288,7 @@ union cvmx_ocx_frcx_stat1 {
 #endif
 	} s;
 	struct cvmx_ocx_frcx_stat1_s          cn78xx;
-	struct cvmx_ocx_frcx_stat1_s          cn78xxp2;
+	struct cvmx_ocx_frcx_stat1_s          cn78xxp1;
 };
 typedef union cvmx_ocx_frcx_stat1 cvmx_ocx_frcx_stat1_t;
 
@@ -1288,7 +1307,7 @@ union cvmx_ocx_frcx_stat2 {
 #endif
 	} s;
 	struct cvmx_ocx_frcx_stat2_s          cn78xx;
-	struct cvmx_ocx_frcx_stat2_s          cn78xxp2;
+	struct cvmx_ocx_frcx_stat2_s          cn78xxp1;
 };
 typedef union cvmx_ocx_frcx_stat2 cvmx_ocx_frcx_stat2_t;
 
@@ -1307,7 +1326,7 @@ union cvmx_ocx_frcx_stat3 {
 #endif
 	} s;
 	struct cvmx_ocx_frcx_stat3_s          cn78xx;
-	struct cvmx_ocx_frcx_stat3_s          cn78xxp2;
+	struct cvmx_ocx_frcx_stat3_s          cn78xxp1;
 };
 typedef union cvmx_ocx_frcx_stat3 cvmx_ocx_frcx_stat3_t;
 
@@ -1333,7 +1352,7 @@ union cvmx_ocx_lnex_bad_cnt {
 #endif
 	} s;
 	struct cvmx_ocx_lnex_bad_cnt_s        cn78xx;
-	struct cvmx_ocx_lnex_bad_cnt_s        cn78xxp2;
+	struct cvmx_ocx_lnex_bad_cnt_s        cn78xxp1;
 };
 typedef union cvmx_ocx_lnex_bad_cnt cvmx_ocx_lnex_bad_cnt_t;
 
@@ -1361,7 +1380,7 @@ union cvmx_ocx_lnex_cfg {
 #endif
 	} s;
 	struct cvmx_ocx_lnex_cfg_s            cn78xx;
-	struct cvmx_ocx_lnex_cfg_s            cn78xxp2;
+	struct cvmx_ocx_lnex_cfg_s            cn78xxp1;
 };
 typedef union cvmx_ocx_lnex_cfg cvmx_ocx_lnex_cfg_t;
 
@@ -1373,18 +1392,38 @@ union cvmx_ocx_lnex_int {
 	struct cvmx_ocx_lnex_int_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_10_63               : 54;
-	uint64_t disp_err                     : 1;  /**< RX disparity error encountered. */
+	uint64_t disp_err                     : 1;  /**< RX disparity error encountered. These receive errors may occur during normal operation,
+                                                         and may likely occur during link bringup. Hardware normally will automatically correct the
+                                                         error. Software may choose to count the number of these errors. */
 	uint64_t bad_64b67b                   : 1;  /**< Bad 64B/67B codeword encountered. Once the bad word reaches the link, as denoted by
-                                                         OCX_COM_LINK(0..2)_INT[BAD_WORD], a retry handshake is initiated. */
+                                                         OCX_COM_LINK(0..2)_INT[BAD_WORD], a retry handshake is initiated. These receive errors may
+                                                         occur during normal operation, and may likely occur during link bringup. Hardware normally
+                                                         will automatically correct the error. Software may choose to count the number of these
+                                                         errors. */
 	uint64_t stat_cnt_ovfl                : 1;  /**< RX lane statistic counter overflow. */
-	uint64_t stat_msg                     : 1;  /**< Status bits for the link or a lane transitioned from a 1 (healthy) to a 0 (problem). */
-	uint64_t dskew_fifo_ovfl              : 1;  /**< RX deskew FIFO overflow occurred. */
-	uint64_t scrm_sync_loss               : 1;  /**< 4 consecutive bad sync words or 3 consecutive scramble state mismatches. */
-	uint64_t ukwn_cntl_word               : 1;  /**< Unknown framing control word. Block type does not match any of (SYNC, SCRAM, SKIP, DIAG). */
-	uint64_t crc32_err                    : 1;  /**< Diagnostic CRC32 errors. */
+	uint64_t stat_msg                     : 1;  /**< Status bits for the link or a lane transitioned from a 1 (healthy) to a 0 (problem). These
+                                                         should not occur during normal operation. This may be considered fatal, depending on the
+                                                         software protocol. */
+	uint64_t dskew_fifo_ovfl              : 1;  /**< RX deskew FIFO overflow occurred. These receive errors may occur during normal operation,
+                                                         and may likely occur during link bringup. Hardware normally will automatically correct the
+                                                         error. Software may choose to count the number of these errors. */
+	uint64_t scrm_sync_loss               : 1;  /**< 4 consecutive bad sync words or 3 consecutive scramble state mismatches. These receive
+                                                         errors should not occur during normal operation, but may likely occur during link bringup.
+                                                         Hardware normally will automatically correct the error. Software may choose to count the
+                                                         number of these errors. */
+	uint64_t ukwn_cntl_word               : 1;  /**< Unknown framing control word. Block type does not match any of (SYNC, SCRAM, SKIP, DIAG).
+                                                         These receive errors may occur during normal operation. Hardware normally will
+                                                         automatically correct the error. Software may choose to count the number of these errors. */
+	uint64_t crc32_err                    : 1;  /**< Diagnostic CRC32 errors. These receive errors may occur during normal operation, typically
+                                                         in the presence of other errors, and may likely occur during link bringup. Hardware
+                                                         normally will automatically correct the error. Software may choose to count the number of
+                                                         these errors. */
 	uint64_t bdry_sync_loss               : 1;  /**< RX logic lost word boundary sync after 16 tries. Hardware automatically attempts to regain
-                                                         word boundary sync. */
-	uint64_t serdes_lock_loss             : 1;  /**< RX SerDes loses lock. */
+                                                         word boundary sync. These receive errors should not occur during normal operation, but may
+                                                         likely occur during link bringup. Hardware normally will automatically correct the error.
+                                                         Software may choose to count the number of these errors. */
+	uint64_t serdes_lock_loss             : 1;  /**< RX SerDes loses lock. These receive errors should not occur during normal operation. This
+                                                         may be considered fatal. */
 #else
 	uint64_t serdes_lock_loss             : 1;
 	uint64_t bdry_sync_loss               : 1;
@@ -1400,7 +1439,7 @@ union cvmx_ocx_lnex_int {
 #endif
 	} s;
 	struct cvmx_ocx_lnex_int_s            cn78xx;
-	struct cvmx_ocx_lnex_int_s            cn78xxp2;
+	struct cvmx_ocx_lnex_int_s            cn78xxp1;
 };
 typedef union cvmx_ocx_lnex_int cvmx_ocx_lnex_int_t;
 
@@ -1412,7 +1451,7 @@ union cvmx_ocx_lnex_int_en {
 	struct cvmx_ocx_lnex_int_en_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_10_63               : 54;
-	uint64_t disp_err                     : 1;  /**< Enable bit for RX disparity error encountered. */
+	uint64_t disp_err                     : 1;  /**< Reserved. */
 	uint64_t bad_64b67b                   : 1;  /**< Enable bit for bad 64B/67B codeword encountered. */
 	uint64_t stat_cnt_ovfl                : 1;  /**< Enable bit for RX lane statistic counter overflow. */
 	uint64_t stat_msg                     : 1;  /**< Enable bit for status bits for the link or a lane transitioned from a 1 (healthy) to a 0 (problem). */
@@ -1438,7 +1477,7 @@ union cvmx_ocx_lnex_int_en {
 #endif
 	} s;
 	struct cvmx_ocx_lnex_int_en_s         cn78xx;
-	struct cvmx_ocx_lnex_int_en_s         cn78xxp2;
+	struct cvmx_ocx_lnex_int_en_s         cn78xxp1;
 };
 typedef union cvmx_ocx_lnex_int_en cvmx_ocx_lnex_int_en_t;
 
@@ -1458,7 +1497,7 @@ union cvmx_ocx_lnex_stat00 {
 #endif
 	} s;
 	struct cvmx_ocx_lnex_stat00_s         cn78xx;
-	struct cvmx_ocx_lnex_stat00_s         cn78xxp2;
+	struct cvmx_ocx_lnex_stat00_s         cn78xxp1;
 };
 typedef union cvmx_ocx_lnex_stat00 cvmx_ocx_lnex_stat00_t;
 
@@ -1478,7 +1517,7 @@ union cvmx_ocx_lnex_stat01 {
 #endif
 	} s;
 	struct cvmx_ocx_lnex_stat01_s         cn78xx;
-	struct cvmx_ocx_lnex_stat01_s         cn78xxp2;
+	struct cvmx_ocx_lnex_stat01_s         cn78xxp1;
 };
 typedef union cvmx_ocx_lnex_stat01 cvmx_ocx_lnex_stat01_t;
 
@@ -1498,7 +1537,7 @@ union cvmx_ocx_lnex_stat02 {
 #endif
 	} s;
 	struct cvmx_ocx_lnex_stat02_s         cn78xx;
-	struct cvmx_ocx_lnex_stat02_s         cn78xxp2;
+	struct cvmx_ocx_lnex_stat02_s         cn78xxp1;
 };
 typedef union cvmx_ocx_lnex_stat02 cvmx_ocx_lnex_stat02_t;
 
@@ -1518,7 +1557,7 @@ union cvmx_ocx_lnex_stat03 {
 #endif
 	} s;
 	struct cvmx_ocx_lnex_stat03_s         cn78xx;
-	struct cvmx_ocx_lnex_stat03_s         cn78xxp2;
+	struct cvmx_ocx_lnex_stat03_s         cn78xxp1;
 };
 typedef union cvmx_ocx_lnex_stat03 cvmx_ocx_lnex_stat03_t;
 
@@ -1538,7 +1577,7 @@ union cvmx_ocx_lnex_stat04 {
 #endif
 	} s;
 	struct cvmx_ocx_lnex_stat04_s         cn78xx;
-	struct cvmx_ocx_lnex_stat04_s         cn78xxp2;
+	struct cvmx_ocx_lnex_stat04_s         cn78xxp1;
 };
 typedef union cvmx_ocx_lnex_stat04 cvmx_ocx_lnex_stat04_t;
 
@@ -1558,7 +1597,7 @@ union cvmx_ocx_lnex_stat05 {
 #endif
 	} s;
 	struct cvmx_ocx_lnex_stat05_s         cn78xx;
-	struct cvmx_ocx_lnex_stat05_s         cn78xxp2;
+	struct cvmx_ocx_lnex_stat05_s         cn78xxp1;
 };
 typedef union cvmx_ocx_lnex_stat05 cvmx_ocx_lnex_stat05_t;
 
@@ -1578,7 +1617,7 @@ union cvmx_ocx_lnex_stat06 {
 #endif
 	} s;
 	struct cvmx_ocx_lnex_stat06_s         cn78xx;
-	struct cvmx_ocx_lnex_stat06_s         cn78xxp2;
+	struct cvmx_ocx_lnex_stat06_s         cn78xxp1;
 };
 typedef union cvmx_ocx_lnex_stat06 cvmx_ocx_lnex_stat06_t;
 
@@ -1598,7 +1637,7 @@ union cvmx_ocx_lnex_stat07 {
 #endif
 	} s;
 	struct cvmx_ocx_lnex_stat07_s         cn78xx;
-	struct cvmx_ocx_lnex_stat07_s         cn78xxp2;
+	struct cvmx_ocx_lnex_stat07_s         cn78xxp1;
 };
 typedef union cvmx_ocx_lnex_stat07 cvmx_ocx_lnex_stat07_t;
 
@@ -1619,7 +1658,7 @@ union cvmx_ocx_lnex_stat08 {
 #endif
 	} s;
 	struct cvmx_ocx_lnex_stat08_s         cn78xx;
-	struct cvmx_ocx_lnex_stat08_s         cn78xxp2;
+	struct cvmx_ocx_lnex_stat08_s         cn78xxp1;
 };
 typedef union cvmx_ocx_lnex_stat08 cvmx_ocx_lnex_stat08_t;
 
@@ -1639,7 +1678,7 @@ union cvmx_ocx_lnex_stat09 {
 #endif
 	} s;
 	struct cvmx_ocx_lnex_stat09_s         cn78xx;
-	struct cvmx_ocx_lnex_stat09_s         cn78xxp2;
+	struct cvmx_ocx_lnex_stat09_s         cn78xxp1;
 };
 typedef union cvmx_ocx_lnex_stat09 cvmx_ocx_lnex_stat09_t;
 
@@ -1659,7 +1698,7 @@ union cvmx_ocx_lnex_stat10 {
 #endif
 	} s;
 	struct cvmx_ocx_lnex_stat10_s         cn78xx;
-	struct cvmx_ocx_lnex_stat10_s         cn78xxp2;
+	struct cvmx_ocx_lnex_stat10_s         cn78xxp1;
 };
 typedef union cvmx_ocx_lnex_stat10 cvmx_ocx_lnex_stat10_t;
 
@@ -1679,7 +1718,7 @@ union cvmx_ocx_lnex_stat11 {
 #endif
 	} s;
 	struct cvmx_ocx_lnex_stat11_s         cn78xx;
-	struct cvmx_ocx_lnex_stat11_s         cn78xxp2;
+	struct cvmx_ocx_lnex_stat11_s         cn78xxp1;
 };
 typedef union cvmx_ocx_lnex_stat11 cvmx_ocx_lnex_stat11_t;
 
@@ -1699,7 +1738,7 @@ union cvmx_ocx_lnex_stat12 {
 #endif
 	} s;
 	struct cvmx_ocx_lnex_stat12_s         cn78xx;
-	struct cvmx_ocx_lnex_stat12_s         cn78xxp2;
+	struct cvmx_ocx_lnex_stat12_s         cn78xxp1;
 };
 typedef union cvmx_ocx_lnex_stat12 cvmx_ocx_lnex_stat12_t;
 
@@ -1719,7 +1758,7 @@ union cvmx_ocx_lnex_stat13 {
 #endif
 	} s;
 	struct cvmx_ocx_lnex_stat13_s         cn78xx;
-	struct cvmx_ocx_lnex_stat13_s         cn78xxp2;
+	struct cvmx_ocx_lnex_stat13_s         cn78xxp1;
 };
 typedef union cvmx_ocx_lnex_stat13 cvmx_ocx_lnex_stat13_t;
 
@@ -1739,7 +1778,7 @@ union cvmx_ocx_lnex_stat14 {
 #endif
 	} s;
 	struct cvmx_ocx_lnex_stat14_s         cn78xx;
-	struct cvmx_ocx_lnex_stat14_s         cn78xxp2;
+	struct cvmx_ocx_lnex_stat14_s         cn78xxp1;
 };
 typedef union cvmx_ocx_lnex_stat14 cvmx_ocx_lnex_stat14_t;
 
@@ -1762,7 +1801,7 @@ union cvmx_ocx_lnex_status {
 #endif
 	} s;
 	struct cvmx_ocx_lnex_status_s         cn78xx;
-	struct cvmx_ocx_lnex_status_s         cn78xxp2;
+	struct cvmx_ocx_lnex_status_s         cn78xxp1;
 };
 typedef union cvmx_ocx_lnex_status cvmx_ocx_lnex_status_t;
 
@@ -1799,7 +1838,7 @@ union cvmx_ocx_lnex_sts_msg {
 #endif
 	} s;
 	struct cvmx_ocx_lnex_sts_msg_s        cn78xx;
-	struct cvmx_ocx_lnex_sts_msg_s        cn78xxp2;
+	struct cvmx_ocx_lnex_sts_msg_s        cn78xxp1;
 };
 typedef union cvmx_ocx_lnex_sts_msg cvmx_ocx_lnex_sts_msg_t;
 
@@ -1826,7 +1865,7 @@ union cvmx_ocx_lnex_trn_ctl {
 #endif
 	} s;
 	struct cvmx_ocx_lnex_trn_ctl_s        cn78xx;
-	struct cvmx_ocx_lnex_trn_ctl_s        cn78xxp2;
+	struct cvmx_ocx_lnex_trn_ctl_s        cn78xxp1;
 };
 typedef union cvmx_ocx_lnex_trn_ctl cvmx_ocx_lnex_trn_ctl_t;
 
@@ -1857,7 +1896,7 @@ union cvmx_ocx_lnex_trn_ld {
 #endif
 	} s;
 	struct cvmx_ocx_lnex_trn_ld_s         cn78xx;
-	struct cvmx_ocx_lnex_trn_ld_s         cn78xxp2;
+	struct cvmx_ocx_lnex_trn_ld_s         cn78xxp1;
 };
 typedef union cvmx_ocx_lnex_trn_ld cvmx_ocx_lnex_trn_ld_t;
 
@@ -1886,7 +1925,7 @@ union cvmx_ocx_lnex_trn_lp {
 #endif
 	} s;
 	struct cvmx_ocx_lnex_trn_lp_s         cn78xx;
-	struct cvmx_ocx_lnex_trn_lp_s         cn78xxp2;
+	struct cvmx_ocx_lnex_trn_lp_s         cn78xxp1;
 };
 typedef union cvmx_ocx_lnex_trn_lp cvmx_ocx_lnex_trn_lp_t;
 
@@ -1944,7 +1983,7 @@ union cvmx_ocx_lne_dbg {
 #endif
 	} s;
 	struct cvmx_ocx_lne_dbg_s             cn78xx;
-	struct cvmx_ocx_lne_dbg_s             cn78xxp2;
+	struct cvmx_ocx_lne_dbg_s             cn78xxp1;
 };
 typedef union cvmx_ocx_lne_dbg cvmx_ocx_lne_dbg_t;
 
@@ -1998,18 +2037,13 @@ union cvmx_ocx_lnkx_cfg {
                                                          A link with QLM_SELECT = 000000 is invalid and will never exchange traffic with the
                                                          link partner. */
 	uint64_t reserved_29_31               : 3;
-	uint64_t data_rate                    : 13; /**< The number of rclk to transmit 32 words, where each word is 67 bits.  hardware will
-                                                         automatically
-                                                         calculate a conservative value for this field.   Software can override the calculation by
-                                                         writing
-                                                         TX_DAT_RATE=roundup((67*RCLK / GBAUD)*32). */
-	uint64_t low_delay                    : 6;  /**< The delay before reacting to a lane low data indication, as a multiple of 64 rclks. */
+	uint64_t data_rate                    : 13; /**< Reserved. */
+	uint64_t low_delay                    : 6;  /**< Reserved. */
 	uint64_t lane_align_dis               : 1;  /**< Disable the RX lane alignment. */
 	uint64_t lane_rev                     : 1;  /**< RX lane reversal.   When enabled, lane destriping is performed from the most significant
                                                          lane enabled to least significant lane enabled [QLM_SELECT] must be zero before changing
                                                          [LANE_REV]. */
-	uint64_t lane_rev_auto                : 1;  /**< Automatically detect RX lane reversal.  When enabled, [LANE_REV] will be updated by
-                                                         hardware. */
+	uint64_t lane_rev_auto                : 1;  /**< Reserved. */
 	uint64_t reserved_0_6                 : 7;
 #else
 	uint64_t reserved_0_6                 : 7;
@@ -2026,7 +2060,7 @@ union cvmx_ocx_lnkx_cfg {
 #endif
 	} s;
 	struct cvmx_ocx_lnkx_cfg_s            cn78xx;
-	struct cvmx_ocx_lnkx_cfg_s            cn78xxp2;
+	struct cvmx_ocx_lnkx_cfg_s            cn78xxp1;
 };
 typedef union cvmx_ocx_lnkx_cfg cvmx_ocx_lnkx_cfg_t;
 
@@ -2075,7 +2109,7 @@ union cvmx_ocx_pp_cmd {
 #endif
 	} s;
 	struct cvmx_ocx_pp_cmd_s              cn78xx;
-	struct cvmx_ocx_pp_cmd_s              cn78xxp2;
+	struct cvmx_ocx_pp_cmd_s              cn78xxp1;
 };
 typedef union cvmx_ocx_pp_cmd cvmx_ocx_pp_cmd_t;
 
@@ -2096,7 +2130,7 @@ union cvmx_ocx_pp_rd_data {
 #endif
 	} s;
 	struct cvmx_ocx_pp_rd_data_s          cn78xx;
-	struct cvmx_ocx_pp_rd_data_s          cn78xxp2;
+	struct cvmx_ocx_pp_rd_data_s          cn78xxp1;
 };
 typedef union cvmx_ocx_pp_rd_data cvmx_ocx_pp_rd_data_t;
 
@@ -2117,7 +2151,7 @@ union cvmx_ocx_pp_wr_data {
 #endif
 	} s;
 	struct cvmx_ocx_pp_wr_data_s          cn78xx;
-	struct cvmx_ocx_pp_wr_data_s          cn78xxp2;
+	struct cvmx_ocx_pp_wr_data_s          cn78xxp1;
 };
 typedef union cvmx_ocx_pp_wr_data cvmx_ocx_pp_wr_data_t;
 
@@ -2128,16 +2162,13 @@ union cvmx_ocx_qlmx_cfg {
 	uint64_t u64;
 	struct cvmx_ocx_qlmx_cfg_s {
 #ifdef __BIG_ENDIAN_BITFIELD
-	uint64_t ser_low                      : 4;  /**< Reduce latency by limiting the amount of data in flight for each SerDes.  Writing to 0
-                                                         causes
-                                                         hardware to determine a typically optimal value. */
+	uint64_t ser_low                      : 4;  /**< Reserved. */
 	uint64_t reserved_42_59               : 18;
-	uint64_t ser_limit                    : 10; /**< Reserved.  Removed in pass 2. */
+	uint64_t ser_limit                    : 10; /**< Reduce latency by limiting the amount of data in flight for each SerDes. For diagnostic
+                                                         use only.  Removed in pass 2. */
 	uint64_t crd_dis                      : 1;  /**< For diagnostic use only. */
 	uint64_t reserved_27_30               : 4;
-	uint64_t trn_rxeq_only                : 1;  /**< Shortened training sequence.  Initialized to 1 during cold reset when OCI_SPD<3:0> pins
-                                                         indicate 5 GBAUD <=speed < 8 GBAUD. Otherwise, initialized to 0 during a cold reset. This
-                                                         field is not affected by soft or warm reset.  For diagnostic use only. */
+	uint64_t trn_rxeq_only                : 1;  /**< Reserved. */
 	uint64_t timer_dis                    : 1;  /**< Disable bad lane timer. A timer counts core clocks (RCLKs) when any enabled lane is not
                                                          ready, i.e. not in the scrambler sync state. If this timer expires before all enabled
                                                          lanes can be made ready, then any lane which is not ready is disabled via
@@ -2195,7 +2226,7 @@ union cvmx_ocx_qlmx_cfg {
 #endif
 	} s;
 	struct cvmx_ocx_qlmx_cfg_s            cn78xx;
-	struct cvmx_ocx_qlmx_cfg_s            cn78xxp2;
+	struct cvmx_ocx_qlmx_cfg_s            cn78xxp1;
 };
 typedef union cvmx_ocx_qlmx_cfg cvmx_ocx_qlmx_cfg_t;
 
@@ -2216,7 +2247,7 @@ union cvmx_ocx_rlkx_align {
 #endif
 	} s;
 	struct cvmx_ocx_rlkx_align_s          cn78xx;
-	struct cvmx_ocx_rlkx_align_s          cn78xxp2;
+	struct cvmx_ocx_rlkx_align_s          cn78xxp1;
 };
 typedef union cvmx_ocx_rlkx_align cvmx_ocx_rlkx_align_t;
 
@@ -2239,7 +2270,7 @@ union cvmx_ocx_rlkx_blk_err {
 #endif
 	} s;
 	struct cvmx_ocx_rlkx_blk_err_s        cn78xx;
-	struct cvmx_ocx_rlkx_blk_err_s        cn78xxp2;
+	struct cvmx_ocx_rlkx_blk_err_s        cn78xxp1;
 };
 typedef union cvmx_ocx_rlkx_blk_err cvmx_ocx_rlkx_blk_err_t;
 
@@ -2266,7 +2297,7 @@ union cvmx_ocx_rlkx_ecc_ctl {
 #endif
 	} s;
 	struct cvmx_ocx_rlkx_ecc_ctl_s        cn78xx;
-	struct cvmx_ocx_rlkx_ecc_ctl_s        cn78xxp2;
+	struct cvmx_ocx_rlkx_ecc_ctl_s        cn78xxp1;
 };
 typedef union cvmx_ocx_rlkx_ecc_ctl cvmx_ocx_rlkx_ecc_ctl_t;
 
@@ -2299,7 +2330,7 @@ union cvmx_ocx_rlkx_enables {
 #endif
 	} s;
 	struct cvmx_ocx_rlkx_enables_s        cn78xx;
-	struct cvmx_ocx_rlkx_enables_s        cn78xxp2;
+	struct cvmx_ocx_rlkx_enables_s        cn78xxp1;
 };
 typedef union cvmx_ocx_rlkx_enables cvmx_ocx_rlkx_enables_t;
 
@@ -2319,7 +2350,7 @@ union cvmx_ocx_rlkx_fifox_cnt {
 #endif
 	} s;
 	struct cvmx_ocx_rlkx_fifox_cnt_s      cn78xx;
-	struct cvmx_ocx_rlkx_fifox_cnt_s      cn78xxp2;
+	struct cvmx_ocx_rlkx_fifox_cnt_s      cn78xxp1;
 };
 typedef union cvmx_ocx_rlkx_fifox_cnt cvmx_ocx_rlkx_fifox_cnt_t;
 
@@ -2342,7 +2373,7 @@ union cvmx_ocx_rlkx_lnk_data {
 #endif
 	} s;
 	struct cvmx_ocx_rlkx_lnk_data_s       cn78xx;
-	struct cvmx_ocx_rlkx_lnk_data_s       cn78xxp2;
+	struct cvmx_ocx_rlkx_lnk_data_s       cn78xxp1;
 };
 typedef union cvmx_ocx_rlkx_lnk_data cvmx_ocx_rlkx_lnk_data_t;
 
@@ -2366,7 +2397,7 @@ union cvmx_ocx_rlkx_mcd_ctl {
 #endif
 	} s;
 	struct cvmx_ocx_rlkx_mcd_ctl_s        cn78xx;
-	struct cvmx_ocx_rlkx_mcd_ctl_s        cn78xxp2;
+	struct cvmx_ocx_rlkx_mcd_ctl_s        cn78xxp1;
 };
 typedef union cvmx_ocx_rlkx_mcd_ctl cvmx_ocx_rlkx_mcd_ctl_t;
 
@@ -2401,7 +2432,7 @@ union cvmx_ocx_strap {
 	uint64_t reserved_26_63               : 38;
 #endif
 	} s;
-	struct cvmx_ocx_strap_s               cn78xxp2;
+	struct cvmx_ocx_strap_s               cn78xx;
 };
 typedef union cvmx_ocx_strap cvmx_ocx_strap_t;
 
@@ -2424,7 +2455,7 @@ union cvmx_ocx_tlkx_bist_status {
 #endif
 	} s;
 	struct cvmx_ocx_tlkx_bist_status_s    cn78xx;
-	struct cvmx_ocx_tlkx_bist_status_s    cn78xxp2;
+	struct cvmx_ocx_tlkx_bist_status_s    cn78xxp1;
 };
 typedef union cvmx_ocx_tlkx_bist_status cvmx_ocx_tlkx_bist_status_t;
 
@@ -2449,7 +2480,7 @@ union cvmx_ocx_tlkx_byp_ctl {
 	uint64_t reserved_12_63               : 52;
 #endif
 	} s;
-	struct cvmx_ocx_tlkx_byp_ctl_s        cn78xxp2;
+	struct cvmx_ocx_tlkx_byp_ctl_s        cn78xx;
 };
 typedef union cvmx_ocx_tlkx_byp_ctl cvmx_ocx_tlkx_byp_ctl_t;
 
@@ -2480,7 +2511,7 @@ union cvmx_ocx_tlkx_ecc_ctl {
 #endif
 	} s;
 	struct cvmx_ocx_tlkx_ecc_ctl_s        cn78xx;
-	struct cvmx_ocx_tlkx_ecc_ctl_s        cn78xxp2;
+	struct cvmx_ocx_tlkx_ecc_ctl_s        cn78xxp1;
 };
 typedef union cvmx_ocx_tlkx_ecc_ctl cvmx_ocx_tlkx_ecc_ctl_t;
 
@@ -2499,7 +2530,7 @@ union cvmx_ocx_tlkx_fifox_cnt {
 #endif
 	} s;
 	struct cvmx_ocx_tlkx_fifox_cnt_s      cn78xx;
-	struct cvmx_ocx_tlkx_fifox_cnt_s      cn78xxp2;
+	struct cvmx_ocx_tlkx_fifox_cnt_s      cn78xxp1;
 };
 typedef union cvmx_ocx_tlkx_fifox_cnt cvmx_ocx_tlkx_fifox_cnt_t;
 
@@ -2519,7 +2550,7 @@ union cvmx_ocx_tlkx_lnk_data {
 #endif
 	} s;
 	struct cvmx_ocx_tlkx_lnk_data_s       cn78xx;
-	struct cvmx_ocx_tlkx_lnk_data_s       cn78xxp2;
+	struct cvmx_ocx_tlkx_lnk_data_s       cn78xxp1;
 };
 typedef union cvmx_ocx_tlkx_lnk_data cvmx_ocx_tlkx_lnk_data_t;
 
@@ -2538,7 +2569,7 @@ union cvmx_ocx_tlkx_lnk_vcx_cnt {
 #endif
 	} s;
 	struct cvmx_ocx_tlkx_lnk_vcx_cnt_s    cn78xx;
-	struct cvmx_ocx_tlkx_lnk_vcx_cnt_s    cn78xxp2;
+	struct cvmx_ocx_tlkx_lnk_vcx_cnt_s    cn78xxp1;
 };
 typedef union cvmx_ocx_tlkx_lnk_vcx_cnt cvmx_ocx_tlkx_lnk_vcx_cnt_t;
 
@@ -2560,7 +2591,7 @@ union cvmx_ocx_tlkx_mcd_ctl {
 #endif
 	} s;
 	struct cvmx_ocx_tlkx_mcd_ctl_s        cn78xx;
-	struct cvmx_ocx_tlkx_mcd_ctl_s        cn78xxp2;
+	struct cvmx_ocx_tlkx_mcd_ctl_s        cn78xxp1;
 };
 typedef union cvmx_ocx_tlkx_mcd_ctl cvmx_ocx_tlkx_mcd_ctl_t;
 
@@ -2579,7 +2610,7 @@ union cvmx_ocx_tlkx_rtn_vcx_cnt {
 #endif
 	} s;
 	struct cvmx_ocx_tlkx_rtn_vcx_cnt_s    cn78xx;
-	struct cvmx_ocx_tlkx_rtn_vcx_cnt_s    cn78xxp2;
+	struct cvmx_ocx_tlkx_rtn_vcx_cnt_s    cn78xxp1;
 };
 typedef union cvmx_ocx_tlkx_rtn_vcx_cnt cvmx_ocx_tlkx_rtn_vcx_cnt_t;
 
@@ -2603,7 +2634,7 @@ union cvmx_ocx_tlkx_stat_ctl {
 #endif
 	} s;
 	struct cvmx_ocx_tlkx_stat_ctl_s       cn78xx;
-	struct cvmx_ocx_tlkx_stat_ctl_s       cn78xxp2;
+	struct cvmx_ocx_tlkx_stat_ctl_s       cn78xxp1;
 };
 typedef union cvmx_ocx_tlkx_stat_ctl cvmx_ocx_tlkx_stat_ctl_t;
 
@@ -2621,7 +2652,7 @@ union cvmx_ocx_tlkx_stat_data_cnt {
 #endif
 	} s;
 	struct cvmx_ocx_tlkx_stat_data_cnt_s  cn78xx;
-	struct cvmx_ocx_tlkx_stat_data_cnt_s  cn78xxp2;
+	struct cvmx_ocx_tlkx_stat_data_cnt_s  cn78xxp1;
 };
 typedef union cvmx_ocx_tlkx_stat_data_cnt cvmx_ocx_tlkx_stat_data_cnt_t;
 
@@ -2639,7 +2670,7 @@ union cvmx_ocx_tlkx_stat_err_cnt {
 #endif
 	} s;
 	struct cvmx_ocx_tlkx_stat_err_cnt_s   cn78xx;
-	struct cvmx_ocx_tlkx_stat_err_cnt_s   cn78xxp2;
+	struct cvmx_ocx_tlkx_stat_err_cnt_s   cn78xxp1;
 };
 typedef union cvmx_ocx_tlkx_stat_err_cnt cvmx_ocx_tlkx_stat_err_cnt_t;
 
@@ -2657,7 +2688,7 @@ union cvmx_ocx_tlkx_stat_idle_cnt {
 #endif
 	} s;
 	struct cvmx_ocx_tlkx_stat_idle_cnt_s  cn78xx;
-	struct cvmx_ocx_tlkx_stat_idle_cnt_s  cn78xxp2;
+	struct cvmx_ocx_tlkx_stat_idle_cnt_s  cn78xxp1;
 };
 typedef union cvmx_ocx_tlkx_stat_idle_cnt cvmx_ocx_tlkx_stat_idle_cnt_t;
 
@@ -2675,7 +2706,7 @@ union cvmx_ocx_tlkx_stat_matx_cnt {
 #endif
 	} s;
 	struct cvmx_ocx_tlkx_stat_matx_cnt_s  cn78xx;
-	struct cvmx_ocx_tlkx_stat_matx_cnt_s  cn78xxp2;
+	struct cvmx_ocx_tlkx_stat_matx_cnt_s  cn78xxp1;
 };
 typedef union cvmx_ocx_tlkx_stat_matx_cnt cvmx_ocx_tlkx_stat_matx_cnt_t;
 
@@ -2704,7 +2735,7 @@ union cvmx_ocx_tlkx_stat_matchx {
 #endif
 	} s;
 	struct cvmx_ocx_tlkx_stat_matchx_s    cn78xx;
-	struct cvmx_ocx_tlkx_stat_matchx_s    cn78xxp2;
+	struct cvmx_ocx_tlkx_stat_matchx_s    cn78xxp1;
 };
 typedef union cvmx_ocx_tlkx_stat_matchx cvmx_ocx_tlkx_stat_matchx_t;
 
@@ -2722,7 +2753,7 @@ union cvmx_ocx_tlkx_stat_retry_cnt {
 #endif
 	} s;
 	struct cvmx_ocx_tlkx_stat_retry_cnt_s cn78xx;
-	struct cvmx_ocx_tlkx_stat_retry_cnt_s cn78xxp2;
+	struct cvmx_ocx_tlkx_stat_retry_cnt_s cn78xxp1;
 };
 typedef union cvmx_ocx_tlkx_stat_retry_cnt cvmx_ocx_tlkx_stat_retry_cnt_t;
 
@@ -2740,7 +2771,7 @@ union cvmx_ocx_tlkx_stat_sync_cnt {
 #endif
 	} s;
 	struct cvmx_ocx_tlkx_stat_sync_cnt_s  cn78xx;
-	struct cvmx_ocx_tlkx_stat_sync_cnt_s  cn78xxp2;
+	struct cvmx_ocx_tlkx_stat_sync_cnt_s  cn78xxp1;
 };
 typedef union cvmx_ocx_tlkx_stat_sync_cnt cvmx_ocx_tlkx_stat_sync_cnt_t;
 
@@ -2759,7 +2790,7 @@ union cvmx_ocx_tlkx_stat_vcx_cmd {
 #endif
 	} s;
 	struct cvmx_ocx_tlkx_stat_vcx_cmd_s   cn78xx;
-	struct cvmx_ocx_tlkx_stat_vcx_cmd_s   cn78xxp2;
+	struct cvmx_ocx_tlkx_stat_vcx_cmd_s   cn78xxp1;
 };
 typedef union cvmx_ocx_tlkx_stat_vcx_cmd cvmx_ocx_tlkx_stat_vcx_cmd_t;
 
@@ -2779,7 +2810,7 @@ union cvmx_ocx_tlkx_stat_vcx_con {
 #endif
 	} s;
 	struct cvmx_ocx_tlkx_stat_vcx_con_s   cn78xx;
-	struct cvmx_ocx_tlkx_stat_vcx_con_s   cn78xxp2;
+	struct cvmx_ocx_tlkx_stat_vcx_con_s   cn78xxp1;
 };
 typedef union cvmx_ocx_tlkx_stat_vcx_con cvmx_ocx_tlkx_stat_vcx_con_t;
 
@@ -2797,7 +2828,7 @@ union cvmx_ocx_tlkx_stat_vcx_pkt {
 #endif
 	} s;
 	struct cvmx_ocx_tlkx_stat_vcx_pkt_s   cn78xx;
-	struct cvmx_ocx_tlkx_stat_vcx_pkt_s   cn78xxp2;
+	struct cvmx_ocx_tlkx_stat_vcx_pkt_s   cn78xxp1;
 };
 typedef union cvmx_ocx_tlkx_stat_vcx_pkt cvmx_ocx_tlkx_stat_vcx_pkt_t;
 
@@ -2838,7 +2869,7 @@ union cvmx_ocx_tlkx_status {
 #endif
 	} s;
 	struct cvmx_ocx_tlkx_status_s         cn78xx;
-	struct cvmx_ocx_tlkx_status_s         cn78xxp2;
+	struct cvmx_ocx_tlkx_status_s         cn78xxp1;
 };
 typedef union cvmx_ocx_tlkx_status cvmx_ocx_tlkx_status_t;
 
@@ -2887,7 +2918,7 @@ union cvmx_ocx_win_cmd {
 #endif
 	} s;
 	struct cvmx_ocx_win_cmd_s             cn78xx;
-	struct cvmx_ocx_win_cmd_s             cn78xxp2;
+	struct cvmx_ocx_win_cmd_s             cn78xxp1;
 };
 typedef union cvmx_ocx_win_cmd cvmx_ocx_win_cmd_t;
 
@@ -2907,7 +2938,7 @@ union cvmx_ocx_win_rd_data {
 #endif
 	} s;
 	struct cvmx_ocx_win_rd_data_s         cn78xx;
-	struct cvmx_ocx_win_rd_data_s         cn78xxp2;
+	struct cvmx_ocx_win_rd_data_s         cn78xxp1;
 };
 typedef union cvmx_ocx_win_rd_data cvmx_ocx_win_rd_data_t;
 
@@ -2931,7 +2962,7 @@ union cvmx_ocx_win_timer {
 #endif
 	} s;
 	struct cvmx_ocx_win_timer_s           cn78xx;
-	struct cvmx_ocx_win_timer_s           cn78xxp2;
+	struct cvmx_ocx_win_timer_s           cn78xxp1;
 };
 typedef union cvmx_ocx_win_timer cvmx_ocx_win_timer_t;
 
@@ -2952,7 +2983,7 @@ union cvmx_ocx_win_wr_data {
 #endif
 	} s;
 	struct cvmx_ocx_win_wr_data_s         cn78xx;
-	struct cvmx_ocx_win_wr_data_s         cn78xxp2;
+	struct cvmx_ocx_win_wr_data_s         cn78xxp1;
 };
 typedef union cvmx_ocx_win_wr_data cvmx_ocx_win_wr_data_t;
 

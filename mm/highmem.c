@@ -29,10 +29,9 @@
 #include <linux/kgdb.h>
 #include <asm/tlbflush.h>
 
-#ifndef CONFIG_PREEMPT_RT_FULL
+
 #if defined(CONFIG_HIGHMEM) || defined(CONFIG_X86_32)
 DEFINE_PER_CPU(int, __kmap_atomic_idx);
-#endif
 #endif
 
 /*
@@ -45,37 +44,89 @@ DEFINE_PER_CPU(int, __kmap_atomic_idx);
  */
 #ifdef CONFIG_HIGHMEM
 
+/*
+ * Architecture with aliasing data cache may define the following family of
+ * helper functions in its asm/highmem.h to control cache color of virtual
+ * addresses where physical memory pages are mapped by kmap.
+ */
+#ifndef get_pkmap_color
+
+/*
+ * Determine color of virtual address where the page should be mapped.
+ */
+static inline unsigned int get_pkmap_color(struct page *page)
+{
+	return 0;
+}
+#define get_pkmap_color get_pkmap_color
+
+/*
+ * Get next index for mapping inside PKMAP region for page with given color.
+ */
+static inline unsigned int get_next_pkmap_nr(unsigned int color)
+{
+	static unsigned int last_pkmap_nr;
+
+	last_pkmap_nr = (last_pkmap_nr + 1) & LAST_PKMAP_MASK;
+	return last_pkmap_nr;
+}
+
+/*
+ * Determine if page index inside PKMAP region (pkmap_nr) of given color
+ * has wrapped around PKMAP region end. When this happens an attempt to
+ * flush all unused PKMAP slots is made.
+ */
+static inline int no_more_pkmaps(unsigned int pkmap_nr, unsigned int color)
+{
+	return pkmap_nr == 0;
+}
+
+/*
+ * Get the number of PKMAP entries of the given color. If no free slot is
+ * found after checking that many entries, kmap will sleep waiting for
+ * someone to call kunmap and free PKMAP slot.
+ */
+static inline int get_pkmap_entries_count(unsigned int color)
+{
+	return LAST_PKMAP;
+}
+
+/*
+ * Get head of a wait queue for PKMAP entries of the given color.
+ * Wait queues for different mapping colors should be independent to avoid
+ * unnecessary wakeups caused by freeing of slots of other colors.
+ */
+static inline wait_queue_head_t *get_pkmap_wait_queue_head(unsigned int color)
+{
+	static DECLARE_WAIT_QUEUE_HEAD(pkmap_map_wait);
+
+	return &pkmap_map_wait;
+}
+#endif
+
 unsigned long totalhigh_pages __read_mostly;
 EXPORT_SYMBOL(totalhigh_pages);
 
-#ifndef CONFIG_PREEMPT_RT_FULL
+
 EXPORT_PER_CPU_SYMBOL(__kmap_atomic_idx);
-#endif
 
 unsigned int nr_free_highpages (void)
 {
-	pg_data_t *pgdat;
+	struct zone *zone;
 	unsigned int pages = 0;
 
-	for_each_online_pgdat(pgdat) {
-		pages += zone_page_state(&pgdat->node_zones[ZONE_HIGHMEM],
-			NR_FREE_PAGES);
-		if (zone_movable_is_highmem())
-			pages += zone_page_state(
-					&pgdat->node_zones[ZONE_MOVABLE],
-					NR_FREE_PAGES);
+	for_each_populated_zone(zone) {
+		if (is_highmem(zone))
+			pages += zone_page_state(zone, NR_FREE_PAGES);
 	}
 
 	return pages;
 }
 
 static int pkmap_count[LAST_PKMAP];
-static unsigned int last_pkmap_nr;
 static  __cacheline_aligned_in_smp DEFINE_SPINLOCK(kmap_lock);
 
 pte_t * pkmap_page_table;
-
-static DECLARE_WAIT_QUEUE_HEAD(pkmap_map_wait);
 
 /*
  * Most architectures have no use for kmap_high_get(), so let's abstract
@@ -140,9 +191,8 @@ static void flush_all_zero_pkmaps(void)
 		 * So no dangers, even with speculative execution.
 		 */
 		page = pte_page(pkmap_page_table[i]);
-		pax_open_kernel();
 		pte_clear(&init_mm, PKMAP_ADDR(i), &pkmap_page_table[i]);
-		pax_close_kernel();
+
 		set_page_address(page, NULL);
 		need_flush = 1;
 	}
@@ -164,15 +214,17 @@ static inline unsigned long map_new_virtual(struct page *page)
 {
 	unsigned long vaddr;
 	int count;
+	unsigned int last_pkmap_nr;
+	unsigned int color = get_pkmap_color(page);
 
 start:
-	count = LAST_PKMAP;
+	count = get_pkmap_entries_count(color);
 	/* Find an empty entry */
 	for (;;) {
-		last_pkmap_nr = (last_pkmap_nr + 1) & LAST_PKMAP_MASK;
-		if (!last_pkmap_nr) {
+		last_pkmap_nr = get_next_pkmap_nr(color);
+		if (no_more_pkmaps(last_pkmap_nr, color)) {
 			flush_all_zero_pkmaps();
-			count = LAST_PKMAP;
+			count = get_pkmap_entries_count(color);
 		}
 		if (!pkmap_count[last_pkmap_nr])
 			break;	/* Found a usable entry */
@@ -184,12 +236,14 @@ start:
 		 */
 		{
 			DECLARE_WAITQUEUE(wait, current);
+			wait_queue_head_t *pkmap_map_wait =
+				get_pkmap_wait_queue_head(color);
 
 			__set_current_state(TASK_UNINTERRUPTIBLE);
-			add_wait_queue(&pkmap_map_wait, &wait);
+			add_wait_queue(pkmap_map_wait, &wait);
 			unlock_kmap();
 			schedule();
-			remove_wait_queue(&pkmap_map_wait, &wait);
+			remove_wait_queue(pkmap_map_wait, &wait);
 			lock_kmap();
 
 			/* Somebody else might have mapped it while we slept */
@@ -201,11 +255,9 @@ start:
 		}
 	}
 	vaddr = PKMAP_ADDR(last_pkmap_nr);
-
-	pax_open_kernel();
 	set_pte_at(&init_mm, vaddr,
 		   &(pkmap_page_table[last_pkmap_nr]), mk_pte(page, kmap_prot));
-	pax_close_kernel();
+
 	pkmap_count[last_pkmap_nr] = 1;
 	set_page_address(page, (void *)vaddr);
 
@@ -279,6 +331,8 @@ void kunmap_high(struct page *page)
 	unsigned long nr;
 	unsigned long flags;
 	int need_wakeup;
+	unsigned int color = get_pkmap_color(page);
+	wait_queue_head_t *pkmap_map_wait;
 
 	lock_kmap_any(flags);
 	vaddr = (unsigned long)page_address(page);
@@ -304,13 +358,14 @@ void kunmap_high(struct page *page)
 		 * no need for the wait-queue-head's lock.  Simply
 		 * test if the queue is empty.
 		 */
-		need_wakeup = waitqueue_active(&pkmap_map_wait);
+		pkmap_map_wait = get_pkmap_wait_queue_head(color);
+		need_wakeup = waitqueue_active(pkmap_map_wait);
 	}
 	unlock_kmap_any(flags);
 
 	/* do wake-up, if needed, race-free outside of the spin lock */
 	if (need_wakeup)
-		wake_up(&pkmap_map_wait);
+		wake_up(pkmap_map_wait);
 }
 
 EXPORT_SYMBOL(kunmap_high);

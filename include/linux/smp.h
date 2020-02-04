@@ -11,16 +11,14 @@
 #include <linux/list.h>
 #include <linux/cpumask.h>
 #include <linux/init.h>
-#include <linux/irqflags.h>
-
-extern void cpu_idle(void);
+#include <linux/llist.h>
 
 typedef void (*smp_call_func_t)(void *info);
 struct call_single_data {
-	struct list_head list;
+	struct llist_node llist;
 	smp_call_func_t func;
 	void *info;
-	u16 flags;
+	unsigned int flags;
 };
 
 /* total number of cpus in this system (may exceed NR_CPUS) */
@@ -28,6 +26,11 @@ extern unsigned int total_cpus;
 
 int smp_call_function_single(int cpuid, smp_call_func_t func, void *info,
 			     int wait);
+
+/*
+ * Call a function on all processors
+ */
+int on_each_cpu(smp_call_func_t func, void *info, int wait);
 
 /*
  * Call a function on processors specified by mask, which might include
@@ -44,6 +47,8 @@ void on_each_cpu_mask(const struct cpumask *mask, smp_call_func_t func,
 void on_each_cpu_cond(bool (*cond_func)(int cpu, void *info),
 		smp_call_func_t func, void *info, bool wait,
 		gfp_t gfp_flags);
+
+int smp_call_function_single_async(int cpu, struct call_single_data *csd);
 
 #ifdef CONFIG_SMP
 
@@ -91,30 +96,19 @@ int smp_call_function(smp_call_func_t func, void *info, int wait);
 void smp_call_function_many(const struct cpumask *mask,
 			    smp_call_func_t func, void *info, bool wait);
 
-void __smp_call_function_single(int cpuid, struct call_single_data *data,
-				int wait);
-
 int smp_call_function_any(const struct cpumask *mask,
 			  smp_call_func_t func, void *info, int wait);
 
 void kick_all_cpus_sync(void);
+void wake_up_all_idle_cpus(void);
 
 /*
  * Generic and arch helpers
  */
-#ifdef CONFIG_USE_GENERIC_SMP_HELPERS
 void __init call_function_init(void);
 void generic_smp_call_function_single_interrupt(void);
 #define generic_smp_call_function_interrupt \
 	generic_smp_call_function_single_interrupt
-#else
-static inline void call_function_init(void) { }
-#endif
-
-/*
- * Call a function on all processors
- */
-int on_each_cpu(smp_call_func_t func, void *info, int wait);
 
 /*
  * Mark the boot cpu "online" so that it can call console drivers in
@@ -141,16 +135,6 @@ static inline int up_smp_call_function(smp_call_func_t func, void *info)
 #define smp_call_function(func, info, wait) \
 			(up_smp_call_function(func, info))
 
-static inline int on_each_cpu(smp_call_func_t func, void *info, int wait)
-{
-	unsigned long flags;
-
-	local_irq_save(flags);
-	func(info);
-	local_irq_restore(flags);
-	return 0;
-}
-
 static inline void smp_send_reschedule(int cpu) { }
 #define smp_prepare_boot_cpu()			do {} while (0)
 #define smp_call_function_many(mask, func, info, wait) \
@@ -165,6 +149,14 @@ smp_call_function_any(const struct cpumask *mask, smp_call_func_t func,
 }
 
 static inline void kick_all_cpus_sync(void) {  }
+static inline void wake_up_all_idle_cpus(void) {  }
+
+#ifdef CONFIG_UP_LATE_INIT
+extern void __init up_late_init(void);
+static inline void smp_init(void) { up_late_init(); }
+#else
+static inline void smp_init(void) { }
+#endif
 
 #endif /* !SMP */
 
@@ -191,12 +183,7 @@ static inline void kick_all_cpus_sync(void) {  }
 #endif
 
 #define get_cpu()		({ preempt_disable(); smp_processor_id(); })
-#define raw_get_cpu()		({ raw_preempt_disable(); raw_smp_processor_id(); })
 #define put_cpu()		preempt_enable()
-#define raw_put_cpu_no_resched()	raw_preempt_enable_no_resched()
-
-#define get_cpu_light()		({ migrate_disable(); smp_processor_id(); })
-#define put_cpu_light()		migrate_enable()
 
 /*
  * Callback to arch code if there's nosmp or maxcpus=0 on the
@@ -204,6 +191,17 @@ static inline void kick_all_cpus_sync(void) {  }
  */
 extern void arch_disable_smp_support(void);
 
+extern void arch_enable_nonboot_cpus_begin(void);
+extern void arch_enable_nonboot_cpus_end(void);
+
 void smp_setup_processor_id(void);
+
+int smp_call_on_cpu(unsigned int cpu, int (*func)(void *), void *par,
+		    bool phys);
+
+/* SMP core functions */
+int smpcfd_prepare_cpu(unsigned int cpu);
+int smpcfd_dead_cpu(unsigned int cpu);
+int smpcfd_dying_cpu(unsigned int cpu);
 
 #endif /* __LINUX_SMP_H */

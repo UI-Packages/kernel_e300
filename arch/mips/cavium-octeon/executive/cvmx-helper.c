@@ -1074,7 +1074,7 @@ static cvmx_helper_interface_mode_t __cvmx_get_mode_cnf75xx(int xiface)
 			iface_ops[interface] = &iface_ops_dis;
 			break;
 		}
-	} else if (interface < 3) {
+	} else if ((interface < 3) && OCTEON_IS_MODEL(OCTEON_CNF75XX)) {
 		cvmx_sriox_status_reg_t sriox_status_reg;
 		int srio_port = interface - 1;
 		sriox_status_reg.u64 =
@@ -1308,6 +1308,23 @@ static cvmx_helper_interface_mode_t __cvmx_get_mode_octeon2(int interface)
 
 	return iface_ops[interface]->mode;
 }
+
+#if defined(CONFIG_UBNT_E1000) || defined(CONFIG_UBNT_E1020)
+#define ENABLE_10G_1G_SWITCH
+#ifdef ENABLE_10G_1G_SWITCH
+void reset_bgx_ops(int xiface, int mode)
+{
+	struct cvmx_xiface xi = cvmx_helper_xiface_to_node_interface(xiface);
+	int interface = xi.interface;
+
+	if(!mode) //sgmii
+		iface_ops[interface] = &iface_ops_bgx_sgmii;
+	else //xfi
+		iface_ops[interface] = &iface_ops_bgx_xfi;
+}
+EXPORT_SYMBOL(reset_bgx_ops);
+#endif
+#endif /* CONFIG_UBNT_E1000 || CONFIG_UBNT_E1020*/
 
 /**
  * Get the operating mode of an interface. Depending on the Octeon
@@ -2095,7 +2112,7 @@ int cvmx_helper_shutdown_packet_io_global_cn78xx(int node)
 	/* Retrieve all packets from the SSO and free them */
 	result = 0;
 	while ((work = cvmx_pow_work_request_sync(CVMX_POW_WAIT))) {
-            cvmx_helper_free_pki_pkt_data(work);
+		cvmx_helper_free_pki_pkt_data(work);
 		cvmx_wqe_pki_free(work);
 		result++;
 	}
@@ -2609,12 +2626,12 @@ cvmx_helper_link_info_t cvmx_helper_link_autoconf(int xipd_port)
 	int index = cvmx_helper_get_interface_index_num(xipd_port);
 	struct cvmx_xiface xi = cvmx_helper_xiface_to_node_interface(xiface);
 	int interface = xi.interface;
-
 	if (interface == -1 || index == -1 ||
 	    index >= cvmx_helper_ports_on_interface(xiface)) {
 		link_info.u64 = 0;
 		return link_info;
 	}
+
 
 	link_info = cvmx_helper_link_get(xipd_port);
 	if (link_info.u64 == (__cvmx_helper_get_link_info(xiface, index)).u64)

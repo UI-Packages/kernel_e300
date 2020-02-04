@@ -121,18 +121,17 @@ static inline unsigned int cvmx_get_local_core_num(void)
 #endif
 
 #if CVMX_ENABLE_DEBUG_PRINTS
-#define cvmx_dprintf        pr_debug
+#define cvmx_dprintf	    pr_debug
 #else
 #define cvmx_dprintf(...)   do { } while(0)
 #endif
 #define cvmx_printf        pr_notice
 
-#define CVMX_CACHE_LINE_SIZE    (128)	/* In bytes */
-#define CVMX_CACHE_LINE_MASK    (CVMX_CACHE_LINE_SIZE - 1)	/* In bytes */
+#define CVMX_CACHE_LINE_SIZE	(128)	/* In bytes */
+#define CVMX_CACHE_LINE_MASK	(CVMX_CACHE_LINE_SIZE - 1)	/* In bytes */
 #define CVMX_CACHE_LINE_ALIGNED __attribute__ ((aligned(CVMX_CACHE_LINE_SIZE)))
 #define CAST64(v) ((long long)(long)(v))
 #define CASTPTR(type, v) ((type *)(long)(v))
-
 
 /* turn the variable name into a string */
 #define CVMX_TMP_STR(x) CVMX_TMP_STR2(x)
@@ -146,6 +145,40 @@ static inline unsigned int cvmx_get_local_core_num(void)
  */ static inline uint64_t cvmx_build_mask(uint64_t bits)
 {
 	return ~((~0x0ull) << bits);
+}
+
+/**
+ * Extract bits out of a number
+ *
+ * @param input  Number to extract from
+ * @param lsb    Starting bit, least significant (0-63)
+ * @param width  Width in bits (1-64)
+ *
+ * @return Extracted number
+ */
+static inline uint64_t cvmx_bit_extract(uint64_t input, int lsb, int width)
+{
+    uint64_t result = input >> lsb;
+    result &= cvmx_build_mask(width);
+    return result;
+}
+
+/**
+ * Extract a signed magnitude value. Signed magnitude is a value where the MSB
+ * is treated as a sign bit, not like the mornal twos compliment.
+ *
+ * @param input  Number to extract from
+ * @param lsb    Starting bit, least significant (0-63)
+ * @param msb    which is the signed bit
+ *
+ * @return Extracted number
+ */
+static inline int64_t cvmx_bit_extract_smag(uint64_t input, int lsb, int msb)
+{
+    int64_t result = cvmx_bit_extract(input, lsb, msb - lsb);
+    if (input & (1ull << msb))
+        result = -result;
+    return result;
 }
 
 /**
@@ -167,8 +200,8 @@ static inline uint64_t cvmx_build_io_address(uint64_t major_did,
  *
  * Example: cvmx_build_bits(39,24,value)
  * <pre>
- * 6       5       4       3       3       2       1
- * 3       5       7       9       1       3       5       7      0
+ * 6	   5	   4	   3	   3	   2	   1
+ * 3	   5	   7	   9	   1	   3	   5	   7	  0
  * +-------+-------+-------+-------+-------+-------+-------+------+
  * 000000000000000000000000___________value000000000000000000000000
  * </pre>
@@ -183,7 +216,6 @@ static inline uint64_t cvmx_build_bits(uint64_t high_bit,
 {
 	return (value & cvmx_build_mask(high_bit - low_bit + 1)) << low_bit;
 }
-
 
 /**
  * Convert a memory pointer (void*) into a hardware compatible
@@ -203,7 +235,7 @@ static inline uint64_t cvmx_ptr_to_phys(void *ptr)
  * memory pointer (void *).
  *
  * @physical_address:
- *               Hardware physical address to memory
+ *		 Hardware physical address to memory
  * Returns Pointer to memory
  */
 static inline void *cvmx_phys_to_ptr(uint64_t physical_address)
@@ -218,12 +250,30 @@ static inline void *cvmx_phys_to_ptr(uint64_t physical_address)
 
 /* We have a full 64bit ABI. Writing to a 64bit address can be done with
     a simple volatile pointer */
-#define CVMX_BUILD_WRITE64(TYPE, ST)                                    \
-static inline void cvmx_write64_##TYPE(uint64_t addr, TYPE##_t val)     \
-{                                                                       \
-    *CASTPTR(volatile TYPE##_t, addr) = val;                            \
+#define CVMX_BUILD_WRITE64(TYPE, ST)					\
+static inline void cvmx_write64_##TYPE(uint64_t addr, TYPE##_t val)	\
+{									\
+    *CASTPTR(volatile TYPE##_t, addr) = val;				\
 }
 
+/**
+ * Insert bits into a number
+ *
+ * @param original Original data, before insert
+ * @param input    Data to insert
+ * @param lsb    Starting bit, least significant (0-63)
+ * @param width  Width in bits (1-64)
+ *
+ * @return Number with inserted bits
+ */
+static inline uint64_t cvmx_bit_insert(uint64_t original, uint64_t input, int lsb, int width) __attribute__((always_inline));
+static inline uint64_t cvmx_bit_insert(uint64_t original, uint64_t input, int lsb, int width)
+{
+    uint64_t mask = cvmx_build_mask(width);
+    uint64_t result = original & ~(mask << lsb);
+    result |= (input & mask) << lsb;
+    return result;
+}
 
 /* The following #if controls the definition of the macro
     CVMX_BUILD_READ64. This macro is used to build a load operation from
@@ -232,19 +282,19 @@ static inline void cvmx_write64_##TYPE(uint64_t addr, TYPE##_t val)     \
 
 /* We have a full 64bit ABI. Writing to a 64bit address can be done with
     a simple volatile pointer */
-#define CVMX_BUILD_READ64(TYPE, LT)                                     \
-static inline TYPE##_t cvmx_read64_##TYPE(uint64_t addr)                \
-{                                                                       \
+#define CVMX_BUILD_READ64(TYPE, LT)					\
+static inline TYPE##_t cvmx_read64_##TYPE(uint64_t addr)		\
+{									\
 	return *CASTPTR(volatile TYPE##_t, addr);			\
 }
 
 
 /* The following defines 8 functions for writing to a 64bit address. Each
     takes two arguments, the address and the value to write.
-    cvmx_write64_int64      cvmx_write64_uint64
-    cvmx_write64_int32      cvmx_write64_uint32
-    cvmx_write64_int16      cvmx_write64_uint16
-    cvmx_write64_int8       cvmx_write64_uint8 */
+    cvmx_write64_int64	    cvmx_write64_uint64
+    cvmx_write64_int32	    cvmx_write64_uint32
+    cvmx_write64_int16	    cvmx_write64_uint16
+    cvmx_write64_int8	    cvmx_write64_uint8 */
 CVMX_BUILD_WRITE64(int64, "sd");
 CVMX_BUILD_WRITE64(int32, "sw");
 CVMX_BUILD_WRITE64(int16, "sh");
@@ -257,10 +307,10 @@ CVMX_BUILD_WRITE64(uint8, "sb");
 
 /* The following defines 8 functions for reading from a 64bit address. Each
     takes the address as the only argument
-    cvmx_read64_int64       cvmx_read64_uint64
-    cvmx_read64_int32       cvmx_read64_uint32
-    cvmx_read64_int16       cvmx_read64_uint16
-    cvmx_read64_int8        cvmx_read64_uint8 */
+    cvmx_read64_int64	    cvmx_read64_uint64
+    cvmx_read64_int32	    cvmx_read64_uint32
+    cvmx_read64_int16	    cvmx_read64_uint16
+    cvmx_read64_int8	    cvmx_read64_uint8 */
 CVMX_BUILD_READ64(int64, "ld");
 CVMX_BUILD_READ64(int32, "lw");
 CVMX_BUILD_READ64(int16, "lh");
@@ -300,6 +350,11 @@ static inline void cvmx_write_csr_node(uint64_t node, uint64_t csr_addr,
 	}
 }
 
+static inline void cvmx_writeq_csr(void __iomem *csr_addr, uint64_t val)
+{
+	cvmx_write_csr((__force uint64_t)csr_addr, val);
+}
+
 static inline void cvmx_write_io(uint64_t io_addr, uint64_t val)
 {
 	cvmx_write64(io_addr, val);
@@ -310,6 +365,11 @@ static inline uint64_t cvmx_read_csr(uint64_t csr_addr)
 {
 	uint64_t val = cvmx_read64(csr_addr);
 	return val;
+}
+
+static inline uint64_t cvmx_readq_csr(void __iomem *csr_addr)
+{
+	return cvmx_read_csr((__force uint64_t) csr_addr);
 }
 
 static inline uint64_t cvmx_read_csr_node(uint64_t node, uint64_t csr_addr)
@@ -415,7 +475,7 @@ static inline uint64_t cvmx_get_cycle(void)
 
 /**
  * Reads a chip global cycle counter.  This counts CPU cycles since
- * chip reset.  The counter is 64 bit.
+ * chip reset.	The counter is 64 bit.
  * This register does not exist on CN38XX pass 1 silicion
  *
  * Returns Global chip cycle count since chip reset.
@@ -536,7 +596,11 @@ static inline int cvmx_octeon_dfa_present(void)
 		return !cvmx_fuse_read(120);
 }
 
-static inline int cvmx_octeon_crypto_present(void)
+static inline bool cvmx_octeon_crypto_present(void)
+{
+	return octeon_has_feature(OCTEON_FEATURE_CRYPTO);
+}
+static inline bool octeon_has_crypto(void)
 {
 	return octeon_has_feature(OCTEON_FEATURE_CRYPTO);
 }

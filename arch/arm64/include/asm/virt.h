@@ -18,10 +18,35 @@
 #ifndef __ASM__VIRT_H
 #define __ASM__VIRT_H
 
-#define BOOT_CPU_MODE_EL2	(0x0e12b007)
+/*
+ * The arm64 hcall implementation uses x0 to specify the hcall type. A value
+ * less than 0xfff indicates a special hcall, such as get/set vector.
+ * Any other value is used as a pointer to the function to call.
+ */
+
+/* HVC_GET_VECTORS - Return the value of the vbar_el2 register. */
+#define HVC_GET_VECTORS 0
+
+/*
+ * HVC_SET_VECTORS - Set the value of the vbar_el2 register.
+ *
+ * @x1: Physical address of the new vector table.
+ */
+#define HVC_SET_VECTORS 1
+
+/*
+ * HVC_SOFT_RESTART - CPU soft reset, used by the cpu_soft_restart routine.
+ */
+#define HVC_SOFT_RESTART 2
+
+#define BOOT_CPU_MODE_EL1	(0xe11)
+#define BOOT_CPU_MODE_EL2	(0xe12)
 
 #ifndef __ASSEMBLY__
-#include <asm/cacheflush.h>
+
+#include <asm/ptrace.h>
+#include <asm/sections.h>
+#include <asm/sysreg.h>
 
 /*
  * __boot_cpu_mode records what mode CPUs were booted in.
@@ -37,20 +62,9 @@ extern u32 __boot_cpu_mode[2];
 void __hyp_set_vectors(phys_addr_t phys_vector_base);
 phys_addr_t __hyp_get_vectors(void);
 
-static inline void sync_boot_mode(void)
-{
-	/*
-	 * As secondaries write to __boot_cpu_mode with caches disabled, we
-	 * must flush the corresponding cache entries to ensure the visibility
-	 * of their writes.
-	 */
-	__flush_dcache_area(__boot_cpu_mode, sizeof(__boot_cpu_mode));
-}
-
 /* Reports the availability of HYP mode */
 static inline bool is_hyp_mode_available(void)
 {
-	sync_boot_mode();
 	return (__boot_cpu_mode[0] == BOOT_CPU_MODE_EL2 &&
 		__boot_cpu_mode[1] == BOOT_CPU_MODE_EL2);
 }
@@ -58,9 +72,19 @@ static inline bool is_hyp_mode_available(void)
 /* Check if the bootloader has booted CPUs in different modes */
 static inline bool is_hyp_mode_mismatched(void)
 {
-	sync_boot_mode();
 	return __boot_cpu_mode[0] != __boot_cpu_mode[1];
 }
+
+static inline bool is_kernel_in_hyp_mode(void)
+{
+	return read_sysreg(CurrentEL) == CurrentEL_EL2;
+}
+
+#ifdef CONFIG_ARM64_VHE
+extern void verify_cpu_run_el(void);
+#else
+static inline void verify_cpu_run_el(void) {}
+#endif
 
 #endif /* __ASSEMBLY__ */
 

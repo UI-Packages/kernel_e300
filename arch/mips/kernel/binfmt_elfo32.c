@@ -1,5 +1,6 @@
 /*
  * Support for o32 Linux/MIPS ELF binaries.
+ * Author: Ralf Baechle (ralf@linux-mips.org)
  *
  * Copyright (C) 1999, 2001 Ralf Baechle
  * Copyright (C) 1999, 2001 Silicon Graphics, Inc.
@@ -30,23 +31,7 @@ typedef elf_fpreg_t elf_fpregset_t[ELF_NFPREG];
 /*
  * This is used to ensure we don't load something for the wrong architecture.
  */
-#define elf_check_arch(hdr)						\
-({									\
-	int __res = 1;							\
-	struct elfhdr *__h = (hdr);					\
-									\
-	if (__h->e_machine != EM_MIPS)					\
-		__res = 0;						\
-	if (__h->e_ident[EI_CLASS] != ELFCLASS32)			\
-		__res = 0;						\
-	if ((__h->e_flags & EF_MIPS_ABI2) != 0)				\
-		__res = 0;						\
-	if (((__h->e_flags & EF_MIPS_ABI) != 0) &&			\
-	    ((__h->e_flags & EF_MIPS_ABI) != EF_MIPS_ABI_O32))		\
-		__res = 0;						\
-									\
-	__res;								\
-})
+#define elf_check_arch elfo32_check_arch
 
 #ifdef CONFIG_KVM_GUEST
 #define TASK32_SIZE		0x3fff8000UL
@@ -56,26 +41,8 @@ typedef elf_fpreg_t elf_fpregset_t[ELF_NFPREG];
 #undef ELF_ET_DYN_BASE
 #define ELF_ET_DYN_BASE		(TASK32_SIZE / 3 * 2)
 
-#ifdef CONFIG_PAX_ASLR
-#define PAX_ELF_ET_DYN_BASE	(TASK_IS_32BIT_ADDR ? 0x00400000UL : 0x00400000UL)
-
-#define PAX_DELTA_MMAP_LEN	(TASK_IS_32BIT_ADDR ? 27-PAGE_SHIFT : 36-PAGE_SHIFT)
-#define PAX_DELTA_STACK_LEN	(TASK_IS_32BIT_ADDR ? 27-PAGE_SHIFT : 36-PAGE_SHIFT)
-#endif
-
 #include <asm/processor.h>
 
-/* These MUST be defined before elf.h gets included */
-extern void elf32_core_copy_regs(elf_gregset_t grp, struct pt_regs *regs);
-#define ELF_CORE_COPY_REGS(_dest, _regs) elf32_core_copy_regs(_dest, _regs);
-#define ELF_CORE_COPY_TASK_REGS(_tsk, _dest)				\
-({									\
-	int __res = 1;							\
-	elf32_core_copy_regs(*(_dest), task_pt_regs(_tsk));		\
-	__res;								\
-})
-
-#include <linux/module.h>
 #include <linux/elfcore.h>
 #include <linux/compat.h>
 #include <linux/math64.h>
@@ -131,35 +98,6 @@ jiffies_to_compat_timeval(unsigned long jiffies, struct compat_timeval *value)
 	value->tv_sec = div_u64_rem(nsec, NSEC_PER_SEC, &rem);
 	value->tv_usec = rem / NSEC_PER_USEC;
 }
-
-
-void elf32_core_copy_regs(elf_gregset_t grp, struct pt_regs *regs)
-{
-	int i;
-
-	for (i = 0; i < MIPS32_EF_R0; i++)
-		grp[i] = 0;
-	grp[MIPS32_EF_R0] = 0;
-	for (i = 1; i <= 31; i++)
-		grp[MIPS32_EF_R0 + i] = (elf_greg_t) regs->regs[i];
-	grp[MIPS32_EF_R26] = 0;
-	grp[MIPS32_EF_R27] = 0;
-	grp[MIPS32_EF_LO] = (elf_greg_t) regs->lo;
-	grp[MIPS32_EF_HI] = (elf_greg_t) regs->hi;
-	grp[MIPS32_EF_CP0_EPC] = (elf_greg_t) regs->cp0_epc;
-	grp[MIPS32_EF_CP0_BADVADDR] = (elf_greg_t) regs->cp0_badvaddr;
-	grp[MIPS32_EF_CP0_STATUS] = (elf_greg_t) regs->cp0_status;
-	grp[MIPS32_EF_CP0_CAUSE] = (elf_greg_t) regs->cp0_cause;
-#ifdef MIPS32_EF_UNUSED0
-	grp[MIPS32_EF_UNUSED0] = 0;
-#endif
-}
-
-MODULE_DESCRIPTION("Binary format loader for compatibility with o32 Linux/MIPS binaries");
-MODULE_AUTHOR("Ralf Baechle (ralf@linux-mips.org)");
-
-#undef MODULE_DESCRIPTION
-#undef MODULE_AUTHOR
 
 #undef TASK_SIZE
 #define TASK_SIZE TASK_SIZE32

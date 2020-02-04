@@ -23,7 +23,7 @@
 #include <asm/time.h>
 
 #ifdef CONFIG_X86_64
-DEFINE_VVAR(volatile unsigned long, jiffies) = INITIAL_JIFFIES;
+__visible volatile unsigned long jiffies __cacheline_aligned = INITIAL_JIFFIES;
 #endif
 
 unsigned long profile_pc(struct pt_regs *regs)
@@ -32,7 +32,7 @@ unsigned long profile_pc(struct pt_regs *regs)
 
 	if (!user_mode(regs) && in_lock_functions(pc)) {
 #ifdef CONFIG_FRAME_POINTER
-		return ktla_ktva(*(unsigned long *)(regs->bp + sizeof(long)));
+		return *(unsigned long *)(regs->bp + sizeof(long));
 #else
 		unsigned long *sp =
 			(unsigned long *)kernel_stack_pointer(regs);
@@ -41,16 +41,10 @@ unsigned long profile_pc(struct pt_regs *regs)
 		 * or above a saved flags. Eflags has bits 22-31 zero,
 		 * kernel addresses don't.
 		 */
-
-#ifdef CONFIG_PAX_KERNEXEC
-		return ktla_ktva(sp[0]);
-#else
 		if (sp[0] >> 22)
 			return sp[0];
 		if (sp[1] >> 22)
 			return sp[1];
-#endif
-
 #endif
 	}
 	return pc;
@@ -68,12 +62,14 @@ static irqreturn_t timer_interrupt(int irq, void *dev_id)
 
 static struct irqaction irq0  = {
 	.handler = timer_interrupt,
-	.flags = IRQF_DISABLED | IRQF_NOBALANCING | IRQF_IRQPOLL | IRQF_TIMER,
+	.flags = IRQF_NOBALANCING | IRQF_IRQPOLL | IRQF_TIMER,
 	.name = "timer"
 };
 
 void __init setup_default_timer_irq(void)
 {
+	if (!nr_legacy_irqs())
+		return;
 	setup_irq(0, &irq0);
 }
 

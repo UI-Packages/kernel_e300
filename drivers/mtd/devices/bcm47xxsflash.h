@@ -60,10 +60,13 @@ enum bcm47xxsflash_type {
 
 struct bcm47xxsflash {
 	struct bcma_drv_cc *bcma_cc;
+	int (*cc_read)(struct bcm47xxsflash *b47s, u16 offset);
+	void (*cc_write)(struct bcm47xxsflash *b47s, u16 offset, u32 value);
 
 	enum bcm47xxsflash_type type;
 
-	u32 window;
+	void __iomem *window;
+
 	u32 blocksize;
 	u16 numblocks;
 	u32 size;

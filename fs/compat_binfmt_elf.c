@@ -30,13 +30,11 @@
 #undef	elf_phdr
 #undef	elf_shdr
 #undef	elf_note
-#undef	elf_dyn
 #undef	elf_addr_t
 #define elfhdr		elf32_hdr
 #define elf_phdr	elf32_phdr
 #define elf_shdr	elf32_shdr
 #define elf_note	elf32_note
-#define elf_dyn		Elf32_Dyn
 #define elf_addr_t	Elf32_Addr
 
 /*
@@ -90,6 +88,11 @@ static void cputime_to_compat_timeval(const cputime_t cputime,
 #define	ELF_HWCAP		COMPAT_ELF_HWCAP
 #endif
 
+#ifdef	COMPAT_ELF_HWCAP2
+#undef	ELF_HWCAP2
+#define	ELF_HWCAP2		COMPAT_ELF_HWCAP2
+#endif
+
 #ifdef	COMPAT_ARCH_DLINFO
 #undef	ARCH_DLINFO
 #define	ARCH_DLINFO		COMPAT_ARCH_DLINFO
@@ -125,23 +128,6 @@ static void cputime_to_compat_timeval(const cputime_t cputime,
 #define ARCH_HAS_SETUP_ADDITIONAL_PAGES 1
 #undef	arch_setup_additional_pages
 #define	arch_setup_additional_pages compat_arch_setup_additional_pages
-#endif
-
-
-#ifdef COMPAT_PR_REG_SIZE
-#define PR_REG_SIZE COMPAT_PR_REG_SIZE
-#endif
-
-#ifdef COMPAT_PRSTATUS_SIZE
-#define PRSTATUS_SIZE COMPAT_PRSTATUS_SIZE
-#endif
-
-#ifdef COMPAT_PR_REG_PTR
-#define PR_REG_PTR COMPAT_PR_REG_PTR
-#endif
-
-#ifdef COMPAT_SET_PR_FPVALID
-#define SET_PR_FPVALID COMPAT_SET_PR_FPVALID
 #endif
 
 /*

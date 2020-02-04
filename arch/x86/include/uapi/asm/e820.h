@@ -21,11 +21,6 @@
  * this size.
  */
 
-/*
- * Odd: 'make headers_check' complains about numa.h if I try
- * to collapse the next two #ifdef lines to a single line:
- *	#if defined(__KERNEL__) && defined(CONFIG_EFI)
- */
 #ifndef __KERNEL__
 #define E820_X_MAX E820MAX
 #endif
@@ -37,7 +32,18 @@
 #define E820_ACPI	3
 #define E820_NVS	4
 #define E820_UNUSABLE	5
+#define E820_PMEM	7
 
+/*
+ * This is a non-standardized way to represent ADR or NVDIMM regions that
+ * persist over a reboot.  The kernel will ignore their special capabilities
+ * unless the CONFIG_X86_PMEM_LEGACY option is set.
+ *
+ * ( Note that older platforms also used 6 for the same type of memory,
+ *   but newer versions switched to 12 as 6 was assigned differently.  Some
+ *   time they will learn... )
+ */
+#define E820_PRAM	12
 
 /*
  * reserved RAM used by kernel itself
@@ -63,7 +69,7 @@ struct e820map {
 #define ISA_START_ADDRESS	0xa0000
 #define ISA_END_ADDRESS		0x100000
 
-#define BIOS_BEGIN		0x000c0000
+#define BIOS_BEGIN		0x000a0000
 #define BIOS_END		0x00100000
 
 #define BIOS_ROM_BASE		0xffe00000

@@ -36,7 +36,7 @@
 struct drm_global_item {
 	struct mutex mutex;
 	void *object;
-	atomic_t refcount;
+	int refcount;
 };
 
 static struct drm_global_item glob[DRM_GLOBAL_NUM];
@@ -49,7 +49,7 @@ void drm_global_init(void)
 		struct drm_global_item *item = &glob[i];
 		mutex_init(&item->mutex);
 		item->object = NULL;
-		atomic_set(&item->refcount, 0);
+		item->refcount = 0;
 	}
 }
 
@@ -59,38 +59,40 @@ void drm_global_release(void)
 	for (i = 0; i < DRM_GLOBAL_NUM; ++i) {
 		struct drm_global_item *item = &glob[i];
 		BUG_ON(item->object != NULL);
-		BUG_ON(atomic_read(&item->refcount) != 0);
+		BUG_ON(item->refcount != 0);
 	}
 }
 
 int drm_global_item_ref(struct drm_global_reference *ref)
 {
-	int ret;
+	int ret = 0;
 	struct drm_global_item *item = &glob[ref->global_type];
-	void *object;
 
 	mutex_lock(&item->mutex);
-	if (atomic_read(&item->refcount) == 0) {
-		item->object = kzalloc(ref->size, GFP_KERNEL);
-		if (unlikely(item->object == NULL)) {
+	if (item->refcount == 0) {
+		ref->object = kzalloc(ref->size, GFP_KERNEL);
+		if (unlikely(ref->object == NULL)) {
 			ret = -ENOMEM;
-			goto out_err;
+			goto error_unlock;
 		}
-
-		ref->object = item->object;
 		ret = ref->init(ref);
 		if (unlikely(ret != 0))
-			goto out_err;
+			goto error_free;
 
+		item->object = ref->object;
+	} else {
+		ref->object = item->object;
 	}
-	atomic_inc(&item->refcount);
-	ref->object = item->object;
-	object = item->object;
+
+	++item->refcount;
 	mutex_unlock(&item->mutex);
 	return 0;
-out_err:
+
+error_free:
+	kfree(ref->object);
+	ref->object = NULL;
+error_unlock:
 	mutex_unlock(&item->mutex);
-	item->object = NULL;
 	return ret;
 }
 EXPORT_SYMBOL(drm_global_item_ref);
@@ -100,9 +102,9 @@ void drm_global_item_unref(struct drm_global_reference *ref)
 	struct drm_global_item *item = &glob[ref->global_type];
 
 	mutex_lock(&item->mutex);
-	BUG_ON(atomic_read(&item->refcount) == 0);
+	BUG_ON(item->refcount == 0);
 	BUG_ON(ref->object != item->object);
-	if (atomic_dec_and_test(&item->refcount)) {
+	if (--item->refcount == 0) {
 		ref->release(ref);
 		item->object = NULL;
 	}

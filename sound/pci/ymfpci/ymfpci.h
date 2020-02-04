@@ -358,7 +358,7 @@ struct snd_ymfpci {
 	spinlock_t reg_lock;
 	spinlock_t voice_lock;
 	wait_queue_head_t interrupt_sleep;
-	atomic_unchecked_t interrupt_sleep_count;
+	atomic_t interrupt_sleep_count;
 	struct snd_info_entry *proc_entry;
 	const struct firmware *dsp_microcode;
 	const struct firmware *controller_microcode;
@@ -379,10 +379,10 @@ void snd_ymfpci_free_gameport(struct snd_ymfpci *chip);
 
 extern const struct dev_pm_ops snd_ymfpci_pm;
 
-int snd_ymfpci_pcm(struct snd_ymfpci *chip, int device, struct snd_pcm **rpcm);
-int snd_ymfpci_pcm2(struct snd_ymfpci *chip, int device, struct snd_pcm **rpcm);
-int snd_ymfpci_pcm_spdif(struct snd_ymfpci *chip, int device, struct snd_pcm **rpcm);
-int snd_ymfpci_pcm_4ch(struct snd_ymfpci *chip, int device, struct snd_pcm **rpcm);
+int snd_ymfpci_pcm(struct snd_ymfpci *chip, int device);
+int snd_ymfpci_pcm2(struct snd_ymfpci *chip, int device);
+int snd_ymfpci_pcm_spdif(struct snd_ymfpci *chip, int device);
+int snd_ymfpci_pcm_4ch(struct snd_ymfpci *chip, int device);
 int snd_ymfpci_mixer(struct snd_ymfpci *chip, int rear_switch);
 int snd_ymfpci_timer(struct snd_ymfpci *chip, int device);
 

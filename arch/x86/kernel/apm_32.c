@@ -378,7 +378,6 @@ static struct cpuidle_driver apm_idle_driver = {
 		{ /* entry 1 is for APM idle */
 			.name = "APM",
 			.desc = "APM idle",
-			.flags = CPUIDLE_FLAG_TIME_VALID,
 			.exit_latency = 250,	/* WAG */
 			.target_residency = 500,	/* WAG */
 			.enter = &apm_cpu_idle
@@ -433,7 +432,7 @@ static DEFINE_MUTEX(apm_mutex);
  * This is for buggy BIOS's that refer to (real mode) segment 0x40
  * even though they are called in protected mode.
  */
-static const struct desc_struct bad_bios_desc = GDT_ENTRY_INIT(0x4093,
+static struct desc_struct bad_bios_desc = GDT_ENTRY_INIT(0x4092,
 			(unsigned long)__va(0x400UL), PAGE_SIZE - 0x400 - 1);
 
 static const char driver_version[] = "1.16ac";	/* no spaces */
@@ -611,10 +610,7 @@ static long __apm_bios_call(void *_call)
 	BUG_ON(cpu != 0);
 	gdt = get_cpu_gdt_table(cpu);
 	save_desc_40 = gdt[0x40 / 8];
-
-	pax_open_kernel();
 	gdt[0x40 / 8] = bad_bios_desc;
-	pax_close_kernel();
 
 	apm_irq_save(flags);
 	APM_DO_SAVE_SEGS;
@@ -623,11 +619,7 @@ static long __apm_bios_call(void *_call)
 			  &call->esi);
 	APM_DO_RESTORE_SEGS;
 	apm_irq_restore(flags);
-
-	pax_open_kernel();
 	gdt[0x40 / 8] = save_desc_40;
-	pax_close_kernel();
-
 	put_cpu();
 
 	return call->eax & 0xff;
@@ -694,10 +686,7 @@ static long __apm_bios_call_simple(void *_call)
 	BUG_ON(cpu != 0);
 	gdt = get_cpu_gdt_table(cpu);
 	save_desc_40 = gdt[0x40 / 8];
-
-	pax_open_kernel();
 	gdt[0x40 / 8] = bad_bios_desc;
-	pax_close_kernel();
 
 	apm_irq_save(flags);
 	APM_DO_SAVE_SEGS;
@@ -705,11 +694,7 @@ static long __apm_bios_call_simple(void *_call)
 					 &call->eax);
 	APM_DO_RESTORE_SEGS;
 	apm_irq_restore(flags);
-
-	pax_open_kernel();
 	gdt[0x40 / 8] = save_desc_40;
-	pax_close_kernel();
-
 	put_cpu();
 	return error;
 }
@@ -855,24 +840,12 @@ static int apm_do_idle(void)
 	u32 eax;
 	u8 ret = 0;
 	int idled = 0;
-	int polling;
 	int err = 0;
 
-	polling = !!(current_thread_info()->status & TS_POLLING);
-	if (polling) {
-		current_thread_info()->status &= ~TS_POLLING;
-		/*
-		 * TS_POLLING-cleared state must be visible before we
-		 * test NEED_RESCHED:
-		 */
-		smp_mb();
-	}
 	if (!need_resched()) {
 		idled = 1;
 		ret = apm_bios_call_simple(APM_FUNC_IDLE, 0, 0, &eax, &err);
 	}
-	if (polling)
-		current_thread_info()->status |= TS_POLLING;
 
 	if (!idled)
 		return 0;
@@ -946,7 +919,7 @@ recalc:
 	} else if (jiffies_since_last_check > idle_period) {
 		unsigned int idle_percentage;
 
-		idle_percentage = stime - last_stime;
+		idle_percentage = cputime_to_jiffies(stime - last_stime);
 		idle_percentage *= 100;
 		idle_percentage /= jiffies_since_last_check;
 		use_apm_idle = (idle_percentage > idle_threshold);
@@ -1069,8 +1042,11 @@ static int apm_get_power_status(u_short *status, u_short *bat, u_short *life)
 
 	if (apm_info.get_power_status_broken)
 		return APM_32_UNSUPPORTED;
-	if (apm_bios_call(&call))
+	if (apm_bios_call(&call)) {
+		if (!call.err)
+			return APM_NO_ERROR;
 		return call.err;
+	}
 	*status = call.ebx;
 	*bat = call.ecx;
 	if (apm_info.get_power_status_swabinminutes) {
@@ -1115,7 +1091,7 @@ static int apm_get_battery_status(u_short which, u_short *status,
  *	@device: identity of device
  *	@enable: on/off
  *
- *	Activate or deactive power management on either a specific device
+ *	Activate or deactivate power management on either a specific device
  *	or the entire system (%APM_DEVICE_ALL).
  */
 
@@ -2294,7 +2270,7 @@ static int __init apm_init(void)
 
 	dmi_check_system(apm_dmi_table);
 
-	if (apm_info.bios.version == 0 || paravirt_enabled() || machine_is_olpc()) {
+	if (apm_info.bios.version == 0 || machine_is_olpc()) {
 		printk(KERN_INFO "apm: BIOS not found.\n");
 		return -ENODEV;
 	}
@@ -2376,15 +2352,12 @@ static int __init apm_init(void)
 	 * code to that CPU.
 	 */
 	gdt = get_cpu_gdt_table(0);
-
-	pax_open_kernel();
 	set_desc_base(&gdt[APM_CS >> 3],
 		 (unsigned long)__va((unsigned long)apm_info.bios.cseg << 4));
 	set_desc_base(&gdt[APM_CS_16 >> 3],
 		 (unsigned long)__va((unsigned long)apm_info.bios.cseg_16 << 4));
 	set_desc_base(&gdt[APM_DS >> 3],
 		 (unsigned long)__va((unsigned long)apm_info.bios.dseg << 4));
-	pax_close_kernel();
 
 	proc_create("apm", 0, NULL, &apm_file_ops);
 

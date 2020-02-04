@@ -42,7 +42,7 @@ static struct nf_ct_ext_type tstamp_extend __read_mostly = {
 #ifdef CONFIG_SYSCTL
 static int nf_conntrack_tstamp_init_sysctl(struct net *net)
 {
-	ctl_table_no_const *table;
+	struct ctl_table *table;
 
 	table = kmemdup(tstamp_sysctl_table, sizeof(tstamp_sysctl_table),
 			GFP_KERNEL);
@@ -97,7 +97,6 @@ int nf_conntrack_tstamp_pernet_init(struct net *net)
 void nf_conntrack_tstamp_pernet_fini(struct net *net)
 {
 	nf_conntrack_tstamp_fini_sysctl(net);
-	nf_ct_extend_unregister(&tstamp_extend);
 }
 
 int nf_conntrack_tstamp_init(void)

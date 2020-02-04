@@ -1,5 +1,5 @@
 /*
- * Atomic operations that C can't guarantee us.	 Useful for
+ * Atomic operations that C can't guarantee us.  Useful for
  * resource counting etc..
  *
  * But use these as seldom as possible since they are much more slower
@@ -17,27 +17,12 @@
 #include <linux/irqflags.h>
 #include <linux/types.h>
 #include <asm/barrier.h>
+#include <asm/compiler.h>
 #include <asm/cpu-features.h>
 #include <asm/cmpxchg.h>
 #include <asm/war.h>
 
-#ifdef CONFIG_GENERIC_ATOMIC64
-#include <asm-generic/atomic64.h>
-#endif
-
 #define ATOMIC_INIT(i)	  { (i) }
-
-#ifdef CONFIG_64BIT
-#define _ASM_EXTABLE(from, to)		\
-"	.section __ex_table,\"a\"\n"	\
-"	.dword	" #from ", " #to"\n"	\
-"	.previous\n"
-#else
-#define _ASM_EXTABLE(from, to)		\
-"	.section __ex_table,\"a\"\n"	\
-"	.word	" #from ", " #to"\n"	\
-"	.previous\n"
-#endif
 
 /*
  * atomic_read - read atomic variable
@@ -45,14 +30,7 @@
  *
  * Atomically reads the value of @v.
  */
-static inline int atomic_read(const atomic_t *v)
-{
-	return (*(volatile const int *) &v->counter);
-}
-static inline int atomic_read_unchecked(const atomic_unchecked_t *v)
-{
-	return (*(volatile const int *) &v->counter);
-}
+#define atomic_read(v)		READ_ONCE((v)->counter)
 
 /*
  * atomic_set - set atomic variable
@@ -61,15 +39,9 @@ static inline int atomic_read_unchecked(const atomic_unchecked_t *v)
  *
  * Atomically sets the value of @v to @i.
  */
-static inline void atomic_set(atomic_t *v, int i)
-{
-	v->counter = i;
-}
-static inline void atomic_set_unchecked(atomic_unchecked_t *v, int i)
-{
-	v->counter = i;
-}
+#define atomic_set(v, i)	WRITE_ONCE((v)->counter, (i))
 
+#if (IS_ENABLED(CONFIG_CAVIUM_OCTEON2))
 /*
  * atomic_add - add integer to atomic variable
  * @i: integer value to add
@@ -77,119 +49,15 @@ static inline void atomic_set_unchecked(atomic_unchecked_t *v, int i)
  *
  * Atomically adds @i to @v.
  */
-static __inline__ void atomic_add(int i, atomic_t *v)
+static inline void atomic_add(int i, atomic_t *v)
 {
-	int temp;
-
-#ifndef CONFIG_PAX_REFCOUNT
-	if (cpu_has_saa) {
-		__asm__ __volatile__(
-		".set	push\n\t"
-		".set	arch=octeon+\n\t"
-		"saa    %1, (%2)\t# atomic_add (%0)\n\t"
-		".set	pop"
-		: "+m" (v->counter)
-		: "r" (i), "r" (&v->counter));
-	} else
-#endif
-	if (kernel_uses_llsc && R10000_LLSC_WAR) {
-		__asm__ __volatile__(
-		"	.set	mips3					\n"
-		"1:	ll	%0, %1		# atomic_add		\n"
-#ifdef CONFIG_PAX_REFCOUNT
-			/* Exception on overflow. */
-		"2:	add	%0, %2					\n"
-#else
-		"	addu	%0, %2					\n"
-#endif
-		"	sc	%0, %1					\n"
-		"	beqzl	%0, 1b					\n"
-#ifdef CONFIG_PAX_REFCOUNT
-		"3:							\n"
-		_ASM_EXTABLE(2b, 3b)
-#endif
-		"	.set	mips0					\n"
-		: "=&r" (temp), "+m" (v->counter)
-		: "Ir" (i));
-	} else if (kernel_uses_llsc) {
-		__asm__ __volatile__(
-		"	.set	mips3					\n"
-		"1:	ll	%0, %1		# atomic_add		\n"
-#ifdef CONFIG_PAX_REFCOUNT
-		/* Exception on overflow. */
-		"2:	add	%0, %2					\n"
-#else
-		"	addu	%0, %2					\n"
-#endif
-		"	sc	%0, %1					\n"
-		"	beqz	%0, 1b					\n"
-#ifdef CONFIG_PAX_REFCOUNT
-		"3:							\n"
-		_ASM_EXTABLE(2b, 3b)
-#endif
-		"	.set	mips0					\n"
-		: "=&r" (temp), "+m" (v->counter)
-		: "Ir" (i));
-	} else {
-		unsigned long flags;
-
-		raw_local_irq_save(flags);
-		__asm__ __volatile__(
-#ifdef CONFIG_PAX_REFCOUNT
-			/* Exception on overflow. */
-		"1:	add	%0, %1					\n"
-		"2:							\n"
-		_ASM_EXTABLE(1b, 2b)
-#else
-		"	addu	%0, %1					\n"
-#endif
-		: "+r" (v->counter) : "Ir" (i));
-		raw_local_irq_restore(flags);
-	}
-}
-
-static __inline__ void atomic_add_unchecked(int i, atomic_unchecked_t *v)
-{
-	if (cpu_has_saa) {
-		__asm__ __volatile__(
-		".set	push\n\t"
-		".set	arch=octeon+\n\t"
-		"saa    %1, (%2)\t# atomic_add (%0)\n\t"
-		".set	pop"
-		: "+m" (v->counter)
-		: "r" (i), "r" (&v->counter));
-	} else if (kernel_uses_llsc && R10000_LLSC_WAR) {
-		int temp;
-
-		__asm__ __volatile__(
-		"	.set	mips3					\n"
-		"1:	ll	%0, %1		# atomic_add		\n"
-		"	addu	%0, %2					\n"
-		"	sc	%0, %1					\n"
-		"	beqzl	%0, 1b					\n"
-		"	.set	mips0					\n"
-		: "=&r" (temp), "+m" (v->counter)
-		: "Ir" (i));
-	} else if (kernel_uses_llsc) {
-		int temp;
-
-		do {
-			__asm__ __volatile__(
-			"	.set	mips3				\n"
-			"	ll	%0, %1		# atomic_add	\n"
-			"	addu	%0, %2				\n"
-			"	sc	%0, %1				\n"
-			"	.set	mips0				\n"
-			: "=&r" (temp), "+m" (v->counter)
-			: "Ir" (i));
-		} while (unlikely(!temp));
-	} else {
-		unsigned long flags;
-
-		raw_local_irq_save(flags);
-		v->counter += i;
-		raw_local_irq_restore(flags);
-	}
+	__asm__ __volatile__(
+	".set	push\n\t"
+	".set	arch=octeon+\n\t"
+	"saa    %1, (%2)\t# atomic_add (%0)\n\t"
+	".set	pop"
+	: "+m" (v->counter)
+	: "r" (i), "r" (&v->counter));
 }
 
 /*
@@ -199,474 +67,291 @@ static __inline__ void atomic_add_unchecked(int i, atomic_unchecked_t *v)
  *
  * Atomically subtracts @i from @v.
  */
-static __inline__ void atomic_sub(int i, atomic_t *v)
+static inline void atomic_sub(int i, atomic_t *v)
 {
-	int temp;
-
-#ifndef CONFIG_PAX_REFCOUNT
-	if (cpu_has_saa) {
-		__asm__ __volatile__(
-		".set	push\n\t"
-		".set	arch=octeon+\n\t"
-		"saa    %1, (%2)\t# atomic_sub(%0)\n\t"
-		".set	pop"
-		: "+m" (v->counter)
-		: "r" (-i), "r" (&v->counter));
-	} else
-#endif
-	if (kernel_uses_llsc && R10000_LLSC_WAR) {
-		__asm__ __volatile__(
-		"	.set	mips3					\n"
-		"1:	ll	%0, %1		# atomic_sub		\n"
-#ifdef CONFIG_PAX_REFCOUNT
-		/* Exception on overflow. */
-		"2:	sub	%0, %2					\n"
-#else
-		"	subu	%0, %2					\n"
-#endif
-		"	sc	%0, %1					\n"
-		"	beqzl	%0, 1b					\n"
-#ifdef CONFIG_PAX_REFCOUNT
-		"3:							\n"
-		_ASM_EXTABLE(2b, 3b)
-#endif
-		"	.set	mips0					\n"
-		: "=&r" (temp), "+m" (v->counter)
-		: "Ir" (i));
-	} else if (kernel_uses_llsc) {
-		__asm__ __volatile__(
-		"	.set	mips3					\n"
-		"1:	ll	%0, %1		# atomic_sub		\n"
-#ifdef CONFIG_PAX_REFCOUNT
-		/* Exception on overflow. */
-		"2:	sub	%0, %2					\n"
-#else
-		"	subu	%0, %2					\n"
-#endif
-		"	sc	%0, %1					\n"
-		"	beqz	%0, 1b					\n"
-#ifdef CONFIG_PAX_REFCOUNT
-		"3:							\n"
-		_ASM_EXTABLE(2b, 3b)
-#endif
-		"	.set	mips0					\n"
-		: "=&r" (temp), "+m" (v->counter)
-		: "Ir" (i));
-	} else {
-		unsigned long flags;
-
-		raw_local_irq_save(flags);
-		__asm__ __volatile__(
-#ifdef CONFIG_PAX_REFCOUNT
-			/* Exception on overflow. */
-		"1:	sub	%0, %1					\n"
-		"2:							\n"
-		_ASM_EXTABLE(1b, 2b)
-#else
-		"	subu	%0, %1					\n"
-#endif
-		: "+r" (v->counter) : "Ir" (i));
-		raw_local_irq_restore(flags);
-	}
-}
-
-static __inline__ void atomic_sub_unchecked(int i, atomic_unchecked_t *v)
-{
-	if (cpu_has_saa) {
-		__asm__ __volatile__(
-		".set	push\n\t"
-		".set	arch=octeon+\n\t"
-		"saa    %1, (%2)\t# atomic_sub(%0)\n\t"
-		".set	pop"
-		: "+m" (v->counter)
-		: "r" (-i), "r" (&v->counter));
-	} else if (kernel_uses_llsc && R10000_LLSC_WAR) {
-		int temp;
-
-		__asm__ __volatile__(
-		"	.set	mips3					\n"
-		"1:	ll	%0, %1		# atomic_sub		\n"
-		"	subu	%0, %2					\n"
-		"	sc	%0, %1					\n"
-		"	beqzl	%0, 1b					\n"
-		"	.set	mips0					\n"
-		: "=&r" (temp), "+m" (v->counter)
-		: "Ir" (i));
-	} else if (kernel_uses_llsc) {
-		int temp;
-
-		do {
-			__asm__ __volatile__(
-			"	.set	mips3				\n"
-			"	ll	%0, %1		# atomic_sub	\n"
-			"	subu	%0, %2				\n"
-			"	sc	%0, %1				\n"
-			"	.set	mips0				\n"
-			: "=&r" (temp), "+m" (v->counter)
-			: "Ir" (i));
-		} while (unlikely(!temp));
-	} else {
-		unsigned long flags;
-
-		raw_local_irq_save(flags);
-		v->counter -= i;
-		raw_local_irq_restore(flags);
-	}
+	__asm__ __volatile__(
+	".set	push\n\t"
+	".set	arch=octeon+\n\t"
+	"saa    %1, (%2)\t# atomic_sub(%0)\n\t"
+	".set	pop"
+	: "+m" (v->counter)
+	: "r" (-i), "r" (&v->counter));
 }
 
 /*
  * Same as above, but return the result value
  */
-static __inline__ int atomic_add_return(int i, atomic_t *v)
+static inline int atomic_add_return_relaxed(int i, atomic_t *v)
 {
 	int result;
-	int temp;
 
-	smp_mb__before_llsc();
+	if (__builtin_constant_p(i) && i == 1)
+		__asm__ __volatile__("lai\t%0,(%2)\t# atomic_add_return (%1)"
+				: "=r" (result), "+m" (v->counter)
+				: "r" (&v->counter));
+	else if (__builtin_constant_p(i) && i == -1)
+		__asm__ __volatile__("lad\t%0,(%2)\t# atomic_add_return (%1)"
+				: "=r" (result), "+m" (v->counter)
+				: "r" (&v->counter));
+	else
+		__asm__ __volatile__("laa\t%0,(%2),%3\t# atomic_add_return (%1)"
+				: "=r" (result), "+m" (v->counter)
+				: "r" (&v->counter), "r" (i));
+	return result + i;
+}
 
-#ifndef CONFIG_PAX_REFCOUNT
-	if (cpu_has_octeon2_isa && kernel_uses_llsc) {
-		/*
-		 * For proper barrier semantics, the preceding
-		 * smp_mb__before_llsc() must expand to syncw.
-		 */
-		if (__builtin_constant_p(i) && i == 1)
-			__asm__ __volatile__("lai\t%0,(%2)\t# atomic_add_return (%1)"
-					: "=r" (result), "+m" (v->counter)
-					: "r" (&v->counter));
-		else if (__builtin_constant_p(i) && i == -1)
-			__asm__ __volatile__("lad\t%0,(%2)\t# atomic_add_return (%1)"
-					: "=r" (result), "+m" (v->counter)
-					: "r" (&v->counter));
-		else
-			__asm__ __volatile__("laa\t%0,(%2),%3\t# atomic_add_return (%1)"
-					: "=r" (result), "+m" (v->counter)
-					: "r" (&v->counter), "r" (i));
-		result += i;
-	} else
-#endif
-	if (kernel_uses_llsc && R10000_LLSC_WAR) {
-		__asm__ __volatile__(
-		"	.set	mips3					\n"
-		"1:	ll	%1, %2		# atomic_add_return	\n"
-#ifdef CONFIG_PAX_REFCOUNT
-		"2:	add	%0, %1, %3				\n"
-#else
-		"	addu	%0, %1, %3				\n"
-#endif
-		"	sc	%0, %2					\n"
-		"	beqzl	%0, 1b					\n"
-#ifdef CONFIG_PAX_REFCOUNT
-		"	b	4f					\n"
-		"	.set	noreorder				\n"
-		"3:	b	5f					\n"
-		"	move	%0, %1					\n"
-		"	.set	reorder					\n"
-		_ASM_EXTABLE(2b, 3b)
-#endif
-		"4:	addu	%0, %1, %3				\n"
-#ifdef CONFIG_PAX_REFCOUNT
-		"5:							\n"
-#endif
-		"	.set	mips0					\n"
-		: "=&r" (result), "=&r" (temp), "+m" (v->counter)
-		: "Ir" (i));
-	} else if (kernel_uses_llsc) {
-		__asm__ __volatile__(
-		"	.set	mips3					\n"
-		"1:	ll	%1, %2	# atomic_add_return		\n"
-#ifdef CONFIG_PAX_REFCOUNT
-		"2:	add	%0, %1, %3				\n"
-#else
-		"	addu	%0, %1, %3				\n"
-#endif
-		"	sc	%0, %2					\n"
-		"	bnez	%0, 4f					\n"
-		"	b	1b					\n"
-#ifdef CONFIG_PAX_REFCOUNT
-		"	.set	noreorder				\n"
-		"3:	b	5f					\n"
-		"	move	%0, %1					\n"
-		"	.set	reorder					\n"
-		_ASM_EXTABLE(2b, 3b)
-#endif
-		"4:	addu	%0, %1, %3				\n"
-#ifdef CONFIG_PAX_REFCOUNT
-		"5:							\n"
-#endif
-		"	.set	mips0					\n"
-		: "=&r" (result), "=&r" (temp), "+m" (v->counter)
-		: "Ir" (i));
-	} else {
-		unsigned long flags;
+static inline int atomic_fetch_add_relaxed(int i, atomic_t *v)
+{
+	int result;
 
-		raw_local_irq_save(flags);
-		__asm__ __volatile__(
-		"	lw	%0, %1					\n"
-#ifdef CONFIG_PAX_REFCOUNT
-			/* Exception on overflow. */
-		"1:	add	%0, %2					\n"
-#else
-		"	addu	%0, %2					\n"
-#endif
-		"	sw	%0, %1					\n"
-#ifdef CONFIG_PAX_REFCOUNT
-		/* Note: Dest reg is not modified on overflow */
-		"2:							\n"
-		_ASM_EXTABLE(1b, 2b)
-#endif
-		: "=&r" (result), "+m" (v->counter) : "Ir" (i));
-		raw_local_irq_restore(flags);
-	}
-
-	smp_llsc_mb();
-
+	if (__builtin_constant_p(i) && i == 1)
+		__asm__ __volatile__("lai\t%0,(%2)\t# atomic_add_return (%1)"
+				: "=r" (result), "+m" (v->counter)
+				: "r" (&v->counter));
+	else if (__builtin_constant_p(i) && i == -1)
+		__asm__ __volatile__("lad\t%0,(%2)\t# atomic_add_return (%1)"
+				: "=r" (result), "+m" (v->counter)
+				: "r" (&v->counter));
+	else
+		__asm__ __volatile__("laa\t%0,(%2),%3\t# atomic_add_return (%1)"
+				: "=r" (result), "+m" (v->counter)
+				: "r" (&v->counter), "r" (i));
 	return result;
 }
 
-static __inline__ int atomic_add_return_unchecked(int i, atomic_unchecked_t *v)
+static inline int atomic_add_return(int i, atomic_t *v)
 {
 	int result;
 
 	smp_mb__before_llsc();
 
-	if (cpu_has_octeon2_isa && kernel_uses_llsc) {
-		/*
-		 * For proper barrier semantics, the preceding
-		 * smp_mb__before_llsc() must expand to syncw.
-		 */
-		if (__builtin_constant_p(i) && i == 1)
-			__asm__ __volatile__("lai\t%0,(%2)\t# atomic_add_return (%1)"
-					: "=r" (result), "+m" (v->counter)
-					: "r" (&v->counter));
-		else if (__builtin_constant_p(i) && i == -1)
-			__asm__ __volatile__("lad\t%0,(%2)\t# atomic_add_return (%1)"
-					: "=r" (result), "+m" (v->counter)
-					: "r" (&v->counter));
-		else
-			__asm__ __volatile__("laa\t%0,(%2),%3\t# atomic_add_return (%1)"
-					: "=r" (result), "+m" (v->counter)
-					: "r" (&v->counter), "r" (i));
-		result += i;
-	} else if (kernel_uses_llsc && R10000_LLSC_WAR) {
-		int temp;
-
-		__asm__ __volatile__(
-		"	.set	mips3					\n"
-		"1:	ll	%1, %2		# atomic_add_return	\n"
-		"	addu	%0, %1, %3				\n"
-		"	sc	%0, %2					\n"
-		"	beqzl	%0, 1b					\n"
-		"	addu	%0, %1, %3				\n"
-		"	.set	mips0					\n"
-		: "=&r" (result), "=&r" (temp), "+m" (v->counter)
-		: "Ir" (i));
-	} else if (kernel_uses_llsc) {
-		int temp;
-
-		do {
-			__asm__ __volatile__(
-			"	.set	mips3				\n"
-			"	ll	%1, %2	# atomic_add_return	\n"
-			"	addu	%0, %1, %3			\n"
-			"	sc	%0, %2				\n"
-			"	.set	mips0				\n"
-			: "=&r" (result), "=&r" (temp), "+m" (v->counter)
-			: "Ir" (i));
-		} while (unlikely(!result));
-
-		result = temp + i;
-	} else {
-		unsigned long flags;
-
-		raw_local_irq_save(flags);
-		result = v->counter;
-		result += i;
-		v->counter = result;
-		raw_local_irq_restore(flags);
-	}
-
-	smp_llsc_mb();
-
+	/*
+	 * For proper barrier semantics, the preceding
+	 * smp_mb__before_llsc() must expand to syncw.
+	 */
+	result = atomic_add_return_relaxed(i, v);
 	return result;
 }
 
-static __inline__ int atomic_sub_return(int i, atomic_t *v)
+static inline int atomic_sub_return_relaxed(int i, atomic_t *v)
 {
 	int result;
-	int temp;
 
-	smp_mb__before_llsc();
+	if (__builtin_constant_p(i) && i == -1)
+		__asm__ __volatile__("lai\t%0,(%2)\t# atomic_sub_return (%1)"
+				: "=r" (result), "+m" (v->counter)
+				: "r" (&v->counter));
+	else if (__builtin_constant_p(i) && i == 1)
+		__asm__ __volatile__("lad\t%0,(%2)\t# atomic_sub_return (%1)"
+				: "=r" (result), "+m" (v->counter)
+				: "r" (&v->counter));
+	else
+		__asm__ __volatile__("laa\t%0,(%2),%3\t# atomic_sub_return (%1)"
+				: "=r" (result), "+m" (v->counter)
+				: "r" (&v->counter), "r" (-i));
+	return result - i;
+}
 
-#ifndef CONFIG_PAX_REFCOUNT
-	if (cpu_has_octeon2_isa && kernel_uses_llsc) {
-		/*
-		 * For proper barrier semantics, the preceding
-		 * smp_mb__before_llsc() must expand to syncw.
-		 */
-		if (__builtin_constant_p(i) && i == -1)
-			__asm__ __volatile__("lai\t%0,(%2)\t# atomic_sub_return (%1)"
-					: "=r" (result), "+m" (v->counter)
-					: "r" (&v->counter));
-		else if (__builtin_constant_p(i) && i == 1)
-			__asm__ __volatile__("lad\t%0,(%2)\t# atomic_sub_return (%1)"
-					: "=r" (result), "+m" (v->counter)
-					: "r" (&v->counter));
-		else
-			__asm__ __volatile__("laa\t%0,(%2),%3\t# atomic_sub_return (%1)"
-					: "=r" (result), "+m" (v->counter)
-					: "r" (&v->counter), "r" (-i));
-		result -= i;
-	} else
-#endif
-	if (kernel_uses_llsc && R10000_LLSC_WAR) {
-		__asm__ __volatile__(
-		"	.set	mips3					\n"
-		"1:	ll	%1, %2		# atomic_sub_return	\n"
-#ifdef CONFIG_PAX_REFCOUNT
-		"2:	sub	%0, %1, %3				\n"
-#else
-		"	subu	%0, %1, %3				\n"
-#endif
-		"	sc	%0, %2					\n"
-		"	beqzl	%0, 1b					\n"
-#ifdef CONFIG_PAX_REFCOUNT
-		"	b	4f					\n"
-		"	.set	noreorder				\n"
-		"3:	b	5f					\n"
-		"	move	%0, %1					\n"
-		"	.set	reorder					\n"
-		_ASM_EXTABLE(2b, 3b)
-#endif
-		"4:	subu	%0, %1, %3				\n"
-#ifdef CONFIG_PAX_REFCOUNT
-		"5:							\n"
-#endif
-		"	.set	mips0					\n"
-		: "=&r" (result), "=&r" (temp), "=m" (v->counter)
-		: "Ir" (i), "m" (v->counter)
-		: "memory");
-	} else if (kernel_uses_llsc) {
-		__asm__ __volatile__(
-		"	.set	mips3					\n"
-		"1:	ll	%1, %2	# atomic_sub_return		\n"
-#ifdef CONFIG_PAX_REFCOUNT
-		"2:	sub	%0, %1, %3				\n"
-#else
-		"	subu	%0, %1, %3				\n"
-#endif
-		"	sc	%0, %2					\n"
-		"	bnez	%0, 4f					\n"
-		"	b	1b					\n"
-#ifdef CONFIG_PAX_REFCOUNT
-		"	.set	noreorder				\n"
-		"3:	b	5f					\n"
-		"	move	%0, %1					\n"
-		"	.set	reorder					\n"
-		_ASM_EXTABLE(2b, 3b)
-#endif
-		"4:	subu	%0, %1, %3				\n"
-#ifdef CONFIG_PAX_REFCOUNT
-		"5:							\n"
-#endif
-		"	.set	mips0					\n"
-		: "=&r" (result), "=&r" (temp), "+m" (v->counter)
-		: "Ir" (i));
-	} else {
-		unsigned long flags;
+static inline int atomic_fetch_sub_relaxed(int i, atomic_t *v)
+{
+	int result;
 
-		raw_local_irq_save(flags);
-		__asm__ __volatile__(
-		"	lw	%0, %1					\n"
-#ifdef CONFIG_PAX_REFCOUNT
-			/* Exception on overflow. */
-		"1:	sub	%0, %2					\n"
-#else
-		"	subu	%0, %2					\n"
-#endif
-		"	sw	%0, %1					\n"
-#ifdef CONFIG_PAX_REFCOUNT
-		/* Note: Dest reg is not modified on overflow */
-		"2:							\n"
-		_ASM_EXTABLE(1b, 2b)
-#endif
-		: "=&r" (result), "+m" (v->counter) : "Ir" (i));
-		raw_local_irq_restore(flags);
-	}
-
-	smp_llsc_mb();
-
+	if (__builtin_constant_p(i) && i == -1)
+		__asm__ __volatile__("lai\t%0,(%2)\t# atomic_sub_return (%1)"
+				: "=r" (result), "+m" (v->counter)
+				: "r" (&v->counter));
+	else if (__builtin_constant_p(i) && i == 1)
+		__asm__ __volatile__("lad\t%0,(%2)\t# atomic_sub_return (%1)"
+				: "=r" (result), "+m" (v->counter)
+				: "r" (&v->counter));
+	else
+		__asm__ __volatile__("laa\t%0,(%2),%3\t# atomic_sub_return (%1)"
+				: "=r" (result), "+m" (v->counter)
+				: "r" (&v->counter), "r" (-i));
 	return result;
 }
-static __inline__ int atomic_sub_return_unchecked(int i, atomic_unchecked_t *v)
+
+static inline int atomic_sub_return(int i, atomic_t *v)
 {
 	int result;
 
 	smp_mb__before_llsc();
 
-	if (cpu_has_octeon2_isa && kernel_uses_llsc) {
-		/*
-		 * For proper barrier semantics, the preceding
-		 * smp_mb__before_llsc() must expand to syncw.
-		 */
-		if (__builtin_constant_p(i) && i == -1)
-			__asm__ __volatile__("lai\t%0,(%2)\t# atomic_sub_return (%1)"
-					: "=r" (result), "+m" (v->counter)
-					: "r" (&v->counter));
-		else if (__builtin_constant_p(i) && i == 1)
-			__asm__ __volatile__("lad\t%0,(%2)\t# atomic_sub_return (%1)"
-					: "=r" (result), "+m" (v->counter)
-					: "r" (&v->counter));
-		else
-			__asm__ __volatile__("laa\t%0,(%2),%3\t# atomic_sub_return (%1)"
-					: "=r" (result), "+m" (v->counter)
-					: "r" (&v->counter), "r" (-i));
-		result -= i;
-	} else if (kernel_uses_llsc && R10000_LLSC_WAR) {
-		int temp;
-
-		__asm__ __volatile__(
-		"	.set	mips3					\n"
-		"1:	ll	%1, %2		# atomic_sub_return	\n"
-		"	subu	%0, %1, %3				\n"
-		"	sc	%0, %2					\n"
-		"	beqzl	%0, 1b					\n"
-		"	subu	%0, %1, %3				\n"
-		"	.set	mips0					\n"
-		: "=&r" (result), "=&r" (temp), "=m" (v->counter)
-		: "Ir" (i), "m" (v->counter)
-		: "memory");
-
-		result = temp - i;
-	} else if (kernel_uses_llsc) {
-		int temp;
-
-		do {
-			__asm__ __volatile__(
-			"	.set	mips3				\n"
-			"	ll	%1, %2	# atomic_sub_return	\n"
-			"	subu	%0, %1, %3			\n"
-			"	sc	%0, %2				\n"
-			"	.set	mips0				\n"
-			: "=&r" (result), "=&r" (temp), "+m" (v->counter)
-			: "Ir" (i));
-		} while (unlikely(!result));
-
-		result = temp - i;
-	} else {
-		unsigned long flags;
-
-		raw_local_irq_save(flags);
-		result = v->counter;
-		result -= i;
-		v->counter = result;
-		raw_local_irq_restore(flags);
-	}
+	/*
+	 * For proper barrier semantics, the preceding
+	 * smp_mb__before_llsc() must expand to syncw.
+	 */
+	result = atomic_sub_return_relaxed(i, v);
 
 	smp_llsc_mb();
-
 	return result;
 }
+#endif
+
+#define ATOMIC_OP(op, c_op, asm_op)					      \
+static __inline__ void atomic_##op(int i, atomic_t * v)			      \
+{									      \
+	if (kernel_uses_llsc && R10000_LLSC_WAR) {			      \
+		int temp;						      \
+									      \
+		__asm__ __volatile__(					      \
+		"	.set	arch=r4000				\n"   \
+		"1:	ll	%0, %1		# atomic_" #op "	\n"   \
+		"	" #asm_op " %0, %2				\n"   \
+		"	sc	%0, %1					\n"   \
+		"	beqzl	%0, 1b					\n"   \
+		"	.set	mips0					\n"   \
+		: "=&r" (temp), "+" GCC_OFF_SMALL_ASM() (v->counter)	      \
+		: "Ir" (i));						      \
+	} else if (kernel_uses_llsc) {					      \
+		int temp;						      \
+									      \
+		do {							      \
+			__asm__ __volatile__(				      \
+			"	.set	"MIPS_ISA_LEVEL"		\n"   \
+			"	ll	%0, %1		# atomic_" #op "\n"   \
+			"	" #asm_op " %0, %2			\n"   \
+			"	sc	%0, %1				\n"   \
+			"	.set	mips0				\n"   \
+			: "=&r" (temp), "+" GCC_OFF_SMALL_ASM() (v->counter)  \
+			: "Ir" (i));					      \
+		} while (unlikely(!temp));				      \
+	} else {							      \
+		unsigned long flags;					      \
+									      \
+		raw_local_irq_save(flags);				      \
+		v->counter c_op i;					      \
+		raw_local_irq_restore(flags);				      \
+	}								      \
+}
+
+#define ATOMIC_OP_RETURN(op, c_op, asm_op)				      \
+static __inline__ int atomic_##op##_return_relaxed(int i, atomic_t * v)	      \
+{									      \
+	int result;							      \
+									      \
+	if (kernel_uses_llsc && R10000_LLSC_WAR) {			      \
+		int temp;						      \
+									      \
+		__asm__ __volatile__(					      \
+		"	.set	arch=r4000				\n"   \
+		"1:	ll	%1, %2		# atomic_" #op "_return	\n"   \
+		"	" #asm_op " %0, %1, %3				\n"   \
+		"	sc	%0, %2					\n"   \
+		"	beqzl	%0, 1b					\n"   \
+		"	" #asm_op " %0, %1, %3				\n"   \
+		"	.set	mips0					\n"   \
+		: "=&r" (result), "=&r" (temp),				      \
+		  "+" GCC_OFF_SMALL_ASM() (v->counter)			      \
+		: "Ir" (i));						      \
+	} else if (kernel_uses_llsc) {					      \
+		int temp;						      \
+									      \
+		do {							      \
+			__asm__ __volatile__(				      \
+			"	.set	"MIPS_ISA_LEVEL"		\n"   \
+			"	ll	%1, %2	# atomic_" #op "_return	\n"   \
+			"	" #asm_op " %0, %1, %3			\n"   \
+			"	sc	%0, %2				\n"   \
+			"	.set	mips0				\n"   \
+			: "=&r" (result), "=&r" (temp),			      \
+			  "+" GCC_OFF_SMALL_ASM() (v->counter)		      \
+			: "Ir" (i));					      \
+		} while (unlikely(!result));				      \
+									      \
+		result = temp; result c_op i;				      \
+	} else {							      \
+		unsigned long flags;					      \
+									      \
+		raw_local_irq_save(flags);				      \
+		result = v->counter;					      \
+		result c_op i;						      \
+		v->counter = result;					      \
+		raw_local_irq_restore(flags);				      \
+	}								      \
+									      \
+	return result;							      \
+}
+
+#define ATOMIC_FETCH_OP(op, c_op, asm_op)				      \
+static __inline__ int atomic_fetch_##op##_relaxed(int i, atomic_t * v)	      \
+{									      \
+	int result;							      \
+									      \
+	if (kernel_uses_llsc && R10000_LLSC_WAR) {			      \
+		int temp;						      \
+									      \
+		__asm__ __volatile__(					      \
+		"	.set	arch=r4000				\n"   \
+		"1:	ll	%1, %2		# atomic_fetch_" #op "	\n"   \
+		"	" #asm_op " %0, %1, %3				\n"   \
+		"	sc	%0, %2					\n"   \
+		"	beqzl	%0, 1b					\n"   \
+		"	move	%0, %1					\n"   \
+		"	.set	mips0					\n"   \
+		: "=&r" (result), "=&r" (temp),				      \
+		  "+" GCC_OFF_SMALL_ASM() (v->counter)			      \
+		: "Ir" (i));						      \
+	} else if (kernel_uses_llsc) {					      \
+		int temp;						      \
+									      \
+		do {							      \
+			__asm__ __volatile__(				      \
+			"	.set	"MIPS_ISA_LEVEL"		\n"   \
+			"	ll	%1, %2	# atomic_fetch_" #op "	\n"   \
+			"	" #asm_op " %0, %1, %3			\n"   \
+			"	sc	%0, %2				\n"   \
+			"	.set	mips0				\n"   \
+			: "=&r" (result), "=&r" (temp),			      \
+			  "+" GCC_OFF_SMALL_ASM() (v->counter)		      \
+			: "Ir" (i));					      \
+		} while (unlikely(!result));				      \
+									      \
+		result = temp;						      \
+	} else {							      \
+		unsigned long flags;					      \
+									      \
+		raw_local_irq_save(flags);				      \
+		result = v->counter;					      \
+		v->counter c_op i;					      \
+		raw_local_irq_restore(flags);				      \
+	}								      \
+									      \
+	return result;							      \
+}
+
+#if (!IS_ENABLED(CONFIG_CAVIUM_OCTEON2))
+#define ATOMIC_OPS(op, c_op, asm_op)					      \
+	ATOMIC_OP(op, c_op, asm_op)					      \
+	ATOMIC_OP_RETURN(op, c_op, asm_op)				      \
+	ATOMIC_FETCH_OP(op, c_op, asm_op)
+
+ATOMIC_OPS(add, +=, addu)
+ATOMIC_OPS(sub, -=, subu)
+#endif
+
+#define atomic_add_return_relaxed	atomic_add_return_relaxed
+#define atomic_sub_return_relaxed	atomic_sub_return_relaxed
+#define atomic_fetch_add_relaxed	atomic_fetch_add_relaxed
+#define atomic_fetch_sub_relaxed	atomic_fetch_sub_relaxed
+
+#undef ATOMIC_OPS
+#define ATOMIC_OPS(op, c_op, asm_op)					      \
+	ATOMIC_OP(op, c_op, asm_op)					      \
+	ATOMIC_FETCH_OP(op, c_op, asm_op)
+
+ATOMIC_OPS(and, &=, and)
+ATOMIC_OPS(or, |=, or)
+ATOMIC_OPS(xor, ^=, xor)
+
+#define atomic_fetch_and_relaxed	atomic_fetch_and_relaxed
+#define atomic_fetch_or_relaxed		atomic_fetch_or_relaxed
+#define atomic_fetch_xor_relaxed	atomic_fetch_xor_relaxed
+
+#undef ATOMIC_OPS
+#undef ATOMIC_FETCH_OP
+#undef ATOMIC_OP_RETURN
+#undef ATOMIC_OP
 
 /*
  * atomic_sub_if_positive - conditionally subtract integer from atomic variable
@@ -676,84 +361,57 @@ static __inline__ int atomic_sub_return_unchecked(int i, atomic_unchecked_t *v)
  * Atomically test @v and subtract @i if @v is greater or equal than @i.
  * The function returns the old value of @v minus @i.
  */
-static __inline__ int atomic_sub_if_positive(int i, atomic_t *v)
+static __inline__ int atomic_sub_if_positive(int i, atomic_t * v)
 {
 	int result;
-	int temp;
 
 	smp_mb__before_llsc();
 
 	if (kernel_uses_llsc && R10000_LLSC_WAR) {
+		int temp;
+
 		__asm__ __volatile__(
-		"	.set	mips3					\n"
+		"	.set	arch=r4000				\n"
 		"1:	ll	%1, %2		# atomic_sub_if_positive\n"
-#ifdef CONFIG_PAX_REFCOUNT
-		"2:	sub	%0, %1, %3				\n"
-#else
 		"	subu	%0, %1, %3				\n"
-#endif
 		"	bltz	%0, 1f					\n"
 		"	sc	%0, %2					\n"
 		"	.set	noreorder				\n"
 		"	beqzl	%0, 1b					\n"
-		"	subu	%0, %1, %3				\n"
-#ifdef CONFIG_PAX_REFCOUNT
-		"	b	1f					\n"
-		"	nop						\n"
-		"3:	b	1f					\n"
-		"	move	%0, %1					\n"
-		_ASM_EXTABLE(2b, 3b)
-#endif
+		"	 subu	%0, %1, %3				\n"
 		"	.set	reorder					\n"
 		"1:							\n"
 		"	.set	mips0					\n"
-		: "=&r" (result), "=&r" (temp), "+m" (v->counter)
-		: "Ir" (i), "m" (v->counter)
+		: "=&r" (result), "=&r" (temp),
+		  "+" GCC_OFF_SMALL_ASM() (v->counter)
+		: "Ir" (i), GCC_OFF_SMALL_ASM() (v->counter)
 		: "memory");
 	} else if (kernel_uses_llsc) {
+		int temp;
+
 		__asm__ __volatile__(
-		"	.set	mips3					\n"
+		"	.set	"MIPS_ISA_LEVEL"			\n"
 		"1:	ll	%1, %2		# atomic_sub_if_positive\n"
-#ifdef CONFIG_PAX_REFCOUNT
-		"2:	sub	%0, %1, %3				\n"
-#else
 		"	subu	%0, %1, %3				\n"
-#endif
 		"	bltz	%0, 1f					\n"
 		"	sc	%0, %2					\n"
 		"	.set	noreorder				\n"
 		"	beqz	%0, 1b					\n"
-		"	subu	%0, %1, %3				\n"
-#ifdef CONFIG_PAX_REFCOUNT
-		"	b	1f					\n"
-		"	nop						\n"
-		"3:	b	1f					\n"
-		"	move	%0, %1					\n"
-		_ASM_EXTABLE(2b, 3b)
-#endif
+		"	 subu	%0, %1, %3				\n"
 		"	.set	reorder					\n"
 		"1:							\n"
 		"	.set	mips0					\n"
-		: "=&r" (result), "=&r" (temp), "+m" (v->counter)
+		: "=&r" (result), "=&r" (temp),
+		  "+" GCC_OFF_SMALL_ASM() (v->counter)
 		: "Ir" (i));
 	} else {
 		unsigned long flags;
 
 		raw_local_irq_save(flags);
-		__asm__ __volatile__(
-		"	lw	%0, %1					\n"
-#ifdef CONFIG_PAX_REFCOUNT
-			/* Exception on overflow. */
-		"1:	sub	%0, %2					\n"
-		/* Note: Dest reg is not modified on overflow */
-		_ASM_EXTABLE(1b, 2f)
-#else
-		"	subu	%0, %2					\n"
-#endif
-		"	bltz	%0, 2f					\n"
-		"	sw	%0, %1					\n"
-		"2:							\n"
-		: "=&r" (result) : "m" (v->counter), "Ir" (i));
+		result = v->counter;
+		result -= i;
+		if (result >= 0)
+			v->counter = result;
 		raw_local_irq_restore(flags);
 	}
 
@@ -762,26 +420,8 @@ static __inline__ int atomic_sub_if_positive(int i, atomic_t *v)
 	return result;
 }
 
-static inline int atomic_cmpxchg(atomic_t *v, int old, int new)
-{
-	return cmpxchg(&v->counter, old, new);
-}
-
-static inline int atomic_cmpxchg_unchecked(atomic_unchecked_t *v, int old,
-					   int new)
-{
-	return cmpxchg(&(v->counter), old, new);
-}
-
-static inline int atomic_xchg(atomic_t *v, int new)
-{
-	return xchg(&v->counter, new);
-}
-
-static inline int atomic_xchg_unchecked(atomic_unchecked_t *v, int new)
-{
-	return xchg(&(v->counter), new);
-}
+#define atomic_cmpxchg(v, o, n) (cmpxchg(&((v)->counter), (o), (n)))
+#define atomic_xchg(v, new) (xchg(&((v)->counter), (new)))
 
 /**
  * __atomic_add_unless - add unless the number is a given value
@@ -809,10 +449,6 @@ static __inline__ int __atomic_add_unless(atomic_t *v, int a, int u)
 
 #define atomic_dec_return(v) atomic_sub_return(1, (v))
 #define atomic_inc_return(v) atomic_add_return(1, (v))
-static __inline__ int atomic_inc_return_unchecked(atomic_unchecked_t *v)
-{
-	return atomic_add_return_unchecked(1, v);
-}
 
 /*
  * atomic_sub_and_test - subtract value from variable and test result
@@ -834,10 +470,6 @@ static __inline__ int atomic_inc_return_unchecked(atomic_unchecked_t *v)
  * other cases.
  */
 #define atomic_inc_and_test(v) (atomic_inc_return(v) == 0)
-static __inline__ int atomic_inc_and_test_unchecked(atomic_unchecked_t *v)
-{
-	return atomic_add_return_unchecked(1, v) == 0;
-}
 
 /*
  * atomic_dec_and_test - decrement by 1 and test
@@ -853,7 +485,7 @@ static __inline__ int atomic_inc_and_test_unchecked(atomic_unchecked_t *v)
  * atomic_dec_if_positive - decrement by 1 if old value positive
  * @v: pointer of type atomic_t
  */
-#define atomic_dec_if_positive(v)	atomic_sub_if_positive(1, (v))
+#define atomic_dec_if_positive(v)	atomic_sub_if_positive(1, v)
 
 /*
  * atomic_inc - increment atomic variable
@@ -862,10 +494,6 @@ static __inline__ int atomic_inc_and_test_unchecked(atomic_unchecked_t *v)
  * Atomically increments @v by 1.
  */
 #define atomic_inc(v) atomic_add(1, (v))
-static __inline__ void atomic_inc_unchecked(atomic_unchecked_t *v)
-{
-	atomic_add_unchecked(1, v);
-}
 
 /*
  * atomic_dec - decrement and test
@@ -874,10 +502,6 @@ static __inline__ void atomic_inc_unchecked(atomic_unchecked_t *v)
  * Atomically decrements @v by 1.
  */
 #define atomic_dec(v) atomic_sub(1, (v))
-static __inline__ void atomic_dec_unchecked(atomic_unchecked_t *v)
-{
-	atomic_sub_unchecked(1, v);
-}
 
 /*
  * atomic_add_negative - add and test if negative
@@ -899,31 +523,16 @@ static __inline__ void atomic_dec_unchecked(atomic_unchecked_t *v)
  * @v: pointer of type atomic64_t
  *
  */
-static inline long atomic64_read(const atomic64_t *v)
-{
-	return (*(volatile long *) &v->counter);
-}
-
-static inline long atomic64_read_unchecked(const atomic64_unchecked_t *v)
-{
-	return (*(volatile long *) &v->counter);
-}
+#define atomic64_read(v)	READ_ONCE((v)->counter)
 
 /*
  * atomic64_set - set atomic variable
  * @v: pointer of type atomic64_t
  * @i: required value
  */
-static inline void atomic64_set(atomic64_t *v, long i)
-{
-	v->counter = i;
-}
+#define atomic64_set(v, i)	WRITE_ONCE((v)->counter, (i))
 
-static inline void atomic64_set_unchecked(atomic64_unchecked_t *v, long i)
-{
-	v->counter = i;
-}
-
+#if (IS_ENABLED(CONFIG_CAVIUM_OCTEON2))
 /*
  * atomic64_add - add integer to atomic variable
  * @i: integer value to add
@@ -931,118 +540,15 @@ static inline void atomic64_set_unchecked(atomic64_unchecked_t *v, long i)
  *
  * Atomically adds @i to @v.
  */
-static __inline__ void atomic64_add(long i, atomic64_t *v)
+static inline void atomic64_add(long i, atomic64_t *v)
 {
-	long temp;
-
-#ifndef CONFIG_PAX_REFCOUNT
-	if (cpu_has_saa) {
-		__asm__ __volatile__(
-		".set	push\n\t"
-		".set	arch=octeon+\n\t"
-		"saad   %1, (%2)\t# atomic64_add (%0)\n\t"
-		".set	pop"
-		: "+m" (v->counter)
-		: "r" (i), "r" (v));
-	} else
-#endif
-	if (kernel_uses_llsc && R10000_LLSC_WAR) {
-		__asm__ __volatile__(
-		"	.set	mips3					\n"
-		"1:	lld	%0, %1		# atomic64_add		\n"
-#ifdef CONFIG_PAX_REFCOUNT
-			/* Exception on overflow. */
-		"2:	dadd	%0, %2					\n"
-#else
-		"	daddu	%0, %2					\n"
-#endif
-		"	scd	%0, %1					\n"
-		"	beqzl	%0, 1b					\n"
-#ifdef CONFIG_PAX_REFCOUNT
-		"3:							\n"
-		_ASM_EXTABLE(2b, 3b)
-#endif
-		"	.set	mips0					\n"
-		: "=&r" (temp), "+m" (v->counter)
-		: "Ir" (i));
-	} else if (kernel_uses_llsc) {
-		__asm__ __volatile__(
-		"	.set	mips3					\n"
-		"1:	lld	%0, %1		# atomic64_add		\n"
-#ifdef CONFIG_PAX_REFCOUNT
-			/* Exception on overflow. */
-		"2:	dadd	%0, %2					\n"
-#else
-		"	daddu	%0, %2					\n"
-#endif
-		"	scd	%0, %1					\n"
-		"	beqz	%0, 1b					\n"
-#ifdef CONFIG_PAX_REFCOUNT
-		"3:							\n"
-		_ASM_EXTABLE(2b, 3b)
-#endif
-		"	.set	mips0					\n"
-		: "=&r" (temp), "+m" (v->counter)
-		: "Ir" (i));
-	} else {
-		unsigned long flags;
-
-		raw_local_irq_save(flags);
-		__asm__ __volatile__(
-#ifdef CONFIG_PAX_REFCOUNT
-			/* Exception on overflow. */
-		"1:	dadd	%0, %1					\n"
-		"2:							\n"
-		_ASM_EXTABLE(1b, 2b)
-#else
-		"	daddu	%0, %1					\n"
-#endif
-		: "+r" (v->counter) : "Ir" (i));
-		raw_local_irq_restore(flags);
-	}
-}
-static __inline__ void atomic64_add_unchecked(long i, atomic64_unchecked_t *v)
-{
-	if (cpu_has_saa) {
-		__asm__ __volatile__(
-		".set	push\n\t"
-		".set	arch=octeon+\n\t"
-		"saad   %1, (%2)\t# atomic64_add (%0)\n\t"
-		".set	pop"
-		: "+m" (v->counter)
-		: "r" (i), "r" (v));
-	} else if (kernel_uses_llsc && R10000_LLSC_WAR) {
-		long temp;
-
-		__asm__ __volatile__(
-		"	.set	mips3					\n"
-		"1:	lld	%0, %1		# atomic64_add		\n"
-		"	daddu	%0, %2					\n"
-		"	scd	%0, %1					\n"
-		"	beqzl	%0, 1b					\n"
-		"	.set	mips0					\n"
-		: "=&r" (temp), "+m" (v->counter)
-		: "Ir" (i));
-	} else if (kernel_uses_llsc) {
-		long temp;
-
-		do {
-			__asm__ __volatile__(
-			"	.set	mips3				\n"
-			"	lld	%0, %1		# atomic64_add	\n"
-			"	daddu	%0, %2				\n"
-			"	scd	%0, %1				\n"
-			"	.set	mips0				\n"
-			: "=&r" (temp), "+m" (v->counter)
-			: "Ir" (i));
-		} while (unlikely(!temp));
-	} else {
-		unsigned long flags;
-
-		raw_local_irq_save(flags);
-		v->counter += i;
-		raw_local_irq_restore(flags);
-	}
+	__asm__ __volatile__(
+	".set	push\n\t"
+	".set	arch=octeon+\n\t"
+	"saad   %1, (%2)\t# atomic64_add (%0)\n\t"
+	".set	pop"
+	: "+m" (v->counter)
+	: "r" (i), "r" (v));
 }
 
 /*
@@ -1052,566 +558,356 @@ static __inline__ void atomic64_add_unchecked(long i, atomic64_unchecked_t *v)
  *
  * Atomically subtracts @i from @v.
  */
-static __inline__ void atomic64_sub(long i, atomic64_t *v)
+static inline void atomic64_sub(long i, atomic64_t *v)
 {
-	long temp;
-
-#ifndef CONFIG_PAX_REFCOUNT
-	if (cpu_has_saa) {
-		__asm__ __volatile__(
-		".set	push\n\t"
-		".set	arch=octeon+\n\t"
-		"saad    %1, (%2)\t# atomic64_sub (%0)\n\t"
-		".set	pop"
-		: "+m" (v->counter)
-		: "r" (-i), "r" (v));
-	} else
-#endif
-	if (kernel_uses_llsc && R10000_LLSC_WAR) {
-		__asm__ __volatile__(
-		"	.set	mips3					\n"
-		"1:	lld	%0, %1		# atomic64_sub		\n"
-#ifdef CONFIG_PAX_REFCOUNT
-		/* Exception on overflow. */
-		"2:	dsub	%0, %2					\n"
-#else
-		"	dsubu	%0, %2					\n"
-#endif
-		"	scd	%0, %1					\n"
-		"	beqzl	%0, 1b					\n"
-#ifdef CONFIG_PAX_REFCOUNT
-		"3:							\n"
-		_ASM_EXTABLE(2b, 3b)
-#endif
-		"	.set	mips0					\n"
-		: "=&r" (temp), "+m" (v->counter)
-		: "Ir" (i));
-	} else if (kernel_uses_llsc) {
-		__asm__ __volatile__(
-		"	.set	mips3					\n"
-		"1:	lld	%0, %1		# atomic64_sub		\n"
-#ifdef CONFIG_PAX_REFCOUNT
-		/* Exception on overflow. */
-		"2:	dsub	%0, %2					\n"
-#else
-		"	dsubu	%0, %2					\n"
-#endif
-		"	scd	%0, %1					\n"
-		"	beqz	%0, 1b					\n"
-#ifdef CONFIG_PAX_REFCOUNT
-		"3:							\n"
-		_ASM_EXTABLE(2b, 3b)
-#endif
-		"	.set	mips0					\n"
-		: "=&r" (temp), "+m" (v->counter)
-		: "Ir" (i));
-	} else {
-		unsigned long flags;
-
-		raw_local_irq_save(flags);
-		__asm__ __volatile__(
-#ifdef CONFIG_PAX_REFCOUNT
-			/* Exception on overflow. */
-		"1:	dsub	%0, %1					\n"
-		"2:							\n"
-		_ASM_EXTABLE(1b, 2b)
-#else
-		"	dsubu	%0, %1					\n"
-#endif
-		: "+r" (v->counter) : "Ir" (i));
-		raw_local_irq_restore(flags);
-	}
-}
-
-static __inline__ void atomic64_sub_unchecked(long i, atomic64_unchecked_t *v)
-{
-	if (cpu_has_saa) {
-		__asm__ __volatile__(
-		".set	push\n\t"
-		".set	arch=octeon+\n\t"
-		"saad    %1, (%2)\t# atomic64_sub (%0)\n\t"
-		".set	pop"
-		: "+m" (v->counter)
-		: "r" (-i), "r" (v));
-	} else if (kernel_uses_llsc && R10000_LLSC_WAR) {
-		long temp;
-
-		__asm__ __volatile__(
-		"	.set	mips3					\n"
-		"1:	lld	%0, %1		# atomic64_sub		\n"
-		"	dsubu	%0, %2					\n"
-		"	scd	%0, %1					\n"
-		"	beqzl	%0, 1b					\n"
-		"	.set	mips0					\n"
-		: "=&r" (temp), "+m" (v->counter)
-		: "Ir" (i));
-	} else if (kernel_uses_llsc) {
-		long temp;
-
-		do {
-			__asm__ __volatile__(
-			"	.set	mips3				\n"
-			"	lld	%0, %1		# atomic64_sub	\n"
-			"	dsubu	%0, %2				\n"
-			"	scd	%0, %1				\n"
-			"	.set	mips0				\n"
-			: "=&r" (temp), "+m" (v->counter)
-			: "Ir" (i));
-		} while (unlikely(!temp));
-	} else {
-		unsigned long flags;
-
-		raw_local_irq_save(flags);
-		v->counter -= i;
-		raw_local_irq_restore(flags);
-	}
+	__asm__ __volatile__(
+	".set	push\n\t"
+	".set	arch=octeon+\n\t"
+	"saad    %1, (%2)\t# atomic64_sub (%0)\n\t"
+	".set	pop"
+	: "+m" (v->counter)
+	: "r" (-i), "r" (v));
 }
 
 /*
  * Same as above, but return the result value
  */
-static __inline__ long atomic64_add_return(long i, atomic64_t *v)
-{
-	long result;
-	long temp;
-
-	smp_mb__before_llsc();
-
-#ifndef CONFIG_PAX_REFCOUNT
-	if (cpu_has_octeon2_isa && kernel_uses_llsc) {
-		/*
-		 * For proper barrier semantics, the preceding
-		 * smp_mb__before_llsc() must expand to syncw.
-		 */
-		if (__builtin_constant_p(i) && i == 1)
-			__asm__ __volatile__("laid\t%0,(%2)\t# atomic64_add_return (%1)"
-					: "=r" (result), "+m" (v->counter)
-					: "r" (&v->counter));
-		else if (__builtin_constant_p(i) && i == -1)
-			__asm__ __volatile__("ladd\t%0,(%2)\t# atomic64_add_return (%1)"
-					: "=r" (result), "+m" (v->counter)
-					: "r" (&v->counter));
-		else
-			__asm__ __volatile__("laad\t%0,(%2),%3\t# atomic64_add_return (%1)"
-					: "=r" (result), "+m" (v->counter)
-					: "r" (&v->counter), "r" (i));
-		result += i;
-	} else
-#endif
-	if (kernel_uses_llsc && R10000_LLSC_WAR) {
-		__asm__ __volatile__(
-		"	.set	mips3					\n"
-		"1:	lld	%1, %2		# atomic64_add_return	\n"
-#ifdef CONFIG_PAX_REFCOUNT
-		"2:	dadd	%0, %1, %3				\n"
-#else
-		"	daddu	%0, %1, %3				\n"
-#endif
-		"	scd	%0, %2					\n"
-		"	beqzl	%0, 1b					\n"
-#ifdef CONFIG_PAX_REFCOUNT
-		"	b	4f					\n"
-		"	.set	noreorder				\n"
-		"3:	b	5f					\n"
-		"	move	%0, %1					\n"
-		"	.set	reorder					\n"
-		_ASM_EXTABLE(2b, 3b)
-#endif
-		"4:	daddu	%0, %1, %3				\n"
-#ifdef CONFIG_PAX_REFCOUNT
-		"5:							\n"
-#endif
-		"	.set	mips0					\n"
-		: "=&r" (result), "=&r" (temp), "+m" (v->counter)
-		: "Ir" (i));
-	} else if (kernel_uses_llsc) {
-		__asm__ __volatile__(
-		"	.set	mips3					\n"
-		"1:	lld	%1, %2	# atomic64_add_return		\n"
-#ifdef CONFIG_PAX_REFCOUNT
-		"2:	dadd	%0, %1, %3				\n"
-#else
-		"	daddu	%0, %1, %3				\n"
-#endif
-		"	scd	%0, %2					\n"
-		"	bnez	%0, 4f					\n"
-		"	b	1b					\n"
-#ifdef CONFIG_PAX_REFCOUNT
-		"	.set	noreorder				\n"
-		"3:	b	5f					\n"
-		"	move	%0, %1					\n"
-		"	.set	reorder					\n"
-		_ASM_EXTABLE(2b, 3b)
-#endif
-		"4:	daddu	%0, %1, %3				\n"
-#ifdef CONFIG_PAX_REFCOUNT
-		"5:							\n"
-#endif
-		"	.set	mips0					\n"
-		: "=&r" (result), "=&r" (temp), "=m" (v->counter)
-		: "Ir" (i), "m" (v->counter)
-		: "memory");
-	} else {
-		unsigned long flags;
-
-		raw_local_irq_save(flags);
-		__asm__ __volatile__(
-		"	ld	%0, %1					\n"
-#ifdef CONFIG_PAX_REFCOUNT
-			/* Exception on overflow. */
-		"1:	dadd	%0, %2					\n"
-#else
-		"	daddu	%0, %2					\n"
-#endif
-		"	sd	%0, %1					\n"
-#ifdef CONFIG_PAX_REFCOUNT
-		/* Note: Dest reg is not modified on overflow */
-		"2:							\n"
-		_ASM_EXTABLE(1b, 2b)
-#endif
-		: "=&r" (result), "+m" (v->counter) : "Ir" (i));
-		raw_local_irq_restore(flags);
-	}
-
-	smp_llsc_mb();
-
-	return result;
-}
-static __inline__ long atomic64_add_return_unchecked(long i, atomic64_unchecked_t *v)
+static inline long atomic64_add_return_relaxed(long i, atomic64_t *v)
 {
 	long result;
 
-	smp_mb__before_llsc();
-
-	if (cpu_has_octeon2_isa && kernel_uses_llsc) {
-		/*
-		 * For proper barrier semantics, the preceding
-		 * smp_mb__before_llsc() must expand to syncw.
-		 */
-		if (__builtin_constant_p(i) && i == 1)
-			__asm__ __volatile__("laid\t%0,(%2)\t# atomic64_add_return (%1)"
-					: "=r" (result), "+m" (v->counter)
-					: "r" (&v->counter));
-		else if (__builtin_constant_p(i) && i == -1)
-			__asm__ __volatile__("ladd\t%0,(%2)\t# atomic64_add_return (%1)"
-					: "=r" (result), "+m" (v->counter)
-					: "r" (&v->counter));
-		else
-			__asm__ __volatile__("laad\t%0,(%2),%3\t# atomic64_add_return (%1)"
-					: "=r" (result), "+m" (v->counter)
-					: "r" (&v->counter), "r" (i));
-		result += i;
-	} else if (kernel_uses_llsc && R10000_LLSC_WAR) {
-		long temp;
-
-		__asm__ __volatile__(
-		"	.set	mips3					\n"
-		"1:	lld	%1, %2		# atomic64_add_return	\n"
-		"	daddu	%0, %1, %3				\n"
-		"	scd	%0, %2					\n"
-		"	beqzl	%0, 1b					\n"
-		"	daddu	%0, %1, %3				\n"
-		"	.set	mips0					\n"
-		: "=&r" (result), "=&r" (temp), "+m" (v->counter)
-		: "Ir" (i));
-	} else if (kernel_uses_llsc) {
-		long temp;
-
-		do {
-			__asm__ __volatile__(
-			"	.set	mips3				\n"
-			"	lld	%1, %2	# atomic64_add_return	\n"
-			"	daddu	%0, %1, %3			\n"
-			"	scd	%0, %2				\n"
-			"	.set	mips0				\n"
-			: "=&r" (result), "=&r" (temp), "=m" (v->counter)
-			: "Ir" (i), "m" (v->counter)
-			: "memory");
-		} while (unlikely(!result));
-
-		result = temp + i;
-	} else {
-		unsigned long flags;
-
-		raw_local_irq_save(flags);
-		result = v->counter;
-		result += i;
-		v->counter = result;
-		raw_local_irq_restore(flags);
-	}
-
-	smp_llsc_mb();
-
-	return result;
-}
-
-static __inline__ long atomic64_sub_return(long i, atomic64_t *v)
-{
-	long result;
-	long temp;
-
-	smp_mb__before_llsc();
-
-#ifndef CONFIG_PAX_REFCOUNT
-	if (cpu_has_octeon2_isa && kernel_uses_llsc) {
-		/*
-		 * For proper barrier semantics, the preceding
-		 * smp_mb__before_llsc() must expand to syncw.
-		 */
-		if (__builtin_constant_p(i) && i == -1)
-			__asm__ __volatile__("laid\t%0,(%2)\t# atomic64_sub_return (%1)"
-					: "=r" (result), "+m" (v->counter)
-					: "r" (&v->counter));
-		else if (__builtin_constant_p(i) && i == 1)
-			__asm__ __volatile__("ladd\t%0,(%2)\t# atomic64_sub_return (%1)"
-					: "=r" (result), "+m" (v->counter)
-					: "r" (&v->counter));
-		else
-			__asm__ __volatile__("laad\t%0,(%2),%3\t# atomic64_sub_return (%1)"
-					: "=r" (result), "+m" (v->counter)
-					: "r" (&v->counter), "r" (-i));
-		result -= i;
-	} else
-#endif
-	if (kernel_uses_llsc && R10000_LLSC_WAR) {
-		long temp;
-
-		__asm__ __volatile__(
-		"	.set	mips3					\n"
-		"1:	lld	%1, %2		# atomic64_sub_return	\n"
-#ifdef CONFIG_PAX_REFCOUNT
-		"2:	dsub	%0, %1, %3				\n"
-#else
-		"	dsubu	%0, %1, %3				\n"
-#endif
-		"	scd	%0, %2					\n"
-		"	beqzl	%0, 1b					\n"
-#ifdef CONFIG_PAX_REFCOUNT
-		"	b	4f					\n"
-		"	.set	noreorder				\n"
-		"3:	b	5f					\n"
-		"	move	%0, %1					\n"
-		"	.set	reorder					\n"
-		_ASM_EXTABLE(2b, 3b)
-#endif
-		"4:	dsubu	%0, %1, %3				\n"
-#ifdef CONFIG_PAX_REFCOUNT
-		"5:							\n"
-#endif
-		"	.set	mips0					\n"
-		: "=&r" (result), "=&r" (temp), "=m" (v->counter)
-		: "Ir" (i), "m" (v->counter)
-		: "memory");
-	} else if (kernel_uses_llsc) {
-		__asm__ __volatile__(
-		"	.set	mips3					\n"
-		"1:	lld	%1, %2	# atomic64_sub_return		\n"
-#ifdef CONFIG_PAX_REFCOUNT
-		"2:	dsub	%0, %1, %3				\n"
-#else
-		"	dsubu	%0, %1, %3				\n"
-#endif
-		"	scd	%0, %2					\n"
-		"	bnez	%0, 4f					\n"
-		"	b	1b					\n"
-#ifdef CONFIG_PAX_REFCOUNT
-		"	.set	noreorder				\n"
-		"3:	b	5f					\n"
-		"	move	%0, %1					\n"
-		"	.set	reorder					\n"
-		_ASM_EXTABLE(2b, 3b)
-#endif
-		"4:	dsubu	%0, %1, %3				\n"
-#ifdef CONFIG_PAX_REFCOUNT
-		"5:							\n"
-#endif
-		"	.set	mips0					\n"
-		: "=&r" (result), "=&r" (temp), "=m" (v->counter)
-		: "Ir" (i), "m" (v->counter)
-		: "memory");
-	} else {
-		unsigned long flags;
-
-		raw_local_irq_save(flags);
-		__asm__ __volatile__(
-		"	ld	%0, %1					\n"
-#ifdef CONFIG_PAX_REFCOUNT
-			/* Exception on overflow. */
-		"1:	dsub	%0, %2					\n"
-#else
-		"	dsubu	%0, %2					\n"
-#endif
-		"	sd	%0, %1					\n"
-#ifdef CONFIG_PAX_REFCOUNT
-		/* Note: Dest reg is not modified on overflow */
-		"2:							\n"
-		_ASM_EXTABLE(1b, 2b)
-#endif
-		: "=&r" (result), "+m" (v->counter) : "Ir" (i));
-		raw_local_irq_restore(flags);
-	}
-
-	smp_llsc_mb();
-
-	return result;
-}
-
-static __inline__ long atomic64_sub_return_unchecked(long i, atomic64_unchecked_t *v)
-{
-	long result;
-
-	smp_mb__before_llsc();
-
-	if (cpu_has_octeon2_isa && kernel_uses_llsc) {
-		/*
-		 * For proper barrier semantics, the preceding
-		 * smp_mb__before_llsc() must expand to syncw.
-		 */
-		if (__builtin_constant_p(i) && i == -1)
-			__asm__ __volatile__("laid\t%0,(%2)\t# atomic64_sub_return (%1)"
-					: "=r" (result), "+m" (v->counter)
-					: "r" (&v->counter));
-		else if (__builtin_constant_p(i) && i == 1)
-			__asm__ __volatile__("ladd\t%0,(%2)\t# atomic64_sub_return (%1)"
-					: "=r" (result), "+m" (v->counter)
-					: "r" (&v->counter));
-		else
-			__asm__ __volatile__("laad\t%0,(%2),%3\t# atomic64_sub_return (%1)"
-					: "=r" (result), "+m" (v->counter)
-					: "r" (&v->counter), "r" (-i));
-		result -= i;
-	} else if (kernel_uses_llsc && R10000_LLSC_WAR) {
-		long temp;
-
-		__asm__ __volatile__(
-		"	.set	mips3					\n"
-		"1:	lld	%1, %2		# atomic64_sub_return	\n"
-		"	dsubu	%0, %1, %3				\n"
-		"	scd	%0, %2					\n"
-		"	beqzl	%0, 1b					\n"
-		"	dsubu	%0, %1, %3				\n"
-		"	.set	mips0					\n"
-		: "=&r" (result), "=&r" (temp), "=m" (v->counter)
-		: "Ir" (i), "m" (v->counter)
-		: "memory");
-	} else if (kernel_uses_llsc) {
-		long temp;
-
-		do {
-			__asm__ __volatile__(
-			"	.set	mips3				\n"
-			"	lld	%1, %2	# atomic64_sub_return	\n"
-			"	dsubu	%0, %1, %3			\n"
-			"	scd	%0, %2				\n"
-			"	.set	mips0				\n"
-			: "=&r" (result), "=&r" (temp), "=m" (v->counter)
-			: "Ir" (i), "m" (v->counter)
-			: "memory");
-		} while (unlikely(!result));
-
-		result = temp - i;
-	} else {
-		unsigned long flags;
-
-		raw_local_irq_save(flags);
-		result = v->counter;
-		result -= i;
-		v->counter = result;
-		raw_local_irq_restore(flags);
-	}
-
-	smp_llsc_mb();
-
-	return result;
+	if (__builtin_constant_p(i) && i == 1)
+		__asm__ __volatile__("laid\t%0,(%2)\t# atomic64_add_return (%1)"
+				: "=r" (result), "+m" (v->counter)
+				: "r" (&v->counter));
+	else if (__builtin_constant_p(i) && i == -1)
+		__asm__ __volatile__("ladd\t%0,(%2)\t# atomic64_add_return (%1)"
+				: "=r" (result), "+m" (v->counter)
+				: "r" (&v->counter));
+	else
+		__asm__ __volatile__("laad\t%0,(%2),%3\t# atomic64_add_return (%1)"
+				: "=r" (result), "+m" (v->counter)
+				: "r" (&v->counter), "r" (i));
+	return result + i;
 }
 
 /*
- * atomic64_sub_if_positive - conditionally subtract integer from atomic variable
+ * Same as above, but return the previous value
+ */
+static inline long atomic64_fetch_add_relaxed(long i, atomic64_t *v)
+{
+	long result;
+
+	if (__builtin_constant_p(i) && i == 1)
+		__asm__ __volatile__("laid\t%0,(%2)\t# atomic64_add_return (%1)"
+				: "=r" (result), "+m" (v->counter)
+				: "r" (&v->counter));
+	else if (__builtin_constant_p(i) && i == -1)
+		__asm__ __volatile__("ladd\t%0,(%2)\t# atomic64_add_return (%1)"
+				: "=r" (result), "+m" (v->counter)
+				: "r" (&v->counter));
+	else
+		__asm__ __volatile__("laad\t%0,(%2),%3\t# atomic64_add_return (%1)"
+				: "=r" (result), "+m" (v->counter)
+				: "r" (&v->counter), "r" (i));
+	return result;
+}
+
+static inline long atomic64_add_return(long i, atomic64_t *v)
+{
+	long result;
+
+	smp_mb__before_llsc();
+	/*
+	 * For proper barrier semantics, the preceding
+	 * smp_mb__before_llsc() must expand to syncw.
+	 */
+	result = atomic64_add_return_relaxed(i, v);
+	smp_llsc_mb();
+	return result;
+}
+
+static inline long atomic64_sub_return_relaxed(long i, atomic64_t *v)
+{
+	long result;
+
+	if (__builtin_constant_p(i) && i == -1)
+		__asm__ __volatile__("laid\t%0,(%2)\t# atomic64_sub_return (%1)"
+				: "=r" (result), "+m" (v->counter)
+				: "r" (&v->counter));
+	else if (__builtin_constant_p(i) && i == 1)
+		__asm__ __volatile__("ladd\t%0,(%2)\t# atomic64_sub_return (%1)"
+				: "=r" (result), "+m" (v->counter)
+				: "r" (&v->counter));
+	else
+		__asm__ __volatile__("laad\t%0,(%2),%3\t# atomic64_sub_return (%1)"
+				: "=r" (result), "+m" (v->counter)
+				: "r" (&v->counter), "r" (-i));
+
+	return result - i;
+}
+
+static inline long atomic64_fetch_sub_relaxed(long i, atomic64_t *v)
+{
+	long result;
+
+	if (__builtin_constant_p(i) && i == -1)
+		__asm__ __volatile__("laid\t%0,(%2)\t# atomic64_sub_return (%1)"
+				: "=r" (result), "+m" (v->counter)
+				: "r" (&v->counter));
+	else if (__builtin_constant_p(i) && i == 1)
+		__asm__ __volatile__("ladd\t%0,(%2)\t# atomic64_sub_return (%1)"
+				: "=r" (result), "+m" (v->counter)
+				: "r" (&v->counter));
+	else
+		__asm__ __volatile__("laad\t%0,(%2),%3\t# atomic64_sub_return (%1)"
+				: "=r" (result), "+m" (v->counter)
+				: "r" (&v->counter), "r" (-i));
+
+	return result;
+}
+
+static inline long atomic64_sub_return(long i, atomic64_t *v)
+{
+	long result;
+
+	smp_mb__before_llsc();
+
+	/*
+	 * For proper barrier semantics, the preceding
+	 * smp_mb__before_llsc() must expand to syncw.
+	 */
+	result = atomic64_sub_return_relaxed(i, v);
+	smp_llsc_mb();
+	return result;
+}
+#endif
+
+#define ATOMIC64_OP(op, c_op, asm_op)					      \
+static __inline__ void atomic64_##op(long i, atomic64_t * v)		      \
+{									      \
+	if (kernel_uses_llsc && R10000_LLSC_WAR) {			      \
+		long temp;						      \
+									      \
+		__asm__ __volatile__(					      \
+		"	.set	arch=r4000				\n"   \
+		"1:	lld	%0, %1		# atomic64_" #op "	\n"   \
+		"	" #asm_op " %0, %2				\n"   \
+		"	scd	%0, %1					\n"   \
+		"	beqzl	%0, 1b					\n"   \
+		"	.set	mips0					\n"   \
+		: "=&r" (temp), "+" GCC_OFF_SMALL_ASM() (v->counter)	      \
+		: "Ir" (i));						      \
+	} else if (kernel_uses_llsc) {					      \
+		long temp;						      \
+									      \
+		do {							      \
+			__asm__ __volatile__(				      \
+			"	.set	"MIPS_ISA_LEVEL"		\n"   \
+			"	lld	%0, %1		# atomic64_" #op "\n" \
+			"	" #asm_op " %0, %2			\n"   \
+			"	scd	%0, %1				\n"   \
+			"	.set	mips0				\n"   \
+			: "=&r" (temp), "+" GCC_OFF_SMALL_ASM() (v->counter)      \
+			: "Ir" (i));					      \
+		} while (unlikely(!temp));				      \
+	} else {							      \
+		unsigned long flags;					      \
+									      \
+		raw_local_irq_save(flags);				      \
+		v->counter c_op i;					      \
+		raw_local_irq_restore(flags);				      \
+	}								      \
+}
+
+#define ATOMIC64_OP_RETURN(op, c_op, asm_op)				      \
+static __inline__ long atomic64_##op##_return_relaxed(long i, atomic64_t * v) \
+{									      \
+	long result;							      \
+									      \
+	if (kernel_uses_llsc && R10000_LLSC_WAR) {			      \
+		long temp;						      \
+									      \
+		__asm__ __volatile__(					      \
+		"	.set	arch=r4000				\n"   \
+		"1:	lld	%1, %2		# atomic64_" #op "_return\n"  \
+		"	" #asm_op " %0, %1, %3				\n"   \
+		"	scd	%0, %2					\n"   \
+		"	beqzl	%0, 1b					\n"   \
+		"	" #asm_op " %0, %1, %3				\n"   \
+		"	.set	mips0					\n"   \
+		: "=&r" (result), "=&r" (temp),				      \
+		  "+" GCC_OFF_SMALL_ASM() (v->counter)			      \
+		: "Ir" (i));						      \
+	} else if (kernel_uses_llsc) {					      \
+		long temp;						      \
+									      \
+		do {							      \
+			__asm__ __volatile__(				      \
+			"	.set	"MIPS_ISA_LEVEL"		\n"   \
+			"	lld	%1, %2	# atomic64_" #op "_return\n"  \
+			"	" #asm_op " %0, %1, %3			\n"   \
+			"	scd	%0, %2				\n"   \
+			"	.set	mips0				\n"   \
+			: "=&r" (result), "=&r" (temp),			      \
+			  "=" GCC_OFF_SMALL_ASM() (v->counter)		      \
+			: "Ir" (i), GCC_OFF_SMALL_ASM() (v->counter)	      \
+			: "memory");					      \
+		} while (unlikely(!result));				      \
+									      \
+		result = temp; result c_op i;				      \
+	} else {							      \
+		unsigned long flags;					      \
+									      \
+		raw_local_irq_save(flags);				      \
+		result = v->counter;					      \
+		result c_op i;						      \
+		v->counter = result;					      \
+		raw_local_irq_restore(flags);				      \
+	}								      \
+									      \
+	return result;							      \
+}
+
+#define ATOMIC64_FETCH_OP(op, c_op, asm_op)				      \
+static __inline__ long atomic64_fetch_##op##_relaxed(long i, atomic64_t * v)  \
+{									      \
+	long result;							      \
+									      \
+	if (kernel_uses_llsc && R10000_LLSC_WAR) {			      \
+		long temp;						      \
+									      \
+		__asm__ __volatile__(					      \
+		"	.set	arch=r4000				\n"   \
+		"1:	lld	%1, %2		# atomic64_fetch_" #op "\n"   \
+		"	" #asm_op " %0, %1, %3				\n"   \
+		"	scd	%0, %2					\n"   \
+		"	beqzl	%0, 1b					\n"   \
+		"	move	%0, %1					\n"   \
+		"	.set	mips0					\n"   \
+		: "=&r" (result), "=&r" (temp),				      \
+		  "+" GCC_OFF_SMALL_ASM() (v->counter)			      \
+		: "Ir" (i));						      \
+	} else if (kernel_uses_llsc) {					      \
+		long temp;						      \
+									      \
+		do {							      \
+			__asm__ __volatile__(				      \
+			"	.set	"MIPS_ISA_LEVEL"		\n"   \
+			"	lld	%1, %2	# atomic64_fetch_" #op "\n"   \
+			"	" #asm_op " %0, %1, %3			\n"   \
+			"	scd	%0, %2				\n"   \
+			"	.set	mips0				\n"   \
+			: "=&r" (result), "=&r" (temp),			      \
+			  "=" GCC_OFF_SMALL_ASM() (v->counter)		      \
+			: "Ir" (i), GCC_OFF_SMALL_ASM() (v->counter)	      \
+			: "memory");					      \
+		} while (unlikely(!result));				      \
+									      \
+		result = temp;						      \
+	} else {							      \
+		unsigned long flags;					      \
+									      \
+		raw_local_irq_save(flags);				      \
+		result = v->counter;					      \
+		v->counter c_op i;					      \
+		raw_local_irq_restore(flags);				      \
+	}								      \
+									      \
+	return result;							      \
+}
+
+#if (!IS_ENABLED(CONFIG_CAVIUM_OCTEON2))
+#define ATOMIC64_OPS(op, c_op, asm_op)					      \
+	ATOMIC64_OP(op, c_op, asm_op)					      \
+	ATOMIC64_OP_RETURN(op, c_op, asm_op)				      \
+	ATOMIC64_FETCH_OP(op, c_op, asm_op)
+
+ATOMIC64_OPS(add, +=, daddu)
+ATOMIC64_OPS(sub, -=, dsubu)
+#endif
+
+#define atomic64_add_return_relaxed	atomic64_add_return_relaxed
+#define atomic64_sub_return_relaxed	atomic64_sub_return_relaxed
+#define atomic64_fetch_add_relaxed	atomic64_fetch_add_relaxed
+#define atomic64_fetch_sub_relaxed	atomic64_fetch_sub_relaxed
+
+#undef ATOMIC64_OPS
+#define ATOMIC64_OPS(op, c_op, asm_op)					      \
+	ATOMIC64_OP(op, c_op, asm_op)					      \
+	ATOMIC64_FETCH_OP(op, c_op, asm_op)
+
+ATOMIC64_OPS(and, &=, and)
+ATOMIC64_OPS(or, |=, or)
+ATOMIC64_OPS(xor, ^=, xor)
+
+#define atomic64_fetch_and_relaxed	atomic64_fetch_and_relaxed
+#define atomic64_fetch_or_relaxed	atomic64_fetch_or_relaxed
+#define atomic64_fetch_xor_relaxed	atomic64_fetch_xor_relaxed
+
+#undef ATOMIC64_OPS
+#undef ATOMIC64_FETCH_OP
+#undef ATOMIC64_OP_RETURN
+#undef ATOMIC64_OP
+
+/*
+ * atomic64_sub_if_positive - conditionally subtract integer from atomic
+ *                            variable
  * @i: integer value to subtract
  * @v: pointer of type atomic64_t
  *
  * Atomically test @v and subtract @i if @v is greater or equal than @i.
  * The function returns the old value of @v minus @i.
  */
-static __inline__ long atomic64_sub_if_positive(long i, atomic64_t *v)
+static __inline__ long atomic64_sub_if_positive(long i, atomic64_t * v)
 {
 	long result;
-	long temp;
 
 	smp_mb__before_llsc();
 
 	if (kernel_uses_llsc && R10000_LLSC_WAR) {
+		long temp;
+
 		__asm__ __volatile__(
-		"	.set	mips3					\n"
+		"	.set	arch=r4000				\n"
 		"1:	lld	%1, %2		# atomic64_sub_if_positive\n"
-#ifdef CONFIG_PAX_REFCOUNT
-		"2:	dsub	%0, %1, %3				\n"
-#else
 		"	dsubu	%0, %1, %3				\n"
-#endif
 		"	bltz	%0, 1f					\n"
 		"	scd	%0, %2					\n"
 		"	.set	noreorder				\n"
 		"	beqzl	%0, 1b					\n"
-		"	dsubu	%0, %1, %3				\n"
-#ifdef CONFIG_PAX_REFCOUNT
-		"	b	1f					\n"
-		"	nop						\n"
-		"3:	b	1f					\n"
-		"	move	%0, %1					\n"
-		_ASM_EXTABLE(2b, 3b)
-#endif
+		"	 dsubu	%0, %1, %3				\n"
 		"	.set	reorder					\n"
 		"1:							\n"
 		"	.set	mips0					\n"
-		: "=&r" (result), "=&r" (temp), "=m" (v->counter)
-		: "Ir" (i), "m" (v->counter)
+		: "=&r" (result), "=&r" (temp),
+		  "=" GCC_OFF_SMALL_ASM() (v->counter)
+		: "Ir" (i), GCC_OFF_SMALL_ASM() (v->counter)
 		: "memory");
 	} else if (kernel_uses_llsc) {
+		long temp;
+
 		__asm__ __volatile__(
-		"	.set	mips3					\n"
+		"	.set	"MIPS_ISA_LEVEL"			\n"
 		"1:	lld	%1, %2		# atomic64_sub_if_positive\n"
-#ifdef CONFIG_PAX_REFCOUNT
-		"2:	dsub	%0, %1, %3				\n"
-#else
 		"	dsubu	%0, %1, %3				\n"
-#endif
 		"	bltz	%0, 1f					\n"
 		"	scd	%0, %2					\n"
 		"	.set	noreorder				\n"
 		"	beqz	%0, 1b					\n"
-		"	dsubu	%0, %1, %3				\n"
-#ifdef CONFIG_PAX_REFCOUNT
-		"	b	1f					\n"
-		"	nop						\n"
-		"3:	b	1f					\n"
-		"	move	%0, %1					\n"
-		_ASM_EXTABLE(2b, 3b)
-#endif
+		"	 dsubu	%0, %1, %3				\n"
 		"	.set	reorder					\n"
 		"1:							\n"
 		"	.set	mips0					\n"
-		: "=&r" (result), "=&r" (temp), "+m" (v->counter)
+		: "=&r" (result), "=&r" (temp),
+		  "+" GCC_OFF_SMALL_ASM() (v->counter)
 		: "Ir" (i));
 	} else {
 		unsigned long flags;
 
 		raw_local_irq_save(flags);
-		__asm__ __volatile__(
-		"	ld	%0, %1					\n"
-#ifdef CONFIG_PAX_REFCOUNT
-			/* Exception on overflow. */
-		"1:	dsub	%0, %2					\n"
-		/* Note: Dest reg is not modified on overflow */
-		_ASM_EXTABLE(1b, 2f)
-#else
-		"	dsubu	%0, %2					\n"
-#endif
-		"	bltz	%0, 2f					\n"
-		"	sd	%0, %1					\n"
-		"2:							\n"
-		: "=&r" (result) : "m" (v->counter), "Ir" (i));
-
+		result = v->counter;
+		result -= i;
 		if (result >= 0)
 			v->counter = result;
 		raw_local_irq_restore(flags);
@@ -1622,26 +918,9 @@ static __inline__ long atomic64_sub_if_positive(long i, atomic64_t *v)
 	return result;
 }
 
-static inline long atomic64_cmpxchg(atomic64_t *v, long old, long new)
-{
-	return cmpxchg(&v->counter, old, new);
-}
-
-static inline long atomic64_cmpxchg_unchecked(atomic64_unchecked_t *v, long old,
-					      long new)
-{
-	return cmpxchg(&(v->counter), old, new);
-}
-
-static inline long atomic64_xchg(atomic64_t *v, long new)
-{
-	return xchg(&v->counter, new);
-}
-
-static inline long atomic64_xchg_unchecked(atomic64_unchecked_t *v, long new)
-{
-	return xchg(&(v->counter), new);
-}
+#define atomic64_cmpxchg(v, o, n) \
+	((__typeof__((v)->counter))cmpxchg(&((v)->counter), (o), (n)))
+#define atomic64_xchg(v, new) (xchg(&((v)->counter), (new)))
 
 /**
  * atomic64_add_unless - add unless the number is a given value
@@ -1650,7 +929,7 @@ static inline long atomic64_xchg_unchecked(atomic64_unchecked_t *v, long new)
  * @u: ...unless v is equal to u.
  *
  * Atomically adds @a to @v, so long as it was not @u.
- * Returns the old value of @v.
+ * Returns true iff @v was not @u.
  */
 static __inline__ int atomic64_add_unless(atomic64_t *v, long a, long u)
 {
@@ -1671,7 +950,6 @@ static __inline__ int atomic64_add_unless(atomic64_t *v, long a, long u)
 
 #define atomic64_dec_return(v) atomic64_sub_return(1, (v))
 #define atomic64_inc_return(v) atomic64_add_return(1, (v))
-#define atomic64_inc_return_unchecked(v) atomic64_add_return_unchecked(1, (v))
 
 /*
  * atomic64_sub_and_test - subtract value from variable and test result
@@ -1693,7 +971,6 @@ static __inline__ int atomic64_add_unless(atomic64_t *v, long a, long u)
  * other cases.
  */
 #define atomic64_inc_and_test(v) (atomic64_inc_return(v) == 0)
-#define atomic64_inc_and_test_unchecked(v) atomic64_add_return_unchecked(1, (v)) == 0)
 
 /*
  * atomic64_dec_and_test - decrement by 1 and test
@@ -1718,7 +995,6 @@ static __inline__ int atomic64_add_unless(atomic64_t *v, long a, long u)
  * Atomically increments @v by 1.
  */
 #define atomic64_inc(v) atomic64_add(1, (v))
-#define atomic64_inc_unchecked(v) atomic64_add_unchecked(1, (v))
 
 /*
  * atomic64_dec - decrement and test
@@ -1727,7 +1003,6 @@ static __inline__ int atomic64_add_unless(atomic64_t *v, long a, long u)
  * Atomically decrements @v by 1.
  */
 #define atomic64_dec(v) atomic64_sub(1, (v))
-#define atomic64_dec_unchecked(v) atomic64_sub_unchecked(1, (v))
 
 /*
  * atomic64_add_negative - add and test if negative
@@ -1741,14 +1016,5 @@ static __inline__ int atomic64_add_unless(atomic64_t *v, long a, long u)
 #define atomic64_add_negative(i, v) (atomic64_add_return(i, (v)) < 0)
 
 #endif /* CONFIG_64BIT */
-
-/*
- * atomic*_return operations are serializing but not the non-*_return
- * versions.
- */
-#define smp_mb__before_atomic_dec()	smp_mb__before_llsc()
-#define smp_mb__after_atomic_dec()	smp_llsc_mb()
-#define smp_mb__before_atomic_inc()	smp_mb__before_llsc()
-#define smp_mb__after_atomic_inc()	smp_llsc_mb()
 
 #endif /* _ASM_ATOMIC_H */

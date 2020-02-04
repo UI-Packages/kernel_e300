@@ -12,7 +12,6 @@
 
 #include <asm/cacheflush.h>
 #include <asm/page.h>
-#include <asm/pgtable.h>
 
 extern const unsigned char relocate_new_kernel[];
 extern const size_t relocate_new_kernel_size;
@@ -26,6 +25,7 @@ void (*_machine_crash_shutdown)(struct pt_regs *regs) = NULL;
 #ifdef CONFIG_SMP
 void (*relocated_kexec_smp_wait) (void *);
 atomic_t kexec_ready_to_reboot = ATOMIC_INIT(0);
+void (*_crash_smp_send_stop)(void) = NULL;
 #endif
 
 int
@@ -112,33 +112,4 @@ machine_kexec(struct kimage *image)
 	atomic_set(&kexec_ready_to_reboot, 1);
 #endif
 	((noretfun_t) reboot_code_buffer)();
-}
-
-void arch_crash_save_vmcoreinfo(void)
-{
-	VMCOREINFO_NUMBER(PAGE_SHIFT);
-	VMCOREINFO_NUMBER(PGD_ORDER);
-#if defined(CONFIG_32BIT) || !defined(CONFIG_PAGE_SIZE_64KB)
-	VMCOREINFO_NUMBER(PMD_ORDER);
-#endif
-	VMCOREINFO_NUMBER(PTE_ORDER);
-	VMCOREINFO_NUMBER(_PAGE_PRESENT);
-#ifdef CONFIG_MIPS_HUGE_TLB_SUPPORT
-	VMCOREINFO_NUMBER(_PAGE_HUGE);
-#endif
-#ifdef CONFIG_64BIT
-#ifdef CONFIG_MAPPED_KERNEL
-	VMCOREINFO_ADDRESS(_text);
-	VMCOREINFO_ADDRESS(_end);
-	VMCOREINFO_ADDRESS(phys_to_kernel_offset);
-#endif
-	VMCOREINFO_ADDRESS(CKSEG0);
-	VMCOREINFO_ADDRESS(CKSSEG);
-#else /* CONFIG_64BIT */
-	VMCOREINFO_ADDRESS(PHYS_OFFSET);
-#endif /* CONFIG_64BIT */
-
-	VMCOREINFO_ADDRESS(PAGE_OFFSET);
-	VMCOREINFO_ADDRESS(IO_BASE);
-	VMCOREINFO_NUMBER(_PFN_SHIFT);
 }

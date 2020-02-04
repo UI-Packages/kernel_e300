@@ -1,23 +1,34 @@
 /* Copyright 2002 Andi Kleen, SuSE Labs */
 
 #include <linux/linkage.h>
-#include <asm/dwarf2.h>
-#include <asm/cpufeature.h>
+#include <asm/cpufeatures.h>
 #include <asm/alternative-asm.h>
+#include <asm/export.h>
+
+.weak memset
 
 /*
  * ISO C memset - set a memory block to a byte value. This function uses fast
  * string to get better performance than the original function. The code is
- * simpler and shorter than the orignal function as well.
- *	
+ * simpler and shorter than the original function as well.
+ *
  * rdi   destination
- * rsi   value (char) 
- * rdx   count (bytes) 
- * 
+ * rsi   value (char)
+ * rdx   count (bytes)
+ *
  * rax   original destination
- */	
-	.section .altinstr_replacement, "a", @progbits
-.Lmemset_c:
+ */
+ENTRY(memset)
+ENTRY(__memset)
+	/*
+	 * Some CPUs support enhanced REP MOVSB/STOSB feature. It is recommended
+	 * to use it when possible. If not available, use fast string instructions.
+	 *
+	 * Otherwise, use original memset function.
+	 */
+	ALTERNATIVE_2 "jmp memset_orig", "", X86_FEATURE_REP_GOOD, \
+		      "jmp memset_erms", X86_FEATURE_ERMS
+
 	movq %rdi,%r9
 	movq %rdx,%rcx
 	andl $7,%edx
@@ -30,10 +41,11 @@
 	movl %edx,%ecx
 	rep stosb
 	movq %r9,%rax
-	pax_force_retaddr
 	ret
-.Lmemset_e:
-	.previous
+ENDPROC(memset)
+ENDPROC(__memset)
+EXPORT_SYMBOL(memset)
+EXPORT_SYMBOL(__memset)
 
 /*
  * ISO C memset - set a memory block to a byte value. This function uses
@@ -46,22 +58,17 @@
  *
  * rax   original destination
  */
-	.section .altinstr_replacement, "a", @progbits
-.Lmemset_c_e:
+ENTRY(memset_erms)
 	movq %rdi,%r9
 	movb %sil,%al
 	movq %rdx,%rcx
 	rep stosb
 	movq %r9,%rax
-	pax_force_retaddr
 	ret
-.Lmemset_e_e:
-	.previous
+ENDPROC(memset_erms)
 
-ENTRY(memset)
-ENTRY(__memset)
-	CFI_STARTPROC
-	movq %rdi,%r11
+ENTRY(memset_orig)
+	movq %rdi,%r10
 
 	/* expand byte value  */
 	movzbl %sil,%ecx
@@ -72,7 +79,6 @@ ENTRY(__memset)
 	movl  %edi,%r9d
 	andl  $7,%r9d
 	jnz  .Lbad_alignment
-	CFI_REMEMBER_STATE
 .Lafter_bad_alignment:
 
 	movq  %rdx,%rcx
@@ -119,11 +125,9 @@ ENTRY(__memset)
 	jnz     .Lloop_1
 
 .Lende:
-	movq	%r11,%rax
-	pax_force_retaddr
+	movq	%r10,%rax
 	ret
 
-	CFI_RESTORE_STATE
 .Lbad_alignment:
 	cmpq $7,%rdx
 	jbe	.Lhandle_7
@@ -134,24 +138,4 @@ ENTRY(__memset)
 	subq %r8,%rdx
 	jmp .Lafter_bad_alignment
 .Lfinal:
-	CFI_ENDPROC
-ENDPROC(memset)
-ENDPROC(__memset)
-
-	/* Some CPUs support enhanced REP MOVSB/STOSB feature.
-	 * It is recommended to use this when possible.
-	 *
-	 * If enhanced REP MOVSB/STOSB feature is not available, use fast string
-	 * instructions.
-	 *
-	 * Otherwise, use original memset function.
-	 *
-	 * In .altinstructions section, ERMS feature is placed after REG_GOOD
-         * feature to implement the right patch order.
-	 */
-	.section .altinstructions,"a"
-	altinstruction_entry memset,.Lmemset_c,X86_FEATURE_REP_GOOD,\
-			     .Lfinal-memset,.Lmemset_e-.Lmemset_c
-	altinstruction_entry memset,.Lmemset_c_e,X86_FEATURE_ERMS, \
-			     .Lfinal-memset,.Lmemset_e_e-.Lmemset_c_e
-	.previous
+ENDPROC(memset_orig)

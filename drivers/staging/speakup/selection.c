@@ -6,7 +6,8 @@
 #include <linux/selection.h>
 #include <linux/workqueue.h>
 #include <linux/tty.h>
-#include <asm/cmpxchg.h>
+#include <linux/tty_flip.h>
+#include <linux/atomic.h>
 
 #include "speakup.h"
 
@@ -65,6 +66,7 @@ int speakup_set_selection(struct tty_struct *tty)
 	if (ps > pe) {
 		/* make sel_start <= sel_end */
 		int tmp = ps;
+
 		ps = pe;
 		pe = tmp;
 	}
@@ -112,7 +114,8 @@ int speakup_set_selection(struct tty_struct *tty)
 			obp = bp;
 		if (!((i + 2) % vc->vc_size_row)) {
 			/* strip trailing blanks from line and add newline,
-			   unless non-space at end of line. */
+			 * unless non-space at end of line.
+			 */
 			if (obp != bp) {
 				bp = obp;
 				*bp++ = '\r';
@@ -142,23 +145,24 @@ static void __speakup_paste_selection(struct work_struct *work)
 	ld = tty_ldisc_ref(tty);
 	if (!ld)
 		goto tty_unref;
+	tty_buffer_lock_exclusive(&vc->port);
 
-	/* FIXME: this is completely unsafe */
 	add_wait_queue(&vc->paste_wait, &wait);
 	while (sel_buffer && sel_buffer_lth > pasted) {
 		set_current_state(TASK_INTERRUPTIBLE);
-		if (test_bit(TTY_THROTTLED, &tty->flags)) {
+		if (tty_throttled(tty)) {
 			schedule();
 			continue;
 		}
 		count = sel_buffer_lth - pasted;
-		count = min_t(int, count, tty->receive_room);
-		ld->ops->receive_buf(tty, sel_buffer + pasted, NULL, count);
+		count = tty_ldisc_receive_buf(ld, sel_buffer + pasted, NULL,
+					      count);
 		pasted += count;
 	}
 	remove_wait_queue(&vc->paste_wait, &wait);
-	current->state = TASK_RUNNING;
+	__set_current_state(TASK_RUNNING);
 
+	tty_buffer_unlock_exclusive(&vc->port);
 	tty_ldisc_deref(ld);
 tty_unref:
 	tty_kref_put(tty);

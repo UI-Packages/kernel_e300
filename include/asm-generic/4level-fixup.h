@@ -4,6 +4,7 @@
 #define __ARCH_HAS_4LEVEL_HACK
 #define __PAGETABLE_PUD_FOLDED
 
+#define PUD_SHIFT			PGDIR_SHIFT
 #define PUD_SIZE			PGDIR_SIZE
 #define PUD_MASK			PGDIR_MASK
 #define PTRS_PER_PUD			1
@@ -13,10 +14,8 @@
 #define pmd_alloc(mm, pud, address) \
 	((unlikely(pgd_none(*(pud))) && __pmd_alloc(mm, pud, address))? \
  		NULL: pmd_offset(pud, address))
-#define pmd_alloc_kernel(mm, pud, address) pmd_alloc((mm), (pud), (address))
 
 #define pud_alloc(mm, pgd, address)	(pgd)
-#define pud_alloc_kernel(mm, pgd, address)	pud_alloc((mm), (pgd), (address))
 #define pud_offset(pgd, start)		(pgd)
 #define pud_none(pud)			0
 #define pud_bad(pud)			0

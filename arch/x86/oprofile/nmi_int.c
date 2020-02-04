@@ -23,7 +23,6 @@
 #include <asm/nmi.h>
 #include <asm/msr.h>
 #include <asm/apic.h>
-#include <asm/pgtable.h>
 
 #include "op_counter.h"
 #include "op_x86_model.h"
@@ -65,11 +64,11 @@ u64 op_x86_get_ctrl(struct op_x86_model_spec const *model,
 static int profile_exceptions_notify(unsigned int val, struct pt_regs *regs)
 {
 	if (ctr_running)
-		model->check_ctrs(regs, &__get_cpu_var(cpu_msrs));
+		model->check_ctrs(regs, this_cpu_ptr(&cpu_msrs));
 	else if (!nmi_enabled)
 		return NMI_DONE;
 	else
-		model->stop(&__get_cpu_var(cpu_msrs));
+		model->stop(this_cpu_ptr(&cpu_msrs));
 	return NMI_HANDLED;
 }
 
@@ -92,7 +91,7 @@ static void nmi_cpu_save_registers(struct op_msrs *msrs)
 
 static void nmi_cpu_start(void *dummy)
 {
-	struct op_msrs const *msrs = &__get_cpu_var(cpu_msrs);
+	struct op_msrs const *msrs = this_cpu_ptr(&cpu_msrs);
 	if (!msrs->controls)
 		WARN_ON_ONCE(1);
 	else
@@ -112,7 +111,7 @@ static int nmi_start(void)
 
 static void nmi_cpu_stop(void *dummy)
 {
-	struct op_msrs const *msrs = &__get_cpu_var(cpu_msrs);
+	struct op_msrs const *msrs = this_cpu_ptr(&cpu_msrs);
 	if (!msrs->controls)
 		WARN_ON_ONCE(1);
 	else
@@ -404,7 +403,7 @@ static void nmi_cpu_down(void *dummy)
 		nmi_cpu_shutdown(dummy);
 }
 
-static int nmi_create_files(struct super_block *sb, struct dentry *root)
+static int nmi_create_files(struct dentry *root)
 {
 	unsigned int i;
 
@@ -421,14 +420,14 @@ static int nmi_create_files(struct super_block *sb, struct dentry *root)
 			continue;
 
 		snprintf(buf,  sizeof(buf), "%d", i);
-		dir = oprofilefs_mkdir(sb, root, buf);
-		oprofilefs_create_ulong(sb, dir, "enabled", &counter_config[i].enabled);
-		oprofilefs_create_ulong(sb, dir, "event", &counter_config[i].event);
-		oprofilefs_create_ulong(sb, dir, "count", &counter_config[i].count);
-		oprofilefs_create_ulong(sb, dir, "unit_mask", &counter_config[i].unit_mask);
-		oprofilefs_create_ulong(sb, dir, "kernel", &counter_config[i].kernel);
-		oprofilefs_create_ulong(sb, dir, "user", &counter_config[i].user);
-		oprofilefs_create_ulong(sb, dir, "extra", &counter_config[i].extra);
+		dir = oprofilefs_mkdir(root, buf);
+		oprofilefs_create_ulong(dir, "enabled", &counter_config[i].enabled);
+		oprofilefs_create_ulong(dir, "event", &counter_config[i].event);
+		oprofilefs_create_ulong(dir, "count", &counter_config[i].count);
+		oprofilefs_create_ulong(dir, "unit_mask", &counter_config[i].unit_mask);
+		oprofilefs_create_ulong(dir, "kernel", &counter_config[i].kernel);
+		oprofilefs_create_ulong(dir, "user", &counter_config[i].user);
+		oprofilefs_create_ulong(dir, "extra", &counter_config[i].extra);
 	}
 
 	return 0;
@@ -438,7 +437,8 @@ static int oprofile_cpu_notifier(struct notifier_block *b, unsigned long action,
 				 void *data)
 {
 	int cpu = (unsigned long)data;
-	switch (action) {
+
+	switch (action & ~CPU_TASKS_FROZEN) {
 	case CPU_DOWN_FAILED:
 	case CPU_ONLINE:
 		smp_call_function_single(cpu, nmi_cpu_up, NULL, 0);
@@ -495,13 +495,18 @@ static int nmi_setup(void)
 	if (err)
 		goto fail;
 
+	cpu_notifier_register_begin();
+
+	/* Use get/put_online_cpus() to protect 'nmi_enabled' */
 	get_online_cpus();
-	register_cpu_notifier(&oprofile_cpu_nb);
 	nmi_enabled = 1;
 	/* make nmi_enabled visible to the nmi handler: */
 	smp_mb();
 	on_each_cpu(nmi_cpu_setup, NULL, 1);
+	__register_cpu_notifier(&oprofile_cpu_nb);
 	put_online_cpus();
+
+	cpu_notifier_register_done();
 
 	return 0;
 fail:
@@ -513,12 +518,18 @@ static void nmi_shutdown(void)
 {
 	struct op_msrs *msrs;
 
+	cpu_notifier_register_begin();
+
+	/* Use get/put_online_cpus() to protect 'nmi_enabled' & 'ctr_running' */
 	get_online_cpus();
-	unregister_cpu_notifier(&oprofile_cpu_nb);
 	on_each_cpu(nmi_cpu_shutdown, NULL, 1);
 	nmi_enabled = 0;
 	ctr_running = 0;
+	__unregister_cpu_notifier(&oprofile_cpu_nb);
 	put_online_cpus();
+
+	cpu_notifier_register_done();
+
 	/* make variables visible to the nmi handler: */
 	smp_mb();
 	unregister_nmi_handler(NMI_LOCAL, "oprofile");
@@ -625,7 +636,7 @@ static int __init ppro_init(char **cpu_type)
 	__u8 cpu_model = boot_cpu_data.x86_model;
 	struct op_x86_model_spec *spec = &op_ppro_spec;	/* default */
 
-	if (force_cpu_type == arch_perfmon && cpu_has_arch_perfmon)
+	if (force_cpu_type == arch_perfmon && boot_cpu_has(X86_FEATURE_ARCH_PERFMON))
 		return 0;
 
 	/*
@@ -689,7 +700,7 @@ int __init op_nmi_init(struct oprofile_operations *ops)
 	char *cpu_type = NULL;
 	int ret = 0;
 
-	if (!cpu_has_apic)
+	if (!boot_cpu_has(X86_FEATURE_APIC))
 		return -ENODEV;
 
 	if (force_cpu_type == timer)
@@ -750,7 +761,7 @@ int __init op_nmi_init(struct oprofile_operations *ops)
 		if (cpu_type)
 			break;
 
-		if (!cpu_has_arch_perfmon)
+		if (!boot_cpu_has(X86_FEATURE_ARCH_PERFMON))
 			return -ENODEV;
 
 		/* use arch perfmon as fallback */
@@ -775,11 +786,8 @@ int __init op_nmi_init(struct oprofile_operations *ops)
 	if (ret)
 		return ret;
 
-	if (!model->num_virt_counters) {
-		pax_open_kernel();
-		*(unsigned int *)&model->num_virt_counters = model->num_counters;
-		pax_close_kernel();
-	}
+	if (!model->num_virt_counters)
+		model->num_virt_counters = model->num_counters;
 
 	mux_init(ops);
 

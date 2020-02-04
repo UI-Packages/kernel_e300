@@ -12,6 +12,7 @@
  * for more details.
  */
 
+#include <linux/errno.h>
 #include <linux/types.h>
 #include <linux/kernel.h>
 #include <linux/mm.h>
@@ -27,7 +28,6 @@
 #include <linux/platform_device.h>
 
 #include <asm/io.h>
-#include <asm/rtc.h>
 #include <asm/bootinfo.h>
 #include <asm/pgtable.h>
 #include <asm/setup.h>
@@ -154,7 +154,7 @@ static unsigned int serports[] =
 	0x3f8,0x2f8,0x3e8,0x2e8,0
 };
 
-static void q40_disable_irqs(void)
+static void __init q40_disable_irqs(void)
 {
 	unsigned i, j;
 
@@ -180,7 +180,7 @@ void __init config_q40(void)
 	mach_reset = q40_reset;
 	mach_get_model = q40_get_model;
 
-#if defined(CONFIG_INPUT_M68K_BEEP) || defined(CONFIG_INPUT_M68K_BEEP_MODULE)
+#if IS_ENABLED(CONFIG_INPUT_M68K_BEEP)
 	mach_beep = q40_mksound;
 #endif
 #ifdef CONFIG_HEARTBEAT
@@ -198,7 +198,7 @@ void __init config_q40(void)
 }
 
 
-int q40_parse_bootinfo(const struct bi_record *rec)
+int __init q40_parse_bootinfo(const struct bi_record *rec)
 {
 	return 1;
 }
@@ -338,6 +338,6 @@ static __init int q40_add_kbd_device(void)
 		return -ENODEV;
 
 	pdev = platform_device_register_simple("q40kbd", -1, NULL, 0);
-	return PTR_RET(pdev);
+	return PTR_ERR_OR_ZERO(pdev);
 }
 arch_initcall(q40_add_kbd_device);

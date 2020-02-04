@@ -1,5 +1,5 @@
 /***********************license start***************
- * Copyright (c) 2003-2015  Cavium Inc. (support@cavium.com). All rights
+ * Copyright (c) 2003-2017  Cavium Inc. (support@cavium.com). All rights
  * reserved.
  *
  *
@@ -57,8 +57,8 @@ static inline uint64_t CVMX_BGXX_CMRX_CONFIG(unsigned long offset, unsigned long
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_CMRX_CONFIG(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0000000ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -71,8 +71,8 @@ static inline uint64_t CVMX_BGXX_CMRX_INT(unsigned long offset, unsigned long bl
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_CMRX_INT(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0000020ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -85,8 +85,8 @@ static inline uint64_t CVMX_BGXX_CMRX_PRT_CBFC_CTL(unsigned long offset, unsigne
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_CMRX_PRT_CBFC_CTL(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0000408ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -99,8 +99,8 @@ static inline uint64_t CVMX_BGXX_CMRX_RX_ADR_CTL(unsigned long offset, unsigned 
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_CMRX_RX_ADR_CTL(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E00000A0ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -113,8 +113,8 @@ static inline uint64_t CVMX_BGXX_CMRX_RX_BP_DROP(unsigned long offset, unsigned 
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_CMRX_RX_BP_DROP(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0000080ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -127,8 +127,8 @@ static inline uint64_t CVMX_BGXX_CMRX_RX_BP_OFF(unsigned long offset, unsigned l
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_CMRX_RX_BP_OFF(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0000090ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -141,8 +141,8 @@ static inline uint64_t CVMX_BGXX_CMRX_RX_BP_ON(unsigned long offset, unsigned lo
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_CMRX_RX_BP_ON(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0000088ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -155,8 +155,8 @@ static inline uint64_t CVMX_BGXX_CMRX_RX_BP_STATUS(unsigned long offset, unsigne
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_CMRX_RX_BP_STATUS(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E00000A8ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -169,8 +169,8 @@ static inline uint64_t CVMX_BGXX_CMRX_RX_FIFO_LEN(unsigned long offset, unsigned
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_CMRX_RX_FIFO_LEN(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E00000C0ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -183,8 +183,8 @@ static inline uint64_t CVMX_BGXX_CMRX_RX_ID_MAP(unsigned long offset, unsigned l
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_CMRX_RX_ID_MAP(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0000028ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -197,8 +197,8 @@ static inline uint64_t CVMX_BGXX_CMRX_RX_LOGL_XOFF(unsigned long offset, unsigne
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_CMRX_RX_LOGL_XOFF(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E00000B0ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -211,8 +211,8 @@ static inline uint64_t CVMX_BGXX_CMRX_RX_LOGL_XON(unsigned long offset, unsigned
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_CMRX_RX_LOGL_XON(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E00000B8ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -225,8 +225,8 @@ static inline uint64_t CVMX_BGXX_CMRX_RX_PAUSE_DROP_TIME(unsigned long offset, u
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_CMRX_RX_PAUSE_DROP_TIME(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0000030ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -239,8 +239,8 @@ static inline uint64_t CVMX_BGXX_CMRX_RX_STAT0(unsigned long offset, unsigned lo
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_CMRX_RX_STAT0(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0000038ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -253,8 +253,8 @@ static inline uint64_t CVMX_BGXX_CMRX_RX_STAT1(unsigned long offset, unsigned lo
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_CMRX_RX_STAT1(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0000040ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -267,8 +267,8 @@ static inline uint64_t CVMX_BGXX_CMRX_RX_STAT2(unsigned long offset, unsigned lo
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_CMRX_RX_STAT2(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0000048ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -281,8 +281,8 @@ static inline uint64_t CVMX_BGXX_CMRX_RX_STAT3(unsigned long offset, unsigned lo
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_CMRX_RX_STAT3(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0000050ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -295,8 +295,8 @@ static inline uint64_t CVMX_BGXX_CMRX_RX_STAT4(unsigned long offset, unsigned lo
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_CMRX_RX_STAT4(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0000058ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -309,8 +309,8 @@ static inline uint64_t CVMX_BGXX_CMRX_RX_STAT5(unsigned long offset, unsigned lo
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_CMRX_RX_STAT5(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0000060ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -323,8 +323,8 @@ static inline uint64_t CVMX_BGXX_CMRX_RX_STAT6(unsigned long offset, unsigned lo
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_CMRX_RX_STAT6(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0000068ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -337,8 +337,8 @@ static inline uint64_t CVMX_BGXX_CMRX_RX_STAT7(unsigned long offset, unsigned lo
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_CMRX_RX_STAT7(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0000070ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -351,8 +351,8 @@ static inline uint64_t CVMX_BGXX_CMRX_RX_STAT8(unsigned long offset, unsigned lo
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_CMRX_RX_STAT8(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0000078ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -365,8 +365,8 @@ static inline uint64_t CVMX_BGXX_CMRX_RX_WEIGHT(unsigned long offset, unsigned l
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_CMRX_RX_WEIGHT(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0000098ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -379,8 +379,8 @@ static inline uint64_t CVMX_BGXX_CMRX_TX_CHANNEL(unsigned long offset, unsigned 
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_CMRX_TX_CHANNEL(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0000400ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -393,8 +393,8 @@ static inline uint64_t CVMX_BGXX_CMRX_TX_FIFO_LEN(unsigned long offset, unsigned
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_CMRX_TX_FIFO_LEN(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0000418ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -407,8 +407,8 @@ static inline uint64_t CVMX_BGXX_CMRX_TX_HG2_STATUS(unsigned long offset, unsign
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_CMRX_TX_HG2_STATUS(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0000410ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -421,8 +421,8 @@ static inline uint64_t CVMX_BGXX_CMRX_TX_OVR_BP(unsigned long offset, unsigned l
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_CMRX_TX_OVR_BP(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0000420ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -435,8 +435,8 @@ static inline uint64_t CVMX_BGXX_CMRX_TX_STAT0(unsigned long offset, unsigned lo
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_CMRX_TX_STAT0(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0000508ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -449,8 +449,8 @@ static inline uint64_t CVMX_BGXX_CMRX_TX_STAT1(unsigned long offset, unsigned lo
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_CMRX_TX_STAT1(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0000510ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -463,8 +463,8 @@ static inline uint64_t CVMX_BGXX_CMRX_TX_STAT10(unsigned long offset, unsigned l
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_CMRX_TX_STAT10(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0000558ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -477,8 +477,8 @@ static inline uint64_t CVMX_BGXX_CMRX_TX_STAT11(unsigned long offset, unsigned l
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_CMRX_TX_STAT11(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0000560ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -491,8 +491,8 @@ static inline uint64_t CVMX_BGXX_CMRX_TX_STAT12(unsigned long offset, unsigned l
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_CMRX_TX_STAT12(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0000568ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -505,8 +505,8 @@ static inline uint64_t CVMX_BGXX_CMRX_TX_STAT13(unsigned long offset, unsigned l
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_CMRX_TX_STAT13(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0000570ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -519,8 +519,8 @@ static inline uint64_t CVMX_BGXX_CMRX_TX_STAT14(unsigned long offset, unsigned l
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_CMRX_TX_STAT14(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0000578ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -533,8 +533,8 @@ static inline uint64_t CVMX_BGXX_CMRX_TX_STAT15(unsigned long offset, unsigned l
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_CMRX_TX_STAT15(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0000580ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -547,8 +547,8 @@ static inline uint64_t CVMX_BGXX_CMRX_TX_STAT16(unsigned long offset, unsigned l
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_CMRX_TX_STAT16(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0000588ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -561,8 +561,8 @@ static inline uint64_t CVMX_BGXX_CMRX_TX_STAT17(unsigned long offset, unsigned l
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_CMRX_TX_STAT17(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0000590ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -575,8 +575,8 @@ static inline uint64_t CVMX_BGXX_CMRX_TX_STAT2(unsigned long offset, unsigned lo
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_CMRX_TX_STAT2(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0000518ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -589,8 +589,8 @@ static inline uint64_t CVMX_BGXX_CMRX_TX_STAT3(unsigned long offset, unsigned lo
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_CMRX_TX_STAT3(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0000520ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -603,8 +603,8 @@ static inline uint64_t CVMX_BGXX_CMRX_TX_STAT4(unsigned long offset, unsigned lo
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_CMRX_TX_STAT4(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0000528ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -617,8 +617,8 @@ static inline uint64_t CVMX_BGXX_CMRX_TX_STAT5(unsigned long offset, unsigned lo
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_CMRX_TX_STAT5(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0000530ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -631,8 +631,8 @@ static inline uint64_t CVMX_BGXX_CMRX_TX_STAT6(unsigned long offset, unsigned lo
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_CMRX_TX_STAT6(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0000538ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -645,8 +645,8 @@ static inline uint64_t CVMX_BGXX_CMRX_TX_STAT7(unsigned long offset, unsigned lo
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_CMRX_TX_STAT7(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0000540ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -659,8 +659,8 @@ static inline uint64_t CVMX_BGXX_CMRX_TX_STAT8(unsigned long offset, unsigned lo
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_CMRX_TX_STAT8(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0000548ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -673,8 +673,8 @@ static inline uint64_t CVMX_BGXX_CMRX_TX_STAT9(unsigned long offset, unsigned lo
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_CMRX_TX_STAT9(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0000550ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -687,8 +687,8 @@ static inline uint64_t CVMX_BGXX_CMR_BAD(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 2))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 5))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 5))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 5))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset == 0)))))
 		cvmx_warn("CVMX_BGXX_CMR_BAD(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800E0001020ull) + ((offset) & 7) * 0x1000000ull;
@@ -701,8 +701,8 @@ static inline uint64_t CVMX_BGXX_CMR_BIST_STATUS(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 2))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 5))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 5))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 5))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset == 0)))))
 		cvmx_warn("CVMX_BGXX_CMR_BIST_STATUS(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800E0000300ull) + ((offset) & 7) * 0x1000000ull;
@@ -715,8 +715,8 @@ static inline uint64_t CVMX_BGXX_CMR_CHAN_MSK_AND(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 2))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 5))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 5))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 5))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset == 0)))))
 		cvmx_warn("CVMX_BGXX_CMR_CHAN_MSK_AND(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800E0000200ull) + ((offset) & 7) * 0x1000000ull;
@@ -729,8 +729,8 @@ static inline uint64_t CVMX_BGXX_CMR_CHAN_MSK_OR(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 2))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 5))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 5))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 5))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset == 0)))))
 		cvmx_warn("CVMX_BGXX_CMR_CHAN_MSK_OR(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800E0000208ull) + ((offset) & 7) * 0x1000000ull;
@@ -756,8 +756,8 @@ static inline uint64_t CVMX_BGXX_CMR_GLOBAL_CONFIG(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 2))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 5))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 5))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 5))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset == 0)))))
 		cvmx_warn("CVMX_BGXX_CMR_GLOBAL_CONFIG(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800E0000008ull) + ((offset) & 7) * 0x1000000ull;
@@ -770,8 +770,8 @@ static inline uint64_t CVMX_BGXX_CMR_MEM_CTRL(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 2))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 5))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 5))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 5))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset == 0)))))
 		cvmx_warn("CVMX_BGXX_CMR_MEM_CTRL(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800E0000018ull) + ((offset) & 7) * 0x1000000ull;
@@ -784,8 +784,8 @@ static inline uint64_t CVMX_BGXX_CMR_MEM_INT(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 2))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 5))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 5))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 5))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset == 0)))))
 		cvmx_warn("CVMX_BGXX_CMR_MEM_INT(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800E0000010ull) + ((offset) & 7) * 0x1000000ull;
@@ -798,8 +798,8 @@ static inline uint64_t CVMX_BGXX_CMR_NXC_ADR(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 2))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 5))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 5))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 5))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset == 0)))))
 		cvmx_warn("CVMX_BGXX_CMR_NXC_ADR(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800E0001018ull) + ((offset) & 7) * 0x1000000ull;
@@ -812,8 +812,8 @@ static inline uint64_t CVMX_BGXX_CMR_RX_ADRX_CAM(unsigned long offset, unsigned 
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 31)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 31)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 31)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 31)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 31)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_CMR_RX_ADRX_CAM(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0000100ull) + (((offset) & 31) + ((block_id) & 7) * 0x200000ull) * 8;
@@ -826,8 +826,8 @@ static inline uint64_t CVMX_BGXX_CMR_RX_LMACS(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 2))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 5))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 5))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 5))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset == 0)))))
 		cvmx_warn("CVMX_BGXX_CMR_RX_LMACS(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800E0000308ull) + ((offset) & 7) * 0x1000000ull;
@@ -840,8 +840,8 @@ static inline uint64_t CVMX_BGXX_CMR_RX_OVR_BP(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 2))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 5))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 5))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 5))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset == 0)))))
 		cvmx_warn("CVMX_BGXX_CMR_RX_OVR_BP(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800E0000318ull) + ((offset) & 7) * 0x1000000ull;
@@ -854,8 +854,8 @@ static inline uint64_t CVMX_BGXX_CMR_TX_LMACS(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 2))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 5))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 5))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 5))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset == 0)))))
 		cvmx_warn("CVMX_BGXX_CMR_TX_LMACS(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800E0001000ull) + ((offset) & 7) * 0x1000000ull;
@@ -868,8 +868,8 @@ static inline uint64_t CVMX_BGXX_GMP_GMI_PRTX_CFG(unsigned long offset, unsigned
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_GMP_GMI_PRTX_CFG(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0038010ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -882,8 +882,8 @@ static inline uint64_t CVMX_BGXX_GMP_GMI_RXX_DECISION(unsigned long offset, unsi
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_GMP_GMI_RXX_DECISION(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0038040ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -896,8 +896,8 @@ static inline uint64_t CVMX_BGXX_GMP_GMI_RXX_FRM_CHK(unsigned long offset, unsig
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_GMP_GMI_RXX_FRM_CHK(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0038020ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -910,8 +910,8 @@ static inline uint64_t CVMX_BGXX_GMP_GMI_RXX_FRM_CTL(unsigned long offset, unsig
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_GMP_GMI_RXX_FRM_CTL(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0038018ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -924,8 +924,8 @@ static inline uint64_t CVMX_BGXX_GMP_GMI_RXX_IFG(unsigned long offset, unsigned 
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_GMP_GMI_RXX_IFG(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0038058ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -938,8 +938,8 @@ static inline uint64_t CVMX_BGXX_GMP_GMI_RXX_INT(unsigned long offset, unsigned 
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_GMP_GMI_RXX_INT(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0038000ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -952,8 +952,8 @@ static inline uint64_t CVMX_BGXX_GMP_GMI_RXX_JABBER(unsigned long offset, unsign
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_GMP_GMI_RXX_JABBER(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0038038ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -966,8 +966,8 @@ static inline uint64_t CVMX_BGXX_GMP_GMI_RXX_UDD_SKP(unsigned long offset, unsig
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_GMP_GMI_RXX_UDD_SKP(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0038048ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -980,8 +980,8 @@ static inline uint64_t CVMX_BGXX_GMP_GMI_SMACX(unsigned long offset, unsigned lo
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_GMP_GMI_SMACX(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0038230ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -994,8 +994,8 @@ static inline uint64_t CVMX_BGXX_GMP_GMI_TXX_APPEND(unsigned long offset, unsign
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_GMP_GMI_TXX_APPEND(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0038218ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -1008,8 +1008,8 @@ static inline uint64_t CVMX_BGXX_GMP_GMI_TXX_BURST(unsigned long offset, unsigne
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_GMP_GMI_TXX_BURST(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0038228ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -1022,8 +1022,8 @@ static inline uint64_t CVMX_BGXX_GMP_GMI_TXX_CTL(unsigned long offset, unsigned 
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_GMP_GMI_TXX_CTL(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0038270ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -1036,8 +1036,8 @@ static inline uint64_t CVMX_BGXX_GMP_GMI_TXX_INT(unsigned long offset, unsigned 
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_GMP_GMI_TXX_INT(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0038500ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -1050,8 +1050,8 @@ static inline uint64_t CVMX_BGXX_GMP_GMI_TXX_MIN_PKT(unsigned long offset, unsig
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_GMP_GMI_TXX_MIN_PKT(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0038240ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -1064,8 +1064,8 @@ static inline uint64_t CVMX_BGXX_GMP_GMI_TXX_PAUSE_PKT_INTERVAL(unsigned long of
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_GMP_GMI_TXX_PAUSE_PKT_INTERVAL(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0038248ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -1078,8 +1078,8 @@ static inline uint64_t CVMX_BGXX_GMP_GMI_TXX_PAUSE_PKT_TIME(unsigned long offset
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_GMP_GMI_TXX_PAUSE_PKT_TIME(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0038238ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -1092,8 +1092,8 @@ static inline uint64_t CVMX_BGXX_GMP_GMI_TXX_PAUSE_TOGO(unsigned long offset, un
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_GMP_GMI_TXX_PAUSE_TOGO(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0038258ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -1106,8 +1106,8 @@ static inline uint64_t CVMX_BGXX_GMP_GMI_TXX_PAUSE_ZERO(unsigned long offset, un
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_GMP_GMI_TXX_PAUSE_ZERO(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0038260ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -1120,8 +1120,8 @@ static inline uint64_t CVMX_BGXX_GMP_GMI_TXX_SGMII_CTL(unsigned long offset, uns
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_GMP_GMI_TXX_SGMII_CTL(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0038300ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -1134,8 +1134,8 @@ static inline uint64_t CVMX_BGXX_GMP_GMI_TXX_SLOT(unsigned long offset, unsigned
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_GMP_GMI_TXX_SLOT(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0038220ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -1148,8 +1148,8 @@ static inline uint64_t CVMX_BGXX_GMP_GMI_TXX_SOFT_PAUSE(unsigned long offset, un
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_GMP_GMI_TXX_SOFT_PAUSE(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0038250ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -1162,8 +1162,8 @@ static inline uint64_t CVMX_BGXX_GMP_GMI_TXX_THRESH(unsigned long offset, unsign
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_GMP_GMI_TXX_THRESH(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0038210ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -1176,8 +1176,8 @@ static inline uint64_t CVMX_BGXX_GMP_GMI_TX_COL_ATTEMPT(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 2))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 5))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 5))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 5))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset == 0)))))
 		cvmx_warn("CVMX_BGXX_GMP_GMI_TX_COL_ATTEMPT(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800E0039010ull) + ((offset) & 7) * 0x1000000ull;
@@ -1190,8 +1190,8 @@ static inline uint64_t CVMX_BGXX_GMP_GMI_TX_IFG(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 2))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 5))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 5))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 5))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset == 0)))))
 		cvmx_warn("CVMX_BGXX_GMP_GMI_TX_IFG(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800E0039000ull) + ((offset) & 7) * 0x1000000ull;
@@ -1204,8 +1204,8 @@ static inline uint64_t CVMX_BGXX_GMP_GMI_TX_JAM(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 2))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 5))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 5))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 5))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset == 0)))))
 		cvmx_warn("CVMX_BGXX_GMP_GMI_TX_JAM(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800E0039008ull) + ((offset) & 7) * 0x1000000ull;
@@ -1218,8 +1218,8 @@ static inline uint64_t CVMX_BGXX_GMP_GMI_TX_LFSR(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 2))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 5))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 5))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 5))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset == 0)))))
 		cvmx_warn("CVMX_BGXX_GMP_GMI_TX_LFSR(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800E0039028ull) + ((offset) & 7) * 0x1000000ull;
@@ -1232,8 +1232,8 @@ static inline uint64_t CVMX_BGXX_GMP_GMI_TX_PAUSE_PKT_DMAC(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 2))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 5))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 5))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 5))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset == 0)))))
 		cvmx_warn("CVMX_BGXX_GMP_GMI_TX_PAUSE_PKT_DMAC(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800E0039018ull) + ((offset) & 7) * 0x1000000ull;
@@ -1246,8 +1246,8 @@ static inline uint64_t CVMX_BGXX_GMP_GMI_TX_PAUSE_PKT_TYPE(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 2))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 5))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 5))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 5))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset == 0)))))
 		cvmx_warn("CVMX_BGXX_GMP_GMI_TX_PAUSE_PKT_TYPE(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800E0039020ull) + ((offset) & 7) * 0x1000000ull;
@@ -1260,8 +1260,8 @@ static inline uint64_t CVMX_BGXX_GMP_PCS_ANX_ADV(unsigned long offset, unsigned 
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_GMP_PCS_ANX_ADV(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0030010ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -1274,8 +1274,8 @@ static inline uint64_t CVMX_BGXX_GMP_PCS_ANX_EXT_ST(unsigned long offset, unsign
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_GMP_PCS_ANX_EXT_ST(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0030028ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -1288,8 +1288,8 @@ static inline uint64_t CVMX_BGXX_GMP_PCS_ANX_LP_ABIL(unsigned long offset, unsig
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_GMP_PCS_ANX_LP_ABIL(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0030018ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -1302,8 +1302,8 @@ static inline uint64_t CVMX_BGXX_GMP_PCS_ANX_RESULTS(unsigned long offset, unsig
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_GMP_PCS_ANX_RESULTS(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0030020ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -1316,8 +1316,8 @@ static inline uint64_t CVMX_BGXX_GMP_PCS_INTX(unsigned long offset, unsigned lon
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_GMP_PCS_INTX(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0030080ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -1330,8 +1330,8 @@ static inline uint64_t CVMX_BGXX_GMP_PCS_LINKX_TIMER(unsigned long offset, unsig
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_GMP_PCS_LINKX_TIMER(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0030040ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -1344,8 +1344,8 @@ static inline uint64_t CVMX_BGXX_GMP_PCS_MISCX_CTL(unsigned long offset, unsigne
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_GMP_PCS_MISCX_CTL(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0030078ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -1358,8 +1358,8 @@ static inline uint64_t CVMX_BGXX_GMP_PCS_MRX_CONTROL(unsigned long offset, unsig
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_GMP_PCS_MRX_CONTROL(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0030000ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -1372,8 +1372,8 @@ static inline uint64_t CVMX_BGXX_GMP_PCS_MRX_STATUS(unsigned long offset, unsign
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_GMP_PCS_MRX_STATUS(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0030008ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -1386,8 +1386,8 @@ static inline uint64_t CVMX_BGXX_GMP_PCS_RXX_STATES(unsigned long offset, unsign
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_GMP_PCS_RXX_STATES(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0030058ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -1400,8 +1400,8 @@ static inline uint64_t CVMX_BGXX_GMP_PCS_RXX_SYNC(unsigned long offset, unsigned
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_GMP_PCS_RXX_SYNC(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0030050ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -1414,8 +1414,8 @@ static inline uint64_t CVMX_BGXX_GMP_PCS_SGMX_AN_ADV(unsigned long offset, unsig
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_GMP_PCS_SGMX_AN_ADV(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0030068ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -1428,8 +1428,8 @@ static inline uint64_t CVMX_BGXX_GMP_PCS_SGMX_LP_ADV(unsigned long offset, unsig
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_GMP_PCS_SGMX_LP_ADV(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0030070ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -1442,8 +1442,8 @@ static inline uint64_t CVMX_BGXX_GMP_PCS_TXX_STATES(unsigned long offset, unsign
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_GMP_PCS_TXX_STATES(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0030060ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -1456,8 +1456,8 @@ static inline uint64_t CVMX_BGXX_GMP_PCS_TX_RXX_POLARITY(unsigned long offset, u
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_GMP_PCS_TX_RXX_POLARITY(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0030048ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -1470,8 +1470,8 @@ static inline uint64_t CVMX_BGXX_SMUX_CBFC_CTL(unsigned long offset, unsigned lo
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_SMUX_CBFC_CTL(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0020218ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -1484,8 +1484,8 @@ static inline uint64_t CVMX_BGXX_SMUX_CTRL(unsigned long offset, unsigned long b
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_SMUX_CTRL(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0020200ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -1498,8 +1498,8 @@ static inline uint64_t CVMX_BGXX_SMUX_EXT_LOOPBACK(unsigned long offset, unsigne
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_SMUX_EXT_LOOPBACK(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0020208ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -1512,8 +1512,8 @@ static inline uint64_t CVMX_BGXX_SMUX_HG2_CONTROL(unsigned long offset, unsigned
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_SMUX_HG2_CONTROL(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0020210ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -1526,8 +1526,8 @@ static inline uint64_t CVMX_BGXX_SMUX_RX_BAD_COL_HI(unsigned long offset, unsign
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_SMUX_RX_BAD_COL_HI(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0020040ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -1540,8 +1540,8 @@ static inline uint64_t CVMX_BGXX_SMUX_RX_BAD_COL_LO(unsigned long offset, unsign
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_SMUX_RX_BAD_COL_LO(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0020038ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -1554,8 +1554,8 @@ static inline uint64_t CVMX_BGXX_SMUX_RX_CTL(unsigned long offset, unsigned long
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_SMUX_RX_CTL(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0020030ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -1568,8 +1568,8 @@ static inline uint64_t CVMX_BGXX_SMUX_RX_DECISION(unsigned long offset, unsigned
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_SMUX_RX_DECISION(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0020020ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -1582,8 +1582,8 @@ static inline uint64_t CVMX_BGXX_SMUX_RX_FRM_CHK(unsigned long offset, unsigned 
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_SMUX_RX_FRM_CHK(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0020010ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -1596,8 +1596,8 @@ static inline uint64_t CVMX_BGXX_SMUX_RX_FRM_CTL(unsigned long offset, unsigned 
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_SMUX_RX_FRM_CTL(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0020008ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -1610,8 +1610,8 @@ static inline uint64_t CVMX_BGXX_SMUX_RX_INT(unsigned long offset, unsigned long
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_SMUX_RX_INT(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0020000ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -1624,8 +1624,8 @@ static inline uint64_t CVMX_BGXX_SMUX_RX_JABBER(unsigned long offset, unsigned l
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_SMUX_RX_JABBER(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0020018ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -1638,8 +1638,8 @@ static inline uint64_t CVMX_BGXX_SMUX_RX_UDD_SKP(unsigned long offset, unsigned 
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_SMUX_RX_UDD_SKP(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0020028ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -1652,8 +1652,8 @@ static inline uint64_t CVMX_BGXX_SMUX_SMAC(unsigned long offset, unsigned long b
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_SMUX_SMAC(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0020108ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -1666,8 +1666,8 @@ static inline uint64_t CVMX_BGXX_SMUX_TX_APPEND(unsigned long offset, unsigned l
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_SMUX_TX_APPEND(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0020100ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -1680,8 +1680,8 @@ static inline uint64_t CVMX_BGXX_SMUX_TX_CTL(unsigned long offset, unsigned long
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_SMUX_TX_CTL(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0020160ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -1694,8 +1694,8 @@ static inline uint64_t CVMX_BGXX_SMUX_TX_IFG(unsigned long offset, unsigned long
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_SMUX_TX_IFG(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0020148ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -1708,8 +1708,8 @@ static inline uint64_t CVMX_BGXX_SMUX_TX_INT(unsigned long offset, unsigned long
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_SMUX_TX_INT(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0020140ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -1722,8 +1722,8 @@ static inline uint64_t CVMX_BGXX_SMUX_TX_MIN_PKT(unsigned long offset, unsigned 
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_SMUX_TX_MIN_PKT(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0020118ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -1736,8 +1736,8 @@ static inline uint64_t CVMX_BGXX_SMUX_TX_PAUSE_PKT_DMAC(unsigned long offset, un
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_SMUX_TX_PAUSE_PKT_DMAC(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0020150ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -1750,8 +1750,8 @@ static inline uint64_t CVMX_BGXX_SMUX_TX_PAUSE_PKT_INTERVAL(unsigned long offset
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_SMUX_TX_PAUSE_PKT_INTERVAL(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0020120ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -1764,8 +1764,8 @@ static inline uint64_t CVMX_BGXX_SMUX_TX_PAUSE_PKT_TIME(unsigned long offset, un
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_SMUX_TX_PAUSE_PKT_TIME(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0020110ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -1778,8 +1778,8 @@ static inline uint64_t CVMX_BGXX_SMUX_TX_PAUSE_PKT_TYPE(unsigned long offset, un
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_SMUX_TX_PAUSE_PKT_TYPE(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0020158ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -1792,8 +1792,8 @@ static inline uint64_t CVMX_BGXX_SMUX_TX_PAUSE_TOGO(unsigned long offset, unsign
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_SMUX_TX_PAUSE_TOGO(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0020130ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -1806,8 +1806,8 @@ static inline uint64_t CVMX_BGXX_SMUX_TX_PAUSE_ZERO(unsigned long offset, unsign
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_SMUX_TX_PAUSE_ZERO(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0020138ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -1820,8 +1820,8 @@ static inline uint64_t CVMX_BGXX_SMUX_TX_SOFT_PAUSE(unsigned long offset, unsign
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_SMUX_TX_SOFT_PAUSE(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0020128ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -1834,8 +1834,8 @@ static inline uint64_t CVMX_BGXX_SMUX_TX_THRESH(unsigned long offset, unsigned l
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_SMUX_TX_THRESH(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0020168ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -1848,8 +1848,8 @@ static inline uint64_t CVMX_BGXX_SPUX_AN_ADV(unsigned long offset, unsigned long
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_SPUX_AN_ADV(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E00100D8ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -1862,8 +1862,8 @@ static inline uint64_t CVMX_BGXX_SPUX_AN_BP_STATUS(unsigned long offset, unsigne
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_SPUX_AN_BP_STATUS(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E00100F8ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -1876,8 +1876,8 @@ static inline uint64_t CVMX_BGXX_SPUX_AN_CONTROL(unsigned long offset, unsigned 
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_SPUX_AN_CONTROL(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E00100C8ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -1890,8 +1890,8 @@ static inline uint64_t CVMX_BGXX_SPUX_AN_LP_BASE(unsigned long offset, unsigned 
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_SPUX_AN_LP_BASE(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E00100E0ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -1904,8 +1904,8 @@ static inline uint64_t CVMX_BGXX_SPUX_AN_LP_XNP(unsigned long offset, unsigned l
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_SPUX_AN_LP_XNP(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E00100F0ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -1918,8 +1918,8 @@ static inline uint64_t CVMX_BGXX_SPUX_AN_STATUS(unsigned long offset, unsigned l
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_SPUX_AN_STATUS(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E00100D0ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -1932,8 +1932,8 @@ static inline uint64_t CVMX_BGXX_SPUX_AN_XNP_TX(unsigned long offset, unsigned l
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_SPUX_AN_XNP_TX(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E00100E8ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -1946,8 +1946,8 @@ static inline uint64_t CVMX_BGXX_SPUX_BR_ALGN_STATUS(unsigned long offset, unsig
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_SPUX_BR_ALGN_STATUS(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0010050ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -1960,8 +1960,8 @@ static inline uint64_t CVMX_BGXX_SPUX_BR_BIP_ERR_CNT(unsigned long offset, unsig
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_SPUX_BR_BIP_ERR_CNT(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0010058ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -1974,8 +1974,8 @@ static inline uint64_t CVMX_BGXX_SPUX_BR_LANE_MAP(unsigned long offset, unsigned
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_SPUX_BR_LANE_MAP(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0010060ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -1988,8 +1988,8 @@ static inline uint64_t CVMX_BGXX_SPUX_BR_PMD_CONTROL(unsigned long offset, unsig
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_SPUX_BR_PMD_CONTROL(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0010068ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -2002,8 +2002,8 @@ static inline uint64_t CVMX_BGXX_SPUX_BR_PMD_LD_CUP(unsigned long offset, unsign
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_SPUX_BR_PMD_LD_CUP(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0010088ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -2016,8 +2016,8 @@ static inline uint64_t CVMX_BGXX_SPUX_BR_PMD_LD_REP(unsigned long offset, unsign
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_SPUX_BR_PMD_LD_REP(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0010090ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -2030,8 +2030,8 @@ static inline uint64_t CVMX_BGXX_SPUX_BR_PMD_LP_CUP(unsigned long offset, unsign
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_SPUX_BR_PMD_LP_CUP(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0010078ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -2044,8 +2044,8 @@ static inline uint64_t CVMX_BGXX_SPUX_BR_PMD_LP_REP(unsigned long offset, unsign
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_SPUX_BR_PMD_LP_REP(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0010080ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -2058,8 +2058,8 @@ static inline uint64_t CVMX_BGXX_SPUX_BR_PMD_STATUS(unsigned long offset, unsign
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_SPUX_BR_PMD_STATUS(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0010070ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -2072,8 +2072,8 @@ static inline uint64_t CVMX_BGXX_SPUX_BR_STATUS1(unsigned long offset, unsigned 
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_SPUX_BR_STATUS1(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0010030ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -2086,8 +2086,8 @@ static inline uint64_t CVMX_BGXX_SPUX_BR_STATUS2(unsigned long offset, unsigned 
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_SPUX_BR_STATUS2(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0010038ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -2100,8 +2100,8 @@ static inline uint64_t CVMX_BGXX_SPUX_BR_TP_CONTROL(unsigned long offset, unsign
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_SPUX_BR_TP_CONTROL(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0010040ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -2114,8 +2114,8 @@ static inline uint64_t CVMX_BGXX_SPUX_BR_TP_ERR_CNT(unsigned long offset, unsign
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_SPUX_BR_TP_ERR_CNT(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0010048ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -2128,8 +2128,8 @@ static inline uint64_t CVMX_BGXX_SPUX_BX_STATUS(unsigned long offset, unsigned l
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_SPUX_BX_STATUS(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0010028ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -2142,8 +2142,8 @@ static inline uint64_t CVMX_BGXX_SPUX_CONTROL1(unsigned long offset, unsigned lo
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_SPUX_CONTROL1(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0010000ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -2156,8 +2156,8 @@ static inline uint64_t CVMX_BGXX_SPUX_CONTROL2(unsigned long offset, unsigned lo
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_SPUX_CONTROL2(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0010018ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -2170,8 +2170,8 @@ static inline uint64_t CVMX_BGXX_SPUX_FEC_ABIL(unsigned long offset, unsigned lo
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_SPUX_FEC_ABIL(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0010098ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -2184,8 +2184,8 @@ static inline uint64_t CVMX_BGXX_SPUX_FEC_CONTROL(unsigned long offset, unsigned
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_SPUX_FEC_CONTROL(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E00100A0ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -2198,8 +2198,8 @@ static inline uint64_t CVMX_BGXX_SPUX_FEC_CORR_BLKS01(unsigned long offset, unsi
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_SPUX_FEC_CORR_BLKS01(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E00100A8ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -2212,8 +2212,8 @@ static inline uint64_t CVMX_BGXX_SPUX_FEC_CORR_BLKS23(unsigned long offset, unsi
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_SPUX_FEC_CORR_BLKS23(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E00100B0ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -2226,8 +2226,8 @@ static inline uint64_t CVMX_BGXX_SPUX_FEC_UNCORR_BLKS01(unsigned long offset, un
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_SPUX_FEC_UNCORR_BLKS01(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E00100B8ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -2240,8 +2240,8 @@ static inline uint64_t CVMX_BGXX_SPUX_FEC_UNCORR_BLKS23(unsigned long offset, un
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_SPUX_FEC_UNCORR_BLKS23(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E00100C0ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -2254,8 +2254,8 @@ static inline uint64_t CVMX_BGXX_SPUX_INT(unsigned long offset, unsigned long bl
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_SPUX_INT(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0010220ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -2268,8 +2268,8 @@ static inline uint64_t CVMX_BGXX_SPUX_LPCS_STATES(unsigned long offset, unsigned
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_SPUX_LPCS_STATES(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0010208ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -2282,8 +2282,8 @@ static inline uint64_t CVMX_BGXX_SPUX_MISC_CONTROL(unsigned long offset, unsigne
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_SPUX_MISC_CONTROL(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0010218ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -2296,8 +2296,8 @@ static inline uint64_t CVMX_BGXX_SPUX_SPD_ABIL(unsigned long offset, unsigned lo
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_SPUX_SPD_ABIL(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0010010ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -2310,8 +2310,8 @@ static inline uint64_t CVMX_BGXX_SPUX_STATUS1(unsigned long offset, unsigned lon
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_SPUX_STATUS1(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0010008ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -2324,8 +2324,8 @@ static inline uint64_t CVMX_BGXX_SPUX_STATUS2(unsigned long offset, unsigned lon
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_SPUX_STATUS2(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0010020ull) + (((offset) & 3) + ((block_id) & 7) * 0x10ull) * 1048576;
@@ -2338,8 +2338,8 @@ static inline uint64_t CVMX_BGXX_SPU_BIST_STATUS(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 2))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 5))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 5))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 5))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset == 0)))))
 		cvmx_warn("CVMX_BGXX_SPU_BIST_STATUS(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800E0010318ull) + ((offset) & 7) * 0x1000000ull;
@@ -2352,8 +2352,8 @@ static inline uint64_t CVMX_BGXX_SPU_DBG_CONTROL(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 2))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 5))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 5))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 5))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset == 0)))))
 		cvmx_warn("CVMX_BGXX_SPU_DBG_CONTROL(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800E0010300ull) + ((offset) & 7) * 0x1000000ull;
@@ -2366,8 +2366,8 @@ static inline uint64_t CVMX_BGXX_SPU_MEM_INT(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 2))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 5))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 5))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 5))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset == 0)))))
 		cvmx_warn("CVMX_BGXX_SPU_MEM_INT(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800E0010310ull) + ((offset) & 7) * 0x1000000ull;
@@ -2380,8 +2380,8 @@ static inline uint64_t CVMX_BGXX_SPU_MEM_STATUS(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 2))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 5))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 5))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 5))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset == 0)))))
 		cvmx_warn("CVMX_BGXX_SPU_MEM_STATUS(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800E0010308ull) + ((offset) & 7) * 0x1000000ull;
@@ -2394,8 +2394,8 @@ static inline uint64_t CVMX_BGXX_SPU_SDSX_SKEW_STATUS(unsigned long offset, unsi
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_SPU_SDSX_SKEW_STATUS(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0010320ull) + (((offset) & 3) + ((block_id) & 7) * 0x200000ull) * 8;
@@ -2408,8 +2408,8 @@ static inline uint64_t CVMX_BGXX_SPU_SDSX_STATES(unsigned long offset, unsigned 
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 2)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 5)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 5)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_BGXX_SPU_SDSX_STATES(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800E0010340ull) + (((offset) & 3) + ((block_id) & 7) * 0x200000ull) * 8;
@@ -2517,7 +2517,7 @@ union cvmx_bgxx_cmrx_config {
 	} s;
 	struct cvmx_bgxx_cmrx_config_s        cn73xx;
 	struct cvmx_bgxx_cmrx_config_s        cn78xx;
-	struct cvmx_bgxx_cmrx_config_s        cn78xxp2;
+	struct cvmx_bgxx_cmrx_config_s        cn78xxp1;
 	struct cvmx_bgxx_cmrx_config_s        cnf75xx;
 };
 typedef union cvmx_bgxx_cmrx_config cvmx_bgxx_cmrx_config_t;
@@ -2542,7 +2542,7 @@ union cvmx_bgxx_cmrx_int {
 	} s;
 	struct cvmx_bgxx_cmrx_int_s           cn73xx;
 	struct cvmx_bgxx_cmrx_int_s           cn78xx;
-	struct cvmx_bgxx_cmrx_int_s           cn78xxp2;
+	struct cvmx_bgxx_cmrx_int_s           cn78xxp1;
 	struct cvmx_bgxx_cmrx_int_s           cnf75xx;
 };
 typedef union cvmx_bgxx_cmrx_int cvmx_bgxx_cmrx_int_t;
@@ -2571,7 +2571,7 @@ union cvmx_bgxx_cmrx_prt_cbfc_ctl {
 	} s;
 	struct cvmx_bgxx_cmrx_prt_cbfc_ctl_s  cn73xx;
 	struct cvmx_bgxx_cmrx_prt_cbfc_ctl_s  cn78xx;
-	struct cvmx_bgxx_cmrx_prt_cbfc_ctl_s  cn78xxp2;
+	struct cvmx_bgxx_cmrx_prt_cbfc_ctl_s  cn78xxp1;
 	struct cvmx_bgxx_cmrx_prt_cbfc_ctl_s  cnf75xx;
 };
 typedef union cvmx_bgxx_cmrx_prt_cbfc_ctl cvmx_bgxx_cmrx_prt_cbfc_ctl_t;
@@ -2594,7 +2594,7 @@ union cvmx_bgxx_cmrx_rx_adr_ctl {
                                                          0x3 = Reserved. */
 	uint64_t bcst_accept                  : 1;  /**< Allow or deny broadcast packets.
                                                          0 = Reject all broadcast packets.
-                                                         1 = Accept all broadcast Packets. */
+                                                         1 = Accept all broadcast packets. */
 #else
 	uint64_t bcst_accept                  : 1;
 	uint64_t mcst_mode                    : 2;
@@ -2604,7 +2604,7 @@ union cvmx_bgxx_cmrx_rx_adr_ctl {
 	} s;
 	struct cvmx_bgxx_cmrx_rx_adr_ctl_s    cn73xx;
 	struct cvmx_bgxx_cmrx_rx_adr_ctl_s    cn78xx;
-	struct cvmx_bgxx_cmrx_rx_adr_ctl_s    cn78xxp2;
+	struct cvmx_bgxx_cmrx_rx_adr_ctl_s    cn78xxp1;
 	struct cvmx_bgxx_cmrx_rx_adr_ctl_s    cnf75xx;
 };
 typedef union cvmx_bgxx_cmrx_rx_adr_ctl cvmx_bgxx_cmrx_rx_adr_ctl_t;
@@ -2629,7 +2629,7 @@ union cvmx_bgxx_cmrx_rx_bp_drop {
 	} s;
 	struct cvmx_bgxx_cmrx_rx_bp_drop_s    cn73xx;
 	struct cvmx_bgxx_cmrx_rx_bp_drop_s    cn78xx;
-	struct cvmx_bgxx_cmrx_rx_bp_drop_s    cn78xxp2;
+	struct cvmx_bgxx_cmrx_rx_bp_drop_s    cn78xxp1;
 	struct cvmx_bgxx_cmrx_rx_bp_drop_s    cnf75xx;
 };
 typedef union cvmx_bgxx_cmrx_rx_bp_drop cvmx_bgxx_cmrx_rx_bp_drop_t;
@@ -2651,7 +2651,7 @@ union cvmx_bgxx_cmrx_rx_bp_off {
 	} s;
 	struct cvmx_bgxx_cmrx_rx_bp_off_s     cn73xx;
 	struct cvmx_bgxx_cmrx_rx_bp_off_s     cn78xx;
-	struct cvmx_bgxx_cmrx_rx_bp_off_s     cn78xxp2;
+	struct cvmx_bgxx_cmrx_rx_bp_off_s     cn78xxp1;
 	struct cvmx_bgxx_cmrx_rx_bp_off_s     cnf75xx;
 };
 typedef union cvmx_bgxx_cmrx_rx_bp_off cvmx_bgxx_cmrx_rx_bp_off_t;
@@ -2681,7 +2681,7 @@ union cvmx_bgxx_cmrx_rx_bp_on {
 	} s;
 	struct cvmx_bgxx_cmrx_rx_bp_on_s      cn73xx;
 	struct cvmx_bgxx_cmrx_rx_bp_on_s      cn78xx;
-	struct cvmx_bgxx_cmrx_rx_bp_on_s      cn78xxp2;
+	struct cvmx_bgxx_cmrx_rx_bp_on_s      cn78xxp1;
 	struct cvmx_bgxx_cmrx_rx_bp_on_s      cnf75xx;
 };
 typedef union cvmx_bgxx_cmrx_rx_bp_on cvmx_bgxx_cmrx_rx_bp_on_t;
@@ -2704,7 +2704,7 @@ union cvmx_bgxx_cmrx_rx_bp_status {
 	} s;
 	struct cvmx_bgxx_cmrx_rx_bp_status_s  cn73xx;
 	struct cvmx_bgxx_cmrx_rx_bp_status_s  cn78xx;
-	struct cvmx_bgxx_cmrx_rx_bp_status_s  cn78xxp2;
+	struct cvmx_bgxx_cmrx_rx_bp_status_s  cn78xxp1;
 	struct cvmx_bgxx_cmrx_rx_bp_status_s  cnf75xx;
 };
 typedef union cvmx_bgxx_cmrx_rx_bp_status cvmx_bgxx_cmrx_rx_bp_status_t;
@@ -2725,7 +2725,7 @@ union cvmx_bgxx_cmrx_rx_fifo_len {
 	} s;
 	struct cvmx_bgxx_cmrx_rx_fifo_len_s   cn73xx;
 	struct cvmx_bgxx_cmrx_rx_fifo_len_s   cn78xx;
-	struct cvmx_bgxx_cmrx_rx_fifo_len_s   cn78xxp2;
+	struct cvmx_bgxx_cmrx_rx_fifo_len_s   cn78xxp1;
 	struct cvmx_bgxx_cmrx_rx_fifo_len_s   cnf75xx;
 };
 typedef union cvmx_bgxx_cmrx_rx_fifo_len cvmx_bgxx_cmrx_rx_fifo_len_t;
@@ -2774,8 +2774,8 @@ union cvmx_bgxx_cmrx_rx_id_map {
 	uint64_t reserved_15_63               : 49;
 #endif
 	} cn73xx;
-	struct cvmx_bgxx_cmrx_rx_id_map_s     cn78xx;
-	struct cvmx_bgxx_cmrx_rx_id_map_cn73xx cn78xxp2;
+	struct cvmx_bgxx_cmrx_rx_id_map_cn73xx cn78xx;
+	struct cvmx_bgxx_cmrx_rx_id_map_s     cn78xxp1;
 	struct cvmx_bgxx_cmrx_rx_id_map_cn73xx cnf75xx;
 };
 typedef union cvmx_bgxx_cmrx_rx_id_map cvmx_bgxx_cmrx_rx_id_map_t;
@@ -2799,7 +2799,7 @@ union cvmx_bgxx_cmrx_rx_logl_xoff {
 	} s;
 	struct cvmx_bgxx_cmrx_rx_logl_xoff_s  cn73xx;
 	struct cvmx_bgxx_cmrx_rx_logl_xoff_s  cn78xx;
-	struct cvmx_bgxx_cmrx_rx_logl_xoff_s  cn78xxp2;
+	struct cvmx_bgxx_cmrx_rx_logl_xoff_s  cn78xxp1;
 	struct cvmx_bgxx_cmrx_rx_logl_xoff_s  cnf75xx;
 };
 typedef union cvmx_bgxx_cmrx_rx_logl_xoff cvmx_bgxx_cmrx_rx_logl_xoff_t;
@@ -2823,7 +2823,7 @@ union cvmx_bgxx_cmrx_rx_logl_xon {
 	} s;
 	struct cvmx_bgxx_cmrx_rx_logl_xon_s   cn73xx;
 	struct cvmx_bgxx_cmrx_rx_logl_xon_s   cn78xx;
-	struct cvmx_bgxx_cmrx_rx_logl_xon_s   cn78xxp2;
+	struct cvmx_bgxx_cmrx_rx_logl_xon_s   cn78xxp1;
 	struct cvmx_bgxx_cmrx_rx_logl_xon_s   cnf75xx;
 };
 typedef union cvmx_bgxx_cmrx_rx_logl_xon cvmx_bgxx_cmrx_rx_logl_xon_t;
@@ -2844,7 +2844,7 @@ union cvmx_bgxx_cmrx_rx_pause_drop_time {
 	} s;
 	struct cvmx_bgxx_cmrx_rx_pause_drop_time_s cn73xx;
 	struct cvmx_bgxx_cmrx_rx_pause_drop_time_s cn78xx;
-	struct cvmx_bgxx_cmrx_rx_pause_drop_time_s cn78xxp2;
+	struct cvmx_bgxx_cmrx_rx_pause_drop_time_s cn78xxp1;
 	struct cvmx_bgxx_cmrx_rx_pause_drop_time_s cnf75xx;
 };
 typedef union cvmx_bgxx_cmrx_rx_pause_drop_time cvmx_bgxx_cmrx_rx_pause_drop_time_t;
@@ -2872,7 +2872,7 @@ union cvmx_bgxx_cmrx_rx_stat0 {
 	} s;
 	struct cvmx_bgxx_cmrx_rx_stat0_s      cn73xx;
 	struct cvmx_bgxx_cmrx_rx_stat0_s      cn78xx;
-	struct cvmx_bgxx_cmrx_rx_stat0_s      cn78xxp2;
+	struct cvmx_bgxx_cmrx_rx_stat0_s      cn78xxp1;
 	struct cvmx_bgxx_cmrx_rx_stat0_s      cnf75xx;
 };
 typedef union cvmx_bgxx_cmrx_rx_stat0 cvmx_bgxx_cmrx_rx_stat0_t;
@@ -2897,7 +2897,7 @@ union cvmx_bgxx_cmrx_rx_stat1 {
 	} s;
 	struct cvmx_bgxx_cmrx_rx_stat1_s      cn73xx;
 	struct cvmx_bgxx_cmrx_rx_stat1_s      cn78xx;
-	struct cvmx_bgxx_cmrx_rx_stat1_s      cn78xxp2;
+	struct cvmx_bgxx_cmrx_rx_stat1_s      cn78xxp1;
 	struct cvmx_bgxx_cmrx_rx_stat1_s      cnf75xx;
 };
 typedef union cvmx_bgxx_cmrx_rx_stat1 cvmx_bgxx_cmrx_rx_stat1_t;
@@ -2926,7 +2926,7 @@ union cvmx_bgxx_cmrx_rx_stat2 {
 	} s;
 	struct cvmx_bgxx_cmrx_rx_stat2_s      cn73xx;
 	struct cvmx_bgxx_cmrx_rx_stat2_s      cn78xx;
-	struct cvmx_bgxx_cmrx_rx_stat2_s      cn78xxp2;
+	struct cvmx_bgxx_cmrx_rx_stat2_s      cn78xxp1;
 	struct cvmx_bgxx_cmrx_rx_stat2_s      cnf75xx;
 };
 typedef union cvmx_bgxx_cmrx_rx_stat2 cvmx_bgxx_cmrx_rx_stat2_t;
@@ -2951,7 +2951,7 @@ union cvmx_bgxx_cmrx_rx_stat3 {
 	} s;
 	struct cvmx_bgxx_cmrx_rx_stat3_s      cn73xx;
 	struct cvmx_bgxx_cmrx_rx_stat3_s      cn78xx;
-	struct cvmx_bgxx_cmrx_rx_stat3_s      cn78xxp2;
+	struct cvmx_bgxx_cmrx_rx_stat3_s      cn78xxp1;
 	struct cvmx_bgxx_cmrx_rx_stat3_s      cnf75xx;
 };
 typedef union cvmx_bgxx_cmrx_rx_stat3 cvmx_bgxx_cmrx_rx_stat3_t;
@@ -2979,7 +2979,7 @@ union cvmx_bgxx_cmrx_rx_stat4 {
 	} s;
 	struct cvmx_bgxx_cmrx_rx_stat4_s      cn73xx;
 	struct cvmx_bgxx_cmrx_rx_stat4_s      cn78xx;
-	struct cvmx_bgxx_cmrx_rx_stat4_s      cn78xxp2;
+	struct cvmx_bgxx_cmrx_rx_stat4_s      cn78xxp1;
 	struct cvmx_bgxx_cmrx_rx_stat4_s      cnf75xx;
 };
 typedef union cvmx_bgxx_cmrx_rx_stat4 cvmx_bgxx_cmrx_rx_stat4_t;
@@ -3004,7 +3004,7 @@ union cvmx_bgxx_cmrx_rx_stat5 {
 	} s;
 	struct cvmx_bgxx_cmrx_rx_stat5_s      cn73xx;
 	struct cvmx_bgxx_cmrx_rx_stat5_s      cn78xx;
-	struct cvmx_bgxx_cmrx_rx_stat5_s      cn78xxp2;
+	struct cvmx_bgxx_cmrx_rx_stat5_s      cn78xxp1;
 	struct cvmx_bgxx_cmrx_rx_stat5_s      cnf75xx;
 };
 typedef union cvmx_bgxx_cmrx_rx_stat5 cvmx_bgxx_cmrx_rx_stat5_t;
@@ -3031,7 +3031,7 @@ union cvmx_bgxx_cmrx_rx_stat6 {
 	} s;
 	struct cvmx_bgxx_cmrx_rx_stat6_s      cn73xx;
 	struct cvmx_bgxx_cmrx_rx_stat6_s      cn78xx;
-	struct cvmx_bgxx_cmrx_rx_stat6_s      cn78xxp2;
+	struct cvmx_bgxx_cmrx_rx_stat6_s      cn78xxp1;
 	struct cvmx_bgxx_cmrx_rx_stat6_s      cnf75xx;
 };
 typedef union cvmx_bgxx_cmrx_rx_stat6 cvmx_bgxx_cmrx_rx_stat6_t;
@@ -3056,7 +3056,7 @@ union cvmx_bgxx_cmrx_rx_stat7 {
 	} s;
 	struct cvmx_bgxx_cmrx_rx_stat7_s      cn73xx;
 	struct cvmx_bgxx_cmrx_rx_stat7_s      cn78xx;
-	struct cvmx_bgxx_cmrx_rx_stat7_s      cn78xxp2;
+	struct cvmx_bgxx_cmrx_rx_stat7_s      cn78xxp1;
 	struct cvmx_bgxx_cmrx_rx_stat7_s      cnf75xx;
 };
 typedef union cvmx_bgxx_cmrx_rx_stat7 cvmx_bgxx_cmrx_rx_stat7_t;
@@ -3098,7 +3098,7 @@ union cvmx_bgxx_cmrx_rx_stat8 {
 	} s;
 	struct cvmx_bgxx_cmrx_rx_stat8_s      cn73xx;
 	struct cvmx_bgxx_cmrx_rx_stat8_s      cn78xx;
-	struct cvmx_bgxx_cmrx_rx_stat8_s      cn78xxp2;
+	struct cvmx_bgxx_cmrx_rx_stat8_s      cn78xxp1;
 	struct cvmx_bgxx_cmrx_rx_stat8_s      cnf75xx;
 };
 typedef union cvmx_bgxx_cmrx_rx_stat8 cvmx_bgxx_cmrx_rx_stat8_t;
@@ -3121,7 +3121,7 @@ union cvmx_bgxx_cmrx_rx_weight {
 	} s;
 	struct cvmx_bgxx_cmrx_rx_weight_s     cn73xx;
 	struct cvmx_bgxx_cmrx_rx_weight_s     cn78xx;
-	struct cvmx_bgxx_cmrx_rx_weight_s     cn78xxp2;
+	struct cvmx_bgxx_cmrx_rx_weight_s     cn78xxp1;
 	struct cvmx_bgxx_cmrx_rx_weight_s     cnf75xx;
 };
 typedef union cvmx_bgxx_cmrx_rx_weight cvmx_bgxx_cmrx_rx_weight_t;
@@ -3149,7 +3149,7 @@ union cvmx_bgxx_cmrx_tx_channel {
 	} s;
 	struct cvmx_bgxx_cmrx_tx_channel_s    cn73xx;
 	struct cvmx_bgxx_cmrx_tx_channel_s    cn78xx;
-	struct cvmx_bgxx_cmrx_tx_channel_s    cn78xxp2;
+	struct cvmx_bgxx_cmrx_tx_channel_s    cn78xxp1;
 	struct cvmx_bgxx_cmrx_tx_channel_s    cnf75xx;
 };
 typedef union cvmx_bgxx_cmrx_tx_channel cvmx_bgxx_cmrx_tx_channel_t;
@@ -3174,7 +3174,7 @@ union cvmx_bgxx_cmrx_tx_fifo_len {
 	} s;
 	struct cvmx_bgxx_cmrx_tx_fifo_len_s   cn73xx;
 	struct cvmx_bgxx_cmrx_tx_fifo_len_s   cn78xx;
-	struct cvmx_bgxx_cmrx_tx_fifo_len_s   cn78xxp2;
+	struct cvmx_bgxx_cmrx_tx_fifo_len_s   cn78xxp1;
 	struct cvmx_bgxx_cmrx_tx_fifo_len_s   cnf75xx;
 };
 typedef union cvmx_bgxx_cmrx_tx_fifo_len cvmx_bgxx_cmrx_tx_fifo_len_t;
@@ -3200,7 +3200,7 @@ union cvmx_bgxx_cmrx_tx_hg2_status {
 	} s;
 	struct cvmx_bgxx_cmrx_tx_hg2_status_s cn73xx;
 	struct cvmx_bgxx_cmrx_tx_hg2_status_s cn78xx;
-	struct cvmx_bgxx_cmrx_tx_hg2_status_s cn78xxp2;
+	struct cvmx_bgxx_cmrx_tx_hg2_status_s cn78xxp1;
 	struct cvmx_bgxx_cmrx_tx_hg2_status_s cnf75xx;
 };
 typedef union cvmx_bgxx_cmrx_tx_hg2_status cvmx_bgxx_cmrx_tx_hg2_status_t;
@@ -3223,7 +3223,7 @@ union cvmx_bgxx_cmrx_tx_ovr_bp {
 	} s;
 	struct cvmx_bgxx_cmrx_tx_ovr_bp_s     cn73xx;
 	struct cvmx_bgxx_cmrx_tx_ovr_bp_s     cn78xx;
-	struct cvmx_bgxx_cmrx_tx_ovr_bp_s     cn78xxp2;
+	struct cvmx_bgxx_cmrx_tx_ovr_bp_s     cn78xxp1;
 	struct cvmx_bgxx_cmrx_tx_ovr_bp_s     cnf75xx;
 };
 typedef union cvmx_bgxx_cmrx_tx_ovr_bp cvmx_bgxx_cmrx_tx_ovr_bp_t;
@@ -3248,7 +3248,7 @@ union cvmx_bgxx_cmrx_tx_stat0 {
 	} s;
 	struct cvmx_bgxx_cmrx_tx_stat0_s      cn73xx;
 	struct cvmx_bgxx_cmrx_tx_stat0_s      cn78xx;
-	struct cvmx_bgxx_cmrx_tx_stat0_s      cn78xxp2;
+	struct cvmx_bgxx_cmrx_tx_stat0_s      cn78xxp1;
 	struct cvmx_bgxx_cmrx_tx_stat0_s      cnf75xx;
 };
 typedef union cvmx_bgxx_cmrx_tx_stat0 cvmx_bgxx_cmrx_tx_stat0_t;
@@ -3273,7 +3273,7 @@ union cvmx_bgxx_cmrx_tx_stat1 {
 	} s;
 	struct cvmx_bgxx_cmrx_tx_stat1_s      cn73xx;
 	struct cvmx_bgxx_cmrx_tx_stat1_s      cn78xx;
-	struct cvmx_bgxx_cmrx_tx_stat1_s      cn78xxp2;
+	struct cvmx_bgxx_cmrx_tx_stat1_s      cn78xxp1;
 	struct cvmx_bgxx_cmrx_tx_stat1_s      cnf75xx;
 };
 typedef union cvmx_bgxx_cmrx_tx_stat1 cvmx_bgxx_cmrx_tx_stat1_t;
@@ -3298,7 +3298,7 @@ union cvmx_bgxx_cmrx_tx_stat10 {
 	} s;
 	struct cvmx_bgxx_cmrx_tx_stat10_s     cn73xx;
 	struct cvmx_bgxx_cmrx_tx_stat10_s     cn78xx;
-	struct cvmx_bgxx_cmrx_tx_stat10_s     cn78xxp2;
+	struct cvmx_bgxx_cmrx_tx_stat10_s     cn78xxp1;
 	struct cvmx_bgxx_cmrx_tx_stat10_s     cnf75xx;
 };
 typedef union cvmx_bgxx_cmrx_tx_stat10 cvmx_bgxx_cmrx_tx_stat10_t;
@@ -3323,7 +3323,7 @@ union cvmx_bgxx_cmrx_tx_stat11 {
 	} s;
 	struct cvmx_bgxx_cmrx_tx_stat11_s     cn73xx;
 	struct cvmx_bgxx_cmrx_tx_stat11_s     cn78xx;
-	struct cvmx_bgxx_cmrx_tx_stat11_s     cn78xxp2;
+	struct cvmx_bgxx_cmrx_tx_stat11_s     cn78xxp1;
 	struct cvmx_bgxx_cmrx_tx_stat11_s     cnf75xx;
 };
 typedef union cvmx_bgxx_cmrx_tx_stat11 cvmx_bgxx_cmrx_tx_stat11_t;
@@ -3348,7 +3348,7 @@ union cvmx_bgxx_cmrx_tx_stat12 {
 	} s;
 	struct cvmx_bgxx_cmrx_tx_stat12_s     cn73xx;
 	struct cvmx_bgxx_cmrx_tx_stat12_s     cn78xx;
-	struct cvmx_bgxx_cmrx_tx_stat12_s     cn78xxp2;
+	struct cvmx_bgxx_cmrx_tx_stat12_s     cn78xxp1;
 	struct cvmx_bgxx_cmrx_tx_stat12_s     cnf75xx;
 };
 typedef union cvmx_bgxx_cmrx_tx_stat12 cvmx_bgxx_cmrx_tx_stat12_t;
@@ -3373,7 +3373,7 @@ union cvmx_bgxx_cmrx_tx_stat13 {
 	} s;
 	struct cvmx_bgxx_cmrx_tx_stat13_s     cn73xx;
 	struct cvmx_bgxx_cmrx_tx_stat13_s     cn78xx;
-	struct cvmx_bgxx_cmrx_tx_stat13_s     cn78xxp2;
+	struct cvmx_bgxx_cmrx_tx_stat13_s     cn78xxp1;
 	struct cvmx_bgxx_cmrx_tx_stat13_s     cnf75xx;
 };
 typedef union cvmx_bgxx_cmrx_tx_stat13 cvmx_bgxx_cmrx_tx_stat13_t;
@@ -3401,7 +3401,7 @@ union cvmx_bgxx_cmrx_tx_stat14 {
 	} s;
 	struct cvmx_bgxx_cmrx_tx_stat14_s     cn73xx;
 	struct cvmx_bgxx_cmrx_tx_stat14_s     cn78xx;
-	struct cvmx_bgxx_cmrx_tx_stat14_s     cn78xxp2;
+	struct cvmx_bgxx_cmrx_tx_stat14_s     cn78xxp1;
 	struct cvmx_bgxx_cmrx_tx_stat14_s     cnf75xx;
 };
 typedef union cvmx_bgxx_cmrx_tx_stat14 cvmx_bgxx_cmrx_tx_stat14_t;
@@ -3429,7 +3429,7 @@ union cvmx_bgxx_cmrx_tx_stat15 {
 	} s;
 	struct cvmx_bgxx_cmrx_tx_stat15_s     cn73xx;
 	struct cvmx_bgxx_cmrx_tx_stat15_s     cn78xx;
-	struct cvmx_bgxx_cmrx_tx_stat15_s     cn78xxp2;
+	struct cvmx_bgxx_cmrx_tx_stat15_s     cn78xxp1;
 	struct cvmx_bgxx_cmrx_tx_stat15_s     cnf75xx;
 };
 typedef union cvmx_bgxx_cmrx_tx_stat15 cvmx_bgxx_cmrx_tx_stat15_t;
@@ -3452,7 +3452,7 @@ union cvmx_bgxx_cmrx_tx_stat16 {
 	} s;
 	struct cvmx_bgxx_cmrx_tx_stat16_s     cn73xx;
 	struct cvmx_bgxx_cmrx_tx_stat16_s     cn78xx;
-	struct cvmx_bgxx_cmrx_tx_stat16_s     cn78xxp2;
+	struct cvmx_bgxx_cmrx_tx_stat16_s     cn78xxp1;
 	struct cvmx_bgxx_cmrx_tx_stat16_s     cnf75xx;
 };
 typedef union cvmx_bgxx_cmrx_tx_stat16 cvmx_bgxx_cmrx_tx_stat16_t;
@@ -3477,7 +3477,7 @@ union cvmx_bgxx_cmrx_tx_stat17 {
 	} s;
 	struct cvmx_bgxx_cmrx_tx_stat17_s     cn73xx;
 	struct cvmx_bgxx_cmrx_tx_stat17_s     cn78xx;
-	struct cvmx_bgxx_cmrx_tx_stat17_s     cn78xxp2;
+	struct cvmx_bgxx_cmrx_tx_stat17_s     cn78xxp1;
 	struct cvmx_bgxx_cmrx_tx_stat17_s     cnf75xx;
 };
 typedef union cvmx_bgxx_cmrx_tx_stat17 cvmx_bgxx_cmrx_tx_stat17_t;
@@ -3502,7 +3502,7 @@ union cvmx_bgxx_cmrx_tx_stat2 {
 	} s;
 	struct cvmx_bgxx_cmrx_tx_stat2_s      cn73xx;
 	struct cvmx_bgxx_cmrx_tx_stat2_s      cn78xx;
-	struct cvmx_bgxx_cmrx_tx_stat2_s      cn78xxp2;
+	struct cvmx_bgxx_cmrx_tx_stat2_s      cn78xxp1;
 	struct cvmx_bgxx_cmrx_tx_stat2_s      cnf75xx;
 };
 typedef union cvmx_bgxx_cmrx_tx_stat2 cvmx_bgxx_cmrx_tx_stat2_t;
@@ -3526,7 +3526,7 @@ union cvmx_bgxx_cmrx_tx_stat3 {
 	} s;
 	struct cvmx_bgxx_cmrx_tx_stat3_s      cn73xx;
 	struct cvmx_bgxx_cmrx_tx_stat3_s      cn78xx;
-	struct cvmx_bgxx_cmrx_tx_stat3_s      cn78xxp2;
+	struct cvmx_bgxx_cmrx_tx_stat3_s      cn78xxp1;
 	struct cvmx_bgxx_cmrx_tx_stat3_s      cnf75xx;
 };
 typedef union cvmx_bgxx_cmrx_tx_stat3 cvmx_bgxx_cmrx_tx_stat3_t;
@@ -3554,7 +3554,7 @@ union cvmx_bgxx_cmrx_tx_stat4 {
 	} s;
 	struct cvmx_bgxx_cmrx_tx_stat4_s      cn73xx;
 	struct cvmx_bgxx_cmrx_tx_stat4_s      cn78xx;
-	struct cvmx_bgxx_cmrx_tx_stat4_s      cn78xxp2;
+	struct cvmx_bgxx_cmrx_tx_stat4_s      cn78xxp1;
 	struct cvmx_bgxx_cmrx_tx_stat4_s      cnf75xx;
 };
 typedef union cvmx_bgxx_cmrx_tx_stat4 cvmx_bgxx_cmrx_tx_stat4_t;
@@ -3579,7 +3579,7 @@ union cvmx_bgxx_cmrx_tx_stat5 {
 	} s;
 	struct cvmx_bgxx_cmrx_tx_stat5_s      cn73xx;
 	struct cvmx_bgxx_cmrx_tx_stat5_s      cn78xx;
-	struct cvmx_bgxx_cmrx_tx_stat5_s      cn78xxp2;
+	struct cvmx_bgxx_cmrx_tx_stat5_s      cn78xxp1;
 	struct cvmx_bgxx_cmrx_tx_stat5_s      cnf75xx;
 };
 typedef union cvmx_bgxx_cmrx_tx_stat5 cvmx_bgxx_cmrx_tx_stat5_t;
@@ -3605,7 +3605,7 @@ union cvmx_bgxx_cmrx_tx_stat6 {
 	} s;
 	struct cvmx_bgxx_cmrx_tx_stat6_s      cn73xx;
 	struct cvmx_bgxx_cmrx_tx_stat6_s      cn78xx;
-	struct cvmx_bgxx_cmrx_tx_stat6_s      cn78xxp2;
+	struct cvmx_bgxx_cmrx_tx_stat6_s      cn78xxp1;
 	struct cvmx_bgxx_cmrx_tx_stat6_s      cnf75xx;
 };
 typedef union cvmx_bgxx_cmrx_tx_stat6 cvmx_bgxx_cmrx_tx_stat6_t;
@@ -3631,7 +3631,7 @@ union cvmx_bgxx_cmrx_tx_stat7 {
 	} s;
 	struct cvmx_bgxx_cmrx_tx_stat7_s      cn73xx;
 	struct cvmx_bgxx_cmrx_tx_stat7_s      cn78xx;
-	struct cvmx_bgxx_cmrx_tx_stat7_s      cn78xxp2;
+	struct cvmx_bgxx_cmrx_tx_stat7_s      cn78xxp1;
 	struct cvmx_bgxx_cmrx_tx_stat7_s      cnf75xx;
 };
 typedef union cvmx_bgxx_cmrx_tx_stat7 cvmx_bgxx_cmrx_tx_stat7_t;
@@ -3656,7 +3656,7 @@ union cvmx_bgxx_cmrx_tx_stat8 {
 	} s;
 	struct cvmx_bgxx_cmrx_tx_stat8_s      cn73xx;
 	struct cvmx_bgxx_cmrx_tx_stat8_s      cn78xx;
-	struct cvmx_bgxx_cmrx_tx_stat8_s      cn78xxp2;
+	struct cvmx_bgxx_cmrx_tx_stat8_s      cn78xxp1;
 	struct cvmx_bgxx_cmrx_tx_stat8_s      cnf75xx;
 };
 typedef union cvmx_bgxx_cmrx_tx_stat8 cvmx_bgxx_cmrx_tx_stat8_t;
@@ -3681,7 +3681,7 @@ union cvmx_bgxx_cmrx_tx_stat9 {
 	} s;
 	struct cvmx_bgxx_cmrx_tx_stat9_s      cn73xx;
 	struct cvmx_bgxx_cmrx_tx_stat9_s      cn78xx;
-	struct cvmx_bgxx_cmrx_tx_stat9_s      cn78xxp2;
+	struct cvmx_bgxx_cmrx_tx_stat9_s      cn78xxp1;
 	struct cvmx_bgxx_cmrx_tx_stat9_s      cnf75xx;
 };
 typedef union cvmx_bgxx_cmrx_tx_stat9 cvmx_bgxx_cmrx_tx_stat9_t;
@@ -3702,7 +3702,7 @@ union cvmx_bgxx_cmr_bad {
 	} s;
 	struct cvmx_bgxx_cmr_bad_s            cn73xx;
 	struct cvmx_bgxx_cmr_bad_s            cn78xx;
-	struct cvmx_bgxx_cmr_bad_s            cn78xxp2;
+	struct cvmx_bgxx_cmr_bad_s            cn78xxp1;
 	struct cvmx_bgxx_cmr_bad_s            cnf75xx;
 };
 typedef union cvmx_bgxx_cmr_bad cvmx_bgxx_cmr_bad_t;
@@ -3724,7 +3724,7 @@ union cvmx_bgxx_cmr_bist_status {
 	} s;
 	struct cvmx_bgxx_cmr_bist_status_s    cn73xx;
 	struct cvmx_bgxx_cmr_bist_status_s    cn78xx;
-	struct cvmx_bgxx_cmr_bist_status_s    cn78xxp2;
+	struct cvmx_bgxx_cmr_bist_status_s    cn78xxp1;
 	struct cvmx_bgxx_cmr_bist_status_s    cnf75xx;
 };
 typedef union cvmx_bgxx_cmr_bist_status cvmx_bgxx_cmr_bist_status_t;
@@ -3752,7 +3752,7 @@ union cvmx_bgxx_cmr_chan_msk_and {
 	} s;
 	struct cvmx_bgxx_cmr_chan_msk_and_s   cn73xx;
 	struct cvmx_bgxx_cmr_chan_msk_and_s   cn78xx;
-	struct cvmx_bgxx_cmr_chan_msk_and_s   cn78xxp2;
+	struct cvmx_bgxx_cmr_chan_msk_and_s   cn78xxp1;
 	struct cvmx_bgxx_cmr_chan_msk_and_s   cnf75xx;
 };
 typedef union cvmx_bgxx_cmr_chan_msk_and cvmx_bgxx_cmr_chan_msk_and_t;
@@ -3779,7 +3779,7 @@ union cvmx_bgxx_cmr_chan_msk_or {
 	} s;
 	struct cvmx_bgxx_cmr_chan_msk_or_s    cn73xx;
 	struct cvmx_bgxx_cmr_chan_msk_or_s    cn78xx;
-	struct cvmx_bgxx_cmr_chan_msk_or_s    cn78xxp2;
+	struct cvmx_bgxx_cmr_chan_msk_or_s    cn78xxp1;
 	struct cvmx_bgxx_cmr_chan_msk_or_s    cnf75xx;
 };
 typedef union cvmx_bgxx_cmr_chan_msk_or cvmx_bgxx_cmr_chan_msk_or_t;
@@ -3799,7 +3799,7 @@ union cvmx_bgxx_cmr_eco {
 #endif
 	} s;
 	struct cvmx_bgxx_cmr_eco_s            cn73xx;
-	struct cvmx_bgxx_cmr_eco_s            cn78xxp2;
+	struct cvmx_bgxx_cmr_eco_s            cn78xx;
 	struct cvmx_bgxx_cmr_eco_s            cnf75xx;
 };
 typedef union cvmx_bgxx_cmr_eco cvmx_bgxx_cmr_eco_t;
@@ -3847,7 +3847,7 @@ union cvmx_bgxx_cmr_global_config {
 	} s;
 	struct cvmx_bgxx_cmr_global_config_s  cn73xx;
 	struct cvmx_bgxx_cmr_global_config_s  cn78xx;
-	struct cvmx_bgxx_cmr_global_config_s  cn78xxp2;
+	struct cvmx_bgxx_cmr_global_config_s  cn78xxp1;
 	struct cvmx_bgxx_cmr_global_config_s  cnf75xx;
 };
 typedef union cvmx_bgxx_cmr_global_config cvmx_bgxx_cmr_global_config_t;
@@ -3898,7 +3898,7 @@ union cvmx_bgxx_cmr_mem_ctrl {
 	} s;
 	struct cvmx_bgxx_cmr_mem_ctrl_s       cn73xx;
 	struct cvmx_bgxx_cmr_mem_ctrl_s       cn78xx;
-	struct cvmx_bgxx_cmr_mem_ctrl_s       cn78xxp2;
+	struct cvmx_bgxx_cmr_mem_ctrl_s       cn78xxp1;
 	struct cvmx_bgxx_cmr_mem_ctrl_s       cnf75xx;
 };
 typedef union cvmx_bgxx_cmr_mem_ctrl cvmx_bgxx_cmr_mem_ctrl_t;
@@ -3953,7 +3953,7 @@ union cvmx_bgxx_cmr_mem_int {
 	} s;
 	struct cvmx_bgxx_cmr_mem_int_s        cn73xx;
 	struct cvmx_bgxx_cmr_mem_int_s        cn78xx;
-	struct cvmx_bgxx_cmr_mem_int_s        cn78xxp2;
+	struct cvmx_bgxx_cmr_mem_int_s        cn78xxp1;
 	struct cvmx_bgxx_cmr_mem_int_s        cnf75xx;
 };
 typedef union cvmx_bgxx_cmr_mem_int cvmx_bgxx_cmr_mem_int_t;
@@ -3976,7 +3976,7 @@ union cvmx_bgxx_cmr_nxc_adr {
 	} s;
 	struct cvmx_bgxx_cmr_nxc_adr_s        cn73xx;
 	struct cvmx_bgxx_cmr_nxc_adr_s        cn78xx;
-	struct cvmx_bgxx_cmr_nxc_adr_s        cn78xxp2;
+	struct cvmx_bgxx_cmr_nxc_adr_s        cn78xxp1;
 	struct cvmx_bgxx_cmr_nxc_adr_s        cnf75xx;
 };
 typedef union cvmx_bgxx_cmr_nxc_adr cvmx_bgxx_cmr_nxc_adr_t;
@@ -4019,7 +4019,7 @@ union cvmx_bgxx_cmr_rx_adrx_cam {
 	} s;
 	struct cvmx_bgxx_cmr_rx_adrx_cam_s    cn73xx;
 	struct cvmx_bgxx_cmr_rx_adrx_cam_s    cn78xx;
-	struct cvmx_bgxx_cmr_rx_adrx_cam_s    cn78xxp2;
+	struct cvmx_bgxx_cmr_rx_adrx_cam_s    cn78xxp1;
 	struct cvmx_bgxx_cmr_rx_adrx_cam_s    cnf75xx;
 };
 typedef union cvmx_bgxx_cmr_rx_adrx_cam cvmx_bgxx_cmr_rx_adrx_cam_t;
@@ -4051,7 +4051,7 @@ union cvmx_bgxx_cmr_rx_lmacs {
 	} s;
 	struct cvmx_bgxx_cmr_rx_lmacs_s       cn73xx;
 	struct cvmx_bgxx_cmr_rx_lmacs_s       cn78xx;
-	struct cvmx_bgxx_cmr_rx_lmacs_s       cn78xxp2;
+	struct cvmx_bgxx_cmr_rx_lmacs_s       cn78xxp1;
 	struct cvmx_bgxx_cmr_rx_lmacs_s       cnf75xx;
 };
 typedef union cvmx_bgxx_cmr_rx_lmacs cvmx_bgxx_cmr_rx_lmacs_t;
@@ -4091,7 +4091,7 @@ union cvmx_bgxx_cmr_rx_ovr_bp {
 	} s;
 	struct cvmx_bgxx_cmr_rx_ovr_bp_s      cn73xx;
 	struct cvmx_bgxx_cmr_rx_ovr_bp_s      cn78xx;
-	struct cvmx_bgxx_cmr_rx_ovr_bp_s      cn78xxp2;
+	struct cvmx_bgxx_cmr_rx_ovr_bp_s      cn78xxp1;
 	struct cvmx_bgxx_cmr_rx_ovr_bp_s      cnf75xx;
 };
 typedef union cvmx_bgxx_cmr_rx_ovr_bp cvmx_bgxx_cmr_rx_ovr_bp_t;
@@ -4126,7 +4126,7 @@ union cvmx_bgxx_cmr_tx_lmacs {
 	} s;
 	struct cvmx_bgxx_cmr_tx_lmacs_s       cn73xx;
 	struct cvmx_bgxx_cmr_tx_lmacs_s       cn78xx;
-	struct cvmx_bgxx_cmr_tx_lmacs_s       cn78xxp2;
+	struct cvmx_bgxx_cmr_tx_lmacs_s       cn78xxp1;
 	struct cvmx_bgxx_cmr_tx_lmacs_s       cnf75xx;
 };
 typedef union cvmx_bgxx_cmr_tx_lmacs cvmx_bgxx_cmr_tx_lmacs_t;
@@ -4176,7 +4176,7 @@ union cvmx_bgxx_gmp_gmi_prtx_cfg {
 	} s;
 	struct cvmx_bgxx_gmp_gmi_prtx_cfg_s   cn73xx;
 	struct cvmx_bgxx_gmp_gmi_prtx_cfg_s   cn78xx;
-	struct cvmx_bgxx_gmp_gmi_prtx_cfg_s   cn78xxp2;
+	struct cvmx_bgxx_gmp_gmi_prtx_cfg_s   cn78xxp1;
 	struct cvmx_bgxx_gmp_gmi_prtx_cfg_s   cnf75xx;
 };
 typedef union cvmx_bgxx_gmp_gmi_prtx_cfg cvmx_bgxx_gmp_gmi_prtx_cfg_t;
@@ -4203,7 +4203,7 @@ union cvmx_bgxx_gmp_gmi_rxx_decision {
 	} s;
 	struct cvmx_bgxx_gmp_gmi_rxx_decision_s cn73xx;
 	struct cvmx_bgxx_gmp_gmi_rxx_decision_s cn78xx;
-	struct cvmx_bgxx_gmp_gmi_rxx_decision_s cn78xxp2;
+	struct cvmx_bgxx_gmp_gmi_rxx_decision_s cn78xxp1;
 	struct cvmx_bgxx_gmp_gmi_rxx_decision_s cnf75xx;
 };
 typedef union cvmx_bgxx_gmp_gmi_rxx_decision cvmx_bgxx_gmp_gmi_rxx_decision_t;
@@ -4238,7 +4238,7 @@ union cvmx_bgxx_gmp_gmi_rxx_frm_chk {
 	} s;
 	struct cvmx_bgxx_gmp_gmi_rxx_frm_chk_s cn73xx;
 	struct cvmx_bgxx_gmp_gmi_rxx_frm_chk_s cn78xx;
-	struct cvmx_bgxx_gmp_gmi_rxx_frm_chk_s cn78xxp2;
+	struct cvmx_bgxx_gmp_gmi_rxx_frm_chk_s cn78xxp1;
 	struct cvmx_bgxx_gmp_gmi_rxx_frm_chk_s cnf75xx;
 };
 typedef union cvmx_bgxx_gmp_gmi_rxx_frm_chk cvmx_bgxx_gmp_gmi_rxx_frm_chk_t;
@@ -4328,7 +4328,7 @@ union cvmx_bgxx_gmp_gmi_rxx_frm_ctl {
 	} s;
 	struct cvmx_bgxx_gmp_gmi_rxx_frm_ctl_s cn73xx;
 	struct cvmx_bgxx_gmp_gmi_rxx_frm_ctl_s cn78xx;
-	struct cvmx_bgxx_gmp_gmi_rxx_frm_ctl_s cn78xxp2;
+	struct cvmx_bgxx_gmp_gmi_rxx_frm_ctl_s cn78xxp1;
 	struct cvmx_bgxx_gmp_gmi_rxx_frm_ctl_s cnf75xx;
 };
 typedef union cvmx_bgxx_gmp_gmi_rxx_frm_ctl cvmx_bgxx_gmp_gmi_rxx_frm_ctl_t;
@@ -4357,7 +4357,7 @@ union cvmx_bgxx_gmp_gmi_rxx_ifg {
 	} s;
 	struct cvmx_bgxx_gmp_gmi_rxx_ifg_s    cn73xx;
 	struct cvmx_bgxx_gmp_gmi_rxx_ifg_s    cn78xx;
-	struct cvmx_bgxx_gmp_gmi_rxx_ifg_s    cn78xxp2;
+	struct cvmx_bgxx_gmp_gmi_rxx_ifg_s    cn78xxp1;
 	struct cvmx_bgxx_gmp_gmi_rxx_ifg_s    cnf75xx;
 };
 typedef union cvmx_bgxx_gmp_gmi_rxx_ifg cvmx_bgxx_gmp_gmi_rxx_ifg_t;
@@ -4385,7 +4385,7 @@ union cvmx_bgxx_gmp_gmi_rxx_int {
                                                          conditions are visible by 1) transfer ended before slottime - COLDET or 2) carrier extend
                                                          error - CAREXT. */
 	uint64_t falerr                       : 1;  /**< False-carrier error, or carrier-extend error after slottime is satisfied. SGMII/1000Base-X only. */
-	uint64_t rsverr                       : 1;  /**< Reserved opcode. */
+	uint64_t rsverr                       : 1;  /**< Detected reserved opcode. */
 	uint64_t pcterr                       : 1;  /**< Bad preamble/protocol error. Checks that the frame begins with a valid PREAMBLE sequence.
                                                          Does not check the number of PREAMBLE cycles. */
 	uint64_t ovrerr                       : 1;  /**< Internal data aggregation overflow. This interrupt should never assert. SGMII/1000Base-X only. */
@@ -4418,7 +4418,7 @@ union cvmx_bgxx_gmp_gmi_rxx_int {
 	} s;
 	struct cvmx_bgxx_gmp_gmi_rxx_int_s    cn73xx;
 	struct cvmx_bgxx_gmp_gmi_rxx_int_s    cn78xx;
-	struct cvmx_bgxx_gmp_gmi_rxx_int_s    cn78xxp2;
+	struct cvmx_bgxx_gmp_gmi_rxx_int_s    cn78xxp1;
 	struct cvmx_bgxx_gmp_gmi_rxx_int_s    cnf75xx;
 };
 typedef union cvmx_bgxx_gmp_gmi_rxx_int cvmx_bgxx_gmp_gmi_rxx_int_t;
@@ -4444,7 +4444,7 @@ union cvmx_bgxx_gmp_gmi_rxx_jabber {
 	} s;
 	struct cvmx_bgxx_gmp_gmi_rxx_jabber_s cn73xx;
 	struct cvmx_bgxx_gmp_gmi_rxx_jabber_s cn78xx;
-	struct cvmx_bgxx_gmp_gmi_rxx_jabber_s cn78xxp2;
+	struct cvmx_bgxx_gmp_gmi_rxx_jabber_s cn78xxp1;
 	struct cvmx_bgxx_gmp_gmi_rxx_jabber_s cnf75xx;
 };
 typedef union cvmx_bgxx_gmp_gmi_rxx_jabber cvmx_bgxx_gmp_gmi_rxx_jabber_t;
@@ -4481,7 +4481,7 @@ union cvmx_bgxx_gmp_gmi_rxx_udd_skp {
 	} s;
 	struct cvmx_bgxx_gmp_gmi_rxx_udd_skp_s cn73xx;
 	struct cvmx_bgxx_gmp_gmi_rxx_udd_skp_s cn78xx;
-	struct cvmx_bgxx_gmp_gmi_rxx_udd_skp_s cn78xxp2;
+	struct cvmx_bgxx_gmp_gmi_rxx_udd_skp_s cn78xxp1;
 	struct cvmx_bgxx_gmp_gmi_rxx_udd_skp_s cnf75xx;
 };
 typedef union cvmx_bgxx_gmp_gmi_rxx_udd_skp cvmx_bgxx_gmp_gmi_rxx_udd_skp_t;
@@ -4502,7 +4502,7 @@ union cvmx_bgxx_gmp_gmi_smacx {
 	} s;
 	struct cvmx_bgxx_gmp_gmi_smacx_s      cn73xx;
 	struct cvmx_bgxx_gmp_gmi_smacx_s      cn78xx;
-	struct cvmx_bgxx_gmp_gmi_smacx_s      cn78xxp2;
+	struct cvmx_bgxx_gmp_gmi_smacx_s      cn78xxp1;
 	struct cvmx_bgxx_gmp_gmi_smacx_s      cnf75xx;
 };
 typedef union cvmx_bgxx_gmp_gmi_smacx cvmx_bgxx_gmp_gmi_smacx_t;
@@ -4529,7 +4529,7 @@ union cvmx_bgxx_gmp_gmi_txx_append {
 	} s;
 	struct cvmx_bgxx_gmp_gmi_txx_append_s cn73xx;
 	struct cvmx_bgxx_gmp_gmi_txx_append_s cn78xx;
-	struct cvmx_bgxx_gmp_gmi_txx_append_s cn78xxp2;
+	struct cvmx_bgxx_gmp_gmi_txx_append_s cn78xxp1;
 	struct cvmx_bgxx_gmp_gmi_txx_append_s cnf75xx;
 };
 typedef union cvmx_bgxx_gmp_gmi_txx_append cvmx_bgxx_gmp_gmi_txx_append_t;
@@ -4554,7 +4554,7 @@ union cvmx_bgxx_gmp_gmi_txx_burst {
 	} s;
 	struct cvmx_bgxx_gmp_gmi_txx_burst_s  cn73xx;
 	struct cvmx_bgxx_gmp_gmi_txx_burst_s  cn78xx;
-	struct cvmx_bgxx_gmp_gmi_txx_burst_s  cn78xxp2;
+	struct cvmx_bgxx_gmp_gmi_txx_burst_s  cn78xxp1;
 	struct cvmx_bgxx_gmp_gmi_txx_burst_s  cnf75xx;
 };
 typedef union cvmx_bgxx_gmp_gmi_txx_burst cvmx_bgxx_gmp_gmi_txx_burst_t;
@@ -4579,7 +4579,7 @@ union cvmx_bgxx_gmp_gmi_txx_ctl {
 	} s;
 	struct cvmx_bgxx_gmp_gmi_txx_ctl_s    cn73xx;
 	struct cvmx_bgxx_gmp_gmi_txx_ctl_s    cn78xx;
-	struct cvmx_bgxx_gmp_gmi_txx_ctl_s    cn78xxp2;
+	struct cvmx_bgxx_gmp_gmi_txx_ctl_s    cn78xxp1;
 	struct cvmx_bgxx_gmp_gmi_txx_ctl_s    cnf75xx;
 };
 typedef union cvmx_bgxx_gmp_gmi_txx_ctl cvmx_bgxx_gmp_gmi_txx_ctl_t;
@@ -4608,7 +4608,7 @@ union cvmx_bgxx_gmp_gmi_txx_int {
 	} s;
 	struct cvmx_bgxx_gmp_gmi_txx_int_s    cn73xx;
 	struct cvmx_bgxx_gmp_gmi_txx_int_s    cn78xx;
-	struct cvmx_bgxx_gmp_gmi_txx_int_s    cn78xxp2;
+	struct cvmx_bgxx_gmp_gmi_txx_int_s    cn78xxp1;
 	struct cvmx_bgxx_gmp_gmi_txx_int_s    cnf75xx;
 };
 typedef union cvmx_bgxx_gmp_gmi_txx_int cvmx_bgxx_gmp_gmi_txx_int_t;
@@ -4632,7 +4632,7 @@ union cvmx_bgxx_gmp_gmi_txx_min_pkt {
 	} s;
 	struct cvmx_bgxx_gmp_gmi_txx_min_pkt_s cn73xx;
 	struct cvmx_bgxx_gmp_gmi_txx_min_pkt_s cn78xx;
-	struct cvmx_bgxx_gmp_gmi_txx_min_pkt_s cn78xxp2;
+	struct cvmx_bgxx_gmp_gmi_txx_min_pkt_s cn78xxp1;
 	struct cvmx_bgxx_gmp_gmi_txx_min_pkt_s cnf75xx;
 };
 typedef union cvmx_bgxx_gmp_gmi_txx_min_pkt cvmx_bgxx_gmp_gmi_txx_min_pkt_t;
@@ -4659,7 +4659,7 @@ union cvmx_bgxx_gmp_gmi_txx_pause_pkt_interval {
 	} s;
 	struct cvmx_bgxx_gmp_gmi_txx_pause_pkt_interval_s cn73xx;
 	struct cvmx_bgxx_gmp_gmi_txx_pause_pkt_interval_s cn78xx;
-	struct cvmx_bgxx_gmp_gmi_txx_pause_pkt_interval_s cn78xxp2;
+	struct cvmx_bgxx_gmp_gmi_txx_pause_pkt_interval_s cn78xxp1;
 	struct cvmx_bgxx_gmp_gmi_txx_pause_pkt_interval_s cnf75xx;
 };
 typedef union cvmx_bgxx_gmp_gmi_txx_pause_pkt_interval cvmx_bgxx_gmp_gmi_txx_pause_pkt_interval_t;
@@ -4683,7 +4683,7 @@ union cvmx_bgxx_gmp_gmi_txx_pause_pkt_time {
 	} s;
 	struct cvmx_bgxx_gmp_gmi_txx_pause_pkt_time_s cn73xx;
 	struct cvmx_bgxx_gmp_gmi_txx_pause_pkt_time_s cn78xx;
-	struct cvmx_bgxx_gmp_gmi_txx_pause_pkt_time_s cn78xxp2;
+	struct cvmx_bgxx_gmp_gmi_txx_pause_pkt_time_s cn78xxp1;
 	struct cvmx_bgxx_gmp_gmi_txx_pause_pkt_time_s cnf75xx;
 };
 typedef union cvmx_bgxx_gmp_gmi_txx_pause_pkt_time cvmx_bgxx_gmp_gmi_txx_pause_pkt_time_t;
@@ -4704,7 +4704,7 @@ union cvmx_bgxx_gmp_gmi_txx_pause_togo {
 	} s;
 	struct cvmx_bgxx_gmp_gmi_txx_pause_togo_s cn73xx;
 	struct cvmx_bgxx_gmp_gmi_txx_pause_togo_s cn78xx;
-	struct cvmx_bgxx_gmp_gmi_txx_pause_togo_s cn78xxp2;
+	struct cvmx_bgxx_gmp_gmi_txx_pause_togo_s cn78xxp1;
 	struct cvmx_bgxx_gmp_gmi_txx_pause_togo_s cnf75xx;
 };
 typedef union cvmx_bgxx_gmp_gmi_txx_pause_togo cvmx_bgxx_gmp_gmi_txx_pause_togo_t;
@@ -4726,7 +4726,7 @@ union cvmx_bgxx_gmp_gmi_txx_pause_zero {
 	} s;
 	struct cvmx_bgxx_gmp_gmi_txx_pause_zero_s cn73xx;
 	struct cvmx_bgxx_gmp_gmi_txx_pause_zero_s cn78xx;
-	struct cvmx_bgxx_gmp_gmi_txx_pause_zero_s cn78xxp2;
+	struct cvmx_bgxx_gmp_gmi_txx_pause_zero_s cn78xxp1;
 	struct cvmx_bgxx_gmp_gmi_txx_pause_zero_s cnf75xx;
 };
 typedef union cvmx_bgxx_gmp_gmi_txx_pause_zero cvmx_bgxx_gmp_gmi_txx_pause_zero_t;
@@ -4757,7 +4757,7 @@ union cvmx_bgxx_gmp_gmi_txx_sgmii_ctl {
 	} s;
 	struct cvmx_bgxx_gmp_gmi_txx_sgmii_ctl_s cn73xx;
 	struct cvmx_bgxx_gmp_gmi_txx_sgmii_ctl_s cn78xx;
-	struct cvmx_bgxx_gmp_gmi_txx_sgmii_ctl_s cn78xxp2;
+	struct cvmx_bgxx_gmp_gmi_txx_sgmii_ctl_s cn78xxp1;
 	struct cvmx_bgxx_gmp_gmi_txx_sgmii_ctl_s cnf75xx;
 };
 typedef union cvmx_bgxx_gmp_gmi_txx_sgmii_ctl cvmx_bgxx_gmp_gmi_txx_sgmii_ctl_t;
@@ -4770,7 +4770,7 @@ union cvmx_bgxx_gmp_gmi_txx_slot {
 	struct cvmx_bgxx_gmp_gmi_txx_slot_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_10_63               : 54;
-	uint64_t slot                         : 10; /**< Slottime (refer to Std 802.3 to set correctly):
+	uint64_t slot                         : 10; /**< Slottime (refer to IEEE 802.3 to set correctly):
                                                          10/100 Mbs: Set SLOT to 0x40.
                                                          1000 Mbs: Set SLOT to 0x200.
                                                          SGMII/1000Base-X only. */
@@ -4781,7 +4781,7 @@ union cvmx_bgxx_gmp_gmi_txx_slot {
 	} s;
 	struct cvmx_bgxx_gmp_gmi_txx_slot_s   cn73xx;
 	struct cvmx_bgxx_gmp_gmi_txx_slot_s   cn78xx;
-	struct cvmx_bgxx_gmp_gmi_txx_slot_s   cn78xxp2;
+	struct cvmx_bgxx_gmp_gmi_txx_slot_s   cn78xxp1;
 	struct cvmx_bgxx_gmp_gmi_txx_slot_s   cnf75xx;
 };
 typedef union cvmx_bgxx_gmp_gmi_txx_slot cvmx_bgxx_gmp_gmi_txx_slot_t;
@@ -4802,7 +4802,7 @@ union cvmx_bgxx_gmp_gmi_txx_soft_pause {
 	} s;
 	struct cvmx_bgxx_gmp_gmi_txx_soft_pause_s cn73xx;
 	struct cvmx_bgxx_gmp_gmi_txx_soft_pause_s cn78xx;
-	struct cvmx_bgxx_gmp_gmi_txx_soft_pause_s cn78xxp2;
+	struct cvmx_bgxx_gmp_gmi_txx_soft_pause_s cn78xxp1;
 	struct cvmx_bgxx_gmp_gmi_txx_soft_pause_s cnf75xx;
 };
 typedef union cvmx_bgxx_gmp_gmi_txx_soft_pause cvmx_bgxx_gmp_gmi_txx_soft_pause_t;
@@ -4828,7 +4828,7 @@ union cvmx_bgxx_gmp_gmi_txx_thresh {
 	} s;
 	struct cvmx_bgxx_gmp_gmi_txx_thresh_s cn73xx;
 	struct cvmx_bgxx_gmp_gmi_txx_thresh_s cn78xx;
-	struct cvmx_bgxx_gmp_gmi_txx_thresh_s cn78xxp2;
+	struct cvmx_bgxx_gmp_gmi_txx_thresh_s cn78xxp1;
 	struct cvmx_bgxx_gmp_gmi_txx_thresh_s cnf75xx;
 };
 typedef union cvmx_bgxx_gmp_gmi_txx_thresh cvmx_bgxx_gmp_gmi_txx_thresh_t;
@@ -4849,7 +4849,7 @@ union cvmx_bgxx_gmp_gmi_tx_col_attempt {
 	} s;
 	struct cvmx_bgxx_gmp_gmi_tx_col_attempt_s cn73xx;
 	struct cvmx_bgxx_gmp_gmi_tx_col_attempt_s cn78xx;
-	struct cvmx_bgxx_gmp_gmi_tx_col_attempt_s cn78xxp2;
+	struct cvmx_bgxx_gmp_gmi_tx_col_attempt_s cn78xxp1;
 	struct cvmx_bgxx_gmp_gmi_tx_col_attempt_s cnf75xx;
 };
 typedef union cvmx_bgxx_gmp_gmi_tx_col_attempt cvmx_bgxx_gmp_gmi_tx_col_attempt_t;
@@ -4884,7 +4884,7 @@ union cvmx_bgxx_gmp_gmi_tx_ifg {
 	} s;
 	struct cvmx_bgxx_gmp_gmi_tx_ifg_s     cn73xx;
 	struct cvmx_bgxx_gmp_gmi_tx_ifg_s     cn78xx;
-	struct cvmx_bgxx_gmp_gmi_tx_ifg_s     cn78xxp2;
+	struct cvmx_bgxx_gmp_gmi_tx_ifg_s     cn78xxp1;
 	struct cvmx_bgxx_gmp_gmi_tx_ifg_s     cnf75xx;
 };
 typedef union cvmx_bgxx_gmp_gmi_tx_ifg cvmx_bgxx_gmp_gmi_tx_ifg_t;
@@ -4908,7 +4908,7 @@ union cvmx_bgxx_gmp_gmi_tx_jam {
 	} s;
 	struct cvmx_bgxx_gmp_gmi_tx_jam_s     cn73xx;
 	struct cvmx_bgxx_gmp_gmi_tx_jam_s     cn78xx;
-	struct cvmx_bgxx_gmp_gmi_tx_jam_s     cn78xxp2;
+	struct cvmx_bgxx_gmp_gmi_tx_jam_s     cn78xxp1;
 	struct cvmx_bgxx_gmp_gmi_tx_jam_s     cnf75xx;
 };
 typedef union cvmx_bgxx_gmp_gmi_tx_jam cvmx_bgxx_gmp_gmi_tx_jam_t;
@@ -4933,7 +4933,7 @@ union cvmx_bgxx_gmp_gmi_tx_lfsr {
 	} s;
 	struct cvmx_bgxx_gmp_gmi_tx_lfsr_s    cn73xx;
 	struct cvmx_bgxx_gmp_gmi_tx_lfsr_s    cn78xx;
-	struct cvmx_bgxx_gmp_gmi_tx_lfsr_s    cn78xxp2;
+	struct cvmx_bgxx_gmp_gmi_tx_lfsr_s    cn78xxp1;
 	struct cvmx_bgxx_gmp_gmi_tx_lfsr_s    cnf75xx;
 };
 typedef union cvmx_bgxx_gmp_gmi_tx_lfsr cvmx_bgxx_gmp_gmi_tx_lfsr_t;
@@ -4954,7 +4954,7 @@ union cvmx_bgxx_gmp_gmi_tx_pause_pkt_dmac {
 	} s;
 	struct cvmx_bgxx_gmp_gmi_tx_pause_pkt_dmac_s cn73xx;
 	struct cvmx_bgxx_gmp_gmi_tx_pause_pkt_dmac_s cn78xx;
-	struct cvmx_bgxx_gmp_gmi_tx_pause_pkt_dmac_s cn78xxp2;
+	struct cvmx_bgxx_gmp_gmi_tx_pause_pkt_dmac_s cn78xxp1;
 	struct cvmx_bgxx_gmp_gmi_tx_pause_pkt_dmac_s cnf75xx;
 };
 typedef union cvmx_bgxx_gmp_gmi_tx_pause_pkt_dmac cvmx_bgxx_gmp_gmi_tx_pause_pkt_dmac_t;
@@ -4978,7 +4978,7 @@ union cvmx_bgxx_gmp_gmi_tx_pause_pkt_type {
 	} s;
 	struct cvmx_bgxx_gmp_gmi_tx_pause_pkt_type_s cn73xx;
 	struct cvmx_bgxx_gmp_gmi_tx_pause_pkt_type_s cn78xx;
-	struct cvmx_bgxx_gmp_gmi_tx_pause_pkt_type_s cn78xxp2;
+	struct cvmx_bgxx_gmp_gmi_tx_pause_pkt_type_s cn78xxp1;
 	struct cvmx_bgxx_gmp_gmi_tx_pause_pkt_type_s cnf75xx;
 };
 typedef union cvmx_bgxx_gmp_gmi_tx_pause_pkt_type cvmx_bgxx_gmp_gmi_tx_pause_pkt_type_t;
@@ -5022,7 +5022,7 @@ union cvmx_bgxx_gmp_pcs_anx_adv {
 	} s;
 	struct cvmx_bgxx_gmp_pcs_anx_adv_s    cn73xx;
 	struct cvmx_bgxx_gmp_pcs_anx_adv_s    cn78xx;
-	struct cvmx_bgxx_gmp_pcs_anx_adv_s    cn78xxp2;
+	struct cvmx_bgxx_gmp_pcs_anx_adv_s    cn78xxp1;
 	struct cvmx_bgxx_gmp_pcs_anx_adv_s    cnf75xx;
 };
 typedef union cvmx_bgxx_gmp_pcs_anx_adv cvmx_bgxx_gmp_pcs_anx_adv_t;
@@ -5051,7 +5051,7 @@ union cvmx_bgxx_gmp_pcs_anx_ext_st {
 	} s;
 	struct cvmx_bgxx_gmp_pcs_anx_ext_st_s cn73xx;
 	struct cvmx_bgxx_gmp_pcs_anx_ext_st_s cn78xx;
-	struct cvmx_bgxx_gmp_pcs_anx_ext_st_s cn78xxp2;
+	struct cvmx_bgxx_gmp_pcs_anx_ext_st_s cn78xxp1;
 	struct cvmx_bgxx_gmp_pcs_anx_ext_st_s cnf75xx;
 };
 typedef union cvmx_bgxx_gmp_pcs_anx_ext_st cvmx_bgxx_gmp_pcs_anx_ext_st_t;
@@ -5099,7 +5099,7 @@ union cvmx_bgxx_gmp_pcs_anx_lp_abil {
 	} s;
 	struct cvmx_bgxx_gmp_pcs_anx_lp_abil_s cn73xx;
 	struct cvmx_bgxx_gmp_pcs_anx_lp_abil_s cn78xx;
-	struct cvmx_bgxx_gmp_pcs_anx_lp_abil_s cn78xxp2;
+	struct cvmx_bgxx_gmp_pcs_anx_lp_abil_s cn78xxp1;
 	struct cvmx_bgxx_gmp_pcs_anx_lp_abil_s cnf75xx;
 };
 typedef union cvmx_bgxx_gmp_pcs_anx_lp_abil cvmx_bgxx_gmp_pcs_anx_lp_abil_t;
@@ -5142,7 +5142,7 @@ union cvmx_bgxx_gmp_pcs_anx_results {
 	} s;
 	struct cvmx_bgxx_gmp_pcs_anx_results_s cn73xx;
 	struct cvmx_bgxx_gmp_pcs_anx_results_s cn78xx;
-	struct cvmx_bgxx_gmp_pcs_anx_results_s cn78xxp2;
+	struct cvmx_bgxx_gmp_pcs_anx_results_s cn78xxp1;
 	struct cvmx_bgxx_gmp_pcs_anx_results_s cnf75xx;
 };
 typedef union cvmx_bgxx_gmp_pcs_anx_results cvmx_bgxx_gmp_pcs_anx_results_t;
@@ -5198,7 +5198,7 @@ union cvmx_bgxx_gmp_pcs_intx {
 	} s;
 	struct cvmx_bgxx_gmp_pcs_intx_s       cn73xx;
 	struct cvmx_bgxx_gmp_pcs_intx_s       cn78xx;
-	struct cvmx_bgxx_gmp_pcs_intx_s       cn78xxp2;
+	struct cvmx_bgxx_gmp_pcs_intx_s       cn78xxp1;
 	struct cvmx_bgxx_gmp_pcs_intx_s       cnf75xx;
 };
 typedef union cvmx_bgxx_gmp_pcs_intx cvmx_bgxx_gmp_pcs_intx_t;
@@ -5224,7 +5224,7 @@ union cvmx_bgxx_gmp_pcs_linkx_timer {
 	} s;
 	struct cvmx_bgxx_gmp_pcs_linkx_timer_s cn73xx;
 	struct cvmx_bgxx_gmp_pcs_linkx_timer_s cn78xx;
-	struct cvmx_bgxx_gmp_pcs_linkx_timer_s cn78xxp2;
+	struct cvmx_bgxx_gmp_pcs_linkx_timer_s cn78xxp1;
 	struct cvmx_bgxx_gmp_pcs_linkx_timer_s cnf75xx;
 };
 typedef union cvmx_bgxx_gmp_pcs_linkx_timer cvmx_bgxx_gmp_pcs_linkx_timer_t;
@@ -5237,14 +5237,11 @@ union cvmx_bgxx_gmp_pcs_miscx_ctl {
 	struct cvmx_bgxx_gmp_pcs_miscx_ctl_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_13_63               : 51;
-	uint64_t sgmii                        : 1;  /**< SGMII mode.
-                                                         0 = other mode selected.
-                                                         1 = SGMII or 1000BASE-X mode selected.
-                                                         See GSER()_LANE_MODE[LMODE]. */
+	uint64_t sgmii                        : 1;  /**< Reserved. Always 0. */
 	uint64_t gmxeno                       : 1;  /**< GMI enable override. When set, forces GMI to appear disabled. The enable/disable status of
                                                          GMI is checked only at SOP of every packet. */
 	uint64_t loopbck2                     : 1;  /**< Sets external loopback mode to return RX data back out via the TX data path. 0 = No
-                                                         loopback, 1 = Loopback.
+                                                         loopback. 1 = Loopback.
                                                          LOOPBCK1 and LOOPBCK2 modes may not be supported simultaneously. */
 	uint64_t mac_phy                      : 1;  /**< MAC/PHY.
                                                          0 = MAC.
@@ -5282,7 +5279,7 @@ union cvmx_bgxx_gmp_pcs_miscx_ctl {
 	} s;
 	struct cvmx_bgxx_gmp_pcs_miscx_ctl_s  cn73xx;
 	struct cvmx_bgxx_gmp_pcs_miscx_ctl_s  cn78xx;
-	struct cvmx_bgxx_gmp_pcs_miscx_ctl_s  cn78xxp2;
+	struct cvmx_bgxx_gmp_pcs_miscx_ctl_s  cn78xxp1;
 	struct cvmx_bgxx_gmp_pcs_miscx_ctl_s  cnf75xx;
 };
 typedef union cvmx_bgxx_gmp_pcs_miscx_ctl cvmx_bgxx_gmp_pcs_miscx_ctl_t;
@@ -5334,7 +5331,7 @@ union cvmx_bgxx_gmp_pcs_mrx_control {
                                                           1          0         1000 Mb/s
                                                           1          1         reserved
                                                          </pre> */
-	uint64_t uni                          : 1;  /**< Unidirectional (Std 802.3-2005, Clause 66.2). When set to 1, this bit overrides [AN_EN]
+	uint64_t uni                          : 1;  /**< Unidirectional (IEEE 802.3-2005, Clause 66.2). When set to 1, this bit overrides [AN_EN]
                                                          and
                                                          disables the autonegotiation variable mr_an_enable. Used in both 1000BASE-X and SGMII
                                                          modes. */
@@ -5357,7 +5354,7 @@ union cvmx_bgxx_gmp_pcs_mrx_control {
 	} s;
 	struct cvmx_bgxx_gmp_pcs_mrx_control_s cn73xx;
 	struct cvmx_bgxx_gmp_pcs_mrx_control_s cn78xx;
-	struct cvmx_bgxx_gmp_pcs_mrx_control_s cn78xxp2;
+	struct cvmx_bgxx_gmp_pcs_mrx_control_s cn78xxp1;
 	struct cvmx_bgxx_gmp_pcs_mrx_control_s cnf75xx;
 };
 typedef union cvmx_bgxx_gmp_pcs_mrx_control cvmx_bgxx_gmp_pcs_mrx_control_t;
@@ -5424,7 +5421,7 @@ union cvmx_bgxx_gmp_pcs_mrx_status {
 	} s;
 	struct cvmx_bgxx_gmp_pcs_mrx_status_s cn73xx;
 	struct cvmx_bgxx_gmp_pcs_mrx_status_s cn78xx;
-	struct cvmx_bgxx_gmp_pcs_mrx_status_s cn78xxp2;
+	struct cvmx_bgxx_gmp_pcs_mrx_status_s cn78xxp1;
 	struct cvmx_bgxx_gmp_pcs_mrx_status_s cnf75xx;
 };
 typedef union cvmx_bgxx_gmp_pcs_mrx_status cvmx_bgxx_gmp_pcs_mrx_status_t;
@@ -5455,7 +5452,7 @@ union cvmx_bgxx_gmp_pcs_rxx_states {
 	} s;
 	struct cvmx_bgxx_gmp_pcs_rxx_states_s cn73xx;
 	struct cvmx_bgxx_gmp_pcs_rxx_states_s cn78xx;
-	struct cvmx_bgxx_gmp_pcs_rxx_states_s cn78xxp2;
+	struct cvmx_bgxx_gmp_pcs_rxx_states_s cn78xxp1;
 	struct cvmx_bgxx_gmp_pcs_rxx_states_s cnf75xx;
 };
 typedef union cvmx_bgxx_gmp_pcs_rxx_states cvmx_bgxx_gmp_pcs_rxx_states_t;
@@ -5478,7 +5475,7 @@ union cvmx_bgxx_gmp_pcs_rxx_sync {
 	} s;
 	struct cvmx_bgxx_gmp_pcs_rxx_sync_s   cn73xx;
 	struct cvmx_bgxx_gmp_pcs_rxx_sync_s   cn78xx;
-	struct cvmx_bgxx_gmp_pcs_rxx_sync_s   cn78xxp2;
+	struct cvmx_bgxx_gmp_pcs_rxx_sync_s   cn78xxp1;
 	struct cvmx_bgxx_gmp_pcs_rxx_sync_s   cnf75xx;
 };
 typedef union cvmx_bgxx_gmp_pcs_rxx_sync cvmx_bgxx_gmp_pcs_rxx_sync_t;
@@ -5521,7 +5518,7 @@ union cvmx_bgxx_gmp_pcs_sgmx_an_adv {
 	} s;
 	struct cvmx_bgxx_gmp_pcs_sgmx_an_adv_s cn73xx;
 	struct cvmx_bgxx_gmp_pcs_sgmx_an_adv_s cn78xx;
-	struct cvmx_bgxx_gmp_pcs_sgmx_an_adv_s cn78xxp2;
+	struct cvmx_bgxx_gmp_pcs_sgmx_an_adv_s cn78xxp1;
 	struct cvmx_bgxx_gmp_pcs_sgmx_an_adv_s cnf75xx;
 };
 typedef union cvmx_bgxx_gmp_pcs_sgmx_an_adv cvmx_bgxx_gmp_pcs_sgmx_an_adv_t;
@@ -5559,7 +5556,7 @@ union cvmx_bgxx_gmp_pcs_sgmx_lp_adv {
 	} s;
 	struct cvmx_bgxx_gmp_pcs_sgmx_lp_adv_s cn73xx;
 	struct cvmx_bgxx_gmp_pcs_sgmx_lp_adv_s cn78xx;
-	struct cvmx_bgxx_gmp_pcs_sgmx_lp_adv_s cn78xxp2;
+	struct cvmx_bgxx_gmp_pcs_sgmx_lp_adv_s cn78xxp1;
 	struct cvmx_bgxx_gmp_pcs_sgmx_lp_adv_s cnf75xx;
 };
 typedef union cvmx_bgxx_gmp_pcs_sgmx_lp_adv cvmx_bgxx_gmp_pcs_sgmx_lp_adv_t;
@@ -5587,7 +5584,7 @@ union cvmx_bgxx_gmp_pcs_txx_states {
 	} s;
 	struct cvmx_bgxx_gmp_pcs_txx_states_s cn73xx;
 	struct cvmx_bgxx_gmp_pcs_txx_states_s cn78xx;
-	struct cvmx_bgxx_gmp_pcs_txx_states_s cn78xxp2;
+	struct cvmx_bgxx_gmp_pcs_txx_states_s cn78xxp1;
 	struct cvmx_bgxx_gmp_pcs_txx_states_s cnf75xx;
 };
 typedef union cvmx_bgxx_gmp_pcs_txx_states cvmx_bgxx_gmp_pcs_txx_states_t;
@@ -5623,7 +5620,7 @@ union cvmx_bgxx_gmp_pcs_tx_rxx_polarity {
 	} s;
 	struct cvmx_bgxx_gmp_pcs_tx_rxx_polarity_s cn73xx;
 	struct cvmx_bgxx_gmp_pcs_tx_rxx_polarity_s cn78xx;
-	struct cvmx_bgxx_gmp_pcs_tx_rxx_polarity_s cn78xxp2;
+	struct cvmx_bgxx_gmp_pcs_tx_rxx_polarity_s cn78xxp1;
 	struct cvmx_bgxx_gmp_pcs_tx_rxx_polarity_s cnf75xx;
 };
 typedef union cvmx_bgxx_gmp_pcs_tx_rxx_polarity cvmx_bgxx_gmp_pcs_tx_rxx_polarity_t;
@@ -5660,7 +5657,7 @@ union cvmx_bgxx_smux_cbfc_ctl {
 	} s;
 	struct cvmx_bgxx_smux_cbfc_ctl_s      cn73xx;
 	struct cvmx_bgxx_smux_cbfc_ctl_s      cn78xx;
-	struct cvmx_bgxx_smux_cbfc_ctl_s      cn78xxp2;
+	struct cvmx_bgxx_smux_cbfc_ctl_s      cn78xxp1;
 	struct cvmx_bgxx_smux_cbfc_ctl_s      cnf75xx;
 };
 typedef union cvmx_bgxx_smux_cbfc_ctl cvmx_bgxx_smux_cbfc_ctl_t;
@@ -5685,7 +5682,7 @@ union cvmx_bgxx_smux_ctrl {
 	} s;
 	struct cvmx_bgxx_smux_ctrl_s          cn73xx;
 	struct cvmx_bgxx_smux_ctrl_s          cn78xx;
-	struct cvmx_bgxx_smux_ctrl_s          cn78xxp2;
+	struct cvmx_bgxx_smux_ctrl_s          cn78xxp1;
 	struct cvmx_bgxx_smux_ctrl_s          cnf75xx;
 };
 typedef union cvmx_bgxx_smux_ctrl cvmx_bgxx_smux_ctrl_t;
@@ -5713,7 +5710,7 @@ union cvmx_bgxx_smux_ext_loopback {
 	} s;
 	struct cvmx_bgxx_smux_ext_loopback_s  cn73xx;
 	struct cvmx_bgxx_smux_ext_loopback_s  cn78xx;
-	struct cvmx_bgxx_smux_ext_loopback_s  cn78xxp2;
+	struct cvmx_bgxx_smux_ext_loopback_s  cn78xxp1;
 	struct cvmx_bgxx_smux_ext_loopback_s  cnf75xx;
 };
 typedef union cvmx_bgxx_smux_ext_loopback cvmx_bgxx_smux_ext_loopback_t;
@@ -5766,7 +5763,7 @@ union cvmx_bgxx_smux_hg2_control {
 	} s;
 	struct cvmx_bgxx_smux_hg2_control_s   cn73xx;
 	struct cvmx_bgxx_smux_hg2_control_s   cn78xx;
-	struct cvmx_bgxx_smux_hg2_control_s   cn78xxp2;
+	struct cvmx_bgxx_smux_hg2_control_s   cn78xxp1;
 	struct cvmx_bgxx_smux_hg2_control_s   cnf75xx;
 };
 typedef union cvmx_bgxx_smux_hg2_control cvmx_bgxx_smux_hg2_control_t;
@@ -5792,7 +5789,7 @@ union cvmx_bgxx_smux_rx_bad_col_hi {
 	} s;
 	struct cvmx_bgxx_smux_rx_bad_col_hi_s cn73xx;
 	struct cvmx_bgxx_smux_rx_bad_col_hi_s cn78xx;
-	struct cvmx_bgxx_smux_rx_bad_col_hi_s cn78xxp2;
+	struct cvmx_bgxx_smux_rx_bad_col_hi_s cn78xxp1;
 	struct cvmx_bgxx_smux_rx_bad_col_hi_s cnf75xx;
 };
 typedef union cvmx_bgxx_smux_rx_bad_col_hi cvmx_bgxx_smux_rx_bad_col_hi_t;
@@ -5812,7 +5809,7 @@ union cvmx_bgxx_smux_rx_bad_col_lo {
 	} s;
 	struct cvmx_bgxx_smux_rx_bad_col_lo_s cn73xx;
 	struct cvmx_bgxx_smux_rx_bad_col_lo_s cn78xx;
-	struct cvmx_bgxx_smux_rx_bad_col_lo_s cn78xxp2;
+	struct cvmx_bgxx_smux_rx_bad_col_lo_s cn78xxp1;
 	struct cvmx_bgxx_smux_rx_bad_col_lo_s cnf75xx;
 };
 typedef union cvmx_bgxx_smux_rx_bad_col_lo cvmx_bgxx_smux_rx_bad_col_lo_t;
@@ -5837,7 +5834,7 @@ union cvmx_bgxx_smux_rx_ctl {
 	} s;
 	struct cvmx_bgxx_smux_rx_ctl_s        cn73xx;
 	struct cvmx_bgxx_smux_rx_ctl_s        cn78xx;
-	struct cvmx_bgxx_smux_rx_ctl_s        cn78xxp2;
+	struct cvmx_bgxx_smux_rx_ctl_s        cn78xxp1;
 	struct cvmx_bgxx_smux_rx_ctl_s        cnf75xx;
 };
 typedef union cvmx_bgxx_smux_rx_ctl cvmx_bgxx_smux_rx_ctl_t;
@@ -5864,7 +5861,7 @@ union cvmx_bgxx_smux_rx_decision {
 	} s;
 	struct cvmx_bgxx_smux_rx_decision_s   cn73xx;
 	struct cvmx_bgxx_smux_rx_decision_s   cn78xx;
-	struct cvmx_bgxx_smux_rx_decision_s   cn78xxp2;
+	struct cvmx_bgxx_smux_rx_decision_s   cn78xxp1;
 	struct cvmx_bgxx_smux_rx_decision_s   cnf75xx;
 };
 typedef union cvmx_bgxx_smux_rx_decision cvmx_bgxx_smux_rx_decision_t;
@@ -5900,7 +5897,7 @@ union cvmx_bgxx_smux_rx_frm_chk {
 	} s;
 	struct cvmx_bgxx_smux_rx_frm_chk_s    cn73xx;
 	struct cvmx_bgxx_smux_rx_frm_chk_s    cn78xx;
-	struct cvmx_bgxx_smux_rx_frm_chk_s    cn78xxp2;
+	struct cvmx_bgxx_smux_rx_frm_chk_s    cn78xxp1;
 	struct cvmx_bgxx_smux_rx_frm_chk_s    cnf75xx;
 };
 typedef union cvmx_bgxx_smux_rx_frm_chk cvmx_bgxx_smux_rx_frm_chk_t;
@@ -5977,7 +5974,7 @@ union cvmx_bgxx_smux_rx_frm_ctl {
 	} s;
 	struct cvmx_bgxx_smux_rx_frm_ctl_s    cn73xx;
 	struct cvmx_bgxx_smux_rx_frm_ctl_s    cn78xx;
-	struct cvmx_bgxx_smux_rx_frm_ctl_s    cn78xxp2;
+	struct cvmx_bgxx_smux_rx_frm_ctl_s    cn78xxp1;
 	struct cvmx_bgxx_smux_rx_frm_ctl_s    cnf75xx;
 };
 typedef union cvmx_bgxx_smux_rx_frm_ctl cvmx_bgxx_smux_rx_frm_ctl_t;
@@ -6004,13 +6001,13 @@ union cvmx_bgxx_smux_rx_int {
                                                          type for HiGig2.
                                                          FC_OBJECT field is neither 0x0 for physical link, nor 0x2 for logical link. Those are the
                                                          only two defined types in HiGig2 */
-	uint64_t bad_term                     : 1;  /**< Frame is terminated by control character other than /T/. (XAUI/RXAUI mode only) The error
+	uint64_t bad_term                     : 1;  /**< Frame is terminated by control character other than /T/. The error
                                                          propagation control character /E/ will be included as part of the frame and does not cause
                                                          a frame termination. */
-	uint64_t bad_seq                      : 1;  /**< Reserved sequence detected. (XAUI/RXAUI mode only) */
-	uint64_t rem_fault                    : 1;  /**< Remote-fault sequence detected. (XAUI/RXAUI mode only) */
-	uint64_t loc_fault                    : 1;  /**< Local-fault sequence detected. (XAUI/RXAUI mode only) */
-	uint64_t rsverr                       : 1;  /**< Reserved opcodes. */
+	uint64_t bad_seq                      : 1;  /**< Detected reserved sequence. */
+	uint64_t rem_fault                    : 1;  /**< Remote-fault sequence detected. */
+	uint64_t loc_fault                    : 1;  /**< Local-fault sequence detected. */
+	uint64_t rsverr                       : 1;  /**< Detected reserved opcode. */
 	uint64_t pcterr                       : 1;  /**< Bad preamble/protocol. In XAUI/RXAUI mode, the column of data that was bad is logged in
                                                          BGX()_SMU()_RX_BAD_COL_LO and BGX()_SMU()_RX_BAD_COL_HI.
                                                          PCTERR checks that the frame begins with a valid
@@ -6041,7 +6038,7 @@ union cvmx_bgxx_smux_rx_int {
 	} s;
 	struct cvmx_bgxx_smux_rx_int_s        cn73xx;
 	struct cvmx_bgxx_smux_rx_int_s        cn78xx;
-	struct cvmx_bgxx_smux_rx_int_s        cn78xxp2;
+	struct cvmx_bgxx_smux_rx_int_s        cn78xxp1;
 	struct cvmx_bgxx_smux_rx_int_s        cnf75xx;
 };
 typedef union cvmx_bgxx_smux_rx_int cvmx_bgxx_smux_rx_int_t;
@@ -6067,7 +6064,7 @@ union cvmx_bgxx_smux_rx_jabber {
 	} s;
 	struct cvmx_bgxx_smux_rx_jabber_s     cn73xx;
 	struct cvmx_bgxx_smux_rx_jabber_s     cn78xx;
-	struct cvmx_bgxx_smux_rx_jabber_s     cn78xxp2;
+	struct cvmx_bgxx_smux_rx_jabber_s     cn78xxp1;
 	struct cvmx_bgxx_smux_rx_jabber_s     cnf75xx;
 };
 typedef union cvmx_bgxx_smux_rx_jabber cvmx_bgxx_smux_rx_jabber_t;
@@ -6106,7 +6103,7 @@ union cvmx_bgxx_smux_rx_udd_skp {
 	} s;
 	struct cvmx_bgxx_smux_rx_udd_skp_s    cn73xx;
 	struct cvmx_bgxx_smux_rx_udd_skp_s    cn78xx;
-	struct cvmx_bgxx_smux_rx_udd_skp_s    cn78xxp2;
+	struct cvmx_bgxx_smux_rx_udd_skp_s    cn78xxp1;
 	struct cvmx_bgxx_smux_rx_udd_skp_s    cnf75xx;
 };
 typedef union cvmx_bgxx_smux_rx_udd_skp cvmx_bgxx_smux_rx_udd_skp_t;
@@ -6127,7 +6124,7 @@ union cvmx_bgxx_smux_smac {
 	} s;
 	struct cvmx_bgxx_smux_smac_s          cn73xx;
 	struct cvmx_bgxx_smux_smac_s          cn78xx;
-	struct cvmx_bgxx_smux_smac_s          cn78xxp2;
+	struct cvmx_bgxx_smux_smac_s          cn78xxp1;
 	struct cvmx_bgxx_smux_smac_s          cnf75xx;
 };
 typedef union cvmx_bgxx_smux_smac cvmx_bgxx_smux_smac_t;
@@ -6159,7 +6156,7 @@ union cvmx_bgxx_smux_tx_append {
 	} s;
 	struct cvmx_bgxx_smux_tx_append_s     cn73xx;
 	struct cvmx_bgxx_smux_tx_append_s     cn78xx;
-	struct cvmx_bgxx_smux_tx_append_s     cn78xxp2;
+	struct cvmx_bgxx_smux_tx_append_s     cn78xxp1;
 	struct cvmx_bgxx_smux_tx_append_s     cnf75xx;
 };
 typedef union cvmx_bgxx_smux_tx_append cvmx_bgxx_smux_tx_append_t;
@@ -6227,7 +6224,7 @@ union cvmx_bgxx_smux_tx_ctl {
 	} s;
 	struct cvmx_bgxx_smux_tx_ctl_s        cn73xx;
 	struct cvmx_bgxx_smux_tx_ctl_s        cn78xx;
-	struct cvmx_bgxx_smux_tx_ctl_s        cn78xxp2;
+	struct cvmx_bgxx_smux_tx_ctl_s        cn78xxp1;
 	struct cvmx_bgxx_smux_tx_ctl_s        cnf75xx;
 };
 typedef union cvmx_bgxx_smux_tx_ctl cvmx_bgxx_smux_tx_ctl_t;
@@ -6256,7 +6253,7 @@ union cvmx_bgxx_smux_tx_ifg {
 	} s;
 	struct cvmx_bgxx_smux_tx_ifg_s        cn73xx;
 	struct cvmx_bgxx_smux_tx_ifg_s        cn78xx;
-	struct cvmx_bgxx_smux_tx_ifg_s        cn78xxp2;
+	struct cvmx_bgxx_smux_tx_ifg_s        cn78xxp1;
 	struct cvmx_bgxx_smux_tx_ifg_s        cnf75xx;
 };
 typedef union cvmx_bgxx_smux_tx_ifg cvmx_bgxx_smux_tx_ifg_t;
@@ -6286,7 +6283,7 @@ union cvmx_bgxx_smux_tx_int {
 	} s;
 	struct cvmx_bgxx_smux_tx_int_s        cn73xx;
 	struct cvmx_bgxx_smux_tx_int_s        cn78xx;
-	struct cvmx_bgxx_smux_tx_int_s        cn78xxp2;
+	struct cvmx_bgxx_smux_tx_int_s        cn78xxp1;
 	struct cvmx_bgxx_smux_tx_int_s        cnf75xx;
 };
 typedef union cvmx_bgxx_smux_tx_int cvmx_bgxx_smux_tx_int_t;
@@ -6301,7 +6298,7 @@ union cvmx_bgxx_smux_tx_min_pkt {
 	uint64_t reserved_8_63                : 56;
 	uint64_t min_size                     : 8;  /**< Min frame in bytes inclusive of FCS, if applied. Padding is only appended when
                                                          BGX()_SMU()_TX_APPEND[PAD] for the corresponding port is set. When FCS is added to
-                                                         a packet which was padded, the FCS always appears in the 4 octets preceding /T/ or /E/. */
+                                                         a packet which was padded, the FCS always appears in the four octets preceding /T/ or /E/. */
 #else
 	uint64_t min_size                     : 8;
 	uint64_t reserved_8_63                : 56;
@@ -6309,7 +6306,7 @@ union cvmx_bgxx_smux_tx_min_pkt {
 	} s;
 	struct cvmx_bgxx_smux_tx_min_pkt_s    cn73xx;
 	struct cvmx_bgxx_smux_tx_min_pkt_s    cn78xx;
-	struct cvmx_bgxx_smux_tx_min_pkt_s    cn78xxp2;
+	struct cvmx_bgxx_smux_tx_min_pkt_s    cn78xxp1;
 	struct cvmx_bgxx_smux_tx_min_pkt_s    cnf75xx;
 };
 typedef union cvmx_bgxx_smux_tx_min_pkt cvmx_bgxx_smux_tx_min_pkt_t;
@@ -6333,7 +6330,7 @@ union cvmx_bgxx_smux_tx_pause_pkt_dmac {
 	} s;
 	struct cvmx_bgxx_smux_tx_pause_pkt_dmac_s cn73xx;
 	struct cvmx_bgxx_smux_tx_pause_pkt_dmac_s cn78xx;
-	struct cvmx_bgxx_smux_tx_pause_pkt_dmac_s cn78xxp2;
+	struct cvmx_bgxx_smux_tx_pause_pkt_dmac_s cn78xxp1;
 	struct cvmx_bgxx_smux_tx_pause_pkt_dmac_s cnf75xx;
 };
 typedef union cvmx_bgxx_smux_tx_pause_pkt_dmac cvmx_bgxx_smux_tx_pause_pkt_dmac_t;
@@ -6367,7 +6364,7 @@ union cvmx_bgxx_smux_tx_pause_pkt_interval {
 	} s;
 	struct cvmx_bgxx_smux_tx_pause_pkt_interval_s cn73xx;
 	struct cvmx_bgxx_smux_tx_pause_pkt_interval_s cn78xx;
-	struct cvmx_bgxx_smux_tx_pause_pkt_interval_s cn78xxp2;
+	struct cvmx_bgxx_smux_tx_pause_pkt_interval_s cn78xxp1;
 	struct cvmx_bgxx_smux_tx_pause_pkt_interval_s cnf75xx;
 };
 typedef union cvmx_bgxx_smux_tx_pause_pkt_interval cvmx_bgxx_smux_tx_pause_pkt_interval_t;
@@ -6391,7 +6388,7 @@ union cvmx_bgxx_smux_tx_pause_pkt_time {
 	} s;
 	struct cvmx_bgxx_smux_tx_pause_pkt_time_s cn73xx;
 	struct cvmx_bgxx_smux_tx_pause_pkt_time_s cn78xx;
-	struct cvmx_bgxx_smux_tx_pause_pkt_time_s cn78xxp2;
+	struct cvmx_bgxx_smux_tx_pause_pkt_time_s cn78xxp1;
 	struct cvmx_bgxx_smux_tx_pause_pkt_time_s cnf75xx;
 };
 typedef union cvmx_bgxx_smux_tx_pause_pkt_time cvmx_bgxx_smux_tx_pause_pkt_time_t;
@@ -6415,7 +6412,7 @@ union cvmx_bgxx_smux_tx_pause_pkt_type {
 	} s;
 	struct cvmx_bgxx_smux_tx_pause_pkt_type_s cn73xx;
 	struct cvmx_bgxx_smux_tx_pause_pkt_type_s cn78xx;
-	struct cvmx_bgxx_smux_tx_pause_pkt_type_s cn78xxp2;
+	struct cvmx_bgxx_smux_tx_pause_pkt_type_s cn78xxp1;
 	struct cvmx_bgxx_smux_tx_pause_pkt_type_s cnf75xx;
 };
 typedef union cvmx_bgxx_smux_tx_pause_pkt_type cvmx_bgxx_smux_tx_pause_pkt_type_t;
@@ -6439,7 +6436,7 @@ union cvmx_bgxx_smux_tx_pause_togo {
 	} s;
 	struct cvmx_bgxx_smux_tx_pause_togo_s cn73xx;
 	struct cvmx_bgxx_smux_tx_pause_togo_s cn78xx;
-	struct cvmx_bgxx_smux_tx_pause_togo_s cn78xxp2;
+	struct cvmx_bgxx_smux_tx_pause_togo_s cn78xxp1;
 	struct cvmx_bgxx_smux_tx_pause_togo_s cnf75xx;
 };
 typedef union cvmx_bgxx_smux_tx_pause_togo cvmx_bgxx_smux_tx_pause_togo_t;
@@ -6461,7 +6458,7 @@ union cvmx_bgxx_smux_tx_pause_zero {
 	} s;
 	struct cvmx_bgxx_smux_tx_pause_zero_s cn73xx;
 	struct cvmx_bgxx_smux_tx_pause_zero_s cn78xx;
-	struct cvmx_bgxx_smux_tx_pause_zero_s cn78xxp2;
+	struct cvmx_bgxx_smux_tx_pause_zero_s cn78xxp1;
 	struct cvmx_bgxx_smux_tx_pause_zero_s cnf75xx;
 };
 typedef union cvmx_bgxx_smux_tx_pause_zero cvmx_bgxx_smux_tx_pause_zero_t;
@@ -6482,7 +6479,7 @@ union cvmx_bgxx_smux_tx_soft_pause {
 	} s;
 	struct cvmx_bgxx_smux_tx_soft_pause_s cn73xx;
 	struct cvmx_bgxx_smux_tx_soft_pause_s cn78xx;
-	struct cvmx_bgxx_smux_tx_soft_pause_s cn78xxp2;
+	struct cvmx_bgxx_smux_tx_soft_pause_s cn78xxp1;
 	struct cvmx_bgxx_smux_tx_soft_pause_s cnf75xx;
 };
 typedef union cvmx_bgxx_smux_tx_soft_pause cvmx_bgxx_smux_tx_soft_pause_t;
@@ -6509,7 +6506,7 @@ union cvmx_bgxx_smux_tx_thresh {
 	} s;
 	struct cvmx_bgxx_smux_tx_thresh_s     cn73xx;
 	struct cvmx_bgxx_smux_tx_thresh_s     cn78xx;
-	struct cvmx_bgxx_smux_tx_thresh_s     cn78xxp2;
+	struct cvmx_bgxx_smux_tx_thresh_s     cn78xxp1;
 	struct cvmx_bgxx_smux_tx_thresh_s     cnf75xx;
 };
 typedef union cvmx_bgxx_smux_tx_thresh cvmx_bgxx_smux_tx_thresh_t;
@@ -6518,7 +6515,7 @@ typedef union cvmx_bgxx_smux_tx_thresh cvmx_bgxx_smux_tx_thresh_t;
  * cvmx_bgx#_spu#_an_adv
  *
  * Software programs this register with the contents of the AN-link code word base page to be
- * transmitted during autonegotiation. (See Std 802.3 section 73.6 for details.) Any write
+ * transmitted during autonegotiation. (See IEEE 802.3 section 73.6 for details.) Any write
  * operations to this register prior to completion of autonegotiation, as indicated by
  * BGX()_SPU()_AN_STATUS[AN_COMPLETE], should be followed by a renegotiation in order for
  * the new values to take effect. Renegotiation is initiated by setting
@@ -6550,7 +6547,7 @@ union cvmx_bgxx_spux_an_adv {
 	uint64_t pause                        : 1;  /**< PAUSE ability. */
 	uint64_t e                            : 5;  /**< Echoed nonce. Provides the echoed-nonce value to use when ACK = 0 in transmitted DME page.
                                                          Should always be 0x0. */
-	uint64_t s                            : 5;  /**< Selector. Should be 0x1 (encoding for IEEE Std 802.3). */
+	uint64_t s                            : 5;  /**< Selector. Should be 0x1 (encoding for IEEE 802.3). */
 #else
 	uint64_t s                            : 5;
 	uint64_t e                            : 5;
@@ -6575,7 +6572,7 @@ union cvmx_bgxx_spux_an_adv {
 	} s;
 	struct cvmx_bgxx_spux_an_adv_s        cn73xx;
 	struct cvmx_bgxx_spux_an_adv_s        cn78xx;
-	struct cvmx_bgxx_spux_an_adv_s        cn78xxp2;
+	struct cvmx_bgxx_spux_an_adv_s        cn78xxp1;
 	struct cvmx_bgxx_spux_an_adv_s        cnf75xx;
 };
 typedef union cvmx_bgxx_spux_an_adv cvmx_bgxx_spux_an_adv_t;
@@ -6620,7 +6617,7 @@ union cvmx_bgxx_spux_an_bp_status {
 	} s;
 	struct cvmx_bgxx_spux_an_bp_status_s  cn73xx;
 	struct cvmx_bgxx_spux_an_bp_status_s  cn78xx;
-	struct cvmx_bgxx_spux_an_bp_status_s  cn78xxp2;
+	struct cvmx_bgxx_spux_an_bp_status_s  cn78xxp1;
 	struct cvmx_bgxx_spux_an_bp_status_s  cnf75xx;
 };
 typedef union cvmx_bgxx_spux_an_bp_status cvmx_bgxx_spux_an_bp_status_t;
@@ -6636,7 +6633,7 @@ union cvmx_bgxx_spux_an_control {
 	uint64_t an_reset                     : 1;  /**< Autonegotiation reset. Setting this bit or BGX()_SPU()_CONTROL1[RESET] to 1
                                                          causes the following to happen:
                                                          * Resets the logical PCS (LPCS)
-                                                         * Sets the Std 802.3 PCS, FEC and AN registers for the LPCS to their default states
+                                                         * Sets the IEEE 802.3 PCS, FEC and AN registers for the LPCS to their default states
                                                          * Resets the associated SerDes lanes.
                                                          It takes up to 32 coprocessor-clock cycles to reset the LPCS, after which RESET is
                                                          automatically cleared. */
@@ -6662,7 +6659,7 @@ union cvmx_bgxx_spux_an_control {
 	} s;
 	struct cvmx_bgxx_spux_an_control_s    cn73xx;
 	struct cvmx_bgxx_spux_an_control_s    cn78xx;
-	struct cvmx_bgxx_spux_an_control_s    cn78xxp2;
+	struct cvmx_bgxx_spux_an_control_s    cn78xxp1;
 	struct cvmx_bgxx_spux_an_control_s    cnf75xx;
 };
 typedef union cvmx_bgxx_spux_an_control cvmx_bgxx_spux_an_control_t;
@@ -6671,7 +6668,7 @@ typedef union cvmx_bgxx_spux_an_control cvmx_bgxx_spux_an_control_t;
  * cvmx_bgx#_spu#_an_lp_base
  *
  * This register captures the contents of the latest AN link code word base page received from
- * the link partner during autonegotiation. (See Std 802.3 section 73.6 for details.)
+ * the link partner during autonegotiation. (See IEEE 802.3 section 73.6 for details.)
  * BGX()_SPU()_AN_STATUS[PAGE_RX] is set when this register is updated by hardware.
  */
 union cvmx_bgxx_spux_an_lp_base {
@@ -6721,7 +6718,7 @@ union cvmx_bgxx_spux_an_lp_base {
 	} s;
 	struct cvmx_bgxx_spux_an_lp_base_s    cn73xx;
 	struct cvmx_bgxx_spux_an_lp_base_s    cn78xx;
-	struct cvmx_bgxx_spux_an_lp_base_s    cn78xxp2;
+	struct cvmx_bgxx_spux_an_lp_base_s    cn78xxp1;
 	struct cvmx_bgxx_spux_an_lp_base_s    cnf75xx;
 };
 typedef union cvmx_bgxx_spux_an_lp_base cvmx_bgxx_spux_an_lp_base_t;
@@ -6757,7 +6754,7 @@ union cvmx_bgxx_spux_an_lp_xnp {
 	} s;
 	struct cvmx_bgxx_spux_an_lp_xnp_s     cn73xx;
 	struct cvmx_bgxx_spux_an_lp_xnp_s     cn78xx;
-	struct cvmx_bgxx_spux_an_lp_xnp_s     cn78xxp2;
+	struct cvmx_bgxx_spux_an_lp_xnp_s     cn78xxp1;
 	struct cvmx_bgxx_spux_an_lp_xnp_s     cnf75xx;
 };
 typedef union cvmx_bgxx_spux_an_lp_xnp cvmx_bgxx_spux_an_lp_xnp_t;
@@ -6814,7 +6811,7 @@ union cvmx_bgxx_spux_an_status {
 	} s;
 	struct cvmx_bgxx_spux_an_status_s     cn73xx;
 	struct cvmx_bgxx_spux_an_status_s     cn78xx;
-	struct cvmx_bgxx_spux_an_status_s     cn78xxp2;
+	struct cvmx_bgxx_spux_an_status_s     cn78xxp1;
 	struct cvmx_bgxx_spux_an_status_s     cnf75xx;
 };
 typedef union cvmx_bgxx_spux_an_status cvmx_bgxx_spux_an_status_t;
@@ -6861,7 +6858,7 @@ union cvmx_bgxx_spux_an_xnp_tx {
 	} s;
 	struct cvmx_bgxx_spux_an_xnp_tx_s     cn73xx;
 	struct cvmx_bgxx_spux_an_xnp_tx_s     cn78xx;
-	struct cvmx_bgxx_spux_an_xnp_tx_s     cn78xxp2;
+	struct cvmx_bgxx_spux_an_xnp_tx_s     cn78xxp1;
 	struct cvmx_bgxx_spux_an_xnp_tx_s     cnf75xx;
 };
 typedef union cvmx_bgxx_spux_an_xnp_tx cvmx_bgxx_spux_an_xnp_tx_t;
@@ -6869,10 +6866,10 @@ typedef union cvmx_bgxx_spux_an_xnp_tx cvmx_bgxx_spux_an_xnp_tx_t;
 /**
  * cvmx_bgx#_spu#_br_algn_status
  *
- * This register implements the Std 802.3 multilane BASE-R PCS alignment status 1-4 registers
+ * This register implements the IEEE 802.3 multilane BASE-R PCS alignment status 1-4 registers
  * (3.50-3.53). It is valid only when the LPCS type is 40GBASE-R
  * (BGX()_CMR()_CONFIG[LMAC_TYPE] = 0x4), and always returns 0x0 for all other LPCS
- * types. Std 802.3 bits that are not applicable to 40GBASE-R (e.g. status bits for PCS lanes
+ * types. IEEE 802.3 bits that are not applicable to 40GBASE-R (e.g. status bits for PCS lanes
  * 19-4) are not implemented and marked as reserved. PCS lanes 3-0 are valid and are mapped to
  * physical SerDes lanes based on the programming of BGX()_CMR()_CONFIG[LANE_TO_SDS].
  */
@@ -6903,7 +6900,7 @@ union cvmx_bgxx_spux_br_algn_status {
 	} s;
 	struct cvmx_bgxx_spux_br_algn_status_s cn73xx;
 	struct cvmx_bgxx_spux_br_algn_status_s cn78xx;
-	struct cvmx_bgxx_spux_br_algn_status_s cn78xxp2;
+	struct cvmx_bgxx_spux_br_algn_status_s cn78xxp1;
 	struct cvmx_bgxx_spux_br_algn_status_s cnf75xx;
 };
 typedef union cvmx_bgxx_spux_br_algn_status cvmx_bgxx_spux_br_algn_status_t;
@@ -6911,7 +6908,7 @@ typedef union cvmx_bgxx_spux_br_algn_status cvmx_bgxx_spux_br_algn_status_t;
 /**
  * cvmx_bgx#_spu#_br_bip_err_cnt
  *
- * This register implements the Std 802.3 BIP error-counter registers for PCS lanes 0-3
+ * This register implements the IEEE 802.3 BIP error-counter registers for PCS lanes 0-3
  * (3.200-3.203). It is valid only when the LPCS type is 40GBASE-R
  * (BGX()_CMR()_CONFIG[LMAC_TYPE] = 0x4), and always returns 0x0 for all other LPCS
  * types. The counters are indexed by the RX PCS lane number based on the Alignment Marker
@@ -6922,7 +6919,7 @@ typedef union cvmx_bgxx_spux_br_algn_status cvmx_bgxx_spux_br_algn_status_t;
  * The reset operation takes precedence over the increment operation; if the register is read on
  * the same clock cycle as an increment operation, the counter is reset to all 0s and the
  * increment operation is lost. The counters are writable for test purposes, rather than read-
- * only as specified in Std 802.3.
+ * only as specified in IEEE 802.3.
  */
 union cvmx_bgxx_spux_br_bip_err_cnt {
 	uint64_t u64;
@@ -6941,7 +6938,7 @@ union cvmx_bgxx_spux_br_bip_err_cnt {
 	} s;
 	struct cvmx_bgxx_spux_br_bip_err_cnt_s cn73xx;
 	struct cvmx_bgxx_spux_br_bip_err_cnt_s cn78xx;
-	struct cvmx_bgxx_spux_br_bip_err_cnt_s cn78xxp2;
+	struct cvmx_bgxx_spux_br_bip_err_cnt_s cn78xxp1;
 	struct cvmx_bgxx_spux_br_bip_err_cnt_s cnf75xx;
 };
 typedef union cvmx_bgxx_spux_br_bip_err_cnt cvmx_bgxx_spux_br_bip_err_cnt_t;
@@ -6949,7 +6946,7 @@ typedef union cvmx_bgxx_spux_br_bip_err_cnt cvmx_bgxx_spux_br_bip_err_cnt_t;
 /**
  * cvmx_bgx#_spu#_br_lane_map
  *
- * This register implements the Std 802.3 lane 0-3 mapping registers (3.400-3.403). It is valid
+ * This register implements the IEEE 802.3 lane 0-3 mapping registers (3.400-3.403). It is valid
  * only when the LPCS type is 40GBASE-R (BGX()_CMR()_CONFIG[LMAC_TYPE] = 0x4), and always
  * returns 0x0 for all other LPCS types. The LNx_MAPPING field for each programmed PCS lane
  * (called service interface in 802.3ba-2010) is valid when that lane has achieved alignment
@@ -6958,11 +6955,11 @@ typedef union cvmx_bgxx_spux_br_bip_err_cnt cvmx_bgxx_spux_br_bip_err_cnt_t;
  * returns the actual detected receive PCS lane number based on the received alignment marker
  * contents received on that service interface.
  *
- * The mapping is flexible because Std 802.3 allows multilane BASE-R receive lanes to be re-
+ * The mapping is flexible because IEEE 802.3 allows multilane BASE-R receive lanes to be re-
  * ordered. Note that for the transmit side, each PCS lane is mapped to a physical SerDes lane
  * based on the programming of BGX()_CMR()_CONFIG[LANE_TO_SDS]. For the receive side,
  * BGX()_CMR()_CONFIG[LANE_TO_SDS] specifies the service interface to physical SerDes
- * lane mapping, and this register specifies the PCS lane to service interface mapping.
+ * lane mapping, and this register specifies the service interface to PCS lane mapping.
  */
 union cvmx_bgxx_spux_br_lane_map {
 	uint64_t u64;
@@ -6989,7 +6986,7 @@ union cvmx_bgxx_spux_br_lane_map {
 	} s;
 	struct cvmx_bgxx_spux_br_lane_map_s   cn73xx;
 	struct cvmx_bgxx_spux_br_lane_map_s   cn78xx;
-	struct cvmx_bgxx_spux_br_lane_map_s   cn78xxp2;
+	struct cvmx_bgxx_spux_br_lane_map_s   cn78xxp1;
 	struct cvmx_bgxx_spux_br_lane_map_s   cnf75xx;
 };
 typedef union cvmx_bgxx_spux_br_lane_map cvmx_bgxx_spux_br_lane_map_t;
@@ -7015,7 +7012,7 @@ union cvmx_bgxx_spux_br_pmd_control {
 	} s;
 	struct cvmx_bgxx_spux_br_pmd_control_s cn73xx;
 	struct cvmx_bgxx_spux_br_pmd_control_s cn78xx;
-	struct cvmx_bgxx_spux_br_pmd_control_s cn78xxp2;
+	struct cvmx_bgxx_spux_br_pmd_control_s cn78xxp1;
 	struct cvmx_bgxx_spux_br_pmd_control_s cnf75xx;
 };
 typedef union cvmx_bgxx_spux_br_pmd_control cvmx_bgxx_spux_br_pmd_control_t;
@@ -7062,7 +7059,7 @@ union cvmx_bgxx_spux_br_pmd_ld_cup {
 	} s;
 	struct cvmx_bgxx_spux_br_pmd_ld_cup_s cn73xx;
 	struct cvmx_bgxx_spux_br_pmd_ld_cup_s cn78xx;
-	struct cvmx_bgxx_spux_br_pmd_ld_cup_s cn78xxp2;
+	struct cvmx_bgxx_spux_br_pmd_ld_cup_s cn78xxp1;
 	struct cvmx_bgxx_spux_br_pmd_ld_cup_s cnf75xx;
 };
 typedef union cvmx_bgxx_spux_br_pmd_ld_cup cvmx_bgxx_spux_br_pmd_ld_cup_t;
@@ -7106,7 +7103,7 @@ union cvmx_bgxx_spux_br_pmd_ld_rep {
 	} s;
 	struct cvmx_bgxx_spux_br_pmd_ld_rep_s cn73xx;
 	struct cvmx_bgxx_spux_br_pmd_ld_rep_s cn78xx;
-	struct cvmx_bgxx_spux_br_pmd_ld_rep_s cn78xxp2;
+	struct cvmx_bgxx_spux_br_pmd_ld_rep_s cn78xxp1;
 	struct cvmx_bgxx_spux_br_pmd_ld_rep_s cnf75xx;
 };
 typedef union cvmx_bgxx_spux_br_pmd_ld_rep cvmx_bgxx_spux_br_pmd_ld_rep_t;
@@ -7147,7 +7144,7 @@ union cvmx_bgxx_spux_br_pmd_lp_cup {
 	} s;
 	struct cvmx_bgxx_spux_br_pmd_lp_cup_s cn73xx;
 	struct cvmx_bgxx_spux_br_pmd_lp_cup_s cn78xx;
-	struct cvmx_bgxx_spux_br_pmd_lp_cup_s cn78xxp2;
+	struct cvmx_bgxx_spux_br_pmd_lp_cup_s cn78xxp1;
 	struct cvmx_bgxx_spux_br_pmd_lp_cup_s cnf75xx;
 };
 typedef union cvmx_bgxx_spux_br_pmd_lp_cup cvmx_bgxx_spux_br_pmd_lp_cup_t;
@@ -7187,7 +7184,7 @@ union cvmx_bgxx_spux_br_pmd_lp_rep {
 	} s;
 	struct cvmx_bgxx_spux_br_pmd_lp_rep_s cn73xx;
 	struct cvmx_bgxx_spux_br_pmd_lp_rep_s cn78xx;
-	struct cvmx_bgxx_spux_br_pmd_lp_rep_s cn78xxp2;
+	struct cvmx_bgxx_spux_br_pmd_lp_rep_s cn78xxp1;
 	struct cvmx_bgxx_spux_br_pmd_lp_rep_s cnf75xx;
 };
 typedef union cvmx_bgxx_spux_br_pmd_lp_rep cvmx_bgxx_spux_br_pmd_lp_rep_t;
@@ -7221,7 +7218,7 @@ union cvmx_bgxx_spux_br_pmd_status {
 	} s;
 	struct cvmx_bgxx_spux_br_pmd_status_s cn73xx;
 	struct cvmx_bgxx_spux_br_pmd_status_s cn78xx;
-	struct cvmx_bgxx_spux_br_pmd_status_s cn78xxp2;
+	struct cvmx_bgxx_spux_br_pmd_status_s cn78xxp1;
 	struct cvmx_bgxx_spux_br_pmd_status_s cnf75xx;
 };
 typedef union cvmx_bgxx_spux_br_pmd_status cvmx_bgxx_spux_br_pmd_status_t;
@@ -7237,7 +7234,7 @@ union cvmx_bgxx_spux_br_status1 {
 	uint64_t rcv_lnk                      : 1;  /**< BASE-R receive link status.
                                                          0 = BASE-R PCS receive-link down.
                                                          1 = BASE-R PCS receive-link up.
-                                                         This bit is a reflection of the PCS_status variable defined in Std 802.3 sections
+                                                         This bit is a reflection of the PCS_status variable defined in IEEE 802.3 sections
                                                          49.2.14.1 and 82.3.1. */
 	uint64_t reserved_4_11                : 8;
 	uint64_t prbs9                        : 1;  /**< 10GBASE-R PRBS9 pattern testing ability. Always 0; PRBS9 pattern testing is not supported. */
@@ -7246,12 +7243,12 @@ union cvmx_bgxx_spux_br_status1 {
                                                          0 = 64/66 bit receiver is detecting a bit-error rate of < 10.4.
                                                          1 = 64/66 bit receiver is detecting a bit-error rate of >= 10.4.
                                                          This bit is a direct reflection of the state of the HI_BER variable in the 64 B/66 B state
-                                                         diagram and is defined in Std 802.3 sections 49.2.13.2.2 and 82.2.18.2.2. */
+                                                         diagram and is defined in IEEE 802.3 sections 49.2.13.2.2 and 82.2.18.2.2. */
 	uint64_t blk_lock                     : 1;  /**< BASE-R PCS block lock.
                                                          0 = No block lock.
                                                          1 = 64/66 bit receiver for BASE-R has block lock.
                                                          This bit is a direct reflection of the state of the BLOCK_LOCK variable in the 64 B/66 B
-                                                         state diagram and is defined in Std 802.3 sections 49.2.13.2.2 and 82.2.18.2.2.
+                                                         state diagram and is defined in IEEE 802.3 sections 49.2.13.2.2 and 82.2.18.2.2.
                                                          For a multilane logical PCS (i.e. 40GBASE-R), this bit indicates that the receiver has
                                                          both block lock and alignment for all lanes and is identical to
                                                          BGX()_SPU()_BR_ALGN_STATUS[ALIGND]. */
@@ -7267,7 +7264,7 @@ union cvmx_bgxx_spux_br_status1 {
 	} s;
 	struct cvmx_bgxx_spux_br_status1_s    cn73xx;
 	struct cvmx_bgxx_spux_br_status1_s    cn78xx;
-	struct cvmx_bgxx_spux_br_status1_s    cn78xxp2;
+	struct cvmx_bgxx_spux_br_status1_s    cn78xxp1;
 	struct cvmx_bgxx_spux_br_status1_s    cnf75xx;
 };
 typedef union cvmx_bgxx_spux_br_status1 cvmx_bgxx_spux_br_status1_t;
@@ -7275,12 +7272,12 @@ typedef union cvmx_bgxx_spux_br_status1 cvmx_bgxx_spux_br_status1_t;
 /**
  * cvmx_bgx#_spu#_br_status2
  *
- * This register implements a combination of the following Std 802.3 registers:
+ * This register implements a combination of the following IEEE 802.3 registers:
  * * BASE-R PCS status 2 (MDIO address 3.33).
  * * BASE-R BER high-order counter (MDIO address 3.44).
  * * Errored-blocks high-order counter (MDIO address 3.45).
  *
- * Note that the relative locations of some fields have been moved from Std 802.3 in order to
+ * Note that the relative locations of some fields have been moved from IEEE 802.3 in order to
  * make the register layout more software friendly: the BER counter high-order and low-order bits
  * from sections 3.44 and 3.33 have been combined into the contiguous, 22-bit [BER_CNT] field;
  * likewise, the errored-blocks counter high-order and low-order bits from section 3.45 have been
@@ -7292,38 +7289,37 @@ union cvmx_bgxx_spux_br_status2 {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_62_63               : 2;
 	uint64_t err_blks                     : 22; /**< Errored-blocks counter. This is the BASE-R errored-blocks counter as defined by the
-                                                         errored_block_count variable specified in Std 802.3 sections 49.2.14.2 and 82.2.18.2.4. It
-                                                         increments by 1 on each block for which the BASE-R receive state machine, specified in Std
+                                                         errored_block_count variable specified in IEEE 802.3 sections 49.2.14.2 and 82.2.18.2.4.
+                                                         It
+                                                         increments by one on each block for which the BASE-R receive state machine, specified in Std
                                                          802.3 diagrams 49-15 and 82-15, enters the RX_E state.
                                                          Back-to-back blocks in the RX_E state are counted as transitions from RX_E to RX_E and
-                                                         keep incrementing the counter. The counter is reset to all 0s after this register is read
+                                                         keep incrementing the counter. The counter is reset to all zeros after this register is read
                                                          by software.
                                                          The reset operation takes precedence over the increment operation: if the register is read
-                                                         on the same clock cycle as an increment operation, the counter is reset to all 0s and the
+                                                         on the same clock cycle as an increment operation, the counter is reset to all zeros and the
                                                          increment operation is lost.
-                                                         This field is writable for test purposes, rather than read-only as specified in Std 802.3. */
+                                                         This field is writable for test purposes, rather than read-only as specified in IEEE
+                                                         802.3. */
 	uint64_t reserved_38_39               : 2;
 	uint64_t ber_cnt                      : 22; /**< Bit-error-rate counter. This is the BASE-R BER counter as defined by the BER_COUNT
-                                                         variable in Std 802.3 sections 49.2.14.2 and 82.2.18.2.4. The counter is reset to all 0s
-                                                         after this register is read by software, and is held at all 1s in case of overflow.
+                                                         variable in IEEE 802.3 sections 49.2.14.2 and 82.2.18.2.4. The counter is reset to all zeros
+                                                         after this register is read by software, and is held at all ones in case of overflow.
                                                          The reset operation takes precedence over the increment operation: if the register is read
-                                                         on the same clock cycle an increment operation, the counter is reset to all 0s and the
+                                                         on the same clock cycle an increment operation, the counter is reset to all zeros and the
                                                          increment operation is lost.
-                                                         This field is writable for test purposes, rather than read-only as specified in Std 802.3. */
+                                                         This field is writable for test purposes, rather than read-only as specified in IEEE
+                                                         802.3. */
 	uint64_t latched_lock                 : 1;  /**< Latched-block lock.
                                                          0 = No block.
                                                          1 = 64/66 bit receiver for BASE-R has block lock.
                                                          This is a latching-low version of BGX()_SPU()_BR_STATUS1[BLK_LOCK]; it stays clear
-                                                         until the register is read by software.
-                                                         Note that in order to avoid read side effects, this is implemented as a write-1-to-set
-                                                         bit, rather than latching low read-only as specified in 802.3. */
+                                                         until a write-1-to-set by software. */
 	uint64_t latched_ber                  : 1;  /**< Latched-high bit-error rate.
                                                          0 = Not a high BER.
                                                          1 = 64/66 bit receiver is detecting a high BER.
                                                          This is a latching-high version of BGX()_SPU()_BR_STATUS1[HI_BER]; it stays set until
-                                                         the register is read by software.
-                                                         Note that in order to avoid read side effects, this is implemented as a write-1-to-clear
-                                                         bit, rather than latching high read-only as specified in 802.3. */
+                                                         a write-1-to-clear by software. */
 	uint64_t reserved_0_13                : 14;
 #else
 	uint64_t reserved_0_13                : 14;
@@ -7337,7 +7333,7 @@ union cvmx_bgxx_spux_br_status2 {
 	} s;
 	struct cvmx_bgxx_spux_br_status2_s    cn73xx;
 	struct cvmx_bgxx_spux_br_status2_s    cn78xx;
-	struct cvmx_bgxx_spux_br_status2_s    cn78xxp2;
+	struct cvmx_bgxx_spux_br_status2_s    cn78xxp1;
 	struct cvmx_bgxx_spux_br_status2_s    cnf75xx;
 };
 typedef union cvmx_bgxx_spux_br_status2 cvmx_bgxx_spux_br_status2_t;
@@ -7380,7 +7376,7 @@ union cvmx_bgxx_spux_br_tp_control {
 	} s;
 	struct cvmx_bgxx_spux_br_tp_control_s cn73xx;
 	struct cvmx_bgxx_spux_br_tp_control_s cn78xx;
-	struct cvmx_bgxx_spux_br_tp_control_s cn78xxp2;
+	struct cvmx_bgxx_spux_br_tp_control_s cn78xxp1;
 	struct cvmx_bgxx_spux_br_tp_control_s cnf75xx;
 };
 typedef union cvmx_bgxx_spux_br_tp_control cvmx_bgxx_spux_br_tp_control_t;
@@ -7397,14 +7393,15 @@ union cvmx_bgxx_spux_br_tp_err_cnt {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_16_63               : 48;
 	uint64_t err_cnt                      : 16; /**< Error counter. This 16-bit counter contains the number of errors received during a pattern
-                                                         test. These bits are reset to all 0s when this register is read by software, and they are
-                                                         held at all 1s in the case of overflow.
-                                                         The test pattern methodology is described in Std 802.3, Sections 49.2.12 and 82.2.10. This
+                                                         test. These bits are reset to all zeros when this register is read by software, and they are
+                                                         held at all ones in the case of overflow.
+                                                         The test pattern methodology is described in IEEE 802.3, Sections 49.2.12 and 82.2.10.
+                                                         This
                                                          counter counts either block errors or bit errors dependent on the test mode (see Section
                                                          49.2.12). The reset operation takes precedence over the increment operation; if the
                                                          register is read on the same clock cycle as an increment operation, the counter is reset
-                                                         to all 0s and the increment operation is lost. This field is writable for test purposes,
-                                                         rather than read-only as specified in Std 802.3. */
+                                                         to all zeros and the increment operation is lost. This field is writable for test purposes,
+                                                         rather than read-only as specified in IEEE 802.3. */
 #else
 	uint64_t err_cnt                      : 16;
 	uint64_t reserved_16_63               : 48;
@@ -7412,7 +7409,7 @@ union cvmx_bgxx_spux_br_tp_err_cnt {
 	} s;
 	struct cvmx_bgxx_spux_br_tp_err_cnt_s cn73xx;
 	struct cvmx_bgxx_spux_br_tp_err_cnt_s cn78xx;
-	struct cvmx_bgxx_spux_br_tp_err_cnt_s cn78xxp2;
+	struct cvmx_bgxx_spux_br_tp_err_cnt_s cn78xxp1;
 	struct cvmx_bgxx_spux_br_tp_err_cnt_s cnf75xx;
 };
 typedef union cvmx_bgxx_spux_br_tp_err_cnt cvmx_bgxx_spux_br_tp_err_cnt_t;
@@ -7444,7 +7441,7 @@ union cvmx_bgxx_spux_bx_status {
 	} s;
 	struct cvmx_bgxx_spux_bx_status_s     cn73xx;
 	struct cvmx_bgxx_spux_bx_status_s     cn78xx;
-	struct cvmx_bgxx_spux_bx_status_s     cn78xxp2;
+	struct cvmx_bgxx_spux_bx_status_s     cn78xxp1;
 	struct cvmx_bgxx_spux_bx_status_s     cnf75xx;
 };
 typedef union cvmx_bgxx_spux_bx_status cvmx_bgxx_spux_bx_status_t;
@@ -7460,7 +7457,7 @@ union cvmx_bgxx_spux_control1 {
 	uint64_t reset                        : 1;  /**< Reset. Setting this bit or BGX()_SPU()_AN_CONTROL[AN_RESET] to 1 causes the
                                                          following to happen:
                                                          * Resets the logical PCS (LPCS)
-                                                         * Sets the Std 802.3 PCS, FEC and AN registers for the LPCS to their default states
+                                                         * Sets the IEEE 802.3 PCS, FEC and AN registers for the LPCS to their default states
                                                          * Resets the associated SerDes lanes.
                                                          It takes up to 32 coprocessor-clock cycles to reset the LPCS, after which RESET is
                                                          automatically cleared. */
@@ -7504,7 +7501,7 @@ union cvmx_bgxx_spux_control1 {
 	} s;
 	struct cvmx_bgxx_spux_control1_s      cn73xx;
 	struct cvmx_bgxx_spux_control1_s      cn78xx;
-	struct cvmx_bgxx_spux_control1_s      cn78xxp2;
+	struct cvmx_bgxx_spux_control1_s      cn78xxp1;
 	struct cvmx_bgxx_spux_control1_s      cnf75xx;
 };
 typedef union cvmx_bgxx_spux_control1 cvmx_bgxx_spux_control1_t;
@@ -7540,7 +7537,7 @@ union cvmx_bgxx_spux_control2 {
 	} s;
 	struct cvmx_bgxx_spux_control2_s      cn73xx;
 	struct cvmx_bgxx_spux_control2_s      cn78xx;
-	struct cvmx_bgxx_spux_control2_s      cn78xxp2;
+	struct cvmx_bgxx_spux_control2_s      cn78xxp1;
 	struct cvmx_bgxx_spux_control2_s      cnf75xx;
 };
 typedef union cvmx_bgxx_spux_control2 cvmx_bgxx_spux_control2_t;
@@ -7565,7 +7562,7 @@ union cvmx_bgxx_spux_fec_abil {
 	} s;
 	struct cvmx_bgxx_spux_fec_abil_s      cn73xx;
 	struct cvmx_bgxx_spux_fec_abil_s      cn78xx;
-	struct cvmx_bgxx_spux_fec_abil_s      cn78xxp2;
+	struct cvmx_bgxx_spux_fec_abil_s      cn78xxp1;
 	struct cvmx_bgxx_spux_fec_abil_s      cnf75xx;
 };
 typedef union cvmx_bgxx_spux_fec_abil cvmx_bgxx_spux_fec_abil_t;
@@ -7596,7 +7593,7 @@ union cvmx_bgxx_spux_fec_control {
 	} s;
 	struct cvmx_bgxx_spux_fec_control_s   cn73xx;
 	struct cvmx_bgxx_spux_fec_control_s   cn78xx;
-	struct cvmx_bgxx_spux_fec_control_s   cn78xxp2;
+	struct cvmx_bgxx_spux_fec_control_s   cn78xxp1;
 	struct cvmx_bgxx_spux_fec_control_s   cnf75xx;
 };
 typedef union cvmx_bgxx_spux_fec_control cvmx_bgxx_spux_fec_control_t;
@@ -7606,7 +7603,7 @@ typedef union cvmx_bgxx_spux_fec_control cvmx_bgxx_spux_fec_control_t;
  *
  * This register is valid only when the LPCS type is BASE-R
  * (BGX()_CMR()_CONFIG[LMAC_TYPE] = 0x3 or 0x4). The FEC corrected-block counters are
- * defined in Std 802.3 section 74.8.4.1. Each corrected-blocks counter increments by 1 for a
+ * defined in IEEE 802.3 section 74.8.4.1. Each corrected-blocks counter increments by 1 for a
  * corrected FEC block, i.e. an FEC block that has been received with invalid parity on the
  * associated PCS lane and has been corrected by the FEC decoder. The counter is reset to all 0s
  * when the register is read, and held at all 1s in case of overflow.
@@ -7614,7 +7611,7 @@ typedef union cvmx_bgxx_spux_fec_control cvmx_bgxx_spux_fec_control_t;
  * The reset operation takes precedence over the increment operation; if the register is read on
  * the same clock cycle as an increment operation, the counter is reset to all 0s and the
  * increment operation is lost. The counters are writable for test purposes, rather than read-
- * only as specified in Std 802.3.
+ * only as specified in IEEE 802.3.
  */
 union cvmx_bgxx_spux_fec_corr_blks01 {
 	uint64_t u64;
@@ -7622,12 +7619,12 @@ union cvmx_bgxx_spux_fec_corr_blks01 {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t ln1_corr_blks                : 32; /**< PCS Lane 1 FEC corrected blocks.
                                                          * For 10GBASE-R, reserved.
-                                                         * For 40GBASE-R, correspond to the Std 802.3 FEC_corrected_blocks_counter_1 variable
+                                                         * For 40GBASE-R, correspond to the IEEE 802.3 FEC_corrected_blocks_counter_1 variable
                                                          (registers 1.302-1.303). */
 	uint64_t ln0_corr_blks                : 32; /**< PCS Lane 0 FEC corrected blocks.
-                                                         * For 10GBASE-R, corresponds to the Std 802.3 FEC_corrected_blocks_counter variable
+                                                         * For 10GBASE-R, corresponds to the IEEE 802.3 FEC_corrected_blocks_counter variable
                                                          (registers 1.172-1.173).
-                                                         * For 40GBASE-R, correspond to the Std 802.3 FEC_corrected_blocks_counter_0 variable
+                                                         * For 40GBASE-R, correspond to the IEEE 802.3 FEC_corrected_blocks_counter_0 variable
                                                          (registers 1.300-1.301). */
 #else
 	uint64_t ln0_corr_blks                : 32;
@@ -7636,7 +7633,7 @@ union cvmx_bgxx_spux_fec_corr_blks01 {
 	} s;
 	struct cvmx_bgxx_spux_fec_corr_blks01_s cn73xx;
 	struct cvmx_bgxx_spux_fec_corr_blks01_s cn78xx;
-	struct cvmx_bgxx_spux_fec_corr_blks01_s cn78xxp2;
+	struct cvmx_bgxx_spux_fec_corr_blks01_s cn78xxp1;
 	struct cvmx_bgxx_spux_fec_corr_blks01_s cnf75xx;
 };
 typedef union cvmx_bgxx_spux_fec_corr_blks01 cvmx_bgxx_spux_fec_corr_blks01_t;
@@ -7646,7 +7643,7 @@ typedef union cvmx_bgxx_spux_fec_corr_blks01 cvmx_bgxx_spux_fec_corr_blks01_t;
  *
  * This register is valid only when the LPCS type is 40GBASE-R
  * (BGX()_CMR()_CONFIG[LMAC_TYPE] = 0x4). The FEC corrected-block counters are defined in
- * Std 802.3 section 74.8.4.1. Each corrected-blocks counter increments by 1 for a corrected FEC
+ * IEEE 802.3 section 74.8.4.1. Each corrected-blocks counter increments by 1 for a corrected FEC
  * block, i.e. an FEC block that has been received with invalid parity on the associated PCS lane
  * and has been corrected by the FEC decoder. The counter is reset to all 0s when the register is
  * read, and held at all 1s in case of overflow.
@@ -7654,15 +7651,15 @@ typedef union cvmx_bgxx_spux_fec_corr_blks01 cvmx_bgxx_spux_fec_corr_blks01_t;
  * The reset operation takes precedence over the increment operation; if the register is read on
  * the same clock cycle as an increment operation, the counter is reset to all 0s and the
  * increment operation is lost. The counters are writable for test purposes, rather than read-
- * only as specified in Std 802.3.
+ * only as specified in IEEE 802.3.
  */
 union cvmx_bgxx_spux_fec_corr_blks23 {
 	uint64_t u64;
 	struct cvmx_bgxx_spux_fec_corr_blks23_s {
 #ifdef __BIG_ENDIAN_BITFIELD
-	uint64_t ln3_corr_blks                : 32; /**< PCS Lane 3 FEC corrected blocks. Correspond to the Std 802.3
+	uint64_t ln3_corr_blks                : 32; /**< PCS Lane 3 FEC corrected blocks. Correspond to the IEEE 802.3
                                                          FEC_corrected_blocks_counter_3 variable (registers 1.306-1.307). */
-	uint64_t ln2_corr_blks                : 32; /**< PCS Lane 2 FEC corrected blocks. Correspond to the Std 802.3
+	uint64_t ln2_corr_blks                : 32; /**< PCS Lane 2 FEC corrected blocks. Correspond to the IEEE 802.3
                                                          FEC_corrected_blocks_counter_3 variable (registers 1.304-1.305). */
 #else
 	uint64_t ln2_corr_blks                : 32;
@@ -7671,7 +7668,7 @@ union cvmx_bgxx_spux_fec_corr_blks23 {
 	} s;
 	struct cvmx_bgxx_spux_fec_corr_blks23_s cn73xx;
 	struct cvmx_bgxx_spux_fec_corr_blks23_s cn78xx;
-	struct cvmx_bgxx_spux_fec_corr_blks23_s cn78xxp2;
+	struct cvmx_bgxx_spux_fec_corr_blks23_s cn78xxp1;
 	struct cvmx_bgxx_spux_fec_corr_blks23_s cnf75xx;
 };
 typedef union cvmx_bgxx_spux_fec_corr_blks23 cvmx_bgxx_spux_fec_corr_blks23_t;
@@ -7681,7 +7678,7 @@ typedef union cvmx_bgxx_spux_fec_corr_blks23 cvmx_bgxx_spux_fec_corr_blks23_t;
  *
  * This register is valid only when the LPCS type is BASE-R
  * (BGX()_CMR()_CONFIG[LMAC_TYPE] = 0x3 or 0x4). The FEC corrected-block counters are
- * defined in Std 802.3 section 74.8.4.2. Each uncorrected-blocks counter increments by 1 for an
+ * defined in IEEE 802.3 section 74.8.4.2. Each uncorrected-blocks counter increments by 1 for an
  * uncorrected FEC block, i.e. an FEC block that has been received with invalid parity on the
  * associated PCS lane and has not been corrected by the FEC decoder. The counter is reset to all
  * 0s when the register is read, and held at all 1s in case of overflow.
@@ -7689,7 +7686,7 @@ typedef union cvmx_bgxx_spux_fec_corr_blks23 cvmx_bgxx_spux_fec_corr_blks23_t;
  * The reset operation takes precedence over the increment operation; if the register is read on
  * the same clock cycle as an increment operation, the counter is reset to all 0s and the
  * increment operation is lost. The counters are writable for test purposes, rather than read-
- * only as specified in Std 802.3.
+ * only as specified in IEEE 802.3.
  */
 union cvmx_bgxx_spux_fec_uncorr_blks01 {
 	uint64_t u64;
@@ -7697,12 +7694,12 @@ union cvmx_bgxx_spux_fec_uncorr_blks01 {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t ln1_uncorr_blks              : 32; /**< PCS Lane 1 FEC corrected blocks.
                                                          * For 10GBASE-R, reserved.
-                                                         * For 40GBASE-R, corresponds to the Std 802.3 FEC_uncorrected_blocks_counter_1 variable
+                                                         * For 40GBASE-R, corresponds to the IEEE 802.3 FEC_uncorrected_blocks_counter_1 variable
                                                          (registers 1.702-1.703). */
 	uint64_t ln0_uncorr_blks              : 32; /**< PCS Lane 0 FEC uncorrected blocks.
-                                                         * For 10GBASE-R, corresponds to the Std 802.3 FEC_uncorrected_blocks_counter variable
+                                                         * For 10GBASE-R, corresponds to the IEEE 802.3 FEC_uncorrected_blocks_counter variable
                                                          (registers 1.174-1.175).
-                                                         * For 40GBASE-R, correspond to the Std 802.3 FEC_uncorrected_blocks_counter_0 variable
+                                                         * For 40GBASE-R, correspond to the IEEE 802.3 FEC_uncorrected_blocks_counter_0 variable
                                                          (registers 1.700-1.701). */
 #else
 	uint64_t ln0_uncorr_blks              : 32;
@@ -7711,7 +7708,7 @@ union cvmx_bgxx_spux_fec_uncorr_blks01 {
 	} s;
 	struct cvmx_bgxx_spux_fec_uncorr_blks01_s cn73xx;
 	struct cvmx_bgxx_spux_fec_uncorr_blks01_s cn78xx;
-	struct cvmx_bgxx_spux_fec_uncorr_blks01_s cn78xxp2;
+	struct cvmx_bgxx_spux_fec_uncorr_blks01_s cn78xxp1;
 	struct cvmx_bgxx_spux_fec_uncorr_blks01_s cnf75xx;
 };
 typedef union cvmx_bgxx_spux_fec_uncorr_blks01 cvmx_bgxx_spux_fec_uncorr_blks01_t;
@@ -7721,7 +7718,7 @@ typedef union cvmx_bgxx_spux_fec_uncorr_blks01 cvmx_bgxx_spux_fec_uncorr_blks01_
  *
  * This register is valid only when the LPCS type is 40GBASE-R
  * (BGX()_CMR()_CONFIG[LMAC_TYPE] = 0x4). The FEC uncorrected-block counters are defined
- * in Std 802.3 section 74.8.4.2. Each corrected-blocks counter increments by 1 for an
+ * in IEEE 802.3 section 74.8.4.2. Each corrected-blocks counter increments by 1 for an
  * uncorrected FEC block, i.e. an FEC block that has been received with invalid parity on the
  * associated PCS lane and has not been corrected by the FEC decoder. The counter is reset to all
  * 0s when the register is read, and held at all 1s in case of overflow.
@@ -7729,15 +7726,15 @@ typedef union cvmx_bgxx_spux_fec_uncorr_blks01 cvmx_bgxx_spux_fec_uncorr_blks01_
  * The reset operation takes precedence over the increment operation; if the register is read on
  * the same clock cycle as an increment operation, the counter is reset to all 0s and the
  * increment operation is lost. The counters are writable for test purposes, rather than read-
- * only as specified in Std 802.3.
+ * only as specified in IEEE 802.3.
  */
 union cvmx_bgxx_spux_fec_uncorr_blks23 {
 	uint64_t u64;
 	struct cvmx_bgxx_spux_fec_uncorr_blks23_s {
 #ifdef __BIG_ENDIAN_BITFIELD
-	uint64_t ln3_uncorr_blks              : 32; /**< PCS Lane 3 FEC uncorrected blocks. Corresponds to the Std 802.3
+	uint64_t ln3_uncorr_blks              : 32; /**< PCS Lane 3 FEC uncorrected blocks. Corresponds to the IEEE 802.3
                                                          FEC_uncorrected_blocks_counter_3 variable (registers 1.706-1.707). */
-	uint64_t ln2_uncorr_blks              : 32; /**< PCS Lane 2 FEC uncorrected blocks. Corresponds to the Std 802.3
+	uint64_t ln2_uncorr_blks              : 32; /**< PCS Lane 2 FEC uncorrected blocks. Corresponds to the IEEE 802.3
                                                          FEC_uncorrected_blocks_counter_3 variable (registers 1.704-1.705). */
 #else
 	uint64_t ln2_uncorr_blks              : 32;
@@ -7746,7 +7743,7 @@ union cvmx_bgxx_spux_fec_uncorr_blks23 {
 	} s;
 	struct cvmx_bgxx_spux_fec_uncorr_blks23_s cn73xx;
 	struct cvmx_bgxx_spux_fec_uncorr_blks23_s cn78xx;
-	struct cvmx_bgxx_spux_fec_uncorr_blks23_s cn78xxp2;
+	struct cvmx_bgxx_spux_fec_uncorr_blks23_s cn78xxp1;
 	struct cvmx_bgxx_spux_fec_uncorr_blks23_s cnf75xx;
 };
 typedef union cvmx_bgxx_spux_fec_uncorr_blks23 cvmx_bgxx_spux_fec_uncorr_blks23_t;
@@ -7835,7 +7832,7 @@ union cvmx_bgxx_spux_int {
 	} s;
 	struct cvmx_bgxx_spux_int_s           cn73xx;
 	struct cvmx_bgxx_spux_int_s           cn78xx;
-	struct cvmx_bgxx_spux_int_s           cn78xxp2;
+	struct cvmx_bgxx_spux_int_s           cn78xxp1;
 	struct cvmx_bgxx_spux_int_s           cnf75xx;
 };
 typedef union cvmx_bgxx_spux_int cvmx_bgxx_spux_int_t;
@@ -7866,7 +7863,7 @@ union cvmx_bgxx_spux_lpcs_states {
 	} s;
 	struct cvmx_bgxx_spux_lpcs_states_s   cn73xx;
 	struct cvmx_bgxx_spux_lpcs_states_s   cn78xx;
-	struct cvmx_bgxx_spux_lpcs_states_s   cn78xxp2;
+	struct cvmx_bgxx_spux_lpcs_states_s   cn78xxp1;
 	struct cvmx_bgxx_spux_lpcs_states_s   cnf75xx;
 };
 typedef union cvmx_bgxx_spux_lpcs_states cvmx_bgxx_spux_lpcs_states_t;
@@ -7903,9 +7900,9 @@ union cvmx_bgxx_spux_misc_control {
                                                          to ensure sufficient density of XAUI idle skip (||R||) columns with a small transmit
                                                          inter-frame gap (IFG) in order to allow the link partner's receiver to delete ||R
                                                          columns as needed for clock rate compensation. It is usually set when the LMAC's transmit
-                                                         IFG is set to 8 bytes in HiGig/HiGig2 modes (i.e. BGX()_SMU()_TX_IFG[IFG1] +
+                                                         IFG is set to eight bytes in HiGig/HiGig2 modes (i.e. BGX()_SMU()_TX_IFG[IFG1] +
                                                          BGX()_SMU()_TX_IFG[IFG2] = 8), and should be cleared when the transmit IFG is
-                                                         greater than 8 bytes. When this bit is set, the SPU will send an ||R|| column after a
+                                                         greater than eight bytes. When this bit is set, the SPU will send an ||R|| column after a
                                                          ||T0|| column (terminate in lane 0) if no ||R|| was sent in the previous IFG. This is a
                                                          minor deviation from the functionality specified in 802.3-2008 Figure 48-6 (PCS transmit
                                                          source state diagram), whereby the state will transition directly from SEND_DATA to
@@ -7927,8 +7924,8 @@ union cvmx_bgxx_spux_misc_control {
                                                          the Marvell RXAUI Interface specification. This does not obey 6.25GHz SerDes disparity. */
 	uint64_t xor_rxplrt                   : 4;  /**< RX polarity control per logical PCS lane */
 	uint64_t xor_txplrt                   : 4;  /**< TX polarity control per logical PCS lane */
-	uint64_t rxplrt                       : 1;  /**< Receive polarity. 1 = inverted polarity, 0 = normal polarity. */
-	uint64_t txplrt                       : 1;  /**< Transmit polarity. 1 = inverted polarity, 0 = normal polarity. */
+	uint64_t rxplrt                       : 1;  /**< Receive polarity. 1 = inverted polarity. 0 = normal polarity. */
+	uint64_t txplrt                       : 1;  /**< Transmit polarity. 1 = inverted polarity. 0 = normal polarity. */
 #else
 	uint64_t txplrt                       : 1;
 	uint64_t rxplrt                       : 1;
@@ -7942,7 +7939,7 @@ union cvmx_bgxx_spux_misc_control {
 	} s;
 	struct cvmx_bgxx_spux_misc_control_s  cn73xx;
 	struct cvmx_bgxx_spux_misc_control_s  cn78xx;
-	struct cvmx_bgxx_spux_misc_control_s  cn78xxp2;
+	struct cvmx_bgxx_spux_misc_control_s  cn78xxp1;
 	struct cvmx_bgxx_spux_misc_control_s  cnf75xx;
 };
 typedef union cvmx_bgxx_spux_misc_control cvmx_bgxx_spux_misc_control_t;
@@ -7969,7 +7966,7 @@ union cvmx_bgxx_spux_spd_abil {
 	} s;
 	struct cvmx_bgxx_spux_spd_abil_s      cn73xx;
 	struct cvmx_bgxx_spux_spd_abil_s      cn78xx;
-	struct cvmx_bgxx_spux_spd_abil_s      cn78xxp2;
+	struct cvmx_bgxx_spux_spd_abil_s      cn78xxp1;
 	struct cvmx_bgxx_spux_spd_abil_s      cnf75xx;
 };
 typedef union cvmx_bgxx_spux_spd_abil cvmx_bgxx_spux_spd_abil_t;
@@ -7988,14 +7985,12 @@ union cvmx_bgxx_spux_status1 {
 	uint64_t rcv_lnk                      : 1;  /**< PCS receive link status:
                                                            0 = receive link down.
                                                            1 = receive link up.
-                                                         This is a latching-low bit; it stays clear until the register is read by software.
+                                                         This is a latching-low bit; it stays clear until a write-1-to-set by software.
                                                          For a BASE-X logical PCS type (in the associated BGX()_CMR()_CONFIG[LMAC_TYPE] =
                                                          XAUI or RXAUI), this is a latching-low version of BGX()_SPU()_BX_STATUS[ALIGND].
                                                          For a BASE-R logical PCS type (in the associated BGX()_CMR()_CONFIG[LMAC_TYPE] =
                                                          10G_R or 40G_R), this is a latching-low version of
-                                                         BGX()_SPU()_BR_STATUS1[RCV_LNK].
-                                                         Note that in order to avoid read side effects, this is implemented as a write-1-to-set
-                                                         bit, rather than latching low read-only as specified in 802.3. */
+                                                         BGX()_SPU()_BR_STATUS1[RCV_LNK]. */
 	uint64_t lpable                       : 1;  /**< Low-power ability. Always returns 1 to indicate that the LPCS supports low-power mode. */
 	uint64_t reserved_0_0                 : 1;
 #else
@@ -8009,7 +8004,7 @@ union cvmx_bgxx_spux_status1 {
 	} s;
 	struct cvmx_bgxx_spux_status1_s       cn73xx;
 	struct cvmx_bgxx_spux_status1_s       cn78xx;
-	struct cvmx_bgxx_spux_status1_s       cn78xxp2;
+	struct cvmx_bgxx_spux_status1_s       cn78xxp1;
 	struct cvmx_bgxx_spux_status1_s       cnf75xx;
 };
 typedef union cvmx_bgxx_spux_status1 cvmx_bgxx_spux_status1_t;
@@ -8025,10 +8020,8 @@ union cvmx_bgxx_spux_status2 {
 	uint64_t dev                          : 2;  /**< Device present. Always returns 0x2 to indicate a device is present at this address. */
 	uint64_t reserved_12_13               : 2;
 	uint64_t xmtflt                       : 1;  /**< Transmit fault. Always returns 0. */
-	uint64_t rcvflt                       : 1;  /**< Receive fault: 1 = receive fault, 0 = no receive fault. Latching high bit; stays set until
-                                                         software writes a 1.
-                                                         Note that in order to avoid read side effects, this is implemented as a write-1-to-clear
-                                                         bit, rather than latching high read-only as specified in 802.3. */
+	uint64_t rcvflt                       : 1;  /**< Receive fault: 1 = receive fault. 0 = no receive fault. Latching high bit; stays set until
+                                                         a write-1-to-clear by software. */
 	uint64_t reserved_6_9                 : 4;
 	uint64_t hundredgb_r                  : 1;  /**< 100GBASE-R capable. Always 0. */
 	uint64_t fortygb_r                    : 1;  /**< 40GBASE-R capable. Always 1. */
@@ -8053,7 +8046,7 @@ union cvmx_bgxx_spux_status2 {
 	} s;
 	struct cvmx_bgxx_spux_status2_s       cn73xx;
 	struct cvmx_bgxx_spux_status2_s       cn78xx;
-	struct cvmx_bgxx_spux_status2_s       cn78xxp2;
+	struct cvmx_bgxx_spux_status2_s       cn78xxp1;
 	struct cvmx_bgxx_spux_status2_s       cnf75xx;
 };
 typedef union cvmx_bgxx_spux_status2 cvmx_bgxx_spux_status2_t;
@@ -8079,7 +8072,7 @@ union cvmx_bgxx_spu_bist_status {
 	} s;
 	struct cvmx_bgxx_spu_bist_status_s    cn73xx;
 	struct cvmx_bgxx_spu_bist_status_s    cn78xx;
-	struct cvmx_bgxx_spu_bist_status_s    cn78xxp2;
+	struct cvmx_bgxx_spu_bist_status_s    cn78xxp1;
 	struct cvmx_bgxx_spu_bist_status_s    cnf75xx;
 };
 typedef union cvmx_bgxx_spu_bist_status cvmx_bgxx_spu_bist_status_t;
@@ -8093,9 +8086,9 @@ union cvmx_bgxx_spu_dbg_control {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_56_63               : 8;
 	uint64_t ms_clk_period                : 12; /**< Millisecond clock period. Specifies the number of microsecond clock ticks per millisecond,
-                                                         minus 1. The default value of 999 (0x3E7) should be used during normal operation; other
+                                                         minus one. The default value of 999 (0x3E7) should be used during normal operation; other
                                                          values may be used for test/debug purposes. */
-	uint64_t us_clk_period                : 12; /**< Microsecond clock period. Specifies the number of SCLK cycles per microseconds, minus 1.
+	uint64_t us_clk_period                : 12; /**< Microsecond clock period. Specifies the number of SCLK cycles per microseconds, minus one.
                                                          For example, if SCLK runs at 1.3 GHz, the number of SCLK cycles per microsecond is 1,300
                                                          so the value of this field should be 1,299 (0x513). This is used by the BASE-R BER monitor
                                                          timers. */
@@ -8209,7 +8202,7 @@ union cvmx_bgxx_spu_dbg_control {
 	} s;
 	struct cvmx_bgxx_spu_dbg_control_s    cn73xx;
 	struct cvmx_bgxx_spu_dbg_control_s    cn78xx;
-	struct cvmx_bgxx_spu_dbg_control_s    cn78xxp2;
+	struct cvmx_bgxx_spu_dbg_control_s    cn78xxp1;
 	struct cvmx_bgxx_spu_dbg_control_s    cnf75xx;
 };
 typedef union cvmx_bgxx_spu_dbg_control cvmx_bgxx_spu_dbg_control_t;
@@ -8234,7 +8227,7 @@ union cvmx_bgxx_spu_mem_int {
 	} s;
 	struct cvmx_bgxx_spu_mem_int_s        cn73xx;
 	struct cvmx_bgxx_spu_mem_int_s        cn78xx;
-	struct cvmx_bgxx_spu_mem_int_s        cn78xxp2;
+	struct cvmx_bgxx_spu_mem_int_s        cn78xxp1;
 	struct cvmx_bgxx_spu_mem_int_s        cnf75xx;
 };
 typedef union cvmx_bgxx_spu_mem_int cvmx_bgxx_spu_mem_int_t;
@@ -8263,7 +8256,7 @@ union cvmx_bgxx_spu_mem_status {
 	} s;
 	struct cvmx_bgxx_spu_mem_status_s     cn73xx;
 	struct cvmx_bgxx_spu_mem_status_s     cn78xx;
-	struct cvmx_bgxx_spu_mem_status_s     cn78xxp2;
+	struct cvmx_bgxx_spu_mem_status_s     cn78xxp1;
 	struct cvmx_bgxx_spu_mem_status_s     cnf75xx;
 };
 typedef union cvmx_bgxx_spu_mem_status cvmx_bgxx_spu_mem_status_t;
@@ -8287,7 +8280,7 @@ union cvmx_bgxx_spu_sdsx_skew_status {
 	} s;
 	struct cvmx_bgxx_spu_sdsx_skew_status_s cn73xx;
 	struct cvmx_bgxx_spu_sdsx_skew_status_s cn78xx;
-	struct cvmx_bgxx_spu_sdsx_skew_status_s cn78xxp2;
+	struct cvmx_bgxx_spu_sdsx_skew_status_s cn78xxp1;
 	struct cvmx_bgxx_spu_sdsx_skew_status_s cnf75xx;
 };
 typedef union cvmx_bgxx_spu_sdsx_skew_status cvmx_bgxx_spu_sdsx_skew_status_t;
@@ -8347,7 +8340,7 @@ union cvmx_bgxx_spu_sdsx_states {
 	} s;
 	struct cvmx_bgxx_spu_sdsx_states_s    cn73xx;
 	struct cvmx_bgxx_spu_sdsx_states_s    cn78xx;
-	struct cvmx_bgxx_spu_sdsx_states_s    cn78xxp2;
+	struct cvmx_bgxx_spu_sdsx_states_s    cn78xxp1;
 	struct cvmx_bgxx_spu_sdsx_states_s    cnf75xx;
 };
 typedef union cvmx_bgxx_spu_sdsx_states cvmx_bgxx_spu_sdsx_states_t;

@@ -206,9 +206,9 @@ void cvmx_sysinfo_linux_userspace_initialize(void)
 				system_info->dram_data_rate_hz = value * 2;
 			else if (strcmp(field, "board_type:") == 0)
 				system_info->board_type = value;
-			else if (strcmp(field, "board_rev_major:") == 0)
+			else if (strcmp(field, "ubnt_r1:") == 0)
 				system_info->board_rev_major = value;
-			else if (strcmp(field, "board_rev_minor:") == 0)
+			else if (strcmp(field, "ubnt_r2:") == 0)
 				system_info->board_rev_minor = value;
 			else if (strcmp(field, "board_serial_number:") == 0) {
 				int sz = sizeof(system_info->board_serial_number);

@@ -14,7 +14,8 @@ enum {
 	_IRQ_NO_BALANCING	= IRQ_NO_BALANCING,
 	_IRQ_NESTED_THREAD	= IRQ_NESTED_THREAD,
 	_IRQ_PER_CPU_DEVID	= IRQ_PER_CPU_DEVID,
-	_IRQ_NO_SOFTIRQ_CALL	= IRQ_NO_SOFTIRQ_CALL,
+	_IRQ_IS_POLLED		= IRQ_IS_POLLED,
+	_IRQ_DISABLE_UNLAZY	= IRQ_DISABLE_UNLAZY,
 	_IRQF_MODIFY_MASK	= IRQF_MODIFY_MASK,
 };
 
@@ -27,7 +28,8 @@ enum {
 #define IRQ_NOAUTOEN		GOT_YOU_MORON
 #define IRQ_NESTED_THREAD	GOT_YOU_MORON
 #define IRQ_PER_CPU_DEVID	GOT_YOU_MORON
-#define IRQ_NO_SOFTIRQ_CALL	GOT_YOU_MORON
+#define IRQ_IS_POLLED		GOT_YOU_MORON
+#define IRQ_DISABLE_UNLAZY	GOT_YOU_MORON
 #undef IRQF_MODIFY_MASK
 #define IRQF_MODIFY_MASK	GOT_YOU_MORON
 
@@ -36,16 +38,6 @@ irq_settings_clr_and_set(struct irq_desc *desc, u32 clr, u32 set)
 {
 	desc->status_use_accessors &= ~(clr & _IRQF_MODIFY_MASK);
 	desc->status_use_accessors |= (set & _IRQF_MODIFY_MASK);
-}
-
-static inline bool irq_settings_no_softirq_call(struct irq_desc *desc)
-{
-	return desc->status_use_accessors & _IRQ_NO_SOFTIRQ_CALL;
-}
-
-static inline void irq_settings_set_no_softirq_call(struct irq_desc *desc)
-{
-	desc->status_use_accessors |= _IRQ_NO_SOFTIRQ_CALL;
 }
 
 static inline bool irq_settings_is_per_cpu(struct irq_desc *desc)
@@ -158,4 +150,19 @@ static inline bool irq_settings_can_autoenable(struct irq_desc *desc)
 static inline bool irq_settings_is_nested_thread(struct irq_desc *desc)
 {
 	return desc->status_use_accessors & _IRQ_NESTED_THREAD;
+}
+
+static inline bool irq_settings_is_polled(struct irq_desc *desc)
+{
+	return desc->status_use_accessors & _IRQ_IS_POLLED;
+}
+
+static inline bool irq_settings_disable_unlazy(struct irq_desc *desc)
+{
+	return desc->status_use_accessors & _IRQ_DISABLE_UNLAZY;
+}
+
+static inline void irq_settings_clr_disable_unlazy(struct irq_desc *desc)
+{
+	desc->status_use_accessors &= ~_IRQ_DISABLE_UNLAZY;
 }

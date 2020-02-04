@@ -44,7 +44,7 @@ static unsigned int bit_cfg_reg78(unsigned int gpio)
 
 static int octeon_gpio_dir_in(struct gpio_chip *chip, unsigned offset)
 {
-	struct octeon_gpio *gpio = container_of(chip, struct octeon_gpio, chip);
+	struct octeon_gpio *gpio = gpiochip_get_data(chip);
 
 	cvmx_write_csr(gpio->register_base + gpio->cfg_reg(offset), 0);
 	return 0;
@@ -52,7 +52,7 @@ static int octeon_gpio_dir_in(struct gpio_chip *chip, unsigned offset)
 
 static void octeon_gpio_set(struct gpio_chip *chip, unsigned offset, int value)
 {
-	struct octeon_gpio *gpio = container_of(chip, struct octeon_gpio, chip);
+	struct octeon_gpio *gpio = gpiochip_get_data(chip);
 	u64 mask = 1ull << offset;
 	u64 reg = gpio->register_base + (value ? TX_SET : TX_CLEAR);
 	cvmx_write_csr(reg, mask);
@@ -61,7 +61,7 @@ static void octeon_gpio_set(struct gpio_chip *chip, unsigned offset, int value)
 static int octeon_gpio_dir_out(struct gpio_chip *chip, unsigned offset,
 			       int value)
 {
-	struct octeon_gpio *gpio = container_of(chip, struct octeon_gpio, chip);
+	struct octeon_gpio *gpio = gpiochip_get_data(chip);
 	union cvmx_gpio_bit_cfgx cfgx;
 
 	octeon_gpio_set(chip, offset, value);
@@ -75,7 +75,7 @@ static int octeon_gpio_dir_out(struct gpio_chip *chip, unsigned offset,
 
 static int octeon_gpio_get(struct gpio_chip *chip, unsigned offset)
 {
-	struct octeon_gpio *gpio = container_of(chip, struct octeon_gpio, chip);
+	struct octeon_gpio *gpio = gpiochip_get_data(chip);
 	u64 read_bits = cvmx_read_csr(gpio->register_base + RX_DAT);
 
 	return ((1ull << offset) & read_bits) != 0;
@@ -83,26 +83,44 @@ static int octeon_gpio_get(struct gpio_chip *chip, unsigned offset)
 
 static int octeon_gpio_to_irq(struct gpio_chip *chip, unsigned offset)
 {
-	struct of_phandle_args dev_irq;
+	struct of_phandle_args oirq;
 
 	if (offset >= 16)
 		return -ENXIO;
 
-	dev_irq.np = chip->of_node;
-	dev_irq.args[0] = offset;
-	dev_irq.args[1] = 8; /* level, active low */
-	dev_irq.args_count = 2;
-	return irq_create_of_mapping(&dev_irq);
+	oirq.np = chip->of_node;
+	oirq.args_count = 2;
+	oirq.args[0] = offset;
+	oirq.args[1] = 8; /* Level Low*/
+
+	return irq_create_of_mapping(&oirq);
 }
+
+struct match_data {
+	unsigned int (*bit_cfg)(unsigned int gpio);
+	int (*irq_init_gpio)(struct device_node *n, struct device_node *p);
+};
+
+int octeon_irq_init_gpio(struct device_node *gpio_node, struct device_node *parent);
+int octeon_irq_init_gpio78(struct device_node *gpio_node, struct device_node *parent);
+
+static const struct match_data md38 = {
+	.bit_cfg = bit_cfg_reg38,
+	.irq_init_gpio = octeon_irq_init_gpio
+};
+static const struct match_data md78 = {
+	.bit_cfg = bit_cfg_reg78,
+	.irq_init_gpio = octeon_irq_init_gpio78
+};
 
 static struct of_device_id octeon_gpio_match[] = {
 	{
 		.compatible = "cavium,octeon-3860-gpio",
-		.data = bit_cfg_reg38,
+		.data = &md38,
 	},
 	{
 		.compatible = "cavium,octeon-7890-gpio",
-		.data = bit_cfg_reg78,
+		.data = &md78,
 	},
 	{},
 };
@@ -113,38 +131,39 @@ static int octeon_gpio_probe(struct platform_device *pdev)
 	struct octeon_gpio *gpio;
 	struct gpio_chip *chip;
 	struct resource *res_mem;
+	void __iomem *reg_base;
 	const struct of_device_id *of_id;
+	struct device_node *irq_parent;
+	const struct match_data *md;
 	int err = 0;
 
 	of_id = of_match_device(octeon_gpio_match, &pdev->dev);
 	if (!of_id)
 		return -EINVAL;
+	md = of_id->data;
 
 	gpio = devm_kzalloc(&pdev->dev, sizeof(*gpio), GFP_KERNEL);
 	if (!gpio)
 		return -ENOMEM;
 	chip = &gpio->chip;
-	gpio->cfg_reg = of_id->data;
+	gpio->cfg_reg = md->bit_cfg;
 
 	res_mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-	if (res_mem == NULL) {
-		dev_err(&pdev->dev, "found no memory resource\n");
-		err = -ENXIO;
-		goto out;
-	}
-	if (!devm_request_mem_region(&pdev->dev, res_mem->start,
-					resource_size(res_mem),
-				     res_mem->name)) {
-		dev_err(&pdev->dev, "request_mem_region failed\n");
-		err = -ENXIO;
-		goto out;
-	}
-	gpio->register_base = (u64)devm_ioremap(&pdev->dev, res_mem->start,
-						resource_size(res_mem));
+	reg_base = devm_ioremap_resource(&pdev->dev, res_mem);
+	if (IS_ERR(reg_base))
+		return PTR_ERR(reg_base);
 
+	gpio->register_base = (u64)reg_base;
 	pdev->dev.platform_data = chip;
+
+	irq_parent = of_irq_find_parent(pdev->dev.of_node);
+	if (irq_parent) {
+		err = md->irq_init_gpio(pdev->dev.of_node, irq_parent);
+		if (err)
+			dev_err(&pdev->dev, "Error: irq init failed %d\n", err);
+	}
 	chip->label = "octeon-gpio";
-	chip->dev = &pdev->dev;
+	chip->parent = &pdev->dev;
 	chip->of_node = pdev->dev.of_node;
 	chip->owner = THIS_MODULE;
 	/*
@@ -152,7 +171,7 @@ static int octeon_gpio_probe(struct platform_device *pdev)
 	 * allocated.
 	 */
 	chip->base = of_node_to_nid(chip->of_node) ? -1 : 0;
-	chip->can_sleep = 0;
+	chip->can_sleep = false;
 	chip->ngpio = 32;
 	chip->direction_input = octeon_gpio_dir_in;
 	chip->get = octeon_gpio_get;
@@ -161,29 +180,20 @@ static int octeon_gpio_probe(struct platform_device *pdev)
 	chip->of_gpio_n_cells = 2;
 	chip->of_xlate = of_gpio_simple_xlate;
 	chip->to_irq = octeon_gpio_to_irq;
-	err = gpiochip_add(chip);
+	err = devm_gpiochip_add_data(&pdev->dev, chip, gpio);
 	if (err)
-		goto out;
+		return err;
 
 	dev_info(&pdev->dev, "OCTEON GPIO: base = %d\n", chip->base);
-out:
-	return err;
-}
-
-static int octeon_gpio_remove(struct platform_device *pdev)
-{
-	struct gpio_chip *chip = pdev->dev.platform_data;
-	return gpiochip_remove(chip);
+	return 0;
 }
 
 static struct platform_driver octeon_gpio_driver = {
 	.driver = {
 		.name		= "octeon_gpio",
-		.owner		= THIS_MODULE,
 		.of_match_table = octeon_gpio_match,
 	},
 	.probe		= octeon_gpio_probe,
-	.remove		= octeon_gpio_remove,
 };
 
 module_platform_driver(octeon_gpio_driver);

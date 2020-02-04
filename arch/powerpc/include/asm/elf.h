@@ -23,26 +23,15 @@
 #define CORE_DUMP_USE_REGSET
 #define ELF_EXEC_PAGESIZE	PAGE_SIZE
 
-/* This is the location that an ET_DYN program is loaded if exec'ed.  Typical
-   use of this is to invoke "./ld.so someprog" to test out a new version of
-   the loader.  We need to make sure that it is out of the way of the program
-   that it will "exec", and that there is sufficient room for the brk.  */
+/*
+ * This is the base location for PIE (ET_DYN with INTERP) loads. On
+ * 64-bit, this is raised to 4GB to leave the entire 32-bit address
+ * space open for things that want to use the area for 32-bit pointers.
+ */
+#define ELF_ET_DYN_BASE		(is_32bit_task() ? 0x000400000UL : \
+						   0x100000000UL)
 
-#ifdef CONFIG_PAX_ASLR
-#define ELF_ET_DYN_BASE		(0x20000000)
-#define PAX_ELF_ET_DYN_BASE	(0x10000000UL)
-
-#ifdef __powerpc64__
-#define PAX_DELTA_MMAP_LEN	(is_32bit_task() ? 16 : 28)
-#define PAX_DELTA_STACK_LEN	(is_32bit_task() ? 16 : 28)
-#else
-#define PAX_DELTA_MMAP_LEN	15
-#define PAX_DELTA_STACK_LEN	15
-#endif
-#else
-extern unsigned long randomize_et_dyn(unsigned long base);
-#define ELF_ET_DYN_BASE		(randomize_et_dyn(0x20000000))
-#endif
+#define ELF_CORE_EFLAGS (is_elf2_task() ? 2 : 0)
 
 /*
  * Our registers are always unsigned longs, whether we're a 32 bit
@@ -99,6 +88,10 @@ typedef elf_vrregset_t elf_fpxregset_t;
 #ifdef __powerpc64__
 # define SET_PERSONALITY(ex)					\
 do {								\
+	if (((ex).e_flags & 0x3) == 2)				\
+		set_thread_flag(TIF_ELF2ABI);			\
+	else							\
+		clear_thread_flag(TIF_ELF2ABI);			\
 	if ((ex).e_ident[EI_CLASS] == ELFCLASS32)		\
 		set_thread_flag(TIF_32BIT);			\
 	else							\
@@ -135,11 +128,6 @@ extern int arch_setup_additional_pages(struct linux_binprm *bprm,
 #define STACK_RND_MASK (is_32bit_task() ? \
 	(0x7ff >> (PAGE_SHIFT - 12)) : \
 	(0x3ffff >> (PAGE_SHIFT - 12)))
-
-#ifndef CONFIG_PAX_ASLR
-extern unsigned long arch_randomize_brk(struct mm_struct *mm);
-#define arch_randomize_brk arch_randomize_brk
-#endif
 
 #ifdef CONFIG_SPU_BASE
 /* Notes used in ET_CORE. Note name is "SPU/<fd>/<filename>". */

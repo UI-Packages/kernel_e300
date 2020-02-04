@@ -25,12 +25,12 @@
 struct mm_struct;
 struct vm_area_struct;
 
+extern pgd_t swapper_pg_dir[1024];
+extern pgd_t initial_page_table[1024];
+
 static inline void pgtable_cache_init(void) { }
 static inline void check_pgt_cache(void) { }
 void paging_init(void);
-
-extern void set_pmd_pfn(unsigned long, unsigned long, pgprot_t);
-
 
 /*
  * Define this if things work differently on an i386 and an i486:
@@ -43,12 +43,6 @@ extern void set_pmd_pfn(unsigned long, unsigned long, pgprot_t);
 # include <asm/pgtable-3level.h>
 #else
 # include <asm/pgtable-2level.h>
-#endif
-
-extern pgd_t swapper_pg_dir[PTRS_PER_PGD];
-extern pgd_t initial_page_table[PTRS_PER_PGD];
-#ifdef CONFIG_X86_PAE
-extern pmd_t swapper_pm_dir[PTRS_PER_PGD][PTRS_PER_PMD];
 #endif
 
 #if defined(CONFIG_HIGHPTE)
@@ -65,16 +59,11 @@ extern pmd_t swapper_pm_dir[PTRS_PER_PGD][PTRS_PER_PMD];
 /* Clear a kernel PTE and flush it from the TLB */
 #define kpte_clear_flush(ptep, vaddr)		\
 do {						\
-	pax_open_kernel();			\
 	pte_clear(&init_mm, (vaddr), (ptep));	\
-	pax_close_kernel();			\
 	__flush_tlb_one((vaddr));		\
 } while (0)
 
 #endif /* !__ASSEMBLY__ */
-
-#define HAVE_ARCH_UNMAPPED_AREA
-#define HAVE_ARCH_UNMAPPED_AREA_TOPDOWN
 
 /*
  * kern_addr_valid() is (1) for FLATMEM and (0) for

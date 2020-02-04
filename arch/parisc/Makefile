@@ -17,6 +17,8 @@
 # Mike Shaver, Helge Deller and Martin K. Petersen
 #
 
+KBUILD_IMAGE := vmlinuz
+
 KBUILD_DEFCONFIG := default_defconfig
 
 NM		= sh $(srctree)/arch/parisc/nm
@@ -60,9 +62,7 @@ cflags-y	+= -mdisable-fpregs
 
 # Without this, "ld -r" results in .text sections that are too big
 # (> 0x40000) for branches to reach stubs.
-ifndef CONFIG_FUNCTION_TRACER
-  cflags-y	+= -ffunction-sections
-endif
+cflags-y	+= -ffunction-sections
 
 # Use long jumps instead of long branches (needed if your linker fails to
 # link a too big vmlinux executable). Not enabled for building modules.
@@ -82,7 +82,6 @@ head-y			:= arch/parisc/kernel/head.o
 KBUILD_CFLAGS	+= $(cflags-y)
 
 kernel-y			:= mm/ kernel/ math-emu/
-kernel-$(CONFIG_HPUX)		+= hpux/
 
 core-y	+= $(addprefix arch/parisc/, $(kernel-y))
 libs-y	+= arch/parisc/lib/ $(LIBGCC)
@@ -97,7 +96,7 @@ PALOCONF := $(shell if [ -f $(src)/palo.conf ]; then echo $(src)/palo.conf; \
 	else echo $(obj)/palo.conf; \
 	fi)
 
-palo: vmlinux
+palo lifimage: vmlinuz
 	@if test ! -x "$(PALO)"; then \
 		echo 'ERROR: Please install palo first (apt-get install palo)';\
 		echo 'or build it from source and install it somewhere in your $$PATH';\
@@ -112,29 +111,42 @@ palo: vmlinux
 	fi
 	$(PALO) -f $(PALOCONF)
 
-# Shorthands for known targets not supported by parisc, use vmlinux as default
-Image zImage bzImage: vmlinux
+BOOT_TARGETS    = zImage Image palo lifimage
+INSTALL_TARGETS = zinstall install
 
-install: vmlinux
-	sh $(src)/arch/parisc/install.sh \
-			$(KERNELRELEASE) $< System.map "$(INSTALL_PATH)"
+PHONY += bzImage $(BOOT_TARGETS) $(INSTALL_TARGETS)
+
+bzImage zImage: vmlinuz
+Image: vmlinux
+
+vmlinuz: vmlinux
+	@gzip -cf -9 $< > $@
+
+install:
+	$(CONFIG_SHELL) $(src)/arch/parisc/install.sh \
+			$(KERNELRELEASE) vmlinux System.map "$(INSTALL_PATH)"
+zinstall:
+	$(CONFIG_SHELL) $(src)/arch/parisc/install.sh \
+			$(KERNELRELEASE) vmlinuz System.map "$(INSTALL_PATH)"
 
 CLEAN_FILES	+= lifimage
 MRPROPER_FILES	+= palo.conf
 
 define archhelp
 	@echo  '* vmlinux	- Uncompressed kernel image (./vmlinux)'
+	@echo  '  vmlinuz	- Compressed kernel image (./vmlinuz)'
 	@echo  '  palo		- Bootable image (./lifimage)'
-	@echo  '  install	- Install kernel using'
+	@echo  '  install	- Install uncompressed vmlinux kernel using'
 	@echo  '		  (your) ~/bin/$(INSTALLKERNEL) or'
 	@echo  '		  (distribution) /sbin/$(INSTALLKERNEL) or'
 	@echo  '		  copy to $$(INSTALL_PATH)'
+	@echo  '  zinstall	- Install compressed vmlinuz kernel'
 endef
 
 # we require gcc 3.3 or above to compile the kernel
 archprepare: checkbin
 checkbin:
-	@if test "$(call cc-version)" -lt "0303"; then \
+	@if test "$(cc-version)" -lt "0303"; then \
 		echo -n "Sorry, GCC v3.3 or above is required to build " ; \
 		echo "the kernel." ; \
 		false ; \

@@ -26,20 +26,20 @@
 #define qports(phydev) (*(int*)&(phydev)->priv)
 
 /* compound read/write must hold mdio mutex */
-#define qphy_muget(phydev) mutex_lock(&(phydev)->bus->mdio_lock)
-#define qphy_muput(phydev) mutex_unlock(&(phydev)->bus->mdio_lock)
+#define qphy_muget(phydev) mutex_lock(&(phydev)->mdio.bus->mdio_lock)
+#define qphy_muput(phydev) mutex_unlock(&(phydev)->mdio.bus->mdio_lock)
 
 /* read/write given mdio addrs, caller holds mutex */
 static inline int __phy_read_addr(struct phy_device *phydev, u32 addr,
 				  u32 regnum)
 {
-	return phydev->bus->read(phydev->bus, addr, regnum);
+	return phydev->mdio.bus->read(phydev->mdio.bus, addr, regnum);
 }
 
 static inline int __phy_write_addr(struct phy_device *phydev, u32 addr,
 				   u32 regnum, u16 val)
 {
-	return phydev->bus->write(phydev->bus, addr, regnum, val);
+	return phydev->mdio.bus->write(phydev->mdio.bus, addr, regnum, val);
 }
 
 /*
@@ -428,12 +428,11 @@ static struct phy_driver qca833x_driver = {
 #else /* !QCA833X_IRQ */
 	.flags = PHY_HAS_MAGICANEG,
 #endif /* !QCA833X_IRQ */
-	.driver.owner = THIS_MODULE,
 };
 
 static int __init qca833x_init(void)
 {
-	return phy_driver_register(&qca833x_driver);
+	return phy_driver_register(&qca833x_driver, THIS_MODULE);
 }
 
 static void __exit qca833x_exit(void)

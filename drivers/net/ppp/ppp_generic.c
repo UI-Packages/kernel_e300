@@ -46,6 +46,7 @@
 #include <linux/device.h>
 #include <linux/mutex.h>
 #include <linux/slab.h>
+#include <linux/file.h>
 #include <asm/unaligned.h>
 #include <net/slhc_vj.h>
 #include <linux/atomic.h>
@@ -118,6 +119,7 @@ struct ppp {
 	int		n_channels;	/* how many channels are attached 54 */
 	spinlock_t	rlock;		/* lock for receive side 58 */
 	spinlock_t	wlock;		/* lock for transmit side 5c */
+	int		*xmit_recursion __percpu; /* xmit recursion detect */
 	int		mru;		/* max receive unit 60 */
 	unsigned int	flags;		/* control bits 64 */
 	unsigned int	xstate;		/* transmit state bits 68 */
@@ -143,9 +145,8 @@ struct ppp {
 	struct sk_buff_head mrq;	/* MP: receive reconstruction queue */
 #endif /* CONFIG_PPP_MULTILINK */
 #ifdef CONFIG_PPP_FILTER
-	struct sock_filter *pass_filter;	/* filter for packets to pass */
-	struct sock_filter *active_filter;/* filter for pkts to reset idle */
-	unsigned pass_len, active_len;
+	struct bpf_prog *pass_filter;	/* filter for packets to pass */
+	struct bpf_prog *active_filter; /* filter for pkts to reset idle */
 #endif /* CONFIG_PPP_FILTER */
 	struct net	*ppp_net;	/* the net we belong to */
 	struct ppp_link_stats stats64;	/* 64 bit network stats */
@@ -182,6 +183,12 @@ struct channel {
 	u32		lastseq;	/* MP: last sequence # received */
 	int		speed;		/* speed of the corresponding ppp channel*/
 #endif /* CONFIG_PPP_MULTILINK */
+};
+
+struct ppp_config {
+	struct file *file;
+	s32 unit;
+	bool ifname_is_set;
 };
 
 /*
@@ -270,9 +277,8 @@ static void ppp_ccp_peek(struct ppp *ppp, struct sk_buff *skb, int inbound);
 static void ppp_ccp_closed(struct ppp *ppp);
 static struct compressor *find_compressor(int type);
 static void ppp_get_stats(struct ppp *ppp, struct ppp_stats *st);
-static struct ppp *ppp_create_interface(struct net *net, int unit, int *retp);
+static int ppp_create_interface(struct net *net, struct file *file, int *unit);
 static void init_ppp_file(struct ppp_file *pf, int kind);
-static void ppp_shutdown_interface(struct ppp *ppp);
 static void ppp_destroy_interface(struct ppp *ppp);
 static struct ppp *ppp_find_unit(struct ppp_net *pn, int unit);
 static struct channel *ppp_find_channel(struct ppp_net *pn, int unit);
@@ -283,6 +289,9 @@ static int unit_get(struct idr *p, void *ptr);
 static int unit_set(struct idr *p, void *ptr, int n);
 static void unit_put(struct idr *p, int n);
 static void *unit_find(struct idr *p, int n);
+static void ppp_setup(struct net_device *dev);
+
+static const struct net_device_ops ppp_netdev_ops;
 
 static struct class *ppp_class;
 
@@ -393,8 +402,10 @@ static int ppp_release(struct inode *unused, struct file *file)
 		file->private_data = NULL;
 		if (pf->kind == INTERFACE) {
 			ppp = PF_TO_PPP(pf);
+			rtnl_lock();
 			if (file == ppp->owner)
-				ppp_shutdown_interface(ppp);
+				unregister_netdevice(ppp->dev);
+			rtnl_unlock();
 		}
 		if (atomic_dec_and_test(&pf->refcnt)) {
 			switch (pf->kind) {
@@ -418,6 +429,7 @@ static ssize_t ppp_read(struct file *file, char __user *buf,
 	ssize_t ret;
 	struct sk_buff *skb = NULL;
 	struct iovec iov;
+	struct iov_iter to;
 
 	ret = count;
 
@@ -439,9 +451,14 @@ static ssize_t ppp_read(struct file *file, char __user *buf,
 			 * network traffic (demand mode).
 			 */
 			struct ppp *ppp = PF_TO_PPP(pf);
+
+			ppp_recv_lock(ppp);
 			if (ppp->n_channels == 0 &&
-			    (ppp->flags & SC_LOOP_TRAFFIC) == 0)
+			    (ppp->flags & SC_LOOP_TRAFFIC) == 0) {
+				ppp_recv_unlock(ppp);
 				break;
+			}
+			ppp_recv_unlock(ppp);
 		}
 		ret = -EAGAIN;
 		if (file->f_flags & O_NONBLOCK)
@@ -463,7 +480,8 @@ static ssize_t ppp_read(struct file *file, char __user *buf,
 	ret = -EFAULT;
 	iov.iov_base = buf;
 	iov.iov_len = count;
-	if (skb_copy_datagram_iovec(skb, 0, &iov, skb->len))
+	iov_iter_init(&to, READ, &iov, 1, count);
+	if (skb_copy_datagram_iter(skb, 0, &to, skb->len))
 		goto outf;
 	ret = skb->len;
 
@@ -527,9 +545,12 @@ static unsigned int ppp_poll(struct file *file, poll_table *wait)
 	else if (pf->kind == INTERFACE) {
 		/* see comment in ppp_read */
 		struct ppp *ppp = PF_TO_PPP(pf);
+
+		ppp_recv_lock(ppp);
 		if (ppp->n_channels == 0 &&
 		    (ppp->flags & SC_LOOP_TRAFFIC) == 0)
 			mask |= POLLIN | POLLRDNORM;
+		ppp_recv_unlock(ppp);
 	}
 
 	return mask;
@@ -540,7 +561,7 @@ static int get_filter(void __user *arg, struct sock_filter **p)
 {
 	struct sock_fprog uprog;
 	struct sock_filter *code = NULL;
-	int len, err;
+	int len;
 
 	if (copy_from_user(&uprog, arg, sizeof(uprog)))
 		return -EFAULT;
@@ -555,12 +576,6 @@ static int get_filter(void __user *arg, struct sock_filter **p)
 	if (IS_ERR(code))
 		return PTR_ERR(code);
 
-	err = sk_chk_filter(code, uprog.len);
-	if (err) {
-		kfree(code);
-		return err;
-	}
-
 	*p = code;
 	return uprog.len;
 }
@@ -568,7 +583,7 @@ static int get_filter(void __user *arg, struct sock_filter **p)
 
 static long ppp_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 {
-	struct ppp_file *pf = file->private_data;
+	struct ppp_file *pf;
 	struct ppp *ppp;
 	int err = -EFAULT, val, val2, i;
 	struct ppp_idle idle;
@@ -578,9 +593,14 @@ static long ppp_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 	void __user *argp = (void __user *)arg;
 	int __user *p = argp;
 
-	if (!pf)
-		return ppp_unattached_ioctl(current->nsproxy->net_ns,
-					pf, file, cmd, arg);
+	mutex_lock(&ppp_mutex);
+
+	pf = file->private_data;
+	if (!pf) {
+		err = ppp_unattached_ioctl(current->nsproxy->net_ns,
+					   pf, file, cmd, arg);
+		goto out;
+	}
 
 	if (cmd == PPPIOCDETACH) {
 		/*
@@ -595,11 +615,12 @@ static long ppp_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 		 * this fd and reopening /dev/ppp.
 		 */
 		err = -EINVAL;
-		mutex_lock(&ppp_mutex);
 		if (pf->kind == INTERFACE) {
 			ppp = PF_TO_PPP(pf);
+			rtnl_lock();
 			if (file == ppp->owner)
-				ppp_shutdown_interface(ppp);
+				unregister_netdevice(ppp->dev);
+			rtnl_unlock();
 		}
 		if (atomic_long_read(&file->f_count) < 2) {
 			ppp_release(NULL, file);
@@ -607,15 +628,13 @@ static long ppp_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 		} else
 			pr_warn("PPPIOCDETACH file->f_count=%ld\n",
 				atomic_long_read(&file->f_count));
-		mutex_unlock(&ppp_mutex);
-		return err;
+		goto out;
 	}
 
 	if (pf->kind == CHANNEL) {
 		struct channel *pch;
 		struct ppp_channel *chan;
 
-		mutex_lock(&ppp_mutex);
 		pch = PF_TO_CHANNEL(pf);
 
 		switch (cmd) {
@@ -637,17 +656,16 @@ static long ppp_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 				err = chan->ops->ioctl(chan, cmd, arg);
 			up_read(&pch->chan_sem);
 		}
-		mutex_unlock(&ppp_mutex);
-		return err;
+		goto out;
 	}
 
 	if (pf->kind != INTERFACE) {
 		/* can't happen */
 		pr_err("PPP: not interface or channel??\n");
-		return -EINVAL;
+		err = -EINVAL;
+		goto out;
 	}
 
-	mutex_lock(&ppp_mutex);
 	ppp = PF_TO_PPP(pf);
 	switch (cmd) {
 	case PPPIOCSMRU:
@@ -662,6 +680,10 @@ static long ppp_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 			break;
 		ppp_lock(ppp);
 		cflags = ppp->flags & ~val;
+#ifdef CONFIG_PPP_MULTILINK
+		if (!(ppp->flags & SC_MULTILINK) && (val & SC_MULTILINK))
+			ppp->nextseq = 0;
+#endif
 		ppp->flags = val & SC_FLAG_BITS;
 		ppp_unlock(ppp);
 		if (cflags & SC_CCP_OPEN)
@@ -753,28 +775,52 @@ static long ppp_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 	case PPPIOCSPASS:
 	{
 		struct sock_filter *code;
+
 		err = get_filter(argp, &code);
 		if (err >= 0) {
-			ppp_lock(ppp);
-			kfree(ppp->pass_filter);
-			ppp->pass_filter = code;
-			ppp->pass_len = err;
-			ppp_unlock(ppp);
+			struct bpf_prog *pass_filter = NULL;
+			struct sock_fprog_kern fprog = {
+				.len = err,
+				.filter = code,
+			};
+
 			err = 0;
+			if (fprog.filter)
+				err = bpf_prog_create(&pass_filter, &fprog);
+			if (!err) {
+				ppp_lock(ppp);
+				if (ppp->pass_filter)
+					bpf_prog_destroy(ppp->pass_filter);
+				ppp->pass_filter = pass_filter;
+				ppp_unlock(ppp);
+			}
+			kfree(code);
 		}
 		break;
 	}
 	case PPPIOCSACTIVE:
 	{
 		struct sock_filter *code;
+
 		err = get_filter(argp, &code);
 		if (err >= 0) {
-			ppp_lock(ppp);
-			kfree(ppp->active_filter);
-			ppp->active_filter = code;
-			ppp->active_len = err;
-			ppp_unlock(ppp);
+			struct bpf_prog *active_filter = NULL;
+			struct sock_fprog_kern fprog = {
+				.len = err,
+				.filter = code,
+			};
+
 			err = 0;
+			if (fprog.filter)
+				err = bpf_prog_create(&active_filter, &fprog);
+			if (!err) {
+				ppp_lock(ppp);
+				if (ppp->active_filter)
+					bpf_prog_destroy(ppp->active_filter);
+				ppp->active_filter = active_filter;
+				ppp_unlock(ppp);
+			}
+			kfree(code);
 		}
 		break;
 	}
@@ -794,7 +840,10 @@ static long ppp_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 	default:
 		err = -ENOTTY;
 	}
+
+out:
 	mutex_unlock(&ppp_mutex);
+
 	return err;
 }
 
@@ -807,19 +856,17 @@ static int ppp_unattached_ioctl(struct net *net, struct ppp_file *pf,
 	struct ppp_net *pn;
 	int __user *p = (int __user *)arg;
 
-	mutex_lock(&ppp_mutex);
 	switch (cmd) {
 	case PPPIOCNEWUNIT:
 		/* Create a new ppp unit */
 		if (get_user(unit, p))
 			break;
-		ppp = ppp_create_interface(net, unit, &err);
-		if (!ppp)
+		err = ppp_create_interface(net, file, &unit);
+		if (err < 0)
 			break;
-		file->private_data = &ppp->file;
-		ppp->owner = file;
+
 		err = -EFAULT;
-		if (put_user(ppp->file.index, p))
+		if (put_user(unit, p))
 			break;
 		err = 0;
 		break;
@@ -858,7 +905,7 @@ static int ppp_unattached_ioctl(struct net *net, struct ppp_file *pf,
 	default:
 		err = -ENOTTY;
 	}
-	mutex_unlock(&ppp_mutex);
+
 	return err;
 }
 
@@ -891,7 +938,27 @@ static __net_init int ppp_init_net(struct net *net)
 static __net_exit void ppp_exit_net(struct net *net)
 {
 	struct ppp_net *pn = net_generic(net, ppp_net_id);
+	struct net_device *dev;
+	struct net_device *aux;
+	struct ppp *ppp;
+	LIST_HEAD(list);
+	int id;
 
+	rtnl_lock();
+	for_each_netdev_safe(net, dev, aux) {
+		if (dev->netdev_ops == &ppp_netdev_ops)
+			unregister_netdevice_queue(dev, &list);
+	}
+
+	idr_for_each_entry(&pn->units_idr, ppp, id)
+		/* Skip devices already unregistered by previous loop */
+		if (!net_eq(dev_net(ppp->dev), net))
+			unregister_netdevice_queue(ppp->dev, &list);
+
+	unregister_netdevice_many(&list);
+	rtnl_unlock();
+
+	mutex_destroy(&pn->all_ppp_mutex);
 	idr_destroy(&pn->units_idr);
 }
 
@@ -900,6 +967,212 @@ static struct pernet_operations ppp_net_ops = {
 	.exit = ppp_exit_net,
 	.id   = &ppp_net_id,
 	.size = sizeof(struct ppp_net),
+};
+
+static int ppp_unit_register(struct ppp *ppp, int unit, bool ifname_is_set)
+{
+	struct ppp_net *pn = ppp_pernet(ppp->ppp_net);
+	int ret;
+
+	mutex_lock(&pn->all_ppp_mutex);
+
+	if (unit < 0) {
+		ret = unit_get(&pn->units_idr, ppp);
+		if (ret < 0)
+			goto err;
+	} else {
+		/* Caller asked for a specific unit number. Fail with -EEXIST
+		 * if unavailable. For backward compatibility, return -EEXIST
+		 * too if idr allocation fails; this makes pppd retry without
+		 * requesting a specific unit number.
+		 */
+		if (unit_find(&pn->units_idr, unit)) {
+			ret = -EEXIST;
+			goto err;
+		}
+		ret = unit_set(&pn->units_idr, ppp, unit);
+		if (ret < 0) {
+			/* Rewrite error for backward compatibility */
+			ret = -EEXIST;
+			goto err;
+		}
+	}
+	ppp->file.index = ret;
+
+	if (!ifname_is_set)
+		snprintf(ppp->dev->name, IFNAMSIZ, "ppp%i", ppp->file.index);
+
+	mutex_unlock(&pn->all_ppp_mutex);
+
+	ret = register_netdevice(ppp->dev);
+	if (ret < 0)
+		goto err_unit;
+
+	atomic_inc(&ppp_unit_count);
+
+	return 0;
+
+err_unit:
+	mutex_lock(&pn->all_ppp_mutex);
+	unit_put(&pn->units_idr, ppp->file.index);
+err:
+	mutex_unlock(&pn->all_ppp_mutex);
+
+	return ret;
+}
+
+static int ppp_dev_configure(struct net *src_net, struct net_device *dev,
+			     const struct ppp_config *conf)
+{
+	struct ppp *ppp = netdev_priv(dev);
+	int indx;
+	int err;
+	int cpu;
+
+	ppp->dev = dev;
+	ppp->ppp_net = src_net;
+	ppp->mru = PPP_MRU;
+	ppp->owner = conf->file;
+
+	init_ppp_file(&ppp->file, INTERFACE);
+	ppp->file.hdrlen = PPP_HDRLEN - 2; /* don't count proto bytes */
+
+	for (indx = 0; indx < NUM_NP; ++indx)
+		ppp->npmode[indx] = NPMODE_PASS;
+	INIT_LIST_HEAD(&ppp->channels);
+	spin_lock_init(&ppp->rlock);
+	spin_lock_init(&ppp->wlock);
+
+	ppp->xmit_recursion = alloc_percpu(int);
+	if (!ppp->xmit_recursion) {
+		err = -ENOMEM;
+		goto err1;
+	}
+	for_each_possible_cpu(cpu)
+		(*per_cpu_ptr(ppp->xmit_recursion, cpu)) = 0;
+
+#ifdef CONFIG_PPP_MULTILINK
+	ppp->minseq = -1;
+	skb_queue_head_init(&ppp->mrq);
+#endif /* CONFIG_PPP_MULTILINK */
+#ifdef CONFIG_PPP_FILTER
+	ppp->pass_filter = NULL;
+	ppp->active_filter = NULL;
+#endif /* CONFIG_PPP_FILTER */
+
+	err = ppp_unit_register(ppp, conf->unit, conf->ifname_is_set);
+	if (err < 0)
+		goto err2;
+
+	conf->file->private_data = &ppp->file;
+
+	return 0;
+err2:
+	free_percpu(ppp->xmit_recursion);
+err1:
+	return err;
+}
+
+static const struct nla_policy ppp_nl_policy[IFLA_PPP_MAX + 1] = {
+	[IFLA_PPP_DEV_FD]	= { .type = NLA_S32 },
+};
+
+static int ppp_nl_validate(struct nlattr *tb[], struct nlattr *data[])
+{
+	if (!data)
+		return -EINVAL;
+
+	if (!data[IFLA_PPP_DEV_FD])
+		return -EINVAL;
+	if (nla_get_s32(data[IFLA_PPP_DEV_FD]) < 0)
+		return -EBADF;
+
+	return 0;
+}
+
+static int ppp_nl_newlink(struct net *src_net, struct net_device *dev,
+			  struct nlattr *tb[], struct nlattr *data[])
+{
+	struct ppp_config conf = {
+		.unit = -1,
+		.ifname_is_set = true,
+	};
+	struct file *file;
+	int err;
+
+	file = fget(nla_get_s32(data[IFLA_PPP_DEV_FD]));
+	if (!file)
+		return -EBADF;
+
+	/* rtnl_lock is already held here, but ppp_create_interface() locks
+	 * ppp_mutex before holding rtnl_lock. Using mutex_trylock() avoids
+	 * possible deadlock due to lock order inversion, at the cost of
+	 * pushing the problem back to userspace.
+	 */
+	if (!mutex_trylock(&ppp_mutex)) {
+		err = -EBUSY;
+		goto out;
+	}
+
+	if (file->f_op != &ppp_device_fops || file->private_data) {
+		err = -EBADF;
+		goto out_unlock;
+	}
+
+	conf.file = file;
+
+	/* Don't use device name generated by the rtnetlink layer when ifname
+	 * isn't specified. Let ppp_dev_configure() set the device name using
+	 * the PPP unit identifer as suffix (i.e. ppp<unit_id>). This allows
+	 * userspace to infer the device name using to the PPPIOCGUNIT ioctl.
+	 */
+	if (!tb[IFLA_IFNAME])
+		conf.ifname_is_set = false;
+
+	err = ppp_dev_configure(src_net, dev, &conf);
+
+out_unlock:
+	mutex_unlock(&ppp_mutex);
+out:
+	fput(file);
+
+	return err;
+}
+
+static void ppp_nl_dellink(struct net_device *dev, struct list_head *head)
+{
+	unregister_netdevice_queue(dev, head);
+}
+
+static size_t ppp_nl_get_size(const struct net_device *dev)
+{
+	return 0;
+}
+
+static int ppp_nl_fill_info(struct sk_buff *skb, const struct net_device *dev)
+{
+	return 0;
+}
+
+static struct net *ppp_nl_get_link_net(const struct net_device *dev)
+{
+	struct ppp *ppp = netdev_priv(dev);
+
+	return ppp->ppp_net;
+}
+
+static struct rtnl_link_ops ppp_link_ops __read_mostly = {
+	.kind		= "ppp",
+	.maxtype	= IFLA_PPP_MAX,
+	.policy		= ppp_nl_policy,
+	.priv_size	= sizeof(struct ppp),
+	.setup		= ppp_setup,
+	.validate	= ppp_nl_validate,
+	.newlink	= ppp_nl_newlink,
+	.dellink	= ppp_nl_dellink,
+	.get_size	= ppp_nl_get_size,
+	.fill_info	= ppp_nl_fill_info,
+	.get_link_net	= ppp_nl_get_link_net,
 };
 
 #define PPP_MAJOR	108
@@ -930,11 +1203,19 @@ static int __init ppp_init(void)
 		goto out_chrdev;
 	}
 
+	err = rtnl_link_register(&ppp_link_ops);
+	if (err) {
+		pr_err("failed to register rtnetlink PPP handler\n");
+		goto out_class;
+	}
+
 	/* not a big deal if we fail here :-) */
 	device_create(ppp_class, NULL, MKDEV(PPP_MAJOR, 0), NULL, "ppp");
 
 	return 0;
 
+out_class:
+	class_destroy(ppp_class);
 out_chrdev:
 	unregister_chrdev(PPP_MAJOR, "ppp");
 out_net:
@@ -979,6 +1260,7 @@ ppp_start_xmit(struct sk_buff *skb, struct net_device *dev)
 	proto = npindex_to_proto[npi];
 	put_unaligned_be16(proto, pp);
 
+	skb_scrub_packet(skb, !net_eq(ppp->ppp_net, dev_net(dev)));
 	skb_queue_tail(&ppp->file.xq, skb);
 	ppp_xmit_process(ppp);
 	return NETDEV_TX_OK;
@@ -997,6 +1279,7 @@ ppp_net_ioctl(struct net_device *dev, struct ifreq *ifr, int cmd)
 	void __user *addr = (void __user *) ifr->ifr_ifru.ifru_data;
 	struct ppp_stats stats;
 	struct ppp_comp_stats cstats;
+	char *vers;
 
 	switch (cmd) {
 	case SIOCGPPPSTATS:
@@ -1018,7 +1301,8 @@ ppp_net_ioctl(struct net_device *dev, struct ifreq *ifr, int cmd)
 		break;
 
 	case SIOCGPPPVER:
-		if (copy_to_user(addr, PPP_VERSION, sizeof(PPP_VERSION)))
+		vers = PPP_VERSION;
+		if (copy_to_user(addr, vers, strlen(vers) + 1))
 			break;
 		err = 0;
 		break;
@@ -1054,43 +1338,85 @@ ppp_get_stats64(struct net_device *dev, struct rtnl_link_stats64 *stats64)
 	return stats64;
 }
 
-static struct lock_class_key ppp_tx_busylock;
 static int ppp_dev_init(struct net_device *dev)
 {
-	dev->qdisc_tx_busylock = &ppp_tx_busylock;
+	struct ppp *ppp;
+
+	netdev_lockdep_set_classes(dev);
+
+	ppp = netdev_priv(dev);
+	/* Let the netdevice take a reference on the ppp file. This ensures
+	 * that ppp_destroy_interface() won't run before the device gets
+	 * unregistered.
+	 */
+	atomic_inc(&ppp->file.refcnt);
+
 	return 0;
+}
+
+static void ppp_dev_uninit(struct net_device *dev)
+{
+	struct ppp *ppp = netdev_priv(dev);
+	struct ppp_net *pn = ppp_pernet(ppp->ppp_net);
+
+	ppp_lock(ppp);
+	ppp->closing = 1;
+	ppp_unlock(ppp);
+
+	mutex_lock(&pn->all_ppp_mutex);
+	unit_put(&pn->units_idr, ppp->file.index);
+	mutex_unlock(&pn->all_ppp_mutex);
+
+	ppp->owner = NULL;
+
+	ppp->file.dead = 1;
+	wake_up_interruptible(&ppp->file.rwait);
+}
+
+static void ppp_dev_priv_destructor(struct net_device *dev)
+{
+	struct ppp *ppp;
+
+	ppp = netdev_priv(dev);
+	if (atomic_dec_and_test(&ppp->file.refcnt))
+		ppp_destroy_interface(ppp);
 }
 
 static const struct net_device_ops ppp_netdev_ops = {
 	.ndo_init	 = ppp_dev_init,
+	.ndo_uninit      = ppp_dev_uninit,
 	.ndo_start_xmit  = ppp_start_xmit,
 	.ndo_do_ioctl    = ppp_net_ioctl,
 	.ndo_get_stats64 = ppp_get_stats64,
 };
 
+static struct device_type ppp_type = {
+	.name = "ppp",
+};
+
 static void ppp_setup(struct net_device *dev)
 {
 	dev->netdev_ops = &ppp_netdev_ops;
+	SET_NETDEV_DEVTYPE(dev, &ppp_type);
+
+	dev->features |= NETIF_F_LLTX;
+
 	dev->hard_header_len = PPP_HDRLEN;
 	dev->mtu = PPP_MRU;
 	dev->addr_len = 0;
 	dev->tx_queue_len = 3;
 	dev->type = ARPHRD_PPP;
 	dev->flags = IFF_POINTOPOINT | IFF_NOARP | IFF_MULTICAST;
-	dev->features |= NETIF_F_NETNS_LOCAL;
-	dev->priv_flags &= ~IFF_XMIT_DST_RELEASE;
+	dev->destructor = ppp_dev_priv_destructor;
+	netif_keep_dst(dev);
 }
 
 /*
  * Transmit-side routines.
  */
 
-/*
- * Called to do any work queued up on the transmit side
- * that can now be done.
- */
-static void
-ppp_xmit_process(struct ppp *ppp)
+/* Called to do any work queued up on the transmit side that can now be done */
+static void __ppp_xmit_process(struct ppp *ppp)
 {
 	struct sk_buff *skb;
 
@@ -1108,6 +1434,28 @@ ppp_xmit_process(struct ppp *ppp)
 			netif_stop_queue(ppp->dev);
 	}
 	ppp_xmit_unlock(ppp);
+}
+
+static void ppp_xmit_process(struct ppp *ppp)
+{
+	local_bh_disable();
+
+	if (unlikely(*this_cpu_ptr(ppp->xmit_recursion)))
+		goto err;
+
+	(*this_cpu_ptr(ppp->xmit_recursion))++;
+	__ppp_xmit_process(ppp);
+	(*this_cpu_ptr(ppp->xmit_recursion))--;
+
+	local_bh_enable();
+
+	return;
+
+err:
+	local_bh_enable();
+
+	if (net_ratelimit())
+		netdev_err(ppp->dev, "recursion detected\n");
 }
 
 static inline struct sk_buff *
@@ -1180,7 +1528,7 @@ ppp_send_frame(struct ppp *ppp, struct sk_buff *skb)
 		   a four-byte PPP header on each packet */
 		*skb_push(skb, 2) = 1;
 		if (ppp->pass_filter &&
-		    sk_run_filter(skb, ppp->pass_filter) == 0) {
+		    BPF_PROG_RUN(ppp->pass_filter, skb) == 0) {
 			if (ppp->debug & 1)
 				netdev_printk(KERN_DEBUG, ppp->dev,
 					      "PPP: outbound frame "
@@ -1190,7 +1538,7 @@ ppp_send_frame(struct ppp *ppp, struct sk_buff *skb)
 		}
 		/* if this packet passes the active filter, record the time */
 		if (!(ppp->active_filter &&
-		      sk_run_filter(skb, ppp->active_filter) == 0))
+		      BPF_PROG_RUN(ppp->active_filter, skb) == 0))
 			ppp->last_xmit = jiffies;
 		skb_pull(skb, 2);
 #else
@@ -1565,11 +1913,8 @@ static int ppp_mp_explode(struct ppp *ppp, struct sk_buff *skb)
 }
 #endif /* CONFIG_PPP_MULTILINK */
 
-/*
- * Try to send data out on a channel.
- */
-static void
-ppp_channel_push(struct channel *pch)
+/* Try to send data out on a channel */
+static void __ppp_channel_push(struct channel *pch)
 {
 	struct sk_buff *skb;
 	struct ppp *ppp;
@@ -1591,12 +1936,23 @@ ppp_channel_push(struct channel *pch)
 	spin_unlock_bh(&pch->downl);
 	/* see if there is anything from the attached unit to be sent */
 	if (skb_queue_empty(&pch->file.xq)) {
-		read_lock_bh(&pch->upl);
 		ppp = pch->ppp;
 		if (ppp)
-			ppp_xmit_process(ppp);
-		read_unlock_bh(&pch->upl);
+			__ppp_xmit_process(ppp);
 	}
+}
+
+static void ppp_channel_push(struct channel *pch)
+{
+	read_lock_bh(&pch->upl);
+	if (pch->ppp) {
+		(*this_cpu_ptr(pch->ppp->xmit_recursion))++;
+		__ppp_channel_push(pch);
+		(*this_cpu_ptr(pch->ppp->xmit_recursion))--;
+	} else {
+		__ppp_channel_push(pch);
+	}
+	read_unlock_bh(&pch->upl);
 }
 
 /*
@@ -1689,6 +2045,7 @@ ppp_receive_frame(struct ppp *ppp, struct sk_buff *skb, struct channel *pch)
 {
 	/* note: a 0-length skb is used as an error indication */
 	if (skb->len > 0) {
+		skb_checksum_complete_unset(skb);
 #ifdef CONFIG_PPP_MULTILINK
 		/* XXX do channel-level decompression here */
 		if (PPP_PROTO(skb) == PPP_MP)
@@ -1814,7 +2171,7 @@ ppp_receive_nonmp_frame(struct ppp *ppp, struct sk_buff *skb)
 
 			*skb_push(skb, 2) = 0;
 			if (ppp->pass_filter &&
-			    sk_run_filter(skb, ppp->pass_filter) == 0) {
+			    BPF_PROG_RUN(ppp->pass_filter, skb) == 0) {
 				if (ppp->debug & 1)
 					netdev_printk(KERN_DEBUG, ppp->dev,
 						      "PPP: inbound frame "
@@ -1823,7 +2180,7 @@ ppp_receive_nonmp_frame(struct ppp *ppp, struct sk_buff *skb)
 				return;
 			}
 			if (!(ppp->active_filter &&
-			      sk_run_filter(skb, ppp->active_filter) == 0))
+			      BPF_PROG_RUN(ppp->active_filter, skb) == 0))
 				ppp->last_recv = jiffies;
 			__skb_pull(skb, 2);
 		} else
@@ -1839,6 +2196,8 @@ ppp_receive_nonmp_frame(struct ppp *ppp, struct sk_buff *skb)
 			skb->dev = ppp->dev;
 			skb->protocol = htons(npindex_to_ethertype[npi]);
 			skb_reset_mac_header(skb);
+			skb_scrub_packet(skb, !net_eq(ppp->ppp_net,
+						      dev_net(ppp->dev)));
 			netif_rx(skb);
 		}
 	}
@@ -2351,13 +2710,15 @@ ppp_set_compress(struct ppp *ppp, unsigned long arg)
 	unsigned char ccp_option[CCP_MAX_OPTION_LENGTH];
 
 	err = -EFAULT;
-	if (copy_from_user(&data, (void __user *) arg, sizeof(data)) ||
-	    (data.length <= CCP_MAX_OPTION_LENGTH &&
-	     copy_from_user(ccp_option, (void __user *) data.ptr, data.length)))
+	if (copy_from_user(&data, (void __user *) arg, sizeof(data)))
 		goto out;
+	if (data.length > CCP_MAX_OPTION_LENGTH)
+		goto out;
+	if (copy_from_user(ccp_option, (void __user *) data.ptr, data.length))
+		goto out;
+
 	err = -EINVAL;
-	if (data.length > CCP_MAX_OPTION_LENGTH ||
-	    ccp_option[1] < 2 || ccp_option[1] > data.length)
+	if (data.length < 2 || ccp_option[1] < 2 || ccp_option[1] > data.length)
 		goto out;
 
 	cp = try_then_request_module(
@@ -2639,94 +3000,42 @@ ppp_get_stats(struct ppp *ppp, struct ppp_stats *st)
  * or if there is already a unit with the requested number.
  * unit == -1 means allocate a new number.
  */
-static struct ppp *
-ppp_create_interface(struct net *net, int unit, int *retp)
+static int ppp_create_interface(struct net *net, struct file *file, int *unit)
 {
+	struct ppp_config conf = {
+		.file = file,
+		.unit = *unit,
+		.ifname_is_set = false,
+	};
+	struct net_device *dev;
 	struct ppp *ppp;
-	struct ppp_net *pn;
-	struct net_device *dev = NULL;
-	int ret = -ENOMEM;
-	int i;
+	int err;
 
-	dev = alloc_netdev(sizeof(struct ppp), "", ppp_setup);
-	if (!dev)
-		goto out1;
-
-	pn = ppp_pernet(net);
-
-	ppp = netdev_priv(dev);
-	ppp->dev = dev;
-	ppp->mru = PPP_MRU;
-	init_ppp_file(&ppp->file, INTERFACE);
-	ppp->file.hdrlen = PPP_HDRLEN - 2;	/* don't count proto bytes */
-	for (i = 0; i < NUM_NP; ++i)
-		ppp->npmode[i] = NPMODE_PASS;
-	INIT_LIST_HEAD(&ppp->channels);
-	spin_lock_init(&ppp->rlock);
-	spin_lock_init(&ppp->wlock);
-#ifdef CONFIG_PPP_MULTILINK
-	ppp->minseq = -1;
-	skb_queue_head_init(&ppp->mrq);
-#endif /* CONFIG_PPP_MULTILINK */
-
-	/*
-	 * drum roll: don't forget to set
-	 * the net device is belong to
-	 */
+	dev = alloc_netdev(sizeof(struct ppp), "", NET_NAME_ENUM, ppp_setup);
+	if (!dev) {
+		err = -ENOMEM;
+		goto err;
+	}
 	dev_net_set(dev, net);
+	dev->rtnl_link_ops = &ppp_link_ops;
 
-	mutex_lock(&pn->all_ppp_mutex);
+	rtnl_lock();
 
-	if (unit < 0) {
-		unit = unit_get(&pn->units_idr, ppp);
-		if (unit < 0) {
-			ret = unit;
-			goto out2;
-		}
-	} else {
-		ret = -EEXIST;
-		if (unit_find(&pn->units_idr, unit))
-			goto out2; /* unit already exists */
-		/*
-		 * if caller need a specified unit number
-		 * lets try to satisfy him, otherwise --
-		 * he should better ask us for new unit number
-		 *
-		 * NOTE: yes I know that returning EEXIST it's not
-		 * fair but at least pppd will ask us to allocate
-		 * new unit in this case so user is happy :)
-		 */
-		unit = unit_set(&pn->units_idr, ppp, unit);
-		if (unit < 0)
-			goto out2;
-	}
+	err = ppp_dev_configure(net, dev, &conf);
+	if (err < 0)
+		goto err_dev;
+	ppp = netdev_priv(dev);
+	*unit = ppp->file.index;
 
-	/* Initialize the new ppp unit */
-	ppp->file.index = unit;
-	sprintf(dev->name, "ppp%d", unit);
+	rtnl_unlock();
 
-	ret = register_netdev(dev);
-	if (ret != 0) {
-		unit_put(&pn->units_idr, unit);
-		netdev_err(ppp->dev, "PPP: couldn't register device %s (%d)\n",
-			   dev->name, ret);
-		goto out2;
-	}
+	return 0;
 
-	ppp->ppp_net = net;
-
-	atomic_inc(&ppp_unit_count);
-	mutex_unlock(&pn->all_ppp_mutex);
-
-	*retp = 0;
-	return ppp;
-
-out2:
-	mutex_unlock(&pn->all_ppp_mutex);
+err_dev:
+	rtnl_unlock();
 	free_netdev(dev);
-out1:
-	*retp = ret;
-	return NULL;
+err:
+	return err;
 }
 
 /*
@@ -2740,34 +3049,6 @@ init_ppp_file(struct ppp_file *pf, int kind)
 	skb_queue_head_init(&pf->rq);
 	atomic_set(&pf->refcnt, 1);
 	init_waitqueue_head(&pf->rwait);
-}
-
-/*
- * Take down a ppp interface unit - called when the owning file
- * (the one that created the unit) is closed or detached.
- */
-static void ppp_shutdown_interface(struct ppp *ppp)
-{
-	struct ppp_net *pn;
-
-	pn = ppp_pernet(ppp->ppp_net);
-	mutex_lock(&pn->all_ppp_mutex);
-
-	/* This will call dev_close() for us. */
-	ppp_lock(ppp);
-	if (!ppp->closing) {
-		ppp->closing = 1;
-		ppp_unlock(ppp);
-		unregister_netdev(ppp->dev);
-		unit_put(&pn->units_idr, ppp->file.index);
-	} else
-		ppp_unlock(ppp);
-
-	ppp->file.dead = 1;
-	ppp->owner = NULL;
-	wake_up_interruptible(&ppp->file.rwait);
-
-	mutex_unlock(&pn->all_ppp_mutex);
 }
 
 /*
@@ -2798,13 +3079,19 @@ static void ppp_destroy_interface(struct ppp *ppp)
 	skb_queue_purge(&ppp->mrq);
 #endif /* CONFIG_PPP_MULTILINK */
 #ifdef CONFIG_PPP_FILTER
-	kfree(ppp->pass_filter);
-	ppp->pass_filter = NULL;
-	kfree(ppp->active_filter);
-	ppp->active_filter = NULL;
+	if (ppp->pass_filter) {
+		bpf_prog_destroy(ppp->pass_filter);
+		ppp->pass_filter = NULL;
+	}
+
+	if (ppp->active_filter) {
+		bpf_prog_destroy(ppp->active_filter);
+		ppp->active_filter = NULL;
+	}
 #endif /* CONFIG_PPP_FILTER */
 
 	kfree_skb(ppp->xmit_pending);
+	free_percpu(ppp->xmit_recursion);
 
 	free_netdev(ppp->dev);
 }
@@ -2941,6 +3228,7 @@ static void __exit ppp_cleanup(void)
 	/* should never happen */
 	if (atomic_read(&ppp_unit_count) || atomic_read(&channel_count))
 		pr_err("PPP: removing module but units remain!\n");
+	rtnl_link_unregister(&ppp_link_ops);
 	unregister_chrdev(PPP_MAJOR, "ppp");
 	device_destroy(ppp_class, MKDEV(PPP_MAJOR, 0));
 	class_destroy(ppp_class);
@@ -2999,4 +3287,5 @@ EXPORT_SYMBOL(ppp_register_compressor);
 EXPORT_SYMBOL(ppp_unregister_compressor);
 MODULE_LICENSE("GPL");
 MODULE_ALIAS_CHARDEV(PPP_MAJOR, 0);
+MODULE_ALIAS_RTNL_LINK("ppp");
 MODULE_ALIAS("devname:ppp");

@@ -22,14 +22,16 @@ struct real_mode_header {
 #endif
 	/* APM/BIOS reboot */
 	u32	machine_real_restart_asm;
+#ifdef CONFIG_X86_64
 	u32	machine_real_restart_seg;
+#endif
 };
 
 /* This must match data at trampoline_32/64.S */
 struct trampoline_header {
 #ifdef CONFIG_X86_32
 	u32 start;
-	u16 boot_cs;
+	u16 gdt_pad;
 	u16 gdt_limit;
 	u32 gdt_base;
 #else
@@ -42,9 +44,9 @@ struct trampoline_header {
 extern struct real_mode_header *real_mode_header;
 extern unsigned char real_mode_blob_end[];
 
-extern unsigned long init_rsp;
 extern unsigned long initial_code;
 extern unsigned long initial_gs;
+extern unsigned long initial_stack;
 
 extern unsigned char real_mode_blob[];
 extern unsigned char real_mode_relocs[];
@@ -56,7 +58,15 @@ extern unsigned char boot_gdt[];
 extern unsigned char secondary_startup_64[];
 #endif
 
+static inline size_t real_mode_size_needed(void)
+{
+	if (real_mode_header)
+		return 0;	/* already allocated. */
+
+	return ALIGN(real_mode_blob_end - real_mode_blob, PAGE_SIZE);
+}
+
+void set_real_mode_mem(phys_addr_t mem, size_t size);
 void reserve_real_mode(void);
-void setup_real_mode(void);
 
 #endif /* _ARCH_X86_REALMODE_H */

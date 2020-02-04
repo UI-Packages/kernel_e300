@@ -1,5 +1,5 @@
 /***********************license start***************
- * Copyright (c) 2003-2015  Cavium Inc. (support@cavium.com). All rights
+ * Copyright (c) 2003-2017  Cavium Inc. (support@cavium.com). All rights
  * reserved.
  *
  *
@@ -74,11 +74,6 @@ static inline uint64_t CVMX_SMIX_CLK(unsigned long offset)
 			if ((offset == 0))
 				return CVMX_ADD_IO_SEG(0x0001180000001818ull) + ((offset) & 0) * 256;
 			break;
-		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
-			if ((offset <= 1))
-				return CVMX_ADD_IO_SEG(0x0001180000003818ull) + ((offset) & 1) * 128;
-			break;
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				if ((offset <= 3))
@@ -89,6 +84,11 @@ static inline uint64_t CVMX_SMIX_CLK(unsigned long offset)
 		case OCTEON_CN68XX & OCTEON_FAMILY_MASK:
 			if ((offset <= 3))
 				return CVMX_ADD_IO_SEG(0x0001180000003818ull) + ((offset) & 3) * 128;
+			break;
+		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
+			if ((offset <= 1))
+				return CVMX_ADD_IO_SEG(0x0001180000003818ull) + ((offset) & 1) * 128;
 			break;
 	}
 	cvmx_warn("CVMX_SMIX_CLK (offset = %lu) not supported on this chip\n", offset);
@@ -112,15 +112,15 @@ static inline uint64_t CVMX_SMIX_CLK(unsigned long offset)
 		case OCTEON_CN31XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN58XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x0001180000001818ull) + (offset) * 256;
-		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
-			return CVMX_ADD_IO_SEG(0x0001180000003818ull) + (offset) * 128;
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return CVMX_ADD_IO_SEG(0x0001180000003818ull) + (offset) * 128;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return CVMX_ADD_IO_SEG(0x0001180000003818ull) + (offset) * 128;
 		case OCTEON_CN68XX & OCTEON_FAMILY_MASK:
+			return CVMX_ADD_IO_SEG(0x0001180000003818ull) + (offset) * 128;
+		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x0001180000003818ull) + (offset) * 128;
 	}
 	return CVMX_ADD_IO_SEG(0x0001180000003818ull) + (offset) * 128;
@@ -148,11 +148,6 @@ static inline uint64_t CVMX_SMIX_CMD(unsigned long offset)
 			if ((offset == 0))
 				return CVMX_ADD_IO_SEG(0x0001180000001800ull) + ((offset) & 0) * 256;
 			break;
-		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
-			if ((offset <= 1))
-				return CVMX_ADD_IO_SEG(0x0001180000003800ull) + ((offset) & 1) * 128;
-			break;
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				if ((offset <= 3))
@@ -163,6 +158,11 @@ static inline uint64_t CVMX_SMIX_CMD(unsigned long offset)
 		case OCTEON_CN68XX & OCTEON_FAMILY_MASK:
 			if ((offset <= 3))
 				return CVMX_ADD_IO_SEG(0x0001180000003800ull) + ((offset) & 3) * 128;
+			break;
+		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
+			if ((offset <= 1))
+				return CVMX_ADD_IO_SEG(0x0001180000003800ull) + ((offset) & 1) * 128;
 			break;
 	}
 	cvmx_warn("CVMX_SMIX_CMD (offset = %lu) not supported on this chip\n", offset);
@@ -186,15 +186,15 @@ static inline uint64_t CVMX_SMIX_CMD(unsigned long offset)
 		case OCTEON_CN31XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN58XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x0001180000001800ull) + (offset) * 256;
-		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
-			return CVMX_ADD_IO_SEG(0x0001180000003800ull) + (offset) * 128;
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return CVMX_ADD_IO_SEG(0x0001180000003800ull) + (offset) * 128;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return CVMX_ADD_IO_SEG(0x0001180000003800ull) + (offset) * 128;
 		case OCTEON_CN68XX & OCTEON_FAMILY_MASK:
+			return CVMX_ADD_IO_SEG(0x0001180000003800ull) + (offset) * 128;
+		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x0001180000003800ull) + (offset) * 128;
 	}
 	return CVMX_ADD_IO_SEG(0x0001180000003800ull) + (offset) * 128;
@@ -222,11 +222,6 @@ static inline uint64_t CVMX_SMIX_EN(unsigned long offset)
 			if ((offset == 0))
 				return CVMX_ADD_IO_SEG(0x0001180000001820ull) + ((offset) & 0) * 256;
 			break;
-		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
-			if ((offset <= 1))
-				return CVMX_ADD_IO_SEG(0x0001180000003820ull) + ((offset) & 1) * 128;
-			break;
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				if ((offset <= 3))
@@ -237,6 +232,11 @@ static inline uint64_t CVMX_SMIX_EN(unsigned long offset)
 		case OCTEON_CN68XX & OCTEON_FAMILY_MASK:
 			if ((offset <= 3))
 				return CVMX_ADD_IO_SEG(0x0001180000003820ull) + ((offset) & 3) * 128;
+			break;
+		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
+			if ((offset <= 1))
+				return CVMX_ADD_IO_SEG(0x0001180000003820ull) + ((offset) & 1) * 128;
 			break;
 	}
 	cvmx_warn("CVMX_SMIX_EN (offset = %lu) not supported on this chip\n", offset);
@@ -260,15 +260,15 @@ static inline uint64_t CVMX_SMIX_EN(unsigned long offset)
 		case OCTEON_CN31XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN58XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x0001180000001820ull) + (offset) * 256;
-		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
-			return CVMX_ADD_IO_SEG(0x0001180000003820ull) + (offset) * 128;
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return CVMX_ADD_IO_SEG(0x0001180000003820ull) + (offset) * 128;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return CVMX_ADD_IO_SEG(0x0001180000003820ull) + (offset) * 128;
 		case OCTEON_CN68XX & OCTEON_FAMILY_MASK:
+			return CVMX_ADD_IO_SEG(0x0001180000003820ull) + (offset) * 128;
+		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x0001180000003820ull) + (offset) * 128;
 	}
 	return CVMX_ADD_IO_SEG(0x0001180000003820ull) + (offset) * 128;
@@ -296,11 +296,6 @@ static inline uint64_t CVMX_SMIX_RD_DAT(unsigned long offset)
 			if ((offset == 0))
 				return CVMX_ADD_IO_SEG(0x0001180000001810ull) + ((offset) & 0) * 256;
 			break;
-		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
-			if ((offset <= 1))
-				return CVMX_ADD_IO_SEG(0x0001180000003810ull) + ((offset) & 1) * 128;
-			break;
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				if ((offset <= 3))
@@ -311,6 +306,11 @@ static inline uint64_t CVMX_SMIX_RD_DAT(unsigned long offset)
 		case OCTEON_CN68XX & OCTEON_FAMILY_MASK:
 			if ((offset <= 3))
 				return CVMX_ADD_IO_SEG(0x0001180000003810ull) + ((offset) & 3) * 128;
+			break;
+		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
+			if ((offset <= 1))
+				return CVMX_ADD_IO_SEG(0x0001180000003810ull) + ((offset) & 1) * 128;
 			break;
 	}
 	cvmx_warn("CVMX_SMIX_RD_DAT (offset = %lu) not supported on this chip\n", offset);
@@ -334,15 +334,15 @@ static inline uint64_t CVMX_SMIX_RD_DAT(unsigned long offset)
 		case OCTEON_CN31XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN58XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x0001180000001810ull) + (offset) * 256;
-		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
-			return CVMX_ADD_IO_SEG(0x0001180000003810ull) + (offset) * 128;
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return CVMX_ADD_IO_SEG(0x0001180000003810ull) + (offset) * 128;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return CVMX_ADD_IO_SEG(0x0001180000003810ull) + (offset) * 128;
 		case OCTEON_CN68XX & OCTEON_FAMILY_MASK:
+			return CVMX_ADD_IO_SEG(0x0001180000003810ull) + (offset) * 128;
+		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x0001180000003810ull) + (offset) * 128;
 	}
 	return CVMX_ADD_IO_SEG(0x0001180000003810ull) + (offset) * 128;
@@ -370,11 +370,6 @@ static inline uint64_t CVMX_SMIX_WR_DAT(unsigned long offset)
 			if ((offset == 0))
 				return CVMX_ADD_IO_SEG(0x0001180000001808ull) + ((offset) & 0) * 256;
 			break;
-		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
-			if ((offset <= 1))
-				return CVMX_ADD_IO_SEG(0x0001180000003808ull) + ((offset) & 1) * 128;
-			break;
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				if ((offset <= 3))
@@ -385,6 +380,11 @@ static inline uint64_t CVMX_SMIX_WR_DAT(unsigned long offset)
 		case OCTEON_CN68XX & OCTEON_FAMILY_MASK:
 			if ((offset <= 3))
 				return CVMX_ADD_IO_SEG(0x0001180000003808ull) + ((offset) & 3) * 128;
+			break;
+		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
+			if ((offset <= 1))
+				return CVMX_ADD_IO_SEG(0x0001180000003808ull) + ((offset) & 1) * 128;
 			break;
 	}
 	cvmx_warn("CVMX_SMIX_WR_DAT (offset = %lu) not supported on this chip\n", offset);
@@ -408,15 +408,15 @@ static inline uint64_t CVMX_SMIX_WR_DAT(unsigned long offset)
 		case OCTEON_CN31XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN58XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x0001180000001808ull) + (offset) * 256;
-		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
-			return CVMX_ADD_IO_SEG(0x0001180000003808ull) + (offset) * 128;
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return CVMX_ADD_IO_SEG(0x0001180000003808ull) + (offset) * 128;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return CVMX_ADD_IO_SEG(0x0001180000003808ull) + (offset) * 128;
 		case OCTEON_CN68XX & OCTEON_FAMILY_MASK:
+			return CVMX_ADD_IO_SEG(0x0001180000003808ull) + (offset) * 128;
+		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x0001180000003808ull) + (offset) * 128;
 	}
 	return CVMX_ADD_IO_SEG(0x0001180000003808ull) + (offset) * 128;
@@ -428,7 +428,7 @@ static inline uint64_t CVMX_SMIX_WR_DAT(unsigned long offset)
  *
  * This register determines the SMI timing characteristics.
  * If software wants to change SMI CLK timing parameters ([SAMPLE]/[SAMPLE_HI]), software
- * must delay the SMI_()_CLK CSR write by at least 512 coprocessor-clocks after the
+ * must delay the SMI_()_CLK CSR write by at least 512 coprocessor-clock cycles after the
  * previous SMI operation is finished.
  */
 union cvmx_smix_clk {
@@ -527,7 +527,7 @@ union cvmx_smix_clk {
 	struct cvmx_smix_clk_s                cn70xxp1;
 	struct cvmx_smix_clk_s                cn73xx;
 	struct cvmx_smix_clk_s                cn78xx;
-	struct cvmx_smix_clk_s                cn78xxp2;
+	struct cvmx_smix_clk_s                cn78xxp1;
 	struct cvmx_smix_clk_s                cnf71xx;
 	struct cvmx_smix_clk_s                cnf75xx;
 };
@@ -605,7 +605,7 @@ union cvmx_smix_cmd {
 	struct cvmx_smix_cmd_s                cn70xxp1;
 	struct cvmx_smix_cmd_s                cn73xx;
 	struct cvmx_smix_cmd_s                cn78xx;
-	struct cvmx_smix_cmd_s                cn78xxp2;
+	struct cvmx_smix_cmd_s                cn78xxp1;
 	struct cvmx_smix_cmd_s                cnf71xx;
 	struct cvmx_smix_cmd_s                cnf75xx;
 };
@@ -623,8 +623,8 @@ union cvmx_smix_en {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_1_63                : 63;
 	uint64_t en                           : 1;  /**< SMI/MDIO interface enable:
-                                                         1 = Enable interface.
-                                                         0 = Disable interface: no transactions, no SMIn_MDC transitions. */
+                                                         0 = Disable interface: no transactions, no SMIn_MDC transitions.
+                                                         1 = Enable interface. */
 #else
 	uint64_t en                           : 1;
 	uint64_t reserved_1_63                : 63;
@@ -651,7 +651,7 @@ union cvmx_smix_en {
 	struct cvmx_smix_en_s                 cn70xxp1;
 	struct cvmx_smix_en_s                 cn73xx;
 	struct cvmx_smix_en_s                 cn78xx;
-	struct cvmx_smix_en_s                 cn78xxp2;
+	struct cvmx_smix_en_s                 cn78xxp1;
 	struct cvmx_smix_en_s                 cnf71xx;
 	struct cvmx_smix_en_s                 cnf75xx;
 };
@@ -699,7 +699,7 @@ union cvmx_smix_rd_dat {
 	struct cvmx_smix_rd_dat_s             cn70xxp1;
 	struct cvmx_smix_rd_dat_s             cn73xx;
 	struct cvmx_smix_rd_dat_s             cn78xx;
-	struct cvmx_smix_rd_dat_s             cn78xxp2;
+	struct cvmx_smix_rd_dat_s             cn78xxp1;
 	struct cvmx_smix_rd_dat_s             cnf71xx;
 	struct cvmx_smix_rd_dat_s             cnf75xx;
 };
@@ -748,7 +748,7 @@ union cvmx_smix_wr_dat {
 	struct cvmx_smix_wr_dat_s             cn70xxp1;
 	struct cvmx_smix_wr_dat_s             cn73xx;
 	struct cvmx_smix_wr_dat_s             cn78xx;
-	struct cvmx_smix_wr_dat_s             cn78xxp2;
+	struct cvmx_smix_wr_dat_s             cn78xxp1;
 	struct cvmx_smix_wr_dat_s             cnf71xx;
 	struct cvmx_smix_wr_dat_s             cnf75xx;
 };

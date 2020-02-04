@@ -1,5 +1,5 @@
 /***********************license start***************
- * Copyright (c) 2003-2015  Cavium Inc. (support@cavium.com). All rights
+ * Copyright (c) 2003-2017  Cavium Inc. (support@cavium.com). All rights
  * reserved.
  *
  *
@@ -158,8 +158,8 @@ static inline uint64_t CVMX_L2C_CBCX_BIST_STATUS(unsigned long offset)
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 3))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_L2C_CBCX_BIST_STATUS(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180080E007F8ull) + ((offset) & 3) * 0x40000ull;
@@ -172,8 +172,8 @@ static inline uint64_t CVMX_L2C_CBCX_DLL(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 3))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_L2C_CBCX_DLL(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180080E00018ull) + ((offset) & 3) * 0x40000ull;
@@ -186,8 +186,8 @@ static inline uint64_t CVMX_L2C_CBCX_HOLEERR(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 3))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_L2C_CBCX_HOLEERR(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180080E007D0ull) + ((offset) & 3) * 0x40000ull;
@@ -201,8 +201,8 @@ static inline uint64_t CVMX_L2C_CBCX_INT(unsigned long offset)
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 3))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_L2C_CBCX_INT(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180080E00028ull) + ((offset) & 3) * 0x40000ull;
@@ -216,8 +216,8 @@ static inline uint64_t CVMX_L2C_CBCX_IOCERR(unsigned long offset)
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 3))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_L2C_CBCX_IOCERR(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180080E007E8ull) + ((offset) & 3) * 0x40000ull;
@@ -230,8 +230,8 @@ static inline uint64_t CVMX_L2C_CBCX_IODISOCIERR(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 3))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_L2C_CBCX_IODISOCIERR(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180080E007D8ull) + ((offset) & 3) * 0x40000ull;
@@ -284,8 +284,8 @@ static inline uint64_t CVMX_L2C_CBCX_RSDERR(unsigned long offset)
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 3))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_L2C_CBCX_RSDERR(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180080E007F0ull) + ((offset) & 3) * 0x40000ull;
@@ -528,8 +528,8 @@ static inline uint64_t CVMX_L2C_INVX_PFC(unsigned long offset)
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 3))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 7))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 7))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 7))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 3)))))
 		cvmx_warn("CVMX_L2C_INVX_PFC(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180080800820ull) + ((offset) & 7) * 64;
@@ -713,8 +713,8 @@ static inline uint64_t CVMX_L2C_MCIX_BIST_STATUS(unsigned long offset)
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 2))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 3))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_L2C_MCIX_BIST_STATUS(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180080C007F8ull) + ((offset) & 3) * 0x40000ull;
@@ -728,8 +728,8 @@ static inline uint64_t CVMX_L2C_MCIX_ERR(unsigned long offset)
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 2))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 3))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_L2C_MCIX_ERR(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180080C007F0ull) + ((offset) & 3) * 0x40000ull;
@@ -743,8 +743,8 @@ static inline uint64_t CVMX_L2C_MCIX_INT(unsigned long offset)
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 2))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 3))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_L2C_MCIX_INT(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180080C00028ull) + ((offset) & 3) * 0x40000ull;
@@ -860,8 +860,8 @@ static inline uint64_t CVMX_L2C_QOS_IOBX(unsigned long offset)
 	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && ((offset == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_L2C_QOS_IOBX(%lu) is invalid on this chip\n", offset);
@@ -880,8 +880,8 @@ static inline uint64_t CVMX_L2C_QOS_PPX(unsigned long offset)
 	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 31))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 15))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 47))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 47))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 47))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 15)))))
 		cvmx_warn("CVMX_L2C_QOS_PPX(%lu) is invalid on this chip\n", offset);
@@ -1099,8 +1099,8 @@ static inline uint64_t CVMX_L2C_TADX_DLL(unsigned long offset)
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 3))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 7))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 7))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 7))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 3)))))
 		cvmx_warn("CVMX_L2C_TADX_DLL(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180080A00018ull) + ((offset) & 7) * 0x40000ull;
@@ -1144,8 +1144,8 @@ static inline uint64_t CVMX_L2C_TADX_ERR(unsigned long offset)
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 3))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 7))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 7))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 7))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 3)))))
 		cvmx_warn("CVMX_L2C_TADX_ERR(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180080A007D0ull) + ((offset) & 7) * 0x40000ull;
@@ -1178,8 +1178,8 @@ static inline uint64_t CVMX_L2C_TADX_INT(unsigned long offset)
 	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 3))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 7))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 7))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 7))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && ((offset == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 3)))))
 		cvmx_warn("CVMX_L2C_TADX_INT(%lu) is invalid on this chip\n", offset);
@@ -1254,8 +1254,8 @@ static inline uint64_t CVMX_L2C_TADX_PFCX(unsigned long offset, unsigned long bl
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && (((offset <= 3)) && ((block_id == 0)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 3)) && ((block_id <= 3)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 7)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset <= 3)) && ((block_id <= 7)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset <= 3)) && ((block_id <= 7)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset <= 3)) && ((block_id <= 3))))))
 		cvmx_warn("CVMX_L2C_TADX_PFCX(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x0001180080A00400ull) + (((offset) & 3) + ((block_id) & 7) * 0x8000ull) * 8;
@@ -1273,8 +1273,8 @@ static inline uint64_t CVMX_L2C_TADX_PRF(unsigned long offset)
 	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 3))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 7))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 7))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 7))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && ((offset == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 3)))))
 		cvmx_warn("CVMX_L2C_TADX_PRF(%lu) is invalid on this chip\n", offset);
@@ -1306,8 +1306,8 @@ static inline uint64_t CVMX_L2C_TADX_TAG(unsigned long offset)
 	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 3))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 7))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 7))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 7))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && ((offset == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 3)))))
 		cvmx_warn("CVMX_L2C_TADX_TAG(%lu) is invalid on this chip\n", offset);
@@ -1321,8 +1321,8 @@ static inline uint64_t CVMX_L2C_TADX_TIMEOUT(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 3))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 7))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 7))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 7))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 3)))))
 		cvmx_warn("CVMX_L2C_TADX_TIMEOUT(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180080A007C8ull) + ((offset) & 7) * 0x40000ull;
@@ -1335,8 +1335,8 @@ static inline uint64_t CVMX_L2C_TADX_TIMETWO(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 3))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 7))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 7))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 7))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 3)))))
 		cvmx_warn("CVMX_L2C_TADX_TIMETWO(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180080A007C0ull) + ((offset) & 7) * 0x40000ull;
@@ -1361,8 +1361,8 @@ static inline uint64_t CVMX_L2C_TBFX_BIST_STATUS(unsigned long offset)
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 3))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 7))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 7))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 7))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 3)))))
 		cvmx_warn("CVMX_L2C_TBFX_BIST_STATUS(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180080A007E8ull) + ((offset) & 7) * 0x40000ull;
@@ -1376,8 +1376,8 @@ static inline uint64_t CVMX_L2C_TDTX_BIST_STATUS(unsigned long offset)
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 3))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 7))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 7))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 7))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 3)))))
 		cvmx_warn("CVMX_L2C_TDTX_BIST_STATUS(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180080A007F0ull) + ((offset) & 7) * 0x40000ull;
@@ -1391,8 +1391,8 @@ static inline uint64_t CVMX_L2C_TQDX_ERR(unsigned long offset)
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 3))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 7))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 7))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 7))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 3)))))
 		cvmx_warn("CVMX_L2C_TQDX_ERR(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180080A007D8ull) + ((offset) & 7) * 0x40000ull;
@@ -1406,8 +1406,8 @@ static inline uint64_t CVMX_L2C_TTGX_BIST_STATUS(unsigned long offset)
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 3))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 7))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 7))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 7))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 3)))))
 		cvmx_warn("CVMX_L2C_TTGX_BIST_STATUS(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180080A007F8ull) + ((offset) & 7) * 0x40000ull;
@@ -1421,8 +1421,8 @@ static inline uint64_t CVMX_L2C_TTGX_ERR(unsigned long offset)
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 3))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 7))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 7))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 7))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 3)))))
 		cvmx_warn("CVMX_L2C_TTGX_ERR(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180080A007E0ull) + ((offset) & 7) * 0x40000ull;
@@ -1540,8 +1540,8 @@ static inline uint64_t CVMX_L2C_WPAR_IOBX(unsigned long offset)
 	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && ((offset == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_L2C_WPAR_IOBX(%lu) is invalid on this chip\n", offset);
@@ -1560,8 +1560,8 @@ static inline uint64_t CVMX_L2C_WPAR_PPX(unsigned long offset)
 	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 31))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 15))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 47))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 47))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 47))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 15)))))
 		cvmx_warn("CVMX_L2C_WPAR_PPX(%lu) is invalid on this chip\n", offset);
@@ -1817,7 +1817,7 @@ union cvmx_l2c_big_ctl {
 	struct cvmx_l2c_big_ctl_cn70xx        cn70xxp1;
 	struct cvmx_l2c_big_ctl_cn70xx        cn73xx;
 	struct cvmx_l2c_big_ctl_cn70xx        cn78xx;
-	struct cvmx_l2c_big_ctl_cn70xx        cn78xxp2;
+	struct cvmx_l2c_big_ctl_cn70xx        cn78xxp1;
 	struct cvmx_l2c_big_ctl_cn61xx        cnf71xx;
 	struct cvmx_l2c_big_ctl_cn70xx        cnf75xx;
 };
@@ -2570,7 +2570,7 @@ union cvmx_l2c_cbcx_bist_status {
 #endif
 	} cn73xx;
 	struct cvmx_l2c_cbcx_bist_status_cn73xx cn78xx;
-	struct cvmx_l2c_cbcx_bist_status_cn73xx cn78xxp2;
+	struct cvmx_l2c_cbcx_bist_status_cn73xx cn78xxp1;
 	struct cvmx_l2c_cbcx_bist_status_cn73xx cnf75xx;
 };
 typedef union cvmx_l2c_cbcx_bist_status cvmx_l2c_cbcx_bist_status_t;
@@ -2608,7 +2608,7 @@ union cvmx_l2c_cbcx_dll {
 	} s;
 	struct cvmx_l2c_cbcx_dll_s            cn73xx;
 	struct cvmx_l2c_cbcx_dll_s            cn78xx;
-	struct cvmx_l2c_cbcx_dll_s            cn78xxp2;
+	struct cvmx_l2c_cbcx_dll_s            cn78xxp1;
 	struct cvmx_l2c_cbcx_dll_s            cnf75xx;
 };
 typedef union cvmx_l2c_cbcx_dll cvmx_l2c_cbcx_dll_t;
@@ -2645,7 +2645,7 @@ union cvmx_l2c_cbcx_holeerr {
 	} s;
 	struct cvmx_l2c_cbcx_holeerr_s        cn73xx;
 	struct cvmx_l2c_cbcx_holeerr_s        cn78xx;
-	struct cvmx_l2c_cbcx_holeerr_s        cn78xxp2;
+	struct cvmx_l2c_cbcx_holeerr_s        cn78xxp1;
 	struct cvmx_l2c_cbcx_holeerr_s        cnf75xx;
 };
 typedef union cvmx_l2c_cbcx_holeerr cvmx_l2c_cbcx_holeerr_t;
@@ -2669,8 +2669,11 @@ union cvmx_l2c_cbcx_int {
 	uint64_t mibsbe                       : 1;  /**< Reserved. */
 	uint64_t ioccmddbe                    : 1;  /**< IOCCMD double-bit error occurred. See L2C_CBC(0..3)_IOCERR for logged information. */
 	uint64_t ioccmdsbe                    : 1;  /**< IOCCMD single-bit error occurred. See L2C_CBC(0..3)_IOCERR for logged information. */
-	uint64_t rsddbe                       : 1;  /**< RSD double-bit error occurred. See L2C_CBC()_RSDERR for logged information. */
-	uint64_t rsdsbe                       : 1;  /**< RSD single-bit error occurred. See L2C_CBC()_RSDERR for logged information. */
+	uint64_t rsddbe                       : 1;  /**< RSD double-bit error occurred. See L2C_CBC()_RSDERR for logged information.
+                                                         An indication of a hardware failure and may be considered fatal. */
+	uint64_t rsdsbe                       : 1;  /**< RSD single-bit error occurred. See L2C_CBC()_RSDERR for logged
+                                                         information. Hardware automatically corrected the error. Software may choose to
+                                                         count the number of these single-bit errors. */
 #else
 	uint64_t rsdsbe                       : 1;
 	uint64_t rsddbe                       : 1;
@@ -2711,8 +2714,11 @@ union cvmx_l2c_cbcx_int {
 	uint64_t mibdbe                       : 1;  /**< Reserved. */
 	uint64_t mibsbe                       : 1;  /**< Reserved. */
 	uint64_t reserved_2_3                 : 2;
-	uint64_t rsddbe                       : 1;  /**< RSD double-bit error occurred. See L2C_CBC()_RSDERR for logged information. */
-	uint64_t rsdsbe                       : 1;  /**< RSD single-bit error occurred. See L2C_CBC()_RSDERR for logged information. */
+	uint64_t rsddbe                       : 1;  /**< RSD double-bit error occurred. See L2C_CBC()_RSDERR for logged information.
+                                                         An indication of a hardware failure and may be considered fatal. */
+	uint64_t rsdsbe                       : 1;  /**< RSD single-bit error occurred. See L2C_CBC()_RSDERR for logged
+                                                         information. Hardware automatically corrected the error. Software may choose to
+                                                         count the number of these single-bit errors. */
 #else
 	uint64_t rsdsbe                       : 1;
 	uint64_t rsddbe                       : 1;
@@ -2727,7 +2733,7 @@ union cvmx_l2c_cbcx_int {
 #endif
 	} cn73xx;
 	struct cvmx_l2c_cbcx_int_cn73xx       cn78xx;
-	struct cvmx_l2c_cbcx_int_cn73xx       cn78xxp2;
+	struct cvmx_l2c_cbcx_int_cn73xx       cn78xxp1;
 	struct cvmx_l2c_cbcx_int_cn73xx       cnf75xx;
 };
 typedef union cvmx_l2c_cbcx_int cvmx_l2c_cbcx_int_t;
@@ -2767,7 +2773,7 @@ union cvmx_l2c_cbcx_iocerr {
 #endif
 	} cn73xx;
 	struct cvmx_l2c_cbcx_iocerr_cn73xx    cn78xx;
-	struct cvmx_l2c_cbcx_iocerr_cn73xx    cn78xxp2;
+	struct cvmx_l2c_cbcx_iocerr_cn73xx    cn78xxp1;
 	struct cvmx_l2c_cbcx_iocerr_cn73xx    cnf75xx;
 };
 typedef union cvmx_l2c_cbcx_iocerr cvmx_l2c_cbcx_iocerr_t;
@@ -2803,7 +2809,7 @@ union cvmx_l2c_cbcx_iodisocierr {
 	} s;
 	struct cvmx_l2c_cbcx_iodisocierr_s    cn73xx;
 	struct cvmx_l2c_cbcx_iodisocierr_s    cn78xx;
-	struct cvmx_l2c_cbcx_iodisocierr_s    cn78xxp2;
+	struct cvmx_l2c_cbcx_iodisocierr_s    cn78xxp1;
 	struct cvmx_l2c_cbcx_iodisocierr_s    cnf75xx;
 };
 typedef union cvmx_l2c_cbcx_iodisocierr cvmx_l2c_cbcx_iodisocierr_t;
@@ -2837,7 +2843,7 @@ union cvmx_l2c_cbcx_miberr {
 	} s;
 	struct cvmx_l2c_cbcx_miberr_s         cn73xx;
 	struct cvmx_l2c_cbcx_miberr_s         cn78xx;
-	struct cvmx_l2c_cbcx_miberr_s         cn78xxp2;
+	struct cvmx_l2c_cbcx_miberr_s         cn78xxp1;
 	struct cvmx_l2c_cbcx_miberr_s         cnf75xx;
 };
 typedef union cvmx_l2c_cbcx_miberr cvmx_l2c_cbcx_miberr_t;
@@ -2845,13 +2851,12 @@ typedef union cvmx_l2c_cbcx_miberr cvmx_l2c_cbcx_miberr_t;
 /**
  * cvmx_l2c_cbc#_rsderr
  *
- * This register records error information for all CBC RSD errors.
- * An error locks the INDEX and [SYN] and sets the bit corresponding to the error received.
- * RSDDBE errors take priority and overwrite an earlier logged RSDSBE error. Only one of
- * [RSDSBE]/[RSDDBE] is set at any given time and serves to document which error the INDEX/[SYN]
- * is
- * associated with.
- * The syndrome is recorded for DBE errors, though the utility of the value is not clear.
+ * This register records error information for all CBC RSD errors. An error locks the
+ * [INDEX] and [SYN] and sets the bit corresponding to the error received. RSDDBE
+ * errors take priority and overwrite an earlier logged RSDSBE error. Only one of
+ * [RSDSBE]/[RSDDBE] is set at any given time and serves to document which error the
+ * INDEX/[SYN] is associated with. The syndrome is recorded for DBE errors, though the
+ * utility of the value is not clear.
  */
 union cvmx_l2c_cbcx_rsderr {
 	uint64_t u64;
@@ -2880,7 +2885,7 @@ union cvmx_l2c_cbcx_rsderr {
 	struct cvmx_l2c_cbcx_rsderr_s         cn70xxp1;
 	struct cvmx_l2c_cbcx_rsderr_s         cn73xx;
 	struct cvmx_l2c_cbcx_rsderr_s         cn78xx;
-	struct cvmx_l2c_cbcx_rsderr_s         cn78xxp2;
+	struct cvmx_l2c_cbcx_rsderr_s         cn78xxp1;
 	struct cvmx_l2c_cbcx_rsderr_s         cnf75xx;
 };
 typedef union cvmx_l2c_cbcx_rsderr cvmx_l2c_cbcx_rsderr_t;
@@ -3471,7 +3476,7 @@ union cvmx_l2c_cop0_adr {
 	struct cvmx_l2c_cop0_adr_s            cn70xxp1;
 	struct cvmx_l2c_cop0_adr_s            cn73xx;
 	struct cvmx_l2c_cop0_adr_s            cn78xx;
-	struct cvmx_l2c_cop0_adr_s            cn78xxp2;
+	struct cvmx_l2c_cop0_adr_s            cn78xxp1;
 	struct cvmx_l2c_cop0_adr_s            cnf75xx;
 };
 typedef union cvmx_l2c_cop0_adr cvmx_l2c_cop0_adr_t;
@@ -3495,7 +3500,7 @@ union cvmx_l2c_cop0_dat {
 	struct cvmx_l2c_cop0_dat_s            cn70xxp1;
 	struct cvmx_l2c_cop0_dat_s            cn73xx;
 	struct cvmx_l2c_cop0_dat_s            cn78xx;
-	struct cvmx_l2c_cop0_dat_s            cn78xxp2;
+	struct cvmx_l2c_cop0_dat_s            cn78xxp1;
 	struct cvmx_l2c_cop0_dat_s            cnf75xx;
 };
 typedef union cvmx_l2c_cop0_dat cvmx_l2c_cop0_dat_t;
@@ -4032,7 +4037,7 @@ union cvmx_l2c_ctl {
 #endif
 	} cn73xx;
 	struct cvmx_l2c_ctl_cn73xx            cn78xx;
-	struct cvmx_l2c_ctl_cn73xx            cn78xxp2;
+	struct cvmx_l2c_ctl_cn73xx            cn78xxp1;
 	struct cvmx_l2c_ctl_cn61xx            cnf71xx;
 	struct cvmx_l2c_ctl_cn73xx            cnf75xx;
 };
@@ -4746,7 +4751,7 @@ union cvmx_l2c_ecc_ctl {
 #endif
 	} cn73xx;
 	struct cvmx_l2c_ecc_ctl_cn73xx        cn78xx;
-	struct cvmx_l2c_ecc_ctl_cn73xx        cn78xxp2;
+	struct cvmx_l2c_ecc_ctl_cn73xx        cn78xxp1;
 	struct cvmx_l2c_ecc_ctl_cn73xx        cnf75xx;
 };
 typedef union cvmx_l2c_ecc_ctl cvmx_l2c_ecc_ctl_t;
@@ -5594,7 +5599,7 @@ union cvmx_l2c_invx_pfc {
 	struct cvmx_l2c_invx_pfc_s            cn70xxp1;
 	struct cvmx_l2c_invx_pfc_s            cn73xx;
 	struct cvmx_l2c_invx_pfc_s            cn78xx;
-	struct cvmx_l2c_invx_pfc_s            cn78xxp2;
+	struct cvmx_l2c_invx_pfc_s            cn78xxp1;
 	struct cvmx_l2c_invx_pfc_s            cnf75xx;
 };
 typedef union cvmx_l2c_invx_pfc cvmx_l2c_invx_pfc_t;
@@ -5624,7 +5629,7 @@ union cvmx_l2c_iocx_pfc {
 	struct cvmx_l2c_iocx_pfc_s            cn70xxp1;
 	struct cvmx_l2c_iocx_pfc_s            cn73xx;
 	struct cvmx_l2c_iocx_pfc_s            cn78xx;
-	struct cvmx_l2c_iocx_pfc_s            cn78xxp2;
+	struct cvmx_l2c_iocx_pfc_s            cn78xxp1;
 	struct cvmx_l2c_iocx_pfc_s            cnf71xx;
 	struct cvmx_l2c_iocx_pfc_s            cnf75xx;
 };
@@ -5655,7 +5660,7 @@ union cvmx_l2c_iorx_pfc {
 	struct cvmx_l2c_iorx_pfc_s            cn70xxp1;
 	struct cvmx_l2c_iorx_pfc_s            cn73xx;
 	struct cvmx_l2c_iorx_pfc_s            cn78xx;
-	struct cvmx_l2c_iorx_pfc_s            cn78xxp2;
+	struct cvmx_l2c_iorx_pfc_s            cn78xxp1;
 	struct cvmx_l2c_iorx_pfc_s            cnf71xx;
 	struct cvmx_l2c_iorx_pfc_s            cnf75xx;
 };
@@ -6214,7 +6219,7 @@ union cvmx_l2c_mcix_bist_status {
 	struct cvmx_l2c_mcix_bist_status_s    cn70xxp1;
 	struct cvmx_l2c_mcix_bist_status_s    cn73xx;
 	struct cvmx_l2c_mcix_bist_status_s    cn78xx;
-	struct cvmx_l2c_mcix_bist_status_s    cn78xxp2;
+	struct cvmx_l2c_mcix_bist_status_s    cn78xxp1;
 	struct cvmx_l2c_mcix_bist_status_s    cnf75xx;
 };
 typedef union cvmx_l2c_mcix_bist_status cvmx_l2c_mcix_bist_status_t;
@@ -6262,7 +6267,7 @@ union cvmx_l2c_mcix_err {
 	struct cvmx_l2c_mcix_err_s            cn70xxp1;
 	struct cvmx_l2c_mcix_err_s            cn73xx;
 	struct cvmx_l2c_mcix_err_s            cn78xx;
-	struct cvmx_l2c_mcix_err_s            cn78xxp2;
+	struct cvmx_l2c_mcix_err_s            cn78xxp1;
 	struct cvmx_l2c_mcix_err_s            cnf75xx;
 };
 typedef union cvmx_l2c_mcix_err cvmx_l2c_mcix_err_t;
@@ -6278,8 +6283,10 @@ union cvmx_l2c_mcix_int {
 	struct cvmx_l2c_mcix_int_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_2_63                : 62;
-	uint64_t vbfdbe                       : 1;  /**< VBF double-bit error occurred. See L2C_MCI()_ERR for logged information. */
-	uint64_t vbfsbe                       : 1;  /**< VBF single-bit error occurred. See L2C_MCI()_ERR for logged information. */
+	uint64_t vbfdbe                       : 1;  /**< VBF double-bit error occurred. See L2C_MCI()_ERR for logged information.
+                                                         An indication of a hardware failure and may be considered fatal. */
+	uint64_t vbfsbe                       : 1;  /**< VBF single-bit error occurred. See L2C_MCI()_ERR for logged information.
+                                                         Hardware corrected the failure. Software may choose to count these single-bit errors. */
 #else
 	uint64_t vbfsbe                       : 1;
 	uint64_t vbfdbe                       : 1;
@@ -6290,7 +6297,7 @@ union cvmx_l2c_mcix_int {
 	struct cvmx_l2c_mcix_int_s            cn70xxp1;
 	struct cvmx_l2c_mcix_int_s            cn73xx;
 	struct cvmx_l2c_mcix_int_s            cn78xx;
-	struct cvmx_l2c_mcix_int_s            cn78xxp2;
+	struct cvmx_l2c_mcix_int_s            cn78xxp1;
 	struct cvmx_l2c_mcix_int_s            cnf75xx;
 };
 typedef union cvmx_l2c_mcix_int cvmx_l2c_mcix_int_t;
@@ -6378,8 +6385,8 @@ union cvmx_l2c_oci_ctl {
 	uint64_t reserved_30_63               : 34;
 #endif
 	} cn73xx;
-	struct cvmx_l2c_oci_ctl_cn73xx        cn78xx;
-	struct cvmx_l2c_oci_ctl_s             cn78xxp2;
+	struct cvmx_l2c_oci_ctl_s             cn78xx;
+	struct cvmx_l2c_oci_ctl_cn73xx        cn78xxp1;
 	struct cvmx_l2c_oci_ctl_cn73xx        cnf75xx;
 };
 typedef union cvmx_l2c_oci_ctl cvmx_l2c_oci_ctl_t;
@@ -6886,7 +6893,7 @@ union cvmx_l2c_qos_iobx {
 	struct cvmx_l2c_qos_iobx_s            cn70xxp1;
 	struct cvmx_l2c_qos_iobx_s            cn73xx;
 	struct cvmx_l2c_qos_iobx_s            cn78xx;
-	struct cvmx_l2c_qos_iobx_s            cn78xxp2;
+	struct cvmx_l2c_qos_iobx_s            cn78xxp1;
 	struct cvmx_l2c_qos_iobx_cn61xx       cnf71xx;
 	struct cvmx_l2c_qos_iobx_s            cnf75xx;
 };
@@ -6928,7 +6935,7 @@ union cvmx_l2c_qos_ppx {
 	struct cvmx_l2c_qos_ppx_s             cn70xxp1;
 	struct cvmx_l2c_qos_ppx_s             cn73xx;
 	struct cvmx_l2c_qos_ppx_s             cn78xx;
-	struct cvmx_l2c_qos_ppx_s             cn78xxp2;
+	struct cvmx_l2c_qos_ppx_s             cn78xxp1;
 	struct cvmx_l2c_qos_ppx_cn61xx        cnf71xx;
 	struct cvmx_l2c_qos_ppx_s             cnf75xx;
 };
@@ -6987,7 +6994,7 @@ union cvmx_l2c_qos_wgt {
 	struct cvmx_l2c_qos_wgt_s             cn70xxp1;
 	struct cvmx_l2c_qos_wgt_s             cn73xx;
 	struct cvmx_l2c_qos_wgt_s             cn78xx;
-	struct cvmx_l2c_qos_wgt_s             cn78xxp2;
+	struct cvmx_l2c_qos_wgt_s             cn78xxp1;
 	struct cvmx_l2c_qos_wgt_cn61xx        cnf71xx;
 	struct cvmx_l2c_qos_wgt_s             cnf75xx;
 };
@@ -7018,7 +7025,7 @@ union cvmx_l2c_rscx_pfc {
 	struct cvmx_l2c_rscx_pfc_s            cn70xxp1;
 	struct cvmx_l2c_rscx_pfc_s            cn73xx;
 	struct cvmx_l2c_rscx_pfc_s            cn78xx;
-	struct cvmx_l2c_rscx_pfc_s            cn78xxp2;
+	struct cvmx_l2c_rscx_pfc_s            cn78xxp1;
 	struct cvmx_l2c_rscx_pfc_s            cnf71xx;
 	struct cvmx_l2c_rscx_pfc_s            cnf75xx;
 };
@@ -7049,7 +7056,7 @@ union cvmx_l2c_rsdx_pfc {
 	struct cvmx_l2c_rsdx_pfc_s            cn70xxp1;
 	struct cvmx_l2c_rsdx_pfc_s            cn73xx;
 	struct cvmx_l2c_rsdx_pfc_s            cn78xx;
-	struct cvmx_l2c_rsdx_pfc_s            cn78xxp2;
+	struct cvmx_l2c_rsdx_pfc_s            cn78xxp1;
 	struct cvmx_l2c_rsdx_pfc_s            cnf71xx;
 	struct cvmx_l2c_rsdx_pfc_s            cnf75xx;
 };
@@ -7060,9 +7067,9 @@ typedef union cvmx_l2c_rsdx_pfc cvmx_l2c_rsdx_pfc_t;
  *
  * This register records error information for all RTG SBE/DBE errors.
  * The priority of errors (lowest to highest) is SBE, DBE. An error locks [SYN], [WAY],
- * and [L2IDX] fields for equal or lower priority errors until cleared by software.
+ * and [L2IDX] for equal or lower priority errors until cleared by software.
  * The syndrome is recorded for DBE errors, though the utility of the value is not clear.
- * [L2IDX][19:7] is the L2 block index associated with the command which had no way to allocate.
+ * [L2IDX]<19:7> is the L2 block index associated with the command which had no way to allocate.
  */
 union cvmx_l2c_rtgx_err {
 	uint64_t u64;
@@ -7073,8 +7080,9 @@ union cvmx_l2c_rtgx_err {
 	uint64_t reserved_39_61               : 23;
 	uint64_t syn                          : 7;  /**< Syndrome for the single-bit error. */
 	uint64_t reserved_24_31               : 8;
-	uint64_t way                          : 4;  /**< Way of the L2 block containing the error */
-	uint64_t l2idx                        : 13; /**< Index of the L2 block containing the error */
+	uint64_t way                          : 4;  /**< Way of the L2 block containing the error. */
+	uint64_t l2idx                        : 13; /**< Index of the L2 block containing the error.
+                                                         See L2C_TAD()_INT_W1C[RTGSBE] for an important use of this field. */
 	uint64_t reserved_0_6                 : 7;
 #else
 	uint64_t reserved_0_6                 : 7;
@@ -7087,7 +7095,7 @@ union cvmx_l2c_rtgx_err {
 	uint64_t rtgdbe                       : 1;
 #endif
 	} s;
-	struct cvmx_l2c_rtgx_err_s            cn78xxp2;
+	struct cvmx_l2c_rtgx_err_s            cn78xx;
 };
 typedef union cvmx_l2c_rtgx_err cvmx_l2c_rtgx_err_t;
 
@@ -7378,7 +7386,7 @@ union cvmx_l2c_tadx_dll {
 	struct cvmx_l2c_tadx_dll_cn70xx       cn70xxp1;
 	struct cvmx_l2c_tadx_dll_s            cn73xx;
 	struct cvmx_l2c_tadx_dll_s            cn78xx;
-	struct cvmx_l2c_tadx_dll_s            cn78xxp2;
+	struct cvmx_l2c_tadx_dll_s            cn78xxp1;
 	struct cvmx_l2c_tadx_dll_s            cnf75xx;
 };
 typedef union cvmx_l2c_tadx_dll cvmx_l2c_tadx_dll_t;
@@ -7481,7 +7489,7 @@ union cvmx_l2c_tadx_err {
 	uint64_t source                       : 7;  /**< XMC source of request causing error. If [SOURCE]<6>==0, then [SOURCE]<5:0> is PPID, else
                                                          [SOURCE]<3:0> is BUSID of the IOB which made the request. If [CMD]<7>==0, this field is
                                                          unpredictable. */
-	uint64_t node                         : 4;  /**< Reserved.  Will always be 0. */
+	uint64_t node                         : 4;  /**< Reserved. Will always be 0. */
 	uint64_t addr                         : 40; /**< XMC address causing the error. [ADDR]<6:0> is unpredictable for *DISOCI and BIG*
                                                          errors. This field is the physical address after hole removal and index aliasing
                                                          (if enabled). (The hole is between DR0 and DR1. Remove the hole by subtracting
@@ -7534,7 +7542,7 @@ union cvmx_l2c_tadx_err {
 	uint64_t source                       : 7;  /**< XMC source of request causing error. If [SOURCE]<6>==0, then [SOURCE]<5:0> is PPID, else
                                                          [SOURCE]<3:0> is BUSID of the IOB which made the request. If [CMD]<7>==0, this field is
                                                          unpredictable. */
-	uint64_t node                         : 4;  /**< Reserved.  Will always be 0. */
+	uint64_t node                         : 4;  /**< Reserved. Will always be 0. */
 	uint64_t addr                         : 40; /**< XMC address causing the error. [ADDR]<6:0> is unpredictable for *DISOCI and BIG*
                                                          errors. This field is the physical address after hole removal and index aliasing
                                                          (if enabled). (The hole is between DR0 and DR1. Remove the hole by subtracting
@@ -7552,7 +7560,7 @@ union cvmx_l2c_tadx_err {
 #endif
 	} cn73xx;
 	struct cvmx_l2c_tadx_err_cn73xx       cn78xx;
-	struct cvmx_l2c_tadx_err_cn73xx       cn78xxp2;
+	struct cvmx_l2c_tadx_err_cn73xx       cn78xxp1;
 	struct cvmx_l2c_tadx_err_cn73xx       cnf75xx;
 };
 typedef union cvmx_l2c_tadx_err cvmx_l2c_tadx_err_t;
@@ -7665,13 +7673,31 @@ union cvmx_l2c_tadx_int {
 	uint64_t reserved_36_63               : 28;
 	uint64_t wrdisoci                     : 1;  /**< Reserved. */
 	uint64_t rddisoci                     : 1;  /**< Reserved. */
-	uint64_t rtgdbe                       : 1;  /**< RTG double-bit error. */
-	uint64_t rtgsbe                       : 1;  /**< RTG single-bit error. */
+	uint64_t rtgdbe                       : 1;  /**< RTG double-bit error.
+                                                         See L2C_TAD()_RTG_ERR for logged information.
+                                                         An indication of a hardware failure and may be considered fatal. */
+	uint64_t rtgsbe                       : 1;  /**< RTG single-bit error on a read. See L2C_TAD()_RTG_ERR for logged
+                                                         information. When [RTGSBE] is set, hardware corrected the error before using the
+                                                         RTG tag, but did not correct any stored value. When [RTGSBE] is set, software
+                                                         should eject the RTG location indicated by the corresponding
+                                                         L2C_TAD()_RTG_ERR[WAY,L2IDX] before clearing [RTGSBE]. Otherwise, hardware may
+                                                         encounter the error again the next time the same RTG location is
+                                                         referenced. Software may also choose to count the number of these single-bit
+                                                         errors.
+                                                         The eject should use a CACHE 0x3 instruction with an effective address of:
+                                                         <pre>
+                                                           payload<24> = 1
+                                                           payload<23:20> = L2C_TAD()_RTG_ERR[WAY]
+                                                           payload<19:7>  = L2C_TAD()_RTG_ERR[L2IDX]
+                                                         </pre> */
 	uint64_t reserved_18_31               : 14;
 	uint64_t lfbto                        : 1;  /**< An LFB entry (or more) has encountered a timeout condition When LFBTO timeout condition
                                                          occurs L2C_TAD()_TIMEOUT is loaded. L2C_TAD()_TIMEOUT is loaded with info from the
                                                          first LFB that timed out. if multiple LFB timed out simultaneously, then the it will
-                                                         capture info from the lowest LFB number that timed out. */
+                                                         capture info from the lowest LFB number that timed out.
+                                                         Should not occur during normal operation.  OCI/CCPI link failures may cause this
+                                                         failure. This may be an indication of hardware failure, and may be considered
+                                                         fatal. */
 	uint64_t reserved_15_16               : 2;
 	uint64_t bigrd                        : 1;  /**< Read reference past L2C_BIG_CTL[MAXDRAM] occurred. [BIGRD] interrupts can occur during
                                                          normal operation as the cores are allowed to prefetch to nonexistent memory locations.
@@ -7681,8 +7707,26 @@ union cvmx_l2c_tadx_int {
 	uint64_t holerd                       : 1;  /**< Read reference to 256MB hole occurred. */
 	uint64_t holewr                       : 1;  /**< Write reference to 256MB hole occurred. */
 	uint64_t reserved_2_10                : 9;
-	uint64_t l2ddbe                       : 1;  /**< L2D double-bit error occurred. See L2C_TQD()_ERR for logged information. */
-	uint64_t l2dsbe                       : 1;  /**< L2D single-bit error occurred. See L2C_TQD()_ERR for logged information. */
+	uint64_t l2ddbe                       : 1;  /**< L2D double-bit error occurred. See L2C_TAD()_TQD_ERR for logged information. An
+                                                         indication of a hardware failure and may be considered fatal. */
+	uint64_t l2dsbe                       : 1;  /**< L2D single-bit error on a read. See L2C_TAD()_TQD_ERR for logged
+                                                         information. When [L2DSBE] is set, hardware corrected the error before using the
+                                                         data, but did not correct any stored value. When [L2DSBE] is set, software
+                                                         should eject the cache block indicated by the corresponding
+                                                         L2C_TAD()_TQD_ERR[QDNUM,L2DIDX] before clearing [L2DSBE]. Otherwise, hardware
+                                                         may encounter the error again the next time the same L2D location is
+                                                         referenced. Software may also choose to count the number of these single-bit
+                                                         errors.
+                                                         The eject should use a CACHE 0x3 instruction with an effective address of:
+                                                         <pre>
+                                                           payload<24:22> = 0
+                                                           payload<21:18> = L2C_TAD()_TQD_ERR[L2DIDX]<10:7>  // way
+                                                           payload<17:11> = L2C_TAD()_TQD_ERR[L2DIDX]<6:0>   // index<10:4>
+                                                           payload<10:9>  = L2C_TAD()_TQD_ERR[L2DIDX]<12:11> // index<3:2>
+                                                           payload<8:7>   = tad             // index<1:0>
+                                                         </pre>
+                                                         where tad is the TAD index from this CSR. Note that L2C_CTL[DISIDXALIAS] has no
+                                                         effect on the payload. */
 #else
 	uint64_t l2dsbe                       : 1;
 	uint64_t l2ddbe                       : 1;
@@ -7806,15 +7850,37 @@ union cvmx_l2c_tadx_int {
 	uint64_t reserved_36_63               : 28;
 	uint64_t wrdisoci                     : 1;  /**< Reserved. */
 	uint64_t rddisoci                     : 1;  /**< Reserved. */
-	uint64_t rtgdbe                       : 1;  /**< RTG double-bit error. */
-	uint64_t rtgsbe                       : 1;  /**< RTG single-bit error. */
+	uint64_t rtgdbe                       : 1;  /**< RTG double-bit error.
+                                                         See L2C_TAD()_RTG_ERR for logged information.
+                                                         An indication of a hardware failure and may be considered fatal. */
+	uint64_t rtgsbe                       : 1;  /**< RTG single-bit error on a read. See L2C_TAD()_RTG_ERR for logged
+                                                         information. When [RTGSBE] is set, hardware corrected the error before using the
+                                                         RTG tag, but did not correct any stored value. When [RTGSBE] is set, software
+                                                         should eject the RTG location indicated by the corresponding
+                                                         L2C_TAD()_RTG_ERR[WAY,L2IDX] before clearing [RTGSBE]. Otherwise, hardware may
+                                                         encounter the error again the next time the same RTG location is
+                                                         referenced. Software may also choose to count the number of these single-bit
+                                                         errors.
+                                                         The eject should use a CACHE 0x3 instruction with an effective address of:
+                                                         <pre>
+                                                           payload<24> = 1
+                                                           payload<23:20> = L2C_TAD()_RTG_ERR[WAY]
+                                                           payload<19:7>  = L2C_TAD()_RTG_ERR[L2IDX]
+                                                         </pre> */
 	uint64_t reserved_18_31               : 14;
 	uint64_t lfbto                        : 1;  /**< An LFB entry (or more) has encountered a timeout condition When LFBTO timeout condition
                                                          occurs L2C_TAD()_TIMEOUT is loaded. L2C_TAD()_TIMEOUT is loaded with info from the
                                                          first LFB that timed out. if multiple LFB timed out simultaneously, then the it will
-                                                         capture info from the lowest LFB number that timed out. */
-	uint64_t wrdislmc                     : 1;  /**< Illegal write to disabled LMC error. A DRAM write arrived before LMC was enabled. */
-	uint64_t rddislmc                     : 1;  /**< Illegal read to disabled LMC error. A DRAM read arrived before LMC was enabled. */
+                                                         capture info from the lowest LFB number that timed out.
+                                                         Should not occur during normal operation.  OCI/CCPI link failures may cause this
+                                                         failure. This may be an indication of hardware failure, and may be considered
+                                                         fatal. */
+	uint64_t wrdislmc                     : 1;  /**< Illegal write to disabled LMC error. A DRAM write arrived before LMC was enabled.
+                                                         Should not occur during normal operation.
+                                                         This may be considered fatal. */
+	uint64_t rddislmc                     : 1;  /**< Illegal read to disabled LMC error. A DRAM read arrived before LMC was enabled.
+                                                         Should not occur during normal operation.
+                                                         This may be considered fatal. */
 	uint64_t bigrd                        : 1;  /**< Read reference past L2C_BIG_CTL[MAXDRAM] occurred. [BIGRD] interrupts can occur during
                                                          normal operation as the cores are allowed to prefetch to nonexistent memory locations.
                                                          Therefore, [BIGRD] is for informational purposes only. See L2C_TAD()_ERR for logged
@@ -7831,15 +7897,54 @@ union cvmx_l2c_tadx_int {
                                                          case where L2C sets [NOWAY]: when it cannot leave a block locked in the L2 cache as part
                                                          of
                                                          a LCKL2 transaction. See L2C_TTG()_ERR for logged information. */
-	uint64_t tagdbe                       : 1;  /**< TAG double-bit error occurred. See L2C_TTG()_ERR for logged information. */
-	uint64_t tagsbe                       : 1;  /**< TAG single-bit error occurred. See L2C_TTG()_ERR for logged information. */
+	uint64_t tagdbe                       : 1;  /**< TAG double-bit error occurred. See L2C_TTG()_ERR for logged information.
+                                                         This is an indication of a hardware failure and may be considered fatal. */
+	uint64_t tagsbe                       : 1;  /**< TAG single-bit error on a read. See L2C_TAD()_TTG_ERR for logged
+                                                         information. When [TAGSBE] is set, hardware corrected the error before using the
+                                                         tag, but did not correct any stored value. When [TAGSBE] is set, software should
+                                                         eject the TAG location indicated by the corresponding
+                                                         L2C_TAD()_TTG_ERR[WAY,L2IDX] before clearing [TAGSBE]. Otherwise, hardware may
+                                                         encounter the error again the next time the same TAG location is
+                                                         referenced. Software may also choose to count the number of these single-bit
+                                                         errors.
+                                                         The eject should use a CACHE 0x3 instruction with an effective address of:
+                                                           <pre>
+                                                           payload<24> = 0
+                                                           payload<23:20> = L2C_TAD()_TTG_ERR[WAY]
+                                                           payload<19:7>  = L2C_TAD()_TTG_ERR[L2IDX]
+                                                           </pre>
+                                                         Note that L2C_CTL[DISIDXALIAS] has no effect on this payload. */
 	uint64_t reserved_6_7                 : 2;
-	uint64_t fbfdbe                       : 1;  /**< FBF double-bit error occurred. See L2C_TQD()_ERR for logged information. */
-	uint64_t fbfsbe                       : 1;  /**< FBF single-bit error occurred. See L2C_TQD()_ERR for logged information. */
-	uint64_t sbfdbe                       : 1;  /**< SBF double-bit error occurred. See L2C_TQD()_ERR for logged information. */
-	uint64_t sbfsbe                       : 1;  /**< SBF single-bit error occurred. See L2C_TQD()_ERR for logged information. */
-	uint64_t l2ddbe                       : 1;  /**< L2D double-bit error occurred. See L2C_TQD()_ERR for logged information. */
-	uint64_t l2dsbe                       : 1;  /**< L2D single-bit error occurred. See L2C_TQD()_ERR for logged information. */
+	uint64_t fbfdbe                       : 1;  /**< FBF double-bit error occurred. See L2C_TAD()_TQD_ERR for logged information. An
+                                                         indication of a hardware failure and may be considered fatal. */
+	uint64_t fbfsbe                       : 1;  /**< FBF single-bit error on a read. See L2C_TAD()_TQD_ERR for logged
+                                                         information. Hardware automatically corrected the error. Software may choose to
+                                                         count the number of these single-bit errors. */
+	uint64_t sbfdbe                       : 1;  /**< SBF double-bit error occurred. See L2C_TAD()_TQD_ERR for logged information. An
+                                                         indication of a hardware failure and may be considered fatal. */
+	uint64_t sbfsbe                       : 1;  /**< SBF single-bit error on a read. See L2C_TAD()_TQD_ERR for logged
+                                                         information. Hardware automatically corrected the error. Software may choose to
+                                                         count the number of these single-bit errors. */
+	uint64_t l2ddbe                       : 1;  /**< L2D double-bit error occurred. See L2C_TAD()_TQD_ERR for logged information. An
+                                                         indication of a hardware failure and may be considered fatal. */
+	uint64_t l2dsbe                       : 1;  /**< L2D single-bit error on a read. See L2C_TAD()_TQD_ERR for logged
+                                                         information. When [L2DSBE] is set, hardware corrected the error before using the
+                                                         data, but did not correct any stored value. When [L2DSBE] is set, software
+                                                         should eject the cache block indicated by the corresponding
+                                                         L2C_TAD()_TQD_ERR[QDNUM,L2DIDX] before clearing [L2DSBE]. Otherwise, hardware
+                                                         may encounter the error again the next time the same L2D location is
+                                                         referenced. Software may also choose to count the number of these single-bit
+                                                         errors.
+                                                         The eject should use a CACHE 0x3 instruction with an effective address of:
+                                                         <pre>
+                                                           payload<24:22> = 0
+                                                           payload<21:18> = L2C_TAD()_TQD_ERR[L2DIDX]<10:7>  // way
+                                                           payload<17:11> = L2C_TAD()_TQD_ERR[L2DIDX]<6:0>   // index<10:4>
+                                                           payload<10:9>  = L2C_TAD()_TQD_ERR[L2DIDX]<12:11> // index<3:2>
+                                                           payload<8:7>   = tad             // index<1:0>
+                                                         </pre>
+                                                         where tad is the TAD index from this CSR. Note that L2C_CTL[DISIDXALIAS] has no
+                                                         effect on the payload. */
 #else
 	uint64_t l2dsbe                       : 1;
 	uint64_t l2ddbe                       : 1;
@@ -7866,7 +7971,7 @@ union cvmx_l2c_tadx_int {
 #endif
 	} cn73xx;
 	struct cvmx_l2c_tadx_int_cn73xx       cn78xx;
-	struct cvmx_l2c_tadx_int_cn73xx       cn78xxp2;
+	struct cvmx_l2c_tadx_int_cn73xx       cn78xxp1;
 	struct cvmx_l2c_tadx_int_cn61xx       cnf71xx;
 	struct cvmx_l2c_tadx_int_cn73xx       cnf75xx;
 };
@@ -7888,7 +7993,7 @@ union cvmx_l2c_tadx_pfcx {
 	struct cvmx_l2c_tadx_pfcx_s           cn70xxp1;
 	struct cvmx_l2c_tadx_pfcx_s           cn73xx;
 	struct cvmx_l2c_tadx_pfcx_s           cn78xx;
-	struct cvmx_l2c_tadx_pfcx_s           cn78xxp2;
+	struct cvmx_l2c_tadx_pfcx_s           cn78xxp1;
 	struct cvmx_l2c_tadx_pfcx_s           cnf75xx;
 };
 typedef union cvmx_l2c_tadx_pfcx cvmx_l2c_tadx_pfcx_t;
@@ -8026,7 +8131,7 @@ union cvmx_l2c_tadx_prf {
 	struct cvmx_l2c_tadx_prf_s            cn70xxp1;
 	struct cvmx_l2c_tadx_prf_s            cn73xx;
 	struct cvmx_l2c_tadx_prf_s            cn78xx;
-	struct cvmx_l2c_tadx_prf_s            cn78xxp2;
+	struct cvmx_l2c_tadx_prf_s            cn78xxp1;
 	struct cvmx_l2c_tadx_prf_s            cnf71xx;
 	struct cvmx_l2c_tadx_prf_s            cnf75xx;
 };
@@ -8054,7 +8159,7 @@ union cvmx_l2c_tadx_stat {
 #endif
 	} s;
 	struct cvmx_l2c_tadx_stat_s           cn73xx;
-	struct cvmx_l2c_tadx_stat_s           cn78xxp2;
+	struct cvmx_l2c_tadx_stat_s           cn78xx;
 	struct cvmx_l2c_tadx_stat_s           cnf75xx;
 };
 typedef union cvmx_l2c_tadx_stat cvmx_l2c_tadx_stat_t;
@@ -8225,7 +8330,7 @@ union cvmx_l2c_tadx_tag {
 	uint64_t sblkdty                      : 4;
 #endif
 	} cn78xx;
-	struct cvmx_l2c_tadx_tag_cn78xx       cn78xxp2;
+	struct cvmx_l2c_tadx_tag_cn78xx       cn78xxp1;
 	struct cvmx_l2c_tadx_tag_cn61xx       cnf71xx;
 	struct cvmx_l2c_tadx_tag_cn73xx       cnf75xx;
 };
@@ -8244,7 +8349,7 @@ union cvmx_l2c_tadx_timeout {
 	uint64_t u64;
 	struct cvmx_l2c_tadx_timeout_s {
 #ifdef __BIG_ENDIAN_BITFIELD
-	uint64_t infolfb                      : 1;  /**< Logged address information is for the LFB original transation. */
+	uint64_t infolfb                      : 1;  /**< Logged address information is for the LFB original transaction. */
 	uint64_t infovab                      : 1;  /**< Logged address information is for the VAB (replacement). If both this and [INFOLFB] is
                                                          set,
                                                          then both could have timed out, but info captured is from the original LFB. */
@@ -8274,7 +8379,7 @@ union cvmx_l2c_tadx_timeout {
 	} s;
 	struct cvmx_l2c_tadx_timeout_s        cn73xx;
 	struct cvmx_l2c_tadx_timeout_s        cn78xx;
-	struct cvmx_l2c_tadx_timeout_s        cn78xxp2;
+	struct cvmx_l2c_tadx_timeout_s        cn78xxp1;
 	struct cvmx_l2c_tadx_timeout_s        cnf75xx;
 };
 typedef union cvmx_l2c_tadx_timeout cvmx_l2c_tadx_timeout_t;
@@ -8290,7 +8395,9 @@ union cvmx_l2c_tadx_timetwo {
 	struct cvmx_l2c_tadx_timetwo_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_33_63               : 31;
-	uint64_t sid                          : 4;  /**< Source id of the original request, that is 'source' of request. */
+	uint64_t sid                          : 4;  /**< Source id of the original request, that is 'source' of request. This is only valid if the
+                                                         request is a local request (valid if L2C_TAD()_TIMEOUT[CMD] is an XMC request and not
+                                                         relevant if it is an CCPI request). */
 	uint64_t busid                        : 4;  /**< Busid of the original request, that is 'source' of request. */
 	uint64_t vabst                        : 3;  /**< This is the LFB internal state if INFOLFB is set, else will contain VAB internal state if
                                                          INFOVAB is set. */
@@ -8309,7 +8416,7 @@ union cvmx_l2c_tadx_timetwo {
 	} s;
 	struct cvmx_l2c_tadx_timetwo_s        cn73xx;
 	struct cvmx_l2c_tadx_timetwo_s        cn78xx;
-	struct cvmx_l2c_tadx_timetwo_s        cn78xxp2;
+	struct cvmx_l2c_tadx_timetwo_s        cn78xxp1;
 	struct cvmx_l2c_tadx_timetwo_s        cnf75xx;
 };
 typedef union cvmx_l2c_tadx_timetwo cvmx_l2c_tadx_timetwo_t;
@@ -8317,8 +8424,13 @@ typedef union cvmx_l2c_tadx_timetwo cvmx_l2c_tadx_timetwo_t;
 /**
  * cvmx_l2c_tad_ctl
  *
- * "* If MAXLFB is != 0, VBF_THRESH should be less than MAXLFB.
- * * If MAXVBF is != 0, VBF_THRESH should be less than MAXVBF."
+ * In CNXXXX, MAXLFB, EXLRQ, EXRRQ, EXFWD, EXVIC refer to half-TAD LFBs/VABs. Therefore, even
+ * though there are 24 LFBs/VABs in a full TAD, the number applies to both halves.
+ * * If [MAXLFB] is written to 0 or 13-15 operation is undefined. (CN78XX pass 1.0).
+ * * If [MAXLFB] is != 0, [VBF_THRESH] should be less than [MAXLFB].
+ * * If [MAXVBF] is != 0, [VBF_THRESH] should be less than [MAXVBF].
+ * * If [MAXLFB] != 0, [EXLRQ] + [EXRRQ] + [EXFWD] + [EXVIC] must be less than or equal to MAXLFB
+ * - 3.
  */
 union cvmx_l2c_tad_ctl {
 	uint64_t u64;
@@ -8335,7 +8447,9 @@ union cvmx_l2c_tad_ctl {
 	uint64_t exfwd                        : 4;  /**< Reserved. */
 	uint64_t exvic                        : 4;  /**< Reserved. */
 	uint64_t vbf_thresh                   : 4;  /**< VBF threshold. When the number of in-use VBFs exceeds this number the L2C TAD increases
-                                                         the priority of all its write operations in the LMC. */
+                                                         the priority of all its write operations in the LMC.
+                                                         If [MAXLFB] is != 0x0, [VBF_THRESH] should be less than [MAXLFB].
+                                                         If [MAXVBF] is != 0x0, [VBF_THRESH] should be less than [MAXVBF]. */
 	uint64_t maxvbf                       : 4;  /**< Maximum VBFs in use at once (0 means 16, 1-15 as expected). */
 	uint64_t maxlfb                       : 4;  /**< Maximum VABs/LFBs in use at once (0 means 16, 1-15 as expected). */
 #else
@@ -8375,7 +8489,7 @@ union cvmx_l2c_tad_ctl {
 	struct cvmx_l2c_tad_ctl_cn70xx        cn70xxp1;
 	struct cvmx_l2c_tad_ctl_s             cn73xx;
 	struct cvmx_l2c_tad_ctl_s             cn78xx;
-	struct cvmx_l2c_tad_ctl_s             cn78xxp2;
+	struct cvmx_l2c_tad_ctl_s             cn78xxp1;
 	struct cvmx_l2c_tad_ctl_s             cnf75xx;
 };
 typedef union cvmx_l2c_tad_ctl cvmx_l2c_tad_ctl_t;
@@ -8402,7 +8516,7 @@ union cvmx_l2c_tbfx_bist_status {
 	struct cvmx_l2c_tbfx_bist_status_s    cn70xxp1;
 	struct cvmx_l2c_tbfx_bist_status_s    cn73xx;
 	struct cvmx_l2c_tbfx_bist_status_s    cn78xx;
-	struct cvmx_l2c_tbfx_bist_status_s    cn78xxp2;
+	struct cvmx_l2c_tbfx_bist_status_s    cn78xxp1;
 	struct cvmx_l2c_tbfx_bist_status_s    cnf75xx;
 };
 typedef union cvmx_l2c_tbfx_bist_status cvmx_l2c_tbfx_bist_status_t;
@@ -8425,7 +8539,7 @@ union cvmx_l2c_tdtx_bist_status {
 	struct cvmx_l2c_tdtx_bist_status_s    cn70xxp1;
 	struct cvmx_l2c_tdtx_bist_status_s    cn73xx;
 	struct cvmx_l2c_tdtx_bist_status_s    cn78xx;
-	struct cvmx_l2c_tdtx_bist_status_s    cn78xxp2;
+	struct cvmx_l2c_tdtx_bist_status_s    cn78xxp1;
 	struct cvmx_l2c_tdtx_bist_status_s    cnf75xx;
 };
 typedef union cvmx_l2c_tdtx_bist_status cvmx_l2c_tdtx_bist_status_t;
@@ -8455,7 +8569,8 @@ union cvmx_l2c_tqdx_err {
 	uint64_t qdnum                        : 3;  /**< Quad containing the error. */
 	uint64_t qdhlf                        : 1;  /**< Quad half of the containing the error. */
 	uint64_t l2didx                       : 14; /**< For L2D errors, index within the quad-half containing the error. For SBF and FBF errors
-                                                         <13:5> is 0x0 and <4:0> is the index of the error (<4:1> is lfbnum<3:0>, <0> is addr<5>). */
+                                                         <13:5> is 0x0 and <4:0> is the index of the error (<4:1> is lfbnum<3:0>, <0> is addr<5>).
+                                                         See L2C_TAD()_INT[L2DSBE] for an important use of this field. */
 #else
 	uint64_t l2didx                       : 14;
 	uint64_t qdhlf                        : 1;
@@ -8475,7 +8590,7 @@ union cvmx_l2c_tqdx_err {
 	struct cvmx_l2c_tqdx_err_s            cn70xxp1;
 	struct cvmx_l2c_tqdx_err_s            cn73xx;
 	struct cvmx_l2c_tqdx_err_s            cn78xx;
-	struct cvmx_l2c_tqdx_err_s            cn78xxp2;
+	struct cvmx_l2c_tqdx_err_s            cn78xxp1;
 	struct cvmx_l2c_tqdx_err_s            cnf75xx;
 };
 typedef union cvmx_l2c_tqdx_err cvmx_l2c_tqdx_err_t;
@@ -8524,7 +8639,7 @@ union cvmx_l2c_ttgx_bist_status {
 	struct cvmx_l2c_ttgx_bist_status_cn70xx cn70xxp1;
 	struct cvmx_l2c_ttgx_bist_status_s    cn73xx;
 	struct cvmx_l2c_ttgx_bist_status_s    cn78xx;
-	struct cvmx_l2c_ttgx_bist_status_s    cn78xxp2;
+	struct cvmx_l2c_ttgx_bist_status_s    cn78xxp1;
 	struct cvmx_l2c_ttgx_bist_status_s    cnf75xx;
 };
 typedef union cvmx_l2c_ttgx_bist_status cvmx_l2c_ttgx_bist_status_t;
@@ -8591,7 +8706,8 @@ union cvmx_l2c_ttgx_err {
 	uint64_t syn                          : 7;  /**< Syndrome for the single-bit error. */
 	uint64_t reserved_22_31               : 10;
 	uint64_t way                          : 4;  /**< Way of the L2 block containing the error. */
-	uint64_t l2idx                        : 11; /**< Index of the L2 block containing the error. */
+	uint64_t l2idx                        : 11; /**< Index of the L2 block containing the error.
+                                                         See L2C_TAD()_INT[TAGSBE] for an important use of this field. */
 	uint64_t reserved_0_6                 : 7;
 #else
 	uint64_t reserved_0_6                 : 7;
@@ -8614,7 +8730,8 @@ union cvmx_l2c_ttgx_err {
 	uint64_t syn                          : 7;  /**< Syndrome for the single-bit error. */
 	uint64_t reserved_24_31               : 8;
 	uint64_t way                          : 4;  /**< Way of the L2 block containing the error. */
-	uint64_t l2idx                        : 13; /**< Index of the L2 block containing the error. */
+	uint64_t l2idx                        : 13; /**< Index of the L2 block containing the error.
+                                                         See L2C_TAD()_INT[TAGSBE] for an important use of this field. */
 	uint64_t reserved_0_6                 : 7;
 #else
 	uint64_t reserved_0_6                 : 7;
@@ -8628,7 +8745,7 @@ union cvmx_l2c_ttgx_err {
 	uint64_t tagdbe                       : 1;
 #endif
 	} cn78xx;
-	struct cvmx_l2c_ttgx_err_cn78xx       cn78xxp2;
+	struct cvmx_l2c_ttgx_err_cn78xx       cn78xxp1;
 	struct cvmx_l2c_ttgx_err_cn73xx       cnf75xx;
 };
 typedef union cvmx_l2c_ttgx_err cvmx_l2c_ttgx_err_t;
@@ -9011,7 +9128,7 @@ union cvmx_l2c_wpar_iobx {
 	struct cvmx_l2c_wpar_iobx_cn70xx      cn70xxp1;
 	struct cvmx_l2c_wpar_iobx_s           cn73xx;
 	struct cvmx_l2c_wpar_iobx_s           cn78xx;
-	struct cvmx_l2c_wpar_iobx_s           cn78xxp2;
+	struct cvmx_l2c_wpar_iobx_s           cn78xxp1;
 	struct cvmx_l2c_wpar_iobx_s           cnf71xx;
 	struct cvmx_l2c_wpar_iobx_s           cnf75xx;
 };
@@ -9058,7 +9175,7 @@ union cvmx_l2c_wpar_ppx {
 	struct cvmx_l2c_wpar_ppx_cn70xx       cn70xxp1;
 	struct cvmx_l2c_wpar_ppx_s            cn73xx;
 	struct cvmx_l2c_wpar_ppx_s            cn78xx;
-	struct cvmx_l2c_wpar_ppx_s            cn78xxp2;
+	struct cvmx_l2c_wpar_ppx_s            cn78xxp1;
 	struct cvmx_l2c_wpar_ppx_s            cnf71xx;
 	struct cvmx_l2c_wpar_ppx_s            cnf75xx;
 };
@@ -9089,7 +9206,7 @@ union cvmx_l2c_xmcx_pfc {
 	struct cvmx_l2c_xmcx_pfc_s            cn70xxp1;
 	struct cvmx_l2c_xmcx_pfc_s            cn73xx;
 	struct cvmx_l2c_xmcx_pfc_s            cn78xx;
-	struct cvmx_l2c_xmcx_pfc_s            cn78xxp2;
+	struct cvmx_l2c_xmcx_pfc_s            cn78xxp1;
 	struct cvmx_l2c_xmcx_pfc_s            cnf71xx;
 	struct cvmx_l2c_xmcx_pfc_s            cnf75xx;
 };
@@ -9193,7 +9310,7 @@ union cvmx_l2c_xmc_cmd {
 	struct cvmx_l2c_xmc_cmd_cn70xx        cn70xxp1;
 	struct cvmx_l2c_xmc_cmd_cn70xx        cn73xx;
 	struct cvmx_l2c_xmc_cmd_cn70xx        cn78xx;
-	struct cvmx_l2c_xmc_cmd_cn70xx        cn78xxp2;
+	struct cvmx_l2c_xmc_cmd_cn70xx        cn78xxp1;
 	struct cvmx_l2c_xmc_cmd_cn61xx        cnf71xx;
 	struct cvmx_l2c_xmc_cmd_cn70xx        cnf75xx;
 };
@@ -9224,7 +9341,7 @@ union cvmx_l2c_xmdx_pfc {
 	struct cvmx_l2c_xmdx_pfc_s            cn70xxp1;
 	struct cvmx_l2c_xmdx_pfc_s            cn73xx;
 	struct cvmx_l2c_xmdx_pfc_s            cn78xx;
-	struct cvmx_l2c_xmdx_pfc_s            cn78xxp2;
+	struct cvmx_l2c_xmdx_pfc_s            cn78xxp1;
 	struct cvmx_l2c_xmdx_pfc_s            cnf71xx;
 	struct cvmx_l2c_xmdx_pfc_s            cnf75xx;
 };

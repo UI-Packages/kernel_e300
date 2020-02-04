@@ -39,8 +39,8 @@
  * @hardware_test: Called to run a specified hardware test on the specified
  * slot.
  * @get_power_status: Called to get the current power status of a slot.
- * 	If this field is NULL, the value passed in the struct hotplug_slot_info
- * 	will be used when this value is requested by a user.
+ *	If this field is NULL, the value passed in the struct hotplug_slot_info
+ *	will be used when this value is requested by a user.
  * @get_attention_status: Called to get the current attention status of a slot.
  *	If this field is NULL, the value passed in the struct hotplug_slot_info
  *	will be used when this value is requested by a user.
@@ -50,6 +50,9 @@
  * @get_adapter_status: Called to get see if an adapter is present in the slot or not.
  *	If this field is NULL, the value passed in the struct hotplug_slot_info
  *	will be used when this value is requested by a user.
+ * @reset_slot: Optional interface to allow override of a bus reset for the
+ *	slot for cases where a secondary bus reset can result in spurious
+ *	hotplug events or where a slot can be reset independent of the bus.
  *
  * The table of function pointers that is passed to the hotplug pci core by a
  * hotplug pci driver.  These functions are called by the hotplug pci core when
@@ -67,8 +70,8 @@ struct hotplug_slot_ops {
 	int (*get_attention_status)	(struct hotplug_slot *slot, u8 *value);
 	int (*get_latch_status)		(struct hotplug_slot *slot, u8 *value);
 	int (*get_adapter_status)	(struct hotplug_slot *slot, u8 *value);
-} __do_const;
-typedef struct hotplug_slot_ops __no_const hotplug_slot_ops_no_const;
+	int (*reset_slot)		(struct hotplug_slot *slot, int probe);
+};
 
 /**
  * struct hotplug_slot_info - used to notify the hotplug pci core of the state of the slot
@@ -106,7 +109,6 @@ struct hotplug_slot {
 	struct list_head		slot_list;
 	struct pci_slot			*pci_slot;
 };
-#define to_hotplug_slot(n) container_of(n, struct hotplug_slot, kobj)
 
 static inline const char *hotplug_slot_name(const struct hotplug_slot *slot)
 {
@@ -172,8 +174,7 @@ struct hotplug_params {
 };
 
 #ifdef CONFIG_ACPI
-#include <acpi/acpi.h>
-#include <acpi/acpi_bus.h>
+#include <linux/acpi.h>
 int pci_get_hp_params(struct pci_dev *dev, struct hotplug_params *hpp);
 int acpi_get_hp_hw_control_from_firmware(struct pci_dev *dev, u32 flags);
 int acpi_pci_check_ejectable(struct pci_bus *pbus, acpi_handle handle);
@@ -185,7 +186,4 @@ static inline int pci_get_hp_params(struct pci_dev *dev,
 	return -ENODEV;
 }
 #endif
-
-void pci_configure_slot(struct pci_dev *dev);
 #endif
-

@@ -19,6 +19,7 @@
 #include <linux/tty.h>
 #include <linux/tty_driver.h>
 #include <linux/tty_flip.h>
+#include <linux/module.h>
 
 #include <asm/byteorder.h>
 #include <asm/io.h>
@@ -84,7 +85,7 @@ struct octeon_pci_console {
 	struct tty_driver *ttydrv;
 	spinlock_t lock;
 	struct octeon_pci_console_rings *rings;
-	/* Pointers to the ring memory refered to in rings. */
+	/* Pointers to the ring memory referred to in rings. */
 	u8 *input_ring;
 	u8 *output_ring;
 	struct timer_list poll_timer;
@@ -119,6 +120,7 @@ static void octeon_pci_console_lowlevel_write(struct octeon_pci_console *opc,
 					      const char *str, unsigned int len)
 {
 	u32 s = opc->rings->buf_size;
+
 	spin_lock(&opc->lock);
 	while (len > 0) {
 		u32 r =  opc->rings->output_read_index;
@@ -145,7 +147,7 @@ static void octeon_pci_console_lowlevel_write(struct octeon_pci_console *opc,
 }
 
 static void octeon_pci_console_write(struct console *con, const char *str,
-				     unsigned len)
+				     unsigned int len)
 {
 	octeon_pci_console_lowlevel_write(con->data, str, len);
 }
@@ -154,6 +156,7 @@ static struct tty_driver *octeon_pci_console_device(struct console *con,
 						    int *index)
 {
 	struct octeon_pci_console  *opc = con->data;
+
 	*index = 0;
 	return opc->ttydrv;
 }
@@ -192,6 +195,7 @@ fail:
 static int octeon_pci_console_setup(struct console *con, char *arg)
 {
 	struct octeon_pci_console *opc = con->data;
+
 	octeon_write_lcd("pci cons");
 	if (octeon_pci_console_setup0(opc)) {
 		octeon_write_lcd("pci fail");
@@ -233,9 +237,11 @@ static void octeon_pci_console_read_poll(unsigned long arg)
 	int i;
 	u8 buffer[32];
 #endif
+
 	while (a > 0) {
 		u8 *buf;
 		unsigned int n;
+
 		if (r > w)
 			n = min(a, s - r);
 		else
@@ -267,6 +273,7 @@ static int octeon_pci_console_tty_open(struct tty_struct *tty,
 				       struct file *filp)
 {
 	struct octeon_pci_console  *opc = tty->driver->driver_state;
+
 	opc->open_count++;
 	if (opc->open_count == 1) {
 		init_timer(&opc->poll_timer);
@@ -281,6 +288,7 @@ static void octeon_pci_console_tty_close(struct tty_struct *tty,
 					 struct file *filp)
 {
 	struct octeon_pci_console  *opc = tty->driver->driver_state;
+
 	opc->open_count--;
 	if (opc->open_count == 0)
 		del_timer(&opc->poll_timer);
@@ -291,6 +299,7 @@ static int octeon_pci_console_tty_write(struct tty_struct *tty,
 					int count)
 {
 	struct octeon_pci_console  *opc = tty->driver->driver_state;
+
 	octeon_pci_console_lowlevel_write(opc, buf, count);
 	return count;
 }
@@ -298,6 +307,7 @@ static int octeon_pci_console_tty_write(struct tty_struct *tty,
 static void octeon_pci_console_tty_send_xchar(struct tty_struct *tty, char ch)
 {
 	struct octeon_pci_console  *opc = tty->driver->driver_state;
+
 	octeon_pci_console_lowlevel_write(opc, &ch, 1);
 }
 
@@ -308,6 +318,7 @@ static void octeon_pci_console_tty_send_xchar(struct tty_struct *tty, char ch)
 static int octeon_pci_console_tty_write_room(struct tty_struct *tty)
 {
 	struct octeon_pci_console  *opc = tty->driver->driver_state;
+
 	return opc->rings->buf_size - 1;
 }
 
@@ -325,7 +336,7 @@ static const struct tty_operations octeon_pci_tty_ops = {
 	.chars_in_buffer = octeon_pci_console_tty_chars_in_buffer,
 };
 
-static __init int octeon_pci_console_module_init(void)
+static int __init octeon_pci_console_module_init(void)
 {
 	int r;
 	struct tty_driver *d = tty_alloc_driver(1, 0);

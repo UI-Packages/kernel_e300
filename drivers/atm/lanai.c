@@ -346,7 +346,8 @@ static void lanai_buf_allocate(struct lanai_buffer *buf,
 		 * everything, but the way the lanai uses DMA memory would
 		 * make that a terrific pain.  This is much simpler.
 		 */
-		buf->start = pci_alloc_consistent(pci, size, &buf->dmaaddr);
+		buf->start = dma_alloc_coherent(&pci->dev,
+						size, &buf->dmaaddr, GFP_KERNEL);
 		if (buf->start != NULL) {	/* Success */
 			/* Lanai requires 256-byte alignment of DMA bufs */
 			APRINTK((buf->dmaaddr & ~0xFFFFFF00) == 0,
@@ -372,8 +373,8 @@ static void lanai_buf_deallocate(struct lanai_buffer *buf,
 	struct pci_dev *pci)
 {
 	if (buf->start != NULL) {
-		pci_free_consistent(pci, lanai_buf_size(buf),
-		    buf->start, buf->dmaaddr);
+		dma_free_coherent(&pci->dev, lanai_buf_size(buf),
+				  buf->start, buf->dmaaddr);
 		buf->start = buf->end = buf->ptr = NULL;
 	}
 }
@@ -678,15 +679,6 @@ static inline void cardvcc_write(const struct lanai_vcc *lvcc,
 static inline int aal5_size(int size)
 {
 	int cells = (size + 8 + 47) / 48;
-	return cells * 48;
-}
-
-/* How many bytes can we send if we have "space" space, assuming we have
- * to send full cells
- */
-static inline int aal5_spacefor(int space)
-{
-	int cells = space / 48;
 	return cells * 48;
 }
 
@@ -1303,7 +1295,7 @@ static void lanai_send_one_aal5(struct lanai_dev *lanai,
 	vcc_tx_add_aal5_trailer(lvcc, skb->len, 0, 0);
 	lanai_endtx(lanai, lvcc);
 	lanai_free_skb(lvcc->tx.atmvcc, skb);
-	atomic_inc_unchecked(&lvcc->tx.atmvcc->stats->tx);
+	atomic_inc(&lvcc->tx.atmvcc->stats->tx);
 }
 
 /* Try to fill the buffer - don't call unless there is backlog */
@@ -1426,7 +1418,7 @@ static void vcc_rx_aal5(struct lanai_vcc *lvcc, int endptr)
 	ATM_SKB(skb)->vcc = lvcc->rx.atmvcc;
 	__net_timestamp(skb);
 	lvcc->rx.atmvcc->push(lvcc->rx.atmvcc, skb);
-	atomic_inc_unchecked(&lvcc->rx.atmvcc->stats->rx);
+	atomic_inc(&lvcc->rx.atmvcc->stats->rx);
     out:
 	lvcc->rx.buf.ptr = end;
 	cardvcc_write(lvcc, endptr, vcc_rxreadptr);
@@ -1667,7 +1659,7 @@ static int handle_service(struct lanai_dev *lanai, u32 s)
 		DPRINTK("(itf %d) got RX service entry 0x%X for non-AAL5 "
 		    "vcc %d\n", lanai->number, (unsigned int) s, vci);
 		lanai->stats.service_rxnotaal5++;
-		atomic_inc_unchecked(&lvcc->rx.atmvcc->stats->rx_err);
+		atomic_inc(&lvcc->rx.atmvcc->stats->rx_err);
 		return 0;
 	}
 	if (likely(!(s & (SERVICE_TRASH | SERVICE_STREAM | SERVICE_CRCERR)))) {
@@ -1679,7 +1671,7 @@ static int handle_service(struct lanai_dev *lanai, u32 s)
 		int bytes;
 		read_unlock(&vcc_sklist_lock);
 		DPRINTK("got trashed rx pdu on vci %d\n", vci);
-		atomic_inc_unchecked(&lvcc->rx.atmvcc->stats->rx_err);
+		atomic_inc(&lvcc->rx.atmvcc->stats->rx_err);
 		lvcc->stats.x.aal5.service_trash++;
 		bytes = (SERVICE_GET_END(s) * 16) -
 		    (((unsigned long) lvcc->rx.buf.ptr) -
@@ -1691,7 +1683,7 @@ static int handle_service(struct lanai_dev *lanai, u32 s)
 	}
 	if (s & SERVICE_STREAM) {
 		read_unlock(&vcc_sklist_lock);
-		atomic_inc_unchecked(&lvcc->rx.atmvcc->stats->rx_err);
+		atomic_inc(&lvcc->rx.atmvcc->stats->rx_err);
 		lvcc->stats.x.aal5.service_stream++;
 		printk(KERN_ERR DEV_LABEL "(itf %d): Got AAL5 stream "
 		    "PDU on VCI %d!\n", lanai->number, vci);
@@ -1699,7 +1691,7 @@ static int handle_service(struct lanai_dev *lanai, u32 s)
 		return 0;
 	}
 	DPRINTK("got rx crc error on vci %d\n", vci);
-	atomic_inc_unchecked(&lvcc->rx.atmvcc->stats->rx_err);
+	atomic_inc(&lvcc->rx.atmvcc->stats->rx_err);
 	lvcc->stats.x.aal5.service_rxcrc++;
 	lvcc->rx.buf.ptr = &lvcc->rx.buf.start[SERVICE_GET_END(s) * 4];
 	cardvcc_write(lvcc, SERVICE_GET_END(s), vcc_rxreadptr);
@@ -1953,12 +1945,7 @@ static int lanai_pci_start(struct lanai_dev *lanai)
 		return -ENXIO;
 	}
 	pci_set_master(pci);
-	if (pci_set_dma_mask(pci, DMA_BIT_MASK(32)) != 0) {
-		printk(KERN_WARNING DEV_LABEL
-		    "(itf %d): No suitable DMA available.\n", lanai->number);
-		return -EBUSY;
-	}
-	if (pci_set_consistent_dma_mask(pci, DMA_BIT_MASK(32)) != 0) {
+	if (dma_set_mask_and_coherent(&pci->dev, DMA_BIT_MASK(32)) != 0) {
 		printk(KERN_WARNING DEV_LABEL
 		    "(itf %d): No suitable DMA available.\n", lanai->number);
 		return -EBUSY;
@@ -2156,6 +2143,7 @@ static int lanai_dev_open(struct atm_dev *atmdev)
 	lanai->base = (bus_addr_t) ioremap(raw_base, LANAI_MAPPING_SIZE);
 	if (lanai->base == NULL) {
 		printk(KERN_ERR DEV_LABEL ": couldn't remap I/O space\n");
+		result = -ENOMEM;
 		goto error_pci;
 	}
 	/* 3.3: Reset lanai and PHY */
@@ -2614,27 +2602,7 @@ static struct pci_driver lanai_driver = {
 	.probe    = lanai_init_one,
 };
 
-static int __init lanai_module_init(void)
-{
-	int x;
-
-	x = pci_register_driver(&lanai_driver);
-	if (x != 0)
-		printk(KERN_ERR DEV_LABEL ": no adapter found\n");
-	return x;
-}
-
-static void __exit lanai_module_exit(void)
-{
-	/* We'll only get called when all the interfaces are already
-	 * gone, so there isn't much to do
-	 */
-	DPRINTK("cleanup_module()\n");
-	pci_unregister_driver(&lanai_driver);
-}
-
-module_init(lanai_module_init);
-module_exit(lanai_module_exit);
+module_pci_driver(lanai_driver);
 
 MODULE_AUTHOR("Mitchell Blank Jr <mitch@sfgoth.com>");
 MODULE_DESCRIPTION("Efficient Networks Speedstream 3010 driver");

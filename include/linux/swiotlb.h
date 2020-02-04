@@ -1,13 +1,21 @@
 #ifndef __LINUX_SWIOTLB_H
 #define __LINUX_SWIOTLB_H
 
+#include <linux/dma-direction.h>
+#include <linux/init.h>
 #include <linux/types.h>
 
 struct device;
-struct dma_attrs;
+struct page;
 struct scatterlist;
 
-extern int swiotlb_force;
+enum swiotlb_force {
+	SWIOTLB_NORMAL,		/* Default - depending on HW DMA mask etc. */
+	SWIOTLB_FORCE,		/* swiotlb=force */
+	SWIOTLB_NO_FORCE,	/* swiotlb=noforce */
+};
+
+extern enum swiotlb_force swiotlb_force;
 
 /*
  * Maximum allowable number of contiguous slabs to map,
@@ -60,16 +68,15 @@ extern void
 
 extern void
 swiotlb_free_coherent(struct device *hwdev, size_t size,
-		      void *vaddr, dma_addr_t dma_handle,
-		      struct dma_attrs *attrs);
+		      void *vaddr, dma_addr_t dma_handle);
 
 extern dma_addr_t swiotlb_map_page(struct device *dev, struct page *page,
 				   unsigned long offset, size_t size,
 				   enum dma_data_direction dir,
-				   struct dma_attrs *attrs);
+				   unsigned long attrs);
 extern void swiotlb_unmap_page(struct device *hwdev, dma_addr_t dev_addr,
 			       size_t size, enum dma_data_direction dir,
-			       struct dma_attrs *attrs);
+			       unsigned long attrs);
 
 extern int
 swiotlb_map_sg(struct device *hwdev, struct scatterlist *sg, int nents,
@@ -81,12 +88,13 @@ swiotlb_unmap_sg(struct device *hwdev, struct scatterlist *sg, int nents,
 
 extern int
 swiotlb_map_sg_attrs(struct device *hwdev, struct scatterlist *sgl, int nelems,
-		     enum dma_data_direction dir, struct dma_attrs *attrs);
+		     enum dma_data_direction dir,
+		     unsigned long attrs);
 
 extern void
 swiotlb_unmap_sg_attrs(struct device *hwdev, struct scatterlist *sgl,
 		       int nelems, enum dma_data_direction dir,
-		       struct dma_attrs *attrs);
+		       unsigned long attrs);
 
 extern void
 swiotlb_sync_single_for_cpu(struct device *hwdev, dma_addr_t dev_addr,
@@ -117,4 +125,6 @@ static inline void swiotlb_free(void) { }
 #endif
 
 extern void swiotlb_print_info(void);
+extern int is_swiotlb_buffer(phys_addr_t paddr);
+
 #endif /* __LINUX_SWIOTLB_H */

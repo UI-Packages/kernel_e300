@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2005-2014 Junjiro R. Okajima
+ * Copyright (C) 2005-2017 Junjiro R. Okajima
  *
  * This program, aufs is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -80,7 +80,7 @@ struct au_vdir {
 
 	unsigned long	vd_version;
 	unsigned int	vd_deblk_sz;
-	unsigned long	vd_jiffy;
+	unsigned long		vd_jiffy;
 } ____cacheline_aligned_in_smp;
 
 /* ---------------------------------------------------------------------- */
@@ -90,6 +90,7 @@ extern const struct file_operations aufs_dir_fop;
 void au_add_nlink(struct inode *dir, struct inode *h_dir);
 void au_sub_nlink(struct inode *dir, struct inode *h_dir);
 loff_t au_dir_size(struct file *file, struct dentry *dentry);
+void au_dir_ts(struct inode *dir, aufs_bindex_t bsrc);
 int au_test_empty_lower(struct dentry *dentry);
 int au_test_empty(struct dentry *dentry, struct au_nhash *whlist);
 
@@ -105,7 +106,7 @@ int au_nhash_append_wh(struct au_nhash *whlist, char *name, int nlen, ino_t ino,
 		       unsigned char shwh);
 void au_vdir_free(struct au_vdir *vdir);
 int au_vdir_init(struct file *file);
-int au_vdir_fill_de(struct file *file, void *dirent, filldir_t filldir);
+int au_vdir_fill_de(struct file *file, struct dir_context *ctx);
 
 /* ioctl.c */
 long aufs_ioctl_dir(struct file *file, unsigned int cmd, unsigned long arg);

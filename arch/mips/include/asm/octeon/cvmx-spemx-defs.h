@@ -1,5 +1,5 @@
 /***********************license start***************
- * Copyright (c) 2003-2015  Cavium Inc. (support@cavium.com). All rights
+ * Copyright (c) 2003-2017  Cavium Inc. (support@cavium.com). All rights
  * reserved.
  *
  *
@@ -1252,7 +1252,7 @@ union cvmx_spemx_eco {
 	struct cvmx_spemx_eco_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_8_63                : 56;
-	uint64_t eco_rw                       : 8;  /**< N/A */
+	uint64_t eco_rw                       : 8;  /**< Reserved for ECO usage. */
 #else
 	uint64_t eco_rw                       : 8;
 	uint64_t reserved_8_63                : 56;
@@ -1412,12 +1412,13 @@ typedef union cvmx_spemx_flr_pf2_vfx_stopreq cvmx_spemx_flr_pf2_vfx_stopreq_t;
  * STOPREQ mimics the behavior of PCIEEP()_CFG001[ME] for outbound requests that will
  * master the PCIe bus (P and NP).
  *
- * Note that STOPREQ will have no effect on completions returned by CNXXXX over the S2M,
+ * STOPREQ will have no effect on completions returned by CNXXXX over the S2M,
  * nor on M2S traffic.
  *
- * Note that when a PF()_STOPREQ is set, none of the associated
- * PEM()_FLR_PF()_VF_STOPREQ[VF_STOPREQ]
- * will be set.
+ * When a PF()_STOPREQ is set, none of the associated
+ * PEM()_FLR_PF()_VF_STOPREQ[VF_STOPREQ] will be set.
+ *
+ * STOPREQ is reset when the MAC is reset, and is not reset after a chip soft reset.
  */
 union cvmx_spemx_flr_pf_stopreq {
 	uint64_t u64;
@@ -1449,12 +1450,12 @@ union cvmx_spemx_flr_zombie_ctl {
 	struct cvmx_spemx_flr_zombie_ctl_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_10_63               : 54;
-	uint64_t exp                          : 10; /**< The expiration value for the inbound shared global zombie counter.  The global zombie
+	uint64_t exp                          : 10; /**< The expiration value for the inbound shared global zombie counter. The global zombie
                                                          counter
                                                          continuously counts the number of cycles where the PCIe Core was allowed to send
                                                          either a Posted request or a Completion to the PEM.  When the global zombie counter
                                                          reaches expiration (EXP), it resets to zero and all the nonzero per PCIe tag zombie
-                                                         counters are decremented.  When a per PCIe tag zombie counter decrements to zero, a
+                                                         counters are decremented. When a per PCIe tag zombie counter decrements to zero, a
                                                          SWI_RSP_ERROR is
                                                          sent to the M2S bus and its associated PCIe tag is returned to the pool.
                                                          This field allows software programmability control of the zombie counter expiration. */

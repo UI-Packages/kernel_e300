@@ -11,6 +11,12 @@
 
 #include "elfconfig.h"
 
+/* On BSD-alike OSes elf.h defines these according to host's word size */
+#undef ELF_ST_BIND
+#undef ELF_ST_TYPE
+#undef ELF_R_SYM
+#undef ELF_R_TYPE
+
 #if KERNEL_ELFCLASS == ELFCLASS32
 
 #define Elf_Ehdr    Elf32_Ehdr
@@ -92,15 +98,15 @@ void *do_nofail(void *ptr, const char *expr);
 
 struct buffer {
 	char *p;
-	unsigned int pos;
-	unsigned int size;
+	int pos;
+	int size;
 };
 
 void __attribute__((format(printf, 2, 3)))
 buf_printf(struct buffer *buf, const char *fmt, ...);
 
 void
-buf_write(struct buffer *buf, const char *s, unsigned int len);
+buf_write(struct buffer *buf, const char *s, int len);
 
 struct module {
 	struct module *next;
@@ -127,7 +133,7 @@ struct elf_info {
 	Elf_Section  export_gpl_sec;
 	Elf_Section  export_unused_gpl_sec;
 	Elf_Section  export_gpl_future_sec;
-	const char   *strtab;
+	char         *strtab;
 	char	     *modinfo;
 	unsigned int modinfo_len;
 

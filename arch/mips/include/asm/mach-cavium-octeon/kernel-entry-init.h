@@ -29,7 +29,6 @@
 	.set arch=octeon
 #ifdef CONFIG_HOTPLUG_CPU
 	b	7f
-
 FEXPORT(octeon_hotplug_entry)
 	move	a0, zero
 	move	a1, zero
@@ -153,7 +152,6 @@ FEXPORT(octeon_hotplug_entry)
 	jr	v0
 
 continue_in_mapped_space:
-
 	mfc0	v1, CP0_PRID_REG
 	andi	v1, 0xff00
 	li	v0, 0x9500		# cn78XX or later
@@ -310,7 +308,7 @@ octeon_main_processor:
 .endm
 
 /*
- * Do SMP slave processor setup necessary before we can savely execute C code.
+ * Do SMP slave processor setup necessary before we can safely execute C code.
  */
 	.macro	smp_slave_setup
 	.endm

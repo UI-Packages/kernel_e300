@@ -64,8 +64,8 @@ struct octeon_srio_port {
 static struct octeon_srio_port srio_ports[MAX_SRIO_PORTS];
 
 /* Pool/aura used by the dma engine */
-static int cmd_pool;
-static int cmd_aura;
+static cvmx_fpa3_pool_t cmd_pool;
+static cvmx_fpa3_gaura_t cmd_aura;
 static void *cmd_pool_stack;
 static struct kmem_cache *cmd_pool_cache;
 
@@ -268,11 +268,11 @@ static int octeon_rio_dsend(struct rio_mport *mport, int mport_id, u16 destid,
  * Returns Local physical address to use for resource access, or 0 on
  *         failure.
  */
-static phys_t octeon_rio_mem_map(struct rio_mport *mport, struct rio_dev *rdev,
-				 u64 offset, u64 length)
+static phys_addr_t octeon_rio_mem_map(struct rio_mport *mport, struct rio_dev *rdev,
+				      u64 offset, u64 length)
 {
 	int priority = 0;
-	phys_t return_code;
+	phys_addr_t return_code;
 	unsigned long flags;
 
 	spin_lock_irqsave(&mport2oct(mport)->lock, flags);
@@ -294,7 +294,7 @@ static phys_t octeon_rio_mem_map(struct rio_mport *mport, struct rio_dev *rdev,
  *               Physical address the resource was mapped at
  */
 static void octeon_rio_mem_unmap(struct rio_mport *mport, struct rio_dev *rdev,
-				 u64 offset, u64 length, phys_t physical_map)
+				 u64 offset, u64 length, phys_addr_t physical_map)
 {
 	unsigned long flags;
 
@@ -322,7 +322,7 @@ int octeon_rio_dma_mem(struct rio_dev *rdev, u64 local_addr,
 	int result;
 	volatile u8 dma_busy = 1;
 	cvmx_dma_engine_header_t header;
-	phys_t memmap;
+	phys_addr_t memmap;
 	int subdid;
 	union cvmx_sli_mem_access_subidx sli_mem_access;
 	u64 sli_address;
@@ -564,8 +564,8 @@ static void octeon_rio_rx_soft_fifo(struct rio_mport *mport)
 		if ((ftype == 0x8) && (transaction == 0x4)) {
 			DEBUG_PACKET(mport, "RX", "%d byte port write\n",
 				skb->len);
-			rio_inb_pwrite_handler((union rio_pw_msg *)
-				(skb->data + ((tt) ? 11 : 9)));
+			rio_inb_pwrite_handler(mport,
+					       (union rio_pw_msg *)(skb->data + ((tt) ? 11 : 9)));
 		} else
 			DEBUG_PACKET(mport, "RX", "%d byte unknown packet\n",
 				skb->len);
@@ -890,7 +890,6 @@ static int octeon_is_srio_port_valid(int srio_port)
 static void octeon_srio_ports_init(int srio_port)
 {
 	struct octeon_srio_port *sport;
-	int			host;
 
 	sport = &srio_ports[srio_port];
 
@@ -905,35 +904,15 @@ static void octeon_srio_ports_init(int srio_port)
 		sport->qlm = srio_port;
 	}
 
-	/* Get the mode (host or endpoint) the srio port is configured as */
-	if (OCTEON_IS_MODEL(OCTEON_CNF75XX)) {
-		cvmx_rst_ctlx_t		rst_ctl;
-
-		rst_ctl.u64 = cvmx_read_csr(CVMX_RST_CTLX(sport->qlm));
-		host = rst_ctl.s.host_mode;
-	} else {
-		union cvmx_mio_rst_ctlx	mio_rst_ctl;
-
-		mio_rst_ctl.u64 = cvmx_read_csr(CVMX_MIO_RST_CNTLX(sport->qlm));
-		host = mio_rst_ctl.s.prtmode;
-	}
-
-	/* Only host mode ports enumerate. Endpoint does discovery */
-	if (host)
-		sport->mport.host_deviceid = srio_port;
-	else
-		sport->mport.host_deviceid = -1;
-
 	sport->mport.ops = &octeon_rio_ops;
-	sport->mport.id = srio_port;
-	sport->mport.index = 0;
+	sport->mport.index = srio_port;
 	sport->mport.sys_size = 0;
 	sport->mport.iores.start =
 		CVMX_SRIOX_STATUS_REG(srio_port) & ((1ull << 49) - 1);
 	sport->mport.iores.end = sport->mport.iores.start + 256;
 	sport->mport.iores.flags = IORESOURCE_MEM;
 	sport->mport.iores.name = "SRIO CSRs";
-	sport->mport.phy_type = RIO_PHY_SERIAL;
+	/* sport->mport.phy_type = RIO_PHY_SERIAL; */
 	sport->mport.phys_efptr = 0x100;
 
 	INIT_LIST_HEAD(&sport->mport.dbells);
@@ -1106,8 +1085,8 @@ static int octeon_rio_dma_cmd_pool_init(void)
 	octeon_fpa3_init(node);
 	octeon_fpa3_pool_init(node, CVMX_FPA_OUTPUT_BUFFER_POOL, &cmd_pool,
 			      &cmd_pool_stack, 4096);
-	octeon_fpa3_aura_init(node, cmd_pool, CVMX_FPA_OUTPUT_BUFFER_POOL,
-			      &cmd_aura, 128, 20480);
+	octeon_fpa3_aura_init(cmd_pool, CVMX_FPA_OUTPUT_BUFFER_POOL, &cmd_aura,
+			      128, 20480);
 
 	cmd_pool_cache = kmem_cache_create("dma cmd",
 					   CVMX_FPA_OUTPUT_BUFFER_POOL_SIZE,
@@ -1115,7 +1094,7 @@ static int octeon_rio_dma_cmd_pool_init(void)
 	if (!cmd_pool_cache)
 		return -ENOMEM;
 
-	return octeon_fpa3_mem_fill(node, cmd_pool_cache, cmd_aura, 128);
+	return octeon_mem_fill_fpa3(node, cmd_pool_cache, cmd_aura, 128);
 }
 
 
@@ -1153,6 +1132,7 @@ static int __init octeon_rio_init(void)
 		if (cvmx_srio_initialize(srio_port, 0))
 			continue;
 
+		rio_mport_initialize(&sport->mport);
 		rio_register_mport(&sport->mport);
 
 		/* Initialize the interrupts */

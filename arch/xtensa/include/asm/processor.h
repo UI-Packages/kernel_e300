@@ -1,11 +1,10 @@
 /*
- * include/asm-xtensa/processor.h
- *
  * This file is subject to the terms and conditions of the GNU General Public
  * License.  See the file "COPYING" in the main directory of this archive
  * for more details.
  *
  * Copyright (C) 2001 - 2008 Tensilica Inc.
+ * Copyright (C) 2015 Cadence Design Systems Inc.
  */
 
 #ifndef _XTENSA_PROCESSOR_H
@@ -38,11 +37,19 @@
 #ifdef CONFIG_MMU
 #define TASK_SIZE	__XTENSA_UL_CONST(0x40000000)
 #else
-#define TASK_SIZE	(PLATFORM_DEFAULT_MEM_START + PLATFORM_DEFAULT_MEM_SIZE)
+#define TASK_SIZE	__XTENSA_UL_CONST(0xffffffff)
 #endif
 
 #define STACK_TOP	TASK_SIZE
 #define STACK_TOP_MAX	STACK_TOP
+
+/*
+ * General exception cause assigned to fake NMI. Fake NMI needs to be handled
+ * differently from other interrupts, but it uses common kernel entry/exit
+ * code.
+ */
+
+#define EXCCAUSE_MAPPED_NMI	62
 
 /*
  * General exception cause assigned to debug exceptions. Debug exceptions go
@@ -65,10 +72,28 @@
 
 #define VALID_DOUBLE_EXCEPTION_ADDRESS	64
 
+#define XTENSA_INT_LEVEL(intno) _XTENSA_INT_LEVEL(intno)
+#define _XTENSA_INT_LEVEL(intno) XCHAL_INT##intno##_LEVEL
+
+#define XTENSA_INTLEVEL_MASK(level) _XTENSA_INTLEVEL_MASK(level)
+#define _XTENSA_INTLEVEL_MASK(level) (XCHAL_INTLEVEL##level##_MASK)
+
+#define XTENSA_INTLEVEL_ANDBELOW_MASK(l) _XTENSA_INTLEVEL_ANDBELOW_MASK(l)
+#define _XTENSA_INTLEVEL_ANDBELOW_MASK(l) (XCHAL_INTLEVEL##l##_ANDBELOW_MASK)
+
+#define PROFILING_INTLEVEL XTENSA_INT_LEVEL(XCHAL_PROFILING_INTERRUPT)
+
 /* LOCKLEVEL defines the interrupt level that masks all
  * general-purpose interrupts.
  */
+#if defined(CONFIG_XTENSA_FAKE_NMI) && defined(XCHAL_PROFILING_INTERRUPT)
+#define LOCKLEVEL (PROFILING_INTLEVEL - 1)
+#else
 #define LOCKLEVEL XCHAL_EXCM_LEVEL
+#endif
+
+#define TOPLEVEL XCHAL_EXCM_LEVEL
+#define XTENSA_FAKE_NMI (LOCKLEVEL < TOPLEVEL)
 
 /* WSBITS and WBBITS are the width of the WINDOWSTART and WINDOWBASE
  * registers
@@ -105,11 +130,10 @@ struct thread_struct {
 	unsigned long bad_vaddr; /* last user fault */
 	unsigned long bad_uaddr; /* last kernel fault accessing user space */
 	unsigned long error_code;
-
-	unsigned long ibreak[XCHAL_NUM_IBREAK];
-	unsigned long dbreaka[XCHAL_NUM_DBREAK];
-	unsigned long dbreakc[XCHAL_NUM_DBREAK];
-
+#ifdef CONFIG_HAVE_HW_BREAKPOINT
+	struct perf_event *ptrace_bp[XCHAL_NUM_IBREAK];
+	struct perf_event *ptrace_wp[XCHAL_NUM_DBREAK];
+#endif
 	/* Make structure 16 bytes aligned. */
 	int align[0] __attribute__ ((aligned(16)));
 };
@@ -182,6 +206,7 @@ extern unsigned long get_wchan(struct task_struct *p);
 #define KSTK_ESP(tsk)		(task_pt_regs(tsk)->areg[1])
 
 #define cpu_relax()  barrier()
+#define cpu_relax_lowlatency() cpu_relax()
 
 /* Special register access. */
 
@@ -190,6 +215,26 @@ extern unsigned long get_wchan(struct task_struct *p);
 
 #define set_sr(x,sr) ({unsigned int v=(unsigned int)x; WSR(v,sr);})
 #define get_sr(sr) ({unsigned int v; RSR(v,sr); v; })
+
+#ifndef XCHAL_HAVE_EXTERN_REGS
+#define XCHAL_HAVE_EXTERN_REGS 0
+#endif
+
+#if XCHAL_HAVE_EXTERN_REGS
+
+static inline void set_er(unsigned long value, unsigned long addr)
+{
+	asm volatile ("wer %0, %1" : : "a" (value), "a" (addr) : "memory");
+}
+
+static inline unsigned long get_er(unsigned long addr)
+{
+	register unsigned long value;
+	asm volatile ("rer %0, %1" : "=a" (value) : "a" (addr) : "memory");
+	return value;
+}
+
+#endif /* XCHAL_HAVE_EXTERN_REGS */
 
 #endif	/* __ASSEMBLY__ */
 #endif	/* _XTENSA_PROCESSOR_H */

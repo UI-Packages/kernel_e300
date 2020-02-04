@@ -84,7 +84,7 @@ static LIST_HEAD(v9fs_trans_list);
 void v9fs_register_trans(struct p9_trans_module *m)
 {
 	spin_lock(&v9fs_trans_lock);
-	pax_list_add_tail((struct list_head *)&m->list, &v9fs_trans_list);
+	list_add_tail(&m->list, &v9fs_trans_list);
 	spin_unlock(&v9fs_trans_lock);
 }
 EXPORT_SYMBOL(v9fs_register_trans);
@@ -97,7 +97,7 @@ EXPORT_SYMBOL(v9fs_register_trans);
 void v9fs_unregister_trans(struct p9_trans_module *m)
 {
 	spin_lock(&v9fs_trans_lock);
-	pax_list_del_init((struct list_head *)&m->list);
+	list_del_init(&m->list);
 	spin_unlock(&v9fs_trans_lock);
 }
 EXPORT_SYMBOL(v9fs_unregister_trans);

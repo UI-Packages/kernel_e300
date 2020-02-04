@@ -27,7 +27,7 @@
 /* Routing table calls. */
 #define SIOCADDRT	0x890B		/* add routing table entry	*/
 #define SIOCDELRT	0x890C		/* delete routing table entry	*/
-#define SIOCRTMSG	0x890D		/* call to routing system	*/
+#define SIOCRTMSG	0x890D		/* unused			*/
 
 /* Socket configuration controls. */
 #define SIOCGIFNAME	0x8910		/* get iface name		*/
@@ -125,7 +125,8 @@
 #define SIOCBRDELIF	0x89a3		/* remove interface from bridge */
 
 /* hardware time stamping: parameters in linux/net_tstamp.h */
-#define SIOCSHWTSTAMP   0x89b0
+#define SIOCSHWTSTAMP	0x89b0		/* set and get config		*/
+#define SIOCGHWTSTAMP	0x89b1		/* get config			*/
 
 /* Device private ioctl calls */
 

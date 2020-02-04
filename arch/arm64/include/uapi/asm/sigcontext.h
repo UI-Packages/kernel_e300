@@ -50,20 +50,15 @@ struct fpsimd_context {
 	struct _aarch64_ctx head;
 	__u32 fpsr;
 	__u32 fpcr;
-
-	/*
-	 * __uint128_t is only there on arm64, so compensate if this
-	 * gets included on other arches.  This can happen on some
-	 * systems when compiling Documentation/getdelays if
-	 * /usr/include/bit/sigcontext.h on the hostincludes
-	 * asm/sigcontext.h, which will incorrectly pick this file up.
-	 */
-#ifdef __aarch64__
 	__uint128_t vregs[32];
-#else
-	__u64 vregp[32][2];
-#endif
 };
 
+/* ESR_EL1 context */
+#define ESR_MAGIC	0x45535201
+
+struct esr_context {
+	struct _aarch64_ctx head;
+	__u64 esr;
+};
 
 #endif /* _UAPI__ASM_SIGCONTEXT_H */

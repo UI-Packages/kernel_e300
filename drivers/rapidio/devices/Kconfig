@@ -3,15 +3,15 @@
 #
 
 config RAPIDIO_TSI721
-	bool "IDT Tsi721 PCI Express SRIO Controller support"
+	tristate "IDT Tsi721 PCI Express SRIO Controller support"
 	depends on RAPIDIO && PCIEPORTBUS
 	default "n"
 	---help---
 	  Include support for IDT Tsi721 PCI Express Serial RapidIO controller.
 
 config RAPIDIO_CN6XXX
-	tristate "Cavium Networks CN6XXX processors"
+	tristate "Cavium CN6XXX SRIO support"
 	depends on RAPIDIO
-	---help---
+	help
 	  Includes support for Cavium Networks CN6XXX family of serial RapidIO
 	  devices.

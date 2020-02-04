@@ -43,7 +43,7 @@
  * Implementation of the Level 2 Cache (L2C) control,
  * measurement, and debugging facilities.
  *
- * <hr>$Revision: 164971 $<hr>
+ * <hr>$Revision: 164990 $<hr>
  *
  */
 
@@ -1121,6 +1121,7 @@ uint64_t cvmx_l2c_tqdl2d_to_index_7xxx(int node, int tad)
 	 */
 	return cindex;
 }
+EXPORT_SYMBOL(cvmx_l2c_tqdl2d_to_index_7xxx);
 
 /**
  * Decodes TTG tag single and double-bit errors to the appropriate cache index
@@ -1140,7 +1141,7 @@ uint64_t cvmx_l2c_ttgx_to_index_7xxx(int node, int tad, bool remote)
 	if (remote)
 		l2c_rtgx_err.u64 = cvmx_read_csr_node(node, CVMX_L2C_RTGX_ERR(tad));
 	else
-	l2c_ttgx_err.u64 = cvmx_read_csr_node(node, CVMX_L2C_TTGX_ERR(tad));
+		l2c_ttgx_err.u64 = cvmx_read_csr_node(node, CVMX_L2C_TTGX_ERR(tad));
 
 	/* Figure out the index to pass to the cache 3 instruction
 	 * Note that this is poorly documented and in many cases the HRM is
@@ -1164,8 +1165,8 @@ uint64_t cvmx_l2c_ttgx_to_index_7xxx(int node, int tad, bool remote)
 
 		/* cindex = (tad & 7) << 7; */	/* 7:9 are the tad */
 		if (remote) {
-		cindex = l2c_rtgx_err.s.l2idx << 7;	/* 7:19 index */
-		cindex |= l2c_rtgx_err.s.way << 20;	/* 20:23 way */
+			cindex = l2c_rtgx_err.s.l2idx << 7;	/* 7:19 index */
+			cindex |= l2c_rtgx_err.s.way << 20;	/* 20:23 way */
 			cindex |= (1 << 24);			/* Remote tag */
 		} else {
 			cindex = l2c_ttgx_err.cn78xx.l2idx << 7;/* 7:19 index */
@@ -1205,6 +1206,7 @@ uint64_t cvmx_l2c_ttgx_to_index_7xxx(int node, int tad, bool remote)
 	 */
 	return cindex;
 }
+EXPORT_SYMBOL(cvmx_l2c_ttgx_to_index_7xxx);
 
 int cvmx_l2c_get_cache_size_bytes(void)
 {

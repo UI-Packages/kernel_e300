@@ -1,5 +1,5 @@
 /***********************license start***************
- * Copyright (c) 2003-2015  Cavium Inc. (support@cavium.com). All rights
+ * Copyright (c) 2003-2017  Cavium Inc. (support@cavium.com). All rights
  * reserved.
  *
  *
@@ -72,11 +72,6 @@ static inline uint64_t CVMX_GPIO_BIT_CFGX(unsigned long offset)
 			if ((offset <= 15))
 				return CVMX_ADD_IO_SEG(0x0001070000000800ull) + ((offset) & 15) * 8;
 			break;
-		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
-			if ((offset <= 31))
-				return CVMX_ADD_IO_SEG(0x0001070000000900ull) + ((offset) & 31) * 8;
-			break;
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				if ((offset <= 19))
@@ -85,6 +80,11 @@ static inline uint64_t CVMX_GPIO_BIT_CFGX(unsigned long offset)
 				if ((offset <= 19))
 					return CVMX_ADD_IO_SEG(0x0001070000000900ull) + ((offset) & 31) * 8;
 
+			break;
+		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
+			if ((offset <= 31))
+				return CVMX_ADD_IO_SEG(0x0001070000000900ull) + ((offset) & 31) * 8;
 			break;
 	}
 	cvmx_warn("CVMX_GPIO_BIT_CFGX (offset = %lu) not supported on this chip\n", offset);
@@ -108,15 +108,15 @@ static inline uint64_t CVMX_GPIO_BIT_CFGX(unsigned long offset)
 		case OCTEON_CN63XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN68XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x0001070000000800ull) + (offset) * 8;
-		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
-			return CVMX_ADD_IO_SEG(0x0001070000000900ull) + (offset) * 8;
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return CVMX_ADD_IO_SEG(0x0001070000000900ull) + (offset) * 8;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return CVMX_ADD_IO_SEG(0x0001070000000900ull) + (offset) * 8;
 
+		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
+			return CVMX_ADD_IO_SEG(0x0001070000000900ull) + (offset) * 8;
 	}
 	return CVMX_ADD_IO_SEG(0x0001070000000900ull) + (offset) * 8;
 }
@@ -144,8 +144,8 @@ static inline uint64_t CVMX_GPIO_CLK_GENX(unsigned long offset)
 	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 3))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 3))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 3)))))
 		cvmx_warn("CVMX_GPIO_CLK_GENX(%lu) is invalid on this chip\n", offset);
@@ -175,8 +175,8 @@ static inline uint64_t CVMX_GPIO_CLK_SYNCEX(unsigned long offset)
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 1))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_GPIO_CLK_SYNCEX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00010700000008E0ull) + ((offset) & 1) * 8;
@@ -211,8 +211,8 @@ static inline uint64_t CVMX_GPIO_INTRX(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 15))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 15))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 15))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 15))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 15)))))
 		cvmx_warn("CVMX_GPIO_INTRX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001070000000A00ull) + ((offset) & 15) * 8;
@@ -226,8 +226,8 @@ static inline uint64_t CVMX_GPIO_MC_INTRX(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset >= 4) && (offset <= 7)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset >= 4) && (offset <= 7)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset >= 4) && (offset <= 7)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset >= 4) && (offset <= 7)))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (((offset >= 4) && (offset <= 7))))))
 		cvmx_warn("CVMX_GPIO_MC_INTRX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001070000000C20ull) + ((offset) & 7) * 8 - 8*4;
@@ -409,7 +409,7 @@ union cvmx_gpio_bit_cfgx {
 	uint64_t clk_gen                      : 1;  /**< When TX_OE is set, GPIO pin becomes a clock */
 	uint64_t clk_sel                      : 2;  /**< Selects which of the 4 GPIO clock generators */
 	uint64_t fil_sel                      : 4;  /**< Filter select. Global counter bit-select (controls sample rate). */
-	uint64_t fil_cnt                      : 4;  /**< Filter count. Specifies the number of consecutive samples (FIL_CNT+1) to change state.
+	uint64_t fil_cnt                      : 4;  /**< Filter count. Specifies the number of consecutive samples ([FIL_CNT]+1) to change state.
                                                          Zero to disable the filter. */
 	uint64_t int_type                     : 1;  /**< Type of interrupt when pin is an input and [INT_EN] set. When set, rising edge interrupt,
                                                          else level interrupt. Only valid for GPIO 0..15, no function for GPIO 16..31. */
@@ -544,7 +544,7 @@ union cvmx_gpio_bit_cfgx {
 	struct cvmx_gpio_bit_cfgx_cn70xx      cn70xxp1;
 	struct cvmx_gpio_bit_cfgx_cn70xx      cn73xx;
 	struct cvmx_gpio_bit_cfgx_cn70xx      cn78xx;
-	struct cvmx_gpio_bit_cfgx_cn70xx      cn78xxp2;
+	struct cvmx_gpio_bit_cfgx_cn70xx      cn78xxp1;
 	struct cvmx_gpio_bit_cfgx_cn61xx      cnf71xx;
 	struct cvmx_gpio_bit_cfgx_cn70xx      cnf75xx;
 };
@@ -604,7 +604,7 @@ union cvmx_gpio_clk_genx {
 	struct cvmx_gpio_clk_genx_s           cn70xxp1;
 	struct cvmx_gpio_clk_genx_s           cn73xx;
 	struct cvmx_gpio_clk_genx_s           cn78xx;
-	struct cvmx_gpio_clk_genx_s           cn78xxp2;
+	struct cvmx_gpio_clk_genx_s           cn78xxp1;
 	struct cvmx_gpio_clk_genx_s           cnf71xx;
 	struct cvmx_gpio_clk_genx_s           cnf75xx;
 };
@@ -788,7 +788,7 @@ union cvmx_gpio_clk_syncex {
 #endif
 	} cn73xx;
 	struct cvmx_gpio_clk_syncex_cn73xx    cn78xx;
-	struct cvmx_gpio_clk_syncex_cn73xx    cn78xxp2;
+	struct cvmx_gpio_clk_syncex_cn73xx    cn78xxp1;
 	struct cvmx_gpio_clk_syncex_cn73xx    cnf75xx;
 };
 typedef union cvmx_gpio_clk_syncex cvmx_gpio_clk_syncex_t;
@@ -819,7 +819,7 @@ union cvmx_gpio_comp {
 	} s;
 	struct cvmx_gpio_comp_s               cn73xx;
 	struct cvmx_gpio_comp_s               cn78xx;
-	struct cvmx_gpio_comp_s               cn78xxp2;
+	struct cvmx_gpio_comp_s               cn78xxp1;
 	struct cvmx_gpio_comp_s               cnf75xx;
 };
 typedef union cvmx_gpio_comp cvmx_gpio_comp_t;
@@ -908,7 +908,8 @@ union cvmx_gpio_intrx {
 #endif
 	} s;
 	struct cvmx_gpio_intrx_s              cn73xx;
-	struct cvmx_gpio_intrx_cn78xx {
+	struct cvmx_gpio_intrx_s              cn78xx;
+	struct cvmx_gpio_intrx_cn78xxp1 {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_1_63                : 63;
 	uint64_t intr                         : 1;  /**< GPIO signaled interrupt. If interrupts are edge sensitive, write one to clear, otherwise
@@ -917,8 +918,7 @@ union cvmx_gpio_intrx {
 	uint64_t intr                         : 1;
 	uint64_t reserved_1_63                : 63;
 #endif
-	} cn78xx;
-	struct cvmx_gpio_intrx_s              cn78xxp2;
+	} cn78xxp1;
 	struct cvmx_gpio_intrx_s              cnf75xx;
 };
 typedef union cvmx_gpio_intrx cvmx_gpio_intrx_t;
@@ -956,7 +956,7 @@ union cvmx_gpio_mc_intrx {
 #endif
 	} cn73xx;
 	struct cvmx_gpio_mc_intrx_s           cn78xx;
-	struct cvmx_gpio_mc_intrx_s           cn78xxp2;
+	struct cvmx_gpio_mc_intrx_s           cn78xxp1;
 	struct cvmx_gpio_mc_intrx_cn73xx      cnf75xx;
 };
 typedef union cvmx_gpio_mc_intrx cvmx_gpio_mc_intrx_t;
@@ -990,7 +990,7 @@ union cvmx_gpio_mc_intrx_w1s {
 	uint64_t reserved_16_63               : 48;
 #endif
 	} cn73xx;
-	struct cvmx_gpio_mc_intrx_w1s_s       cn78xxp2;
+	struct cvmx_gpio_mc_intrx_w1s_s       cn78xx;
 	struct cvmx_gpio_mc_intrx_w1s_cn73xx  cnf75xx;
 };
 typedef union cvmx_gpio_mc_intrx_w1s cvmx_gpio_mc_intrx_w1s_t;
@@ -1019,7 +1019,7 @@ union cvmx_gpio_multi_cast {
 	struct cvmx_gpio_multi_cast_s         cn70xxp1;
 	struct cvmx_gpio_multi_cast_s         cn73xx;
 	struct cvmx_gpio_multi_cast_s         cn78xx;
-	struct cvmx_gpio_multi_cast_s         cn78xxp2;
+	struct cvmx_gpio_multi_cast_s         cn78xxp1;
 	struct cvmx_gpio_multi_cast_s         cnf71xx;
 	struct cvmx_gpio_multi_cast_s         cnf75xx;
 };
@@ -1046,7 +1046,7 @@ union cvmx_gpio_ocla_exten_trig {
 	struct cvmx_gpio_ocla_exten_trig_s    cn70xxp1;
 	struct cvmx_gpio_ocla_exten_trig_s    cn73xx;
 	struct cvmx_gpio_ocla_exten_trig_s    cn78xx;
-	struct cvmx_gpio_ocla_exten_trig_s    cn78xxp2;
+	struct cvmx_gpio_ocla_exten_trig_s    cn78xxp1;
 	struct cvmx_gpio_ocla_exten_trig_s    cnf75xx;
 };
 typedef union cvmx_gpio_ocla_exten_trig cvmx_gpio_ocla_exten_trig_t;
@@ -1142,7 +1142,7 @@ union cvmx_gpio_rx_dat {
 	struct cvmx_gpio_rx_dat_cn61xx        cn70xxp1;
 	struct cvmx_gpio_rx_dat_s             cn73xx;
 	struct cvmx_gpio_rx_dat_cn61xx        cn78xx;
-	struct cvmx_gpio_rx_dat_cn61xx        cn78xxp2;
+	struct cvmx_gpio_rx_dat_cn61xx        cn78xxp1;
 	struct cvmx_gpio_rx_dat_cn61xx        cnf71xx;
 	struct cvmx_gpio_rx_dat_s             cnf75xx;
 };
@@ -1261,7 +1261,7 @@ union cvmx_gpio_tim_ctl {
 	struct cvmx_gpio_tim_ctl_cn68xx       cn68xxp1;
 	struct cvmx_gpio_tim_ctl_s            cn73xx;
 	struct cvmx_gpio_tim_ctl_s            cn78xx;
-	struct cvmx_gpio_tim_ctl_s            cn78xxp2;
+	struct cvmx_gpio_tim_ctl_s            cn78xxp1;
 	struct cvmx_gpio_tim_ctl_s            cnf75xx;
 };
 typedef union cvmx_gpio_tim_ctl cvmx_gpio_tim_ctl_t;
@@ -1328,7 +1328,7 @@ union cvmx_gpio_tx_clr {
 	struct cvmx_gpio_tx_clr_cn61xx        cn70xxp1;
 	struct cvmx_gpio_tx_clr_s             cn73xx;
 	struct cvmx_gpio_tx_clr_cn61xx        cn78xx;
-	struct cvmx_gpio_tx_clr_cn61xx        cn78xxp2;
+	struct cvmx_gpio_tx_clr_cn61xx        cn78xxp1;
 	struct cvmx_gpio_tx_clr_cn61xx        cnf71xx;
 	struct cvmx_gpio_tx_clr_s             cnf75xx;
 };
@@ -1396,7 +1396,7 @@ union cvmx_gpio_tx_set {
 	struct cvmx_gpio_tx_set_cn61xx        cn70xxp1;
 	struct cvmx_gpio_tx_set_s             cn73xx;
 	struct cvmx_gpio_tx_set_cn61xx        cn78xx;
-	struct cvmx_gpio_tx_set_cn61xx        cn78xxp2;
+	struct cvmx_gpio_tx_set_cn61xx        cn78xxp1;
 	struct cvmx_gpio_tx_set_cn61xx        cnf71xx;
 	struct cvmx_gpio_tx_set_s             cnf75xx;
 };
@@ -1464,7 +1464,7 @@ union cvmx_gpio_usbh_ctl {
 	uint64_t reserved_5_63                : 59;
 #endif
 	} cn78xx;
-	struct cvmx_gpio_usbh_ctl_cn78xx      cn78xxp2;
+	struct cvmx_gpio_usbh_ctl_cn78xx      cn78xxp1;
 };
 typedef union cvmx_gpio_usbh_ctl cvmx_gpio_usbh_ctl_t;
 

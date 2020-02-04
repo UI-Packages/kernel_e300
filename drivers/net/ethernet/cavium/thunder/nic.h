@@ -1,10 +1,9 @@
 /*
  * Copyright (C) 2015 Cavium, Inc.
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation; either version 2 of
- * the License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of version 2 of the GNU General Public License
+ * as published by the Free Software Foundation.
  */
 
 #ifndef NIC_H
@@ -12,6 +11,7 @@
 
 #include <linux/netdevice.h>
 #include <linux/interrupt.h>
+#include <linux/pci.h>
 #include "thunder_bgx.h"
 
 /* PCI device IDs */
@@ -19,6 +19,17 @@
 #define	PCI_DEVICE_ID_THUNDER_PASS1_NIC_VF	0x0011
 #define	PCI_DEVICE_ID_THUNDER_NIC_VF		0xA034
 #define	PCI_DEVICE_ID_THUNDER_BGX		0xA026
+
+/* Subsystem device IDs */
+#define PCI_SUBSYS_DEVID_88XX_NIC_PF		0xA11E
+#define PCI_SUBSYS_DEVID_81XX_NIC_PF		0xA21E
+#define PCI_SUBSYS_DEVID_83XX_NIC_PF		0xA31E
+
+#define PCI_SUBSYS_DEVID_88XX_PASS1_NIC_VF	0xA11E
+#define PCI_SUBSYS_DEVID_88XX_NIC_VF		0xA134
+#define PCI_SUBSYS_DEVID_81XX_NIC_VF		0xA234
+#define PCI_SUBSYS_DEVID_83XX_NIC_VF		0xA334
+
 
 /* PCI BAR nos */
 #define	PCI_CFG_REG_BAR_NUM		0
@@ -32,53 +43,17 @@
 #define	NIC_TNS_MODE			1
 
 /* NIC priv flags */
-#define	NIC_SRIOV_ENABLED		(1 << 0)
-#define	NIC_TNS_ENABLED			(1 << 1)
-
-/* VNIC HW optimiation features */
-#undef VNIC_RSS_SUPPORT /* 3.10 doesn't support it */
+#define	NIC_SRIOV_ENABLED		BIT(0)
 
 /* Min/Max packet size */
 #define	NIC_HW_MIN_FRS			64
-#define	NIC_HW_MAX_FRS			9200 /* 9216 max packet including FCS */
+#define	NIC_HW_MAX_FRS			9190 /* Excluding L2 header and FCS */
 
 /* Max pkinds */
 #define	NIC_MAX_PKIND			16
 
-/* Rx Channels */
-/* Receive channel configuration in TNS bypass mode
- * Below is configuration in TNS bypass mode
- * BGX0-LMAC0-CHAN0 - VNIC CHAN0
- * BGX0-LMAC1-CHAN0 - VNIC CHAN16
- * ...
- * BGX1-LMAC0-CHAN0 - VNIC CHAN128
- * ...
- * BGX1-LMAC3-CHAN0 - VNIC CHAN174
- */
-#define	NIC_INTF_COUNT			2  /* Interfaces btw VNIC and TNS/BGX */
-#define	NIC_CHANS_PER_INF		128
-#define	NIC_MAX_CHANS			(NIC_INTF_COUNT * NIC_CHANS_PER_INF)
-#define	NIC_CPI_COUNT			2048 /* No of channel parse indices */
-
-/* TNS bypass mode: 1-1 mapping between VNIC and BGX:LMAC */
-#define NIC_MAX_BGX			MAX_BGX_PER_CN88XX
-#define	NIC_CPI_PER_BGX			(NIC_CPI_COUNT / NIC_MAX_BGX)
-#define	NIC_MAX_CPI_PER_LMAC		64 /* Max when CPI_ALG is IP diffserv */
-#define	NIC_RSSI_PER_BGX		(NIC_RSSI_COUNT / NIC_MAX_BGX)
-
-/* Tx scheduling */
-#define	NIC_MAX_TL4			1024
-#define	NIC_MAX_TL4_SHAPERS		256 /* 1 shaper for 4 TL4s */
-#define	NIC_MAX_TL3			256
-#define	NIC_MAX_TL3_SHAPERS		64  /* 1 shaper for 4 TL3s */
-#define	NIC_MAX_TL2			64
-#define	NIC_MAX_TL2_SHAPERS		2  /* 1 shaper for 32 TL2s */
-#define	NIC_MAX_TL1			2
-
-/* TNS bypass mode */
-#define	NIC_TL2_PER_BGX			32
-#define	NIC_TL4_PER_BGX			(NIC_MAX_TL4 / NIC_MAX_BGX)
-#define	NIC_TL4_PER_LMAC		(NIC_MAX_TL4 / NIC_CHANS_PER_INF)
+/* Max when CPI_ALG is IP diffserv */
+#define	NIC_MAX_CPI_PER_LMAC		64
 
 /* NIC VF Interrupts */
 #define	NICVF_INTR_CQ			0
@@ -100,10 +75,10 @@
 #define	NICVF_INTR_CQ_MASK		(0xFF << NICVF_INTR_CQ_SHIFT)
 #define	NICVF_INTR_SQ_MASK		(0xFF << NICVF_INTR_SQ_SHIFT)
 #define	NICVF_INTR_RBDR_MASK		(0x03 << NICVF_INTR_RBDR_SHIFT)
-#define	NICVF_INTR_PKT_DROP_MASK	(1 << NICVF_INTR_PKT_DROP_SHIFT)
-#define	NICVF_INTR_TCP_TIMER_MASK	(1 << NICVF_INTR_TCP_TIMER_SHIFT)
-#define	NICVF_INTR_MBOX_MASK		(1 << NICVF_INTR_MBOX_SHIFT)
-#define	NICVF_INTR_QS_ERR_MASK		(1 << NICVF_INTR_QS_ERR_SHIFT)
+#define	NICVF_INTR_PKT_DROP_MASK	BIT(NICVF_INTR_PKT_DROP_SHIFT)
+#define	NICVF_INTR_TCP_TIMER_MASK	BIT(NICVF_INTR_TCP_TIMER_SHIFT)
+#define	NICVF_INTR_MBOX_MASK		BIT(NICVF_INTR_MBOX_SHIFT)
+#define	NICVF_INTR_QS_ERR_MASK		BIT(NICVF_INTR_QS_ERR_SHIFT)
 
 /* MSI-X interrupts */
 #define	NIC_PF_MSIX_VECTORS		10
@@ -120,44 +95,59 @@
 #define NIC_PF_INTR_ID_MBOX0		8
 #define NIC_PF_INTR_ID_MBOX1		9
 
+/* Minimum FIFO level before all packets for the CQ are dropped
+ *
+ * This value ensures that once a packet has been "accepted"
+ * for reception it will not get dropped due to non-availability
+ * of CQ descriptor. An errata in HW mandates this value to be
+ * atleast 0x100.
+ */
+#define NICPF_CQM_MIN_DROP_LEVEL       0x100
+
 /* Global timer for CQ timer thresh interrupts
  * Calculated for SCLK of 700Mhz
  * value written should be a 1/16th of what is expected
  *
- * 1 tick per 0.05usec = value of 2.2
- * This 10% would be covered in CQ timer thresh value
+ * 1 tick per 0.025usec
  */
-#define NICPF_CLK_PER_INT_TICK		2
+#define NICPF_CLK_PER_INT_TICK		1
+
+/* Time to wait before we decide that a SQ is stuck.
+ *
+ * Since both pkt rx and tx notifications are done with same CQ,
+ * when packets are being received at very high rate (eg: L2 forwarding)
+ * then freeing transmitted skbs will be delayed and watchdog
+ * will kick in, resetting interface. Hence keeping this value high.
+ */
+#define	NICVF_TX_TIMEOUT		(50 * HZ)
 
 struct nicvf_cq_poll {
+	struct  nicvf *nicvf;
 	u8	cq_idx;		/* Completion queue index */
 	struct	napi_struct napi;
 };
 
-#define	NIC_RSSI_COUNT			4096 /* Total no of RSS indices */
 #define NIC_MAX_RSS_HASH_BITS		8
 #define NIC_MAX_RSS_IDR_TBL_SIZE	(1 << NIC_MAX_RSS_HASH_BITS)
 #define RSS_HASH_KEY_SIZE		5 /* 320 bit key */
 
-#ifdef VNIC_RSS_SUPPORT
 struct nicvf_rss_info {
 	bool enable;
-#define	RSS_L2_EXTENDED_HASH_ENA	(1 << 0)
-#define	RSS_IP_HASH_ENA			(1 << 1)
-#define	RSS_TCP_HASH_ENA		(1 << 2)
-#define	RSS_TCP_SYN_DIS			(1 << 3)
-#define	RSS_UDP_HASH_ENA		(1 << 4)
-#define RSS_L4_EXTENDED_HASH_ENA	(1 << 5)
-#define	RSS_ROCE_ENA			(1 << 6)
-#define	RSS_L3_BI_DIRECTION_ENA		(1 << 7)
-#define	RSS_L4_BI_DIRECTION_ENA		(1 << 8)
+#define	RSS_L2_EXTENDED_HASH_ENA	BIT(0)
+#define	RSS_IP_HASH_ENA			BIT(1)
+#define	RSS_TCP_HASH_ENA		BIT(2)
+#define	RSS_TCP_SYN_DIS			BIT(3)
+#define	RSS_UDP_HASH_ENA		BIT(4)
+#define RSS_L4_EXTENDED_HASH_ENA	BIT(5)
+#define	RSS_ROCE_ENA			BIT(6)
+#define	RSS_L3_BI_DIRECTION_ENA		BIT(7)
+#define	RSS_L4_BI_DIRECTION_ENA		BIT(8)
 	u64 cfg;
 	u8  hash_bits;
 	u16 rss_size;
 	u8  ind_tbl[NIC_MAX_RSS_IDR_TBL_SIZE];
 	u64 key[RSS_HASH_KEY_SIZE];
 } ____cacheline_aligned_in_smp;
-#endif
 
 enum rx_stats_reg_offset {
 	RX_OCTS = 0x0,
@@ -187,12 +177,12 @@ enum tx_stats_reg_offset {
 };
 
 struct nicvf_hw_stats {
-	u64 rx_bytes_ok;
-	u64 rx_ucast_frames_ok;
-	u64 rx_bcast_frames_ok;
-	u64 rx_mcast_frames_ok;
-	u64 rx_fcs_errors;
-	u64 rx_l2_errors;
+	u64 rx_bytes;
+	u64 rx_frames;
+	u64 rx_ucast_frames;
+	u64 rx_bcast_frames;
+	u64 rx_mcast_frames;
+	u64 rx_drops;
 	u64 rx_drop_red;
 	u64 rx_drop_red_bytes;
 	u64 rx_drop_overrun;
@@ -201,101 +191,136 @@ struct nicvf_hw_stats {
 	u64 rx_drop_mcast;
 	u64 rx_drop_l3_bcast;
 	u64 rx_drop_l3_mcast;
-	u64 tx_bytes_ok;
-	u64 tx_ucast_frames_ok;
-	u64 tx_bcast_frames_ok;
-	u64 tx_mcast_frames_ok;
+	u64 rx_fcs_errors;
+	u64 rx_l2_errors;
+
+	u64 tx_bytes;
+	u64 tx_frames;
+	u64 tx_ucast_frames;
+	u64 tx_bcast_frames;
+	u64 tx_mcast_frames;
 	u64 tx_drops;
 };
 
 struct nicvf_drv_stats {
-	/* Rx */
-	u64 rx_frames_ok;
-	u64 rx_frames_64;
-	u64 rx_frames_127;
-	u64 rx_frames_255;
-	u64 rx_frames_511;
-	u64 rx_frames_1023;
-	u64 rx_frames_1518;
-	u64 rx_frames_jumbo;
-	u64 rx_drops;
-	/* Tx */
-	u64 tx_frames_ok;
-	u64 tx_drops;
-	u64 tx_busy;
+	/* CQE Rx errs */
+	u64 rx_bgx_truncated_pkts;
+	u64 rx_jabber_errs;
+	u64 rx_fcs_errs;
+	u64 rx_bgx_errs;
+	u64 rx_prel2_errs;
+	u64 rx_l2_hdr_malformed;
+	u64 rx_oversize;
+	u64 rx_undersize;
+	u64 rx_l2_len_mismatch;
+	u64 rx_l2_pclp;
+	u64 rx_ip_ver_errs;
+	u64 rx_ip_csum_errs;
+	u64 rx_ip_hdr_malformed;
+	u64 rx_ip_payload_malformed;
+	u64 rx_ip_ttl_errs;
+	u64 rx_l3_pclp;
+	u64 rx_l4_malformed;
+	u64 rx_l4_csum_errs;
+	u64 rx_udp_len_errs;
+	u64 rx_l4_port_errs;
+	u64 rx_tcp_flag_errs;
+	u64 rx_tcp_offset_errs;
+	u64 rx_l4_pclp;
+	u64 rx_truncated_pkts;
+
+	/* CQE Tx errs */
+	u64 tx_desc_fault;
+	u64 tx_hdr_cons_err;
+	u64 tx_subdesc_err;
+	u64 tx_max_size_exceeded;
+	u64 tx_imm_size_oflow;
+	u64 tx_data_seq_err;
+	u64 tx_mem_seq_err;
+	u64 tx_lock_viol;
+	u64 tx_data_fault;
+	u64 tx_tstmp_conflict;
+	u64 tx_tstmp_timeout;
+	u64 tx_mem_fault;
+	u64 tx_csum_overlap;
+	u64 tx_csum_overflow;
+
+	/* driver debug stats */
+	u64 rcv_buffer_alloc_failures;
 	u64 tx_tso;
+	u64 tx_timeout;
+	u64 txq_stop;
+	u64 txq_wake;
+
+	struct u64_stats_sync   syncp;
 };
 
 struct nicvf {
+	struct nicvf		*pnicvf;
 	struct net_device	*netdev;
 	struct pci_dev		*pdev;
-	u8			vf_id;
-	u8			node;
-	u8			tns_mode;
-	u16			mtu;
+	void __iomem		*reg_base;
+#define	MAX_QUEUES_PER_QSET			8
 	struct queue_set	*qs;
-	u64			reg_base;
+	struct nicvf_cq_poll	*napi[8];
+	u8			vf_id;
+	u8			sqs_id;
+	bool                    sqs_mode;
+	bool			hw_tso;
+	bool			t88;
+
+	/* Receive buffer alloc */
+	u32			rb_page_offset;
+	u16			rb_pageref;
+	bool			rb_alloc_fail;
+	bool			rb_work_scheduled;
+	struct page		*rb_page;
+	struct delayed_work	rbdr_work;
+	struct tasklet_struct	rbdr_task;
+
+	/* Secondary Qset */
+	u8			sqs_count;
+#define	MAX_SQS_PER_VF_SINGLE_NODE		5
+#define	MAX_SQS_PER_VF				11
+	struct nicvf		*snicvf[MAX_SQS_PER_VF];
+
+	/* Queue count */
+	u8			rx_queues;
+	u8			tx_queues;
+	u8			max_queues;
+
+	u8			node;
+	u8			cpi_alg;
 	bool			link_up;
 	u8			duplex;
 	u32			speed;
-	struct tasklet_struct	rbdr_task;
-	struct tasklet_struct	qs_err_task;
-	struct tasklet_struct	cq_task;
-	struct nicvf_cq_poll	*napi[8];
-#ifdef VNIC_RSS_SUPPORT
+	bool			tns_mode;
+	bool			loopback_supported;
 	struct nicvf_rss_info	rss_info;
-#endif
-	u8			cpi_alg;
+	struct tasklet_struct	qs_err_task;
+	struct work_struct	reset_task;
+
 	/* Interrupt coalescing settings */
 	u32			cq_coalesce_usecs;
-
 	u32			msg_enable;
-	struct nicvf_hw_stats   stats;
-	struct nicvf_drv_stats  drv_stats;
+
+	/* Stats */
+	struct nicvf_hw_stats   hw_stats;
+	struct nicvf_drv_stats  __percpu *drv_stats;
 	struct bgx_stats	bgx_stats;
-	struct work_struct	reset_task;
 
 	/* MSI-X  */
 	bool			msix_enabled;
 	u8			num_vec;
 	struct msix_entry	msix_entries[NIC_VF_MSIX_VECTORS];
-	char			irq_name[NIC_VF_MSIX_VECTORS][20];
+	char			irq_name[NIC_VF_MSIX_VECTORS][IFNAMSIZ + 15];
 	bool			irq_allocated[NIC_VF_MSIX_VECTORS];
-} ____cacheline_aligned_in_smp;
+	cpumask_var_t		affinity_mask[NIC_VF_MSIX_VECTORS];
 
-struct nicpf {
-	struct net_device	*netdev;
-	struct pci_dev		*pdev;
-	u8			rev_id;
-#define NIC_NODE_ID_MASK	0x300000000000
-#define NIC_NODE_ID(x)		((x & NODE_ID_MASK) >> 44)
-	u8			node;
-	unsigned int		flags;
-	u16			total_vf_cnt;   /* Total num of VF supported */
-	u8			num_vf_en;      /* No of VF enabled */
-	bool			vf_enabled[MAX_NUM_VFS_SUPPORTED];
-	u64			reg_base;       /* Register start address */
-	struct pkind_cfg	pkind;
-	u8			bgx_cnt;
-#define	NIC_SET_VF_LMAC_MAP(bgx, lmac)	(((bgx & 0xF) << 4) | (lmac & 0xF))
-#define	NIC_GET_BGX_FROM_VF_LMAC_MAP(map)	((map >> 4) & 0xF)
-#define	NIC_GET_LMAC_FROM_VF_LMAC_MAP(map)	(map & 0xF)
-	u8			vf_lmac_map[MAX_LMAC];
-	struct delayed_work     dwork;
-	struct workqueue_struct *check_link;
-	u8			link[MAX_LMAC];
-	u8			duplex[MAX_LMAC];
-	u32			speed[MAX_LMAC];
-	u16			cpi_base[MAX_NUM_VFS_SUPPORTED];
-	u16			rss_ind_tbl_size;
-	u64			mac[MAX_NUM_VFS_SUPPORTED];
-	bool			mbx_lock[MAX_NUM_VFS_SUPPORTED];
-
-	/* MSI-X */
-	bool			msix_enabled;
-	u8			num_vec;
-	struct msix_entry	msix_entries[NIC_PF_MSIX_VECTORS];
-	bool			irq_allocated[NIC_PF_MSIX_VECTORS];
+	/* VF <-> PF mailbox communication */
+	bool			pf_acked;
+	bool			pf_nacked;
+	bool			set_mac_pending;
 } ____cacheline_aligned_in_smp;
 
 /* PF <--> VF Mailbox communication
@@ -326,140 +351,203 @@ struct nicpf {
 #define	NIC_MBOX_MSG_RQ_SW_SYNC		0x0F	/* Flush inflight pkts to RQ */
 #define	NIC_MBOX_MSG_BGX_STATS		0x10	/* Get stats from BGX */
 #define	NIC_MBOX_MSG_BGX_LINK_CHANGE	0x11	/* BGX:LMAC link status */
+#define	NIC_MBOX_MSG_ALLOC_SQS		0x12	/* Allocate secondary Qset */
+#define	NIC_MBOX_MSG_NICVF_PTR		0x13	/* Send nicvf ptr to PF */
+#define	NIC_MBOX_MSG_PNICVF_PTR		0x14	/* Get primary qset nicvf ptr */
+#define	NIC_MBOX_MSG_SNICVF_PTR		0x15	/* Send sqet nicvf ptr to PVF */
+#define	NIC_MBOX_MSG_LOOPBACK		0x16	/* Set interface in loopback */
+#define	NIC_MBOX_MSG_RESET_STAT_COUNTER 0x17	/* Reset statistics counters */
+#define	NIC_MBOX_MSG_CFG_DONE		0xF0	/* VF configuration done */
+#define	NIC_MBOX_MSG_SHUTDOWN		0xF1	/* VF is being shutdown */
 
 struct nic_cfg_msg {
+	u8    msg;
 	u8    vf_id;
-	u8    tns_mode;
 	u8    node_id;
-	u8    unused0;
-	u16   unused1;
-	u64   mac_addr;
-} __packed;
+	u8    tns_mode:1;
+	u8    sqs_mode:1;
+	u8    loopback_supported:1;
+	u8    mac_addr[ETH_ALEN];
+};
 
 /* Qset configuration */
 struct qs_cfg_msg {
+	u8    msg;
 	u8    num;
-	u8    unused0;
-	u32   unused1;
+	u8    sqs_count;
 	u64   cfg;
-} __packed;
+};
 
 /* Receive queue configuration */
 struct rq_cfg_msg {
+	u8    msg;
 	u8    qs_num;
 	u8    rq_num;
-	u32   unused0;
 	u64   cfg;
-} __packed;
+};
 
 /* Send queue configuration */
 struct sq_cfg_msg {
+	u8    msg;
 	u8    qs_num;
 	u8    sq_num;
-	u32   unused0;
+	bool  sqs_mode;
 	u64   cfg;
-} __packed;
+};
 
 /* Set VF's MAC address */
 struct set_mac_msg {
+	u8    msg;
 	u8    vf_id;
-	u8    unused0;
-	u32   unused1;
-	u64   addr;
-} __packed;
+	u8    mac_addr[ETH_ALEN];
+};
 
 /* Set Maximum frame size */
 struct set_frs_msg {
+	u8    msg;
 	u8    vf_id;
 	u16   max_frs;
 };
 
 /* Set CPI algorithm type */
 struct cpi_cfg_msg {
+	u8    msg;
 	u8    vf_id;
 	u8    rq_cnt;
 	u8    cpi_alg;
 };
 
-#ifdef VNIC_RSS_SUPPORT
 /* Get RSS table size */
 struct rss_sz_msg {
+	u8    msg;
 	u8    vf_id;
 	u16   ind_tbl_size;
 };
 
 /* Set RSS configuration */
 struct rss_cfg_msg {
+	u8    msg;
 	u8    vf_id;
 	u8    hash_bits;
 	u8    tbl_len;
 	u8    tbl_offset;
-	u16   unused0;
 #define RSS_IND_TBL_LEN_PER_MBX_MSG	8
 	u8    ind_tbl[RSS_IND_TBL_LEN_PER_MBX_MSG];
-} __packed;
-#endif
+};
 
 struct bgx_stats_msg {
+	u8    msg;
 	u8    vf_id;
 	u8    rx;
 	u8    idx;
-	u8    unused0;
-	u16   unused1;
 	u64   stats;
-} __packed;
+};
 
 /* Physical interface link status */
 struct bgx_link_status {
+	u8    msg;
 	u8    link_up;
 	u8    duplex;
 	u32   speed;
 };
 
-/* 128 bit shared memory between PF and each VF */
-struct nic_mbx {
+/* Get Extra Qset IDs */
+struct sqs_alloc {
 	u8    msg;
-	u8    unused;
-	union	{
-		struct nic_cfg_msg	nic_cfg;
-		struct qs_cfg_msg	qs;
-		struct rq_cfg_msg	rq;
-		struct sq_cfg_msg	sq;
-		struct set_mac_msg	mac;
-		struct set_frs_msg	frs;
-		struct cpi_cfg_msg	cpi_cfg;
-#ifdef VNIC_RSS_SUPPORT
-		struct rss_sz_msg	rss_size;
-		struct rss_cfg_msg	rss_cfg;
-#endif
-		struct bgx_stats_msg    bgx_stats;
-		struct bgx_link_status  link_status;
-	} data;
-} __packed;
+	u8    vf_id;
+	u8    qs_count;
+};
+
+struct nicvf_ptr {
+	u8    msg;
+	u8    vf_id;
+	bool  sqs_mode;
+	u8    sqs_id;
+	u64   nicvf;
+};
+
+/* Set interface in loopback mode */
+struct set_loopback {
+	u8    msg;
+	u8    vf_id;
+	bool  enable;
+};
+
+/* Reset statistics counters */
+struct reset_stat_cfg {
+	u8    msg;
+	/* Bitmap to select NIC_PF_VNIC(vf_id)_RX_STAT(0..13) */
+	u16   rx_stat_mask;
+	/* Bitmap to select NIC_PF_VNIC(vf_id)_TX_STAT(0..4) */
+	u8    tx_stat_mask;
+	/* Bitmap to select NIC_PF_QS(0..127)_RQ(0..7)_STAT(0..1)
+	 * bit14, bit15 NIC_PF_QS(vf_id)_RQ7_STAT(0..1)
+	 * bit12, bit13 NIC_PF_QS(vf_id)_RQ6_STAT(0..1)
+	 * ..
+	 * bit2, bit3 NIC_PF_QS(vf_id)_RQ1_STAT(0..1)
+	 * bit0, bit1 NIC_PF_QS(vf_id)_RQ0_STAT(0..1)
+	 */
+	u16   rq_stat_mask;
+	/* Bitmap to select NIC_PF_QS(0..127)_SQ(0..7)_STAT(0..1)
+	 * bit14, bit15 NIC_PF_QS(vf_id)_SQ7_STAT(0..1)
+	 * bit12, bit13 NIC_PF_QS(vf_id)_SQ6_STAT(0..1)
+	 * ..
+	 * bit2, bit3 NIC_PF_QS(vf_id)_SQ1_STAT(0..1)
+	 * bit0, bit1 NIC_PF_QS(vf_id)_SQ0_STAT(0..1)
+	 */
+	u16   sq_stat_mask;
+};
+
+/* 128 bit shared memory between PF and each VF */
+union nic_mbx {
+	struct { u8 msg; }	msg;
+	struct nic_cfg_msg	nic_cfg;
+	struct qs_cfg_msg	qs;
+	struct rq_cfg_msg	rq;
+	struct sq_cfg_msg	sq;
+	struct set_mac_msg	mac;
+	struct set_frs_msg	frs;
+	struct cpi_cfg_msg	cpi_cfg;
+	struct rss_sz_msg	rss_size;
+	struct rss_cfg_msg	rss_cfg;
+	struct bgx_stats_msg    bgx_stats;
+	struct bgx_link_status  link_status;
+	struct sqs_alloc        sqs_alloc;
+	struct nicvf_ptr	nicvf;
+	struct set_loopback	lbk;
+	struct reset_stat_cfg	reset_stat;
+};
+
+#define NIC_NODE_ID_MASK	0x03
+#define NIC_NODE_ID_SHIFT	44
+
+static inline int nic_get_node_id(struct pci_dev *pdev)
+{
+	u64 addr = pci_resource_start(pdev, PCI_CFG_REG_BAR_NUM);
+	return ((addr >> NIC_NODE_ID_SHIFT) & NIC_NODE_ID_MASK);
+}
+
+static inline bool pass1_silicon(struct pci_dev *pdev)
+{
+	return (pdev->revision < 8) &&
+		(pdev->subsystem_device == PCI_SUBSYS_DEVID_88XX_NIC_PF);
+}
+
+static inline bool pass2_silicon(struct pci_dev *pdev)
+{
+	return (pdev->revision >= 8) &&
+		(pdev->subsystem_device == PCI_SUBSYS_DEVID_88XX_NIC_PF);
+}
 
 int nicvf_set_real_num_queues(struct net_device *netdev,
 			      int tx_queues, int rx_queues);
 int nicvf_open(struct net_device *netdev);
 int nicvf_stop(struct net_device *netdev);
-int nicvf_send_msg_to_pf(struct nicvf *vf, struct nic_mbx *mbx);
-void nicvf_config_cpi(struct nicvf *nic);
-#ifdef VNIC_RSS_SUPPORT
+int nicvf_send_msg_to_pf(struct nicvf *vf, union nic_mbx *mbx);
 void nicvf_config_rss(struct nicvf *nic);
 void nicvf_set_rss_key(struct nicvf *nic);
-#endif
-void nicvf_free_skb(struct nicvf *nic, struct sk_buff *skb);
 void nicvf_set_ethtool_ops(struct net_device *netdev);
 void nicvf_update_stats(struct nicvf *nic);
 void nicvf_update_lmac_stats(struct nicvf *nic);
-
-/* Debug */
-#undef	NIC_DEBUG
-
-#ifdef	NIC_DEBUG
-#define	nic_dbg(dev, fmt, arg...) \
-		dev_info(dev, fmt, ##arg)
-#else
-#define	nic_dbg(dev, fmt, arg...) do {} while (0)
-#endif
 
 #endif /* NIC_H */

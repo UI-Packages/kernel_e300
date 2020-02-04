@@ -14,9 +14,6 @@
 #include "edac_core.h"
 #include "edac_module.h"
 
-/* Turn off this whole feature if PCI is not configured */
-#ifdef CONFIG_PCI
-
 #define EDAC_PCI_SYMLINK	"device"
 
 /* data variables exported via sysfs */
@@ -26,8 +23,8 @@ static int edac_pci_log_pe = 1;		/* log PCI parity errors */
 static int edac_pci_log_npe = 1;	/* log PCI non-parity error errors */
 static int edac_pci_poll_msec = 1000;	/* one second workq period */
 
-static atomic_unchecked_t pci_parity_count = ATOMIC_INIT(0);
-static atomic_unchecked_t pci_nonparity_count = ATOMIC_INIT(0);
+static atomic_t pci_parity_count = ATOMIC_INIT(0);
+static atomic_t pci_nonparity_count = ATOMIC_INIT(0);
 
 static struct kobject *edac_pci_top_main_kobj;
 static atomic_t edac_pci_sysfs_refcount = ATOMIC_INIT(0);
@@ -235,7 +232,7 @@ struct edac_pci_dev_attribute {
 	void *value;
 	 ssize_t(*show) (void *, char *);
 	 ssize_t(*store) (void *, const char *, size_t);
-} __do_const;
+};
 
 /* Set of show/store abstract level functions for PCI Parity object */
 static ssize_t edac_pci_dev_show(struct kobject *kobj, struct attribute *attr,
@@ -334,10 +331,7 @@ static struct kobj_type ktype_edac_pci_main_kobj = {
 };
 
 /**
- * edac_pci_main_kobj_setup()
- *
- *	setup the sysfs for EDAC PCI attributes
- *	assumes edac_subsys has already been initialized
+ * edac_pci_main_kobj_setup: Setup the sysfs for EDAC PCI attributes.
  */
 static int edac_pci_main_kobj_setup(void)
 {
@@ -354,11 +348,6 @@ static int edac_pci_main_kobj_setup(void)
 	 * controls and attributes
 	 */
 	edac_subsys = edac_get_sysfs_subsys();
-	if (edac_subsys == NULL) {
-		edac_dbg(1, "no edac_subsys\n");
-		err = -ENODEV;
-		goto decrement_count_fail;
-	}
 
 	/* Bump the reference count on this module to ensure the
 	 * modules isn't unloaded until we deconstruct the top
@@ -367,7 +356,7 @@ static int edac_pci_main_kobj_setup(void)
 	if (!try_module_get(THIS_MODULE)) {
 		edac_dbg(1, "try_module_get() failed\n");
 		err = -ENODEV;
-		goto mod_get_fail;
+		goto decrement_count_fail;
 	}
 
 	edac_pci_top_main_kobj = kzalloc(sizeof(struct kobject), GFP_KERNEL);
@@ -402,9 +391,6 @@ kobject_init_and_add_fail:
 kzalloc_fail:
 	module_put(THIS_MODULE);
 
-mod_get_fail:
-	edac_put_sysfs_subsys();
-
 decrement_count_fail:
 	/* if are on this error exit, nothing to tear down */
 	atomic_dec(&edac_pci_sysfs_refcount);
@@ -429,7 +415,6 @@ static void edac_pci_main_kobj_teardown(void)
 	if (atomic_dec_return(&edac_pci_sysfs_refcount) == 0) {
 		edac_dbg(0, "called kobject_put on main kobj\n");
 		kobject_put(edac_pci_top_main_kobj);
-		edac_put_sysfs_subsys();
 	}
 }
 
@@ -579,7 +564,7 @@ static void edac_pci_dev_parity_test(struct pci_dev *dev)
 			edac_printk(KERN_CRIT, EDAC_PCI,
 				"Signaled System Error on %s\n",
 				pci_name(dev));
-			atomic_inc_unchecked(&pci_nonparity_count);
+			atomic_inc(&pci_nonparity_count);
 		}
 
 		if (status & (PCI_STATUS_PARITY)) {
@@ -587,7 +572,7 @@ static void edac_pci_dev_parity_test(struct pci_dev *dev)
 				"Master Data Parity Error on %s\n",
 				pci_name(dev));
 
-			atomic_inc_unchecked(&pci_parity_count);
+			atomic_inc(&pci_parity_count);
 		}
 
 		if (status & (PCI_STATUS_DETECTED_PARITY)) {
@@ -595,7 +580,7 @@ static void edac_pci_dev_parity_test(struct pci_dev *dev)
 				"Detected Parity Error on %s\n",
 				pci_name(dev));
 
-			atomic_inc_unchecked(&pci_parity_count);
+			atomic_inc(&pci_parity_count);
 		}
 	}
 
@@ -618,7 +603,7 @@ static void edac_pci_dev_parity_test(struct pci_dev *dev)
 				edac_printk(KERN_CRIT, EDAC_PCI, "Bridge "
 					"Signaled System Error on %s\n",
 					pci_name(dev));
-				atomic_inc_unchecked(&pci_nonparity_count);
+				atomic_inc(&pci_nonparity_count);
 			}
 
 			if (status & (PCI_STATUS_PARITY)) {
@@ -626,7 +611,7 @@ static void edac_pci_dev_parity_test(struct pci_dev *dev)
 					"Master Data Parity Error on "
 					"%s\n", pci_name(dev));
 
-				atomic_inc_unchecked(&pci_parity_count);
+				atomic_inc(&pci_parity_count);
 			}
 
 			if (status & (PCI_STATUS_DETECTED_PARITY)) {
@@ -634,7 +619,7 @@ static void edac_pci_dev_parity_test(struct pci_dev *dev)
 					"Detected Parity Error on %s\n",
 					pci_name(dev));
 
-				atomic_inc_unchecked(&pci_parity_count);
+				atomic_inc(&pci_parity_count);
 			}
 		}
 	}
@@ -672,7 +657,7 @@ void edac_pci_do_parity_check(void)
 	if (!check_pci_errors)
 		return;
 
-	before_count = atomic_read_unchecked(&pci_parity_count);
+	before_count = atomic_read(&pci_parity_count);
 
 	/* scan all PCI devices looking for a Parity Error on devices and
 	 * bridges.
@@ -684,7 +669,7 @@ void edac_pci_do_parity_check(void)
 	/* Only if operator has selected panic on PCI Error */
 	if (edac_pci_get_panic_on_pe()) {
 		/* If the count is different 'after' from 'before' */
-		if (before_count != atomic_read_unchecked(&pci_parity_count))
+		if (before_count != atomic_read(&pci_parity_count))
 			panic("EDAC: PCI Parity Error");
 	}
 }
@@ -761,5 +746,3 @@ MODULE_PARM_DESC(check_pci_errors,
 module_param(edac_pci_panic_on_pe, int, 0644);
 MODULE_PARM_DESC(edac_pci_panic_on_pe,
 		 "Panic on PCI Bus Parity error: 0=off 1=on");
-
-#endif				/* CONFIG_PCI */

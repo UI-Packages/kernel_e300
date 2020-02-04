@@ -29,7 +29,8 @@ static void ar9002_hw_set_desc_link(void *ds, u32 ds_link)
 	((struct ath_desc*) ds)->ds_link = ds_link;
 }
 
-static bool ar9002_hw_get_isr(struct ath_hw *ah, enum ath9k_int *masked)
+static bool ar9002_hw_get_isr(struct ath_hw *ah, enum ath9k_int *masked,
+			      u32 *sync_cause_p)
 {
 	u32 isr = 0;
 	u32 mask2 = 0;
@@ -170,7 +171,8 @@ static bool ar9002_hw_get_isr(struct ath_hw *ah, enum ath9k_int *masked)
 		return true;
 
 	if (sync_cause) {
-		ath9k_debug_sync_cause(common, sync_cause);
+		if (sync_cause_p)
+			*sync_cause_p = sync_cause;
 		fatal_int =
 			(sync_cause &
 			 (AR_INTR_SYNC_HOST1_FATAL | AR_INTR_SYNC_HOST1_PERR))
@@ -218,8 +220,8 @@ ar9002_set_txdesc(struct ath_hw *ah, void *ds, struct ath_tx_info *i)
 	ads->ds_txstatus6 = ads->ds_txstatus7 = 0;
 	ads->ds_txstatus8 = ads->ds_txstatus9 = 0;
 
-	ACCESS_ONCE_RW(ads->ds_link) = i->link;
-	ACCESS_ONCE_RW(ads->ds_data) = i->buf_addr[0];
+	ACCESS_ONCE(ads->ds_link) = i->link;
+	ACCESS_ONCE(ads->ds_data) = i->buf_addr[0];
 
 	ctl1 = i->buf_len[0] | (i->is_last ? 0 : AR_TxMore);
 	ctl6 = SM(i->keytype, AR_EncrType);
@@ -233,26 +235,26 @@ ar9002_set_txdesc(struct ath_hw *ah, void *ds, struct ath_tx_info *i)
 
 	if ((i->is_first || i->is_last) &&
 	    i->aggr != AGGR_BUF_MIDDLE && i->aggr != AGGR_BUF_LAST) {
-		ACCESS_ONCE_RW(ads->ds_ctl2) = set11nTries(i->rates, 0)
+		ACCESS_ONCE(ads->ds_ctl2) = set11nTries(i->rates, 0)
 			| set11nTries(i->rates, 1)
 			| set11nTries(i->rates, 2)
 			| set11nTries(i->rates, 3)
 			| (i->dur_update ? AR_DurUpdateEna : 0)
 			| SM(0, AR_BurstDur);
 
-		ACCESS_ONCE_RW(ads->ds_ctl3) = set11nRate(i->rates, 0)
+		ACCESS_ONCE(ads->ds_ctl3) = set11nRate(i->rates, 0)
 			| set11nRate(i->rates, 1)
 			| set11nRate(i->rates, 2)
 			| set11nRate(i->rates, 3);
 	} else {
-		ACCESS_ONCE_RW(ads->ds_ctl2) = 0;
-		ACCESS_ONCE_RW(ads->ds_ctl3) = 0;
+		ACCESS_ONCE(ads->ds_ctl2) = 0;
+		ACCESS_ONCE(ads->ds_ctl3) = 0;
 	}
 
 	if (!i->is_first) {
-		ACCESS_ONCE_RW(ads->ds_ctl0) = 0;
-		ACCESS_ONCE_RW(ads->ds_ctl1) = ctl1;
-		ACCESS_ONCE_RW(ads->ds_ctl6) = ctl6;
+		ACCESS_ONCE(ads->ds_ctl0) = 0;
+		ACCESS_ONCE(ads->ds_ctl1) = ctl1;
+		ACCESS_ONCE(ads->ds_ctl6) = ctl6;
 		return;
 	}
 
@@ -277,9 +279,9 @@ ar9002_set_txdesc(struct ath_hw *ah, void *ds, struct ath_tx_info *i)
 		break;
 	}
 
-	ACCESS_ONCE_RW(ads->ds_ctl0) = (i->pkt_len & AR_FrameLen)
+	ACCESS_ONCE(ads->ds_ctl0) = (i->pkt_len & AR_FrameLen)
 		| (i->flags & ATH9K_TXDESC_VMF ? AR_VirtMoreFrag : 0)
-		| SM(i->txpower, AR_XmitPower)
+		| SM(i->txpower[0], AR_XmitPower0)
 		| (i->flags & ATH9K_TXDESC_VEOL ? AR_VEOL : 0)
 		| (i->flags & ATH9K_TXDESC_INTREQ ? AR_TxIntrReq : 0)
 		| (i->keyix != ATH9K_TXKEYIX_INVALID ? AR_DestIdxValid : 0)
@@ -287,23 +289,27 @@ ar9002_set_txdesc(struct ath_hw *ah, void *ds, struct ath_tx_info *i)
 		| (i->flags & ATH9K_TXDESC_RTSENA ? AR_RTSEnable :
 		   (i->flags & ATH9K_TXDESC_CTSENA ? AR_CTSEnable : 0));
 
-	ACCESS_ONCE_RW(ads->ds_ctl1) = ctl1;
-	ACCESS_ONCE_RW(ads->ds_ctl6) = ctl6;
+	ACCESS_ONCE(ads->ds_ctl1) = ctl1;
+	ACCESS_ONCE(ads->ds_ctl6) = ctl6;
 
 	if (i->aggr == AGGR_BUF_MIDDLE || i->aggr == AGGR_BUF_LAST)
 		return;
 
-	ACCESS_ONCE_RW(ads->ds_ctl4) = set11nPktDurRTSCTS(i->rates, 0)
+	ACCESS_ONCE(ads->ds_ctl4) = set11nPktDurRTSCTS(i->rates, 0)
 		| set11nPktDurRTSCTS(i->rates, 1);
 
-	ACCESS_ONCE_RW(ads->ds_ctl5) = set11nPktDurRTSCTS(i->rates, 2)
+	ACCESS_ONCE(ads->ds_ctl5) = set11nPktDurRTSCTS(i->rates, 2)
 		| set11nPktDurRTSCTS(i->rates, 3);
 
-	ACCESS_ONCE_RW(ads->ds_ctl7) = set11nRateFlags(i->rates, 0)
+	ACCESS_ONCE(ads->ds_ctl7) = set11nRateFlags(i->rates, 0)
 		| set11nRateFlags(i->rates, 1)
 		| set11nRateFlags(i->rates, 2)
 		| set11nRateFlags(i->rates, 3)
 		| SM(i->rtscts_rate, AR_RTSCTSRate);
+
+	ACCESS_ONCE(ads->ds_ctl9) = SM(i->txpower[1], AR_XmitPower1);
+	ACCESS_ONCE(ads->ds_ctl10) = SM(i->txpower[2], AR_XmitPower2);
+	ACCESS_ONCE(ads->ds_ctl11) = SM(i->txpower[3], AR_XmitPower3);
 }
 
 static int ar9002_hw_proc_txdesc(struct ath_hw *ah, void *ds,
@@ -378,6 +384,24 @@ static int ar9002_hw_proc_txdesc(struct ath_hw *ah, void *ds,
 	return 0;
 }
 
+static int ar9002_hw_get_duration(struct ath_hw *ah, const void *ds, int index)
+{
+	struct ar5416_desc *ads = AR5416DESC(ds);
+
+	switch (index) {
+	case 0:
+		return MS(ACCESS_ONCE(ads->ds_ctl4), AR_PacketDur0);
+	case 1:
+		return MS(ACCESS_ONCE(ads->ds_ctl4), AR_PacketDur1);
+	case 2:
+		return MS(ACCESS_ONCE(ads->ds_ctl5), AR_PacketDur2);
+	case 3:
+		return MS(ACCESS_ONCE(ads->ds_ctl5), AR_PacketDur3);
+	default:
+		return -1;
+	}
+}
+
 void ath9k_hw_setuprxdesc(struct ath_hw *ah, struct ath_desc *ds,
 			  u32 size, u32 flags)
 {
@@ -400,4 +424,5 @@ void ar9002_hw_attach_mac_ops(struct ath_hw *ah)
 	ops->get_isr = ar9002_hw_get_isr;
 	ops->set_txdesc = ar9002_set_txdesc;
 	ops->proc_txdesc = ar9002_hw_proc_txdesc;
+	ops->get_duration = ar9002_hw_get_duration;
 }

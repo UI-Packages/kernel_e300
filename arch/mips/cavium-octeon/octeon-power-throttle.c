@@ -70,12 +70,12 @@ module_param_named(start, boot_powlim, long, 0444);
 /* IPI calls to ask target CPU to access own registers ... */
 static inline void read_my_power_throttle(void *info)
 {
-	*(u64*)info = __read_64bit_c0_register($11, 6);
+	*(u64 *)info = __read_64bit_c0_register($11, 6);
 }
 
 static inline void write_my_power_throttle(void *info)
 {
-	__write_64bit_c0_register($11, 6, *(u64*)info);
+	__write_64bit_c0_register($11, 6, *(u64 *)info);
 }
 
 /*
@@ -85,10 +85,10 @@ static int throttle_op(int cpu,
 	union octeon_power_throttle_bits *r, bool write)
 {
 	int err =
-	smp_call_function_single(cpu, 
-		(write ? write_my_power_throttle
-		       : read_my_power_throttle),
-		r, 1);
+	smp_call_function_single(cpu,
+				 (write ? write_my_power_throttle
+				  : read_my_power_throttle),
+				 r, 1);
 	return err;
 }
 
@@ -146,7 +146,8 @@ static int scaled(union octeon_power_throttle_bits r, int val)
 /*
  * Set the POWLIM field as percentage% of the MAXPOW field in r.
  */
-static int set_powlim(union octeon_power_throttle_bits *r, unsigned long percentage)
+static int set_powlim(union octeon_power_throttle_bits *r,
+		      unsigned long percentage)
 {
 	int maxpow = r->s.maxpow;	/* max with override */
 	int base = get_powbase(*r);	/* max without override */
@@ -263,7 +264,7 @@ static ssize_t store(
 	int error = 0;
 	bool restore_default_powlim =
 		(buf[0] == 'd' && attr->attr.name[0] == 'p');
-	
+
 	if (!restore_default_powlim)
 		error = kstrtoul(buf, 0, &val);
 
@@ -339,13 +340,13 @@ bye:
 	return size;
 }
 
-static DEVICE_ATTR(percentage, S_IRUGO | S_IWUSR, show, store); 
-static DEVICE_ATTR(override, S_IRUGO | S_IWUSR, show, store); 
-static DEVICE_ATTR(cycles, S_IRUGO | S_IWUSR, show, store); 
-static DEVICE_ATTR(maxthr, S_IRUGO | S_IWUSR, show, store); 
-static DEVICE_ATTR(minthr, S_IRUGO | S_IWUSR, show, store); 
-static DEVICE_ATTR(default, S_IRUGO, show, NULL);
-static DEVICE_ATTR(state, S_IRUGO, show, NULL);
+static DEVICE_ATTR(percentage, 0644, show, store);
+static DEVICE_ATTR(override, 0644, show, store);
+static DEVICE_ATTR(cycles, 0644, show, store);
+static DEVICE_ATTR(maxthr, 0644, show, store);
+static DEVICE_ATTR(minthr, 0644, show, store);
+static DEVICE_ATTR(default, 0444, show, NULL);
+static DEVICE_ATTR(state, 0444, show, NULL);
 
 static struct attribute *octeon_power_throttle_attrs[] = {
 	&dev_attr_percentage.attr,
@@ -363,7 +364,7 @@ static struct attribute_group octeon_power_throttle_attr_group = {
 	.name	= "power_throttle"
 };
 
-static __cpuinit int octeon_power_throttle_add_dev(struct device *dev)
+static int octeon_power_throttle_add_dev(struct device *dev)
 {
 	return sysfs_create_group(&dev->kobj,
 				  &octeon_power_throttle_attr_group);
@@ -375,7 +376,7 @@ static __init int octeon_power_throttle_init(void)
 	int err = 0;
 
 	if (!(current_cpu_type() == CPU_CAVIUM_OCTEON2 ||
-		current_cpu_type() == CPU_CAVIUM_OCTEON3))
+	      current_cpu_type() == CPU_CAVIUM_OCTEON3))
 		return 0;
 
 	get_online_cpus();

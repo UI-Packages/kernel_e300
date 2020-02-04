@@ -627,7 +627,7 @@ int __cvmx_helper_get_los(int xiface, int index)
 				cvmx_dprintf("%s(0x%x, %d): los detected (mod_abs) los: %d\n",
 					     __func__, xiface, index, los);
 			return 1;
-	}
+		}
 		vsc7224_chan = sfp->vsc7224_chan;
 		while (vsc7224_chan) {
 			uint64_t done;
@@ -685,7 +685,7 @@ int __cvmx_helper_get_los(int xiface, int index)
  * @param	data	user-defined data
  *
  * @return	0 for success, -1 on error
-	 */
+ */
 int cvmx_sfp_vsc7224_mod_abs_changed(struct cvmx_fdt_sfp_info *sfp, int val,
 				     void *data)
 {
@@ -716,8 +716,8 @@ int cvmx_sfp_vsc7224_mod_abs_changed(struct cvmx_fdt_sfp_info *sfp, int val,
 	if (!mod_info->valid || !sfp->valid) {
 		if (dbg)
 			cvmx_dprintf("%s: Module data is invalid\n", __func__);
-			return -1;
-		}
+		return -1;
+	}
 
 	vsc7224_chan = sfp->vsc7224_chan;
 	while (vsc7224_chan) {
@@ -794,6 +794,47 @@ int cvmx_sfp_vsc7224_mod_abs_changed(struct cvmx_fdt_sfp_info *sfp, int val,
 
 	return err;
 }
+
+/**
+ * Function called whenever mod_abs/mod_prs has changed for Avago AVSP5410
+ *
+ * @param	sfp	pointer to SFP data structure
+ * @param	val	1 if absent, 0 if present, otherwise not set
+ * @param	data	user-defined data
+ *
+ * @return	0 for success, -1 on error
+	 */
+int cvmx_sfp_avsp5410_mod_abs_changed(struct cvmx_fdt_sfp_info *sfp, int val,
+				     void *data)
+{
+	int err;
+	struct cvmx_sfp_mod_info *mod_info;
+	const int dbg = device_tree_dbg;
+
+	if (dbg)
+		cvmx_dprintf("%s(%s, %d, %p): Module %s\n", __func__,
+			     sfp->name, val, data, val ? "absent" : "present");
+	if (val)
+		return 0;
+
+	/* We're here if we detect that the module is now present */
+	err = cvmx_sfp_read_i2c_eeprom(sfp);
+	if (err) {
+		cvmx_dprintf("%s: Error reading the SFP module eeprom for %s\n",
+			     __func__, sfp->name);
+		return err;
+	}
+	mod_info = &sfp->sfp_info;
+
+	if (!mod_info->valid || !sfp->valid) {
+		if (dbg)
+			cvmx_dprintf("%s: Module data is invalid\n", __func__);
+			return -1;
+		}
+
+	return err;
+}
+
 #define CS4224_PP_LINE_SDS_COMMON_STX0_TX_OUTPUT_CTRLA	0x108F
 #define CS4224_PP_LINE_SDS_COMMON_STX0_TX_OUTPUT_CTRLB	0x1090
 #define CS4224_PP_LINE_SDS_DSP_MSEQ_SPARE22_LSB		0x12AC
@@ -1067,6 +1108,7 @@ static int cvmx_is_cortina(const struct cvmx_phy_info *phy_info)
 int cvmx_helper_phy_register_mod_abs_changed(int xiface, int index)
 {
 	struct cvmx_vsc7224_chan *vsc7224_chan;
+	struct cvmx_avsp5410 *avsp5410;
 	struct cvmx_phy_info *phy_info;
 	struct cvmx_fdt_sfp_info *sfp_info;
 	int cortina_type;
@@ -1090,6 +1132,18 @@ int cvmx_helper_phy_register_mod_abs_changed(int xiface, int index)
 				     __func__);
 		cvmx_sfp_register_mod_abs_changed(sfp_info,
 						  &cvmx_sfp_vsc7224_mod_abs_changed,
+						  NULL);
+		return 0;
+	}
+
+	/* See if the Avago AVSP5410 phy has been used */
+	avsp5410 = cvmx_helper_cfg_get_avsp5410_info(xiface, index);
+	if (avsp5410) {
+		if (device_tree_dbg)
+			cvmx_dprintf("%s: Registering AVSP5410 handler\n",
+				     __func__);
+		cvmx_sfp_register_mod_abs_changed(sfp_info,
+						  &cvmx_sfp_avsp5410_mod_abs_changed,
 						  NULL);
 		return 0;
 	}
@@ -1161,6 +1215,10 @@ int __cvmx_helper_78xx_parse_phy(struct cvmx_phy_info *phy_info, int ipd_port)
 		}
 		if (__cvmx_fdt_parse_vsc7224(fdt_addr)) {
 			cvmx_dprintf("Error: could not parse Microsemi VSC7224 in DT\n");
+			return -1;
+		}
+		if (__cvmx_fdt_parse_avsp5410(fdt_addr)) {
+			cvmx_dprintf("Error: could not parse Avago AVSP5410 in DT\n");
 			return -1;
 		}
 		if (octeon_has_feature(OCTEON_FEATURE_BGX_XCV) &&
@@ -1815,7 +1873,7 @@ int __cvmx_helper_parse_bgx_dt(void *fdt_addr)
 				cvmx_dprintf("%s: No SFP slots found\n",
 					     __func__);
 			}
-	}
+		}
 	}
 	parsed = true;
 	return 0;
@@ -1933,6 +1991,7 @@ int __cvmx_helper_parse_bgx_rgmii_dt(const void *fdt_addr)
 				     __func__, xiface, port_index, fdt_phy_node);
 		cvmx_helper_set_port_phy_present(xiface, port_index, false);
 	}
+
 	return 0;
 }
 
@@ -1976,7 +2035,7 @@ int __cvmx_helper_board_get_port_from_dt(void *fdt_addr, int ipd_port)
 				parse_vsc7224_err =
 					__cvmx_fdt_parse_vsc7224(fdt_addr);
 				if (!parse_bgx_dt_err && !parse_vsc7224_err)
-				fdt_ports_initialized = 1;
+					fdt_ports_initialized = 1;
 			} else {
 				cvmx_dprintf("%s: Error parsing FDT\n",
 					     __func__);
@@ -2513,6 +2572,31 @@ int cvmx_helper_board_get_mii_address(int ipd_port)
 	}
 #endif
 	switch (cvmx_sysinfo_get()->board_type) {
+	case CVMX_BOARD_TYPE_UBNT_E200:
+	case CVMX_BOARD_TYPE_UBNT_E220:
+		return -1;
+
+	case CVMX_BOARD_TYPE_UBNT_E100:
+		if (ipd_port == 0) {
+			return 7;
+		} else if (ipd_port == 1) {
+			return 6;
+		} else if (ipd_port == 2
+			   && cvmx_sysinfo_get()->board_rev_major == 2) {
+			return 5;
+		}
+		return -1;
+
+	case CVMX_BOARD_TYPE_UBNT_E120:
+		if (ipd_port == 0) {
+			return 7;
+		} else if (ipd_port == 1) {
+			return 6;
+		} else if (ipd_port == 2) {
+			return 5;
+		}
+		return -1;
+
 	case CVMX_BOARD_TYPE_SIM:
 		/* Simulator doesn't have MII */
 		return -1;
@@ -2702,11 +2786,6 @@ int cvmx_helper_board_get_mii_address(int ipd_port)
 			return ipd_port - 16 + 4;
 		else
 			return -1;
-	case CVMX_BOARD_TYPE_UBNT_E100:
-		if (ipd_port >= 0 && ipd_port <= 2)
-			return 7 - ipd_port;
-		else
-			return -1;
 	}
 
 	/* Some unknown board. Somebody forgot to update this function... */
@@ -2773,7 +2852,6 @@ __cvmx_get_cortina_phy_link_state(cvmx_phy_info_t *phy_info)
 
 	value = cvmx_mdio_45_read(bus, phy_addr, 0, CS4XXX_GLOBAL_CHIPID_MSB);
 	id |= value << 16;
-
 	/* Are we a CS4223/CS4343 PHY? */
 	if ((id & 0x0FFFFFFF) == 0x000303e5) {
 		/* For the CS4223 and CS4343 Cortina PHYs the link information
@@ -2813,7 +2891,7 @@ __cvmx_get_cortina_phy_link_state(cvmx_phy_info_t *phy_info)
 			slice_off =
 				cs4343_off[phy_addr & 1][phy_info->phy_sub_addr];
 		else
-		slice_off = phy_info->phy_sub_addr * 0x1000;
+			slice_off = phy_info->phy_sub_addr * 0x1000;
 
 		/* For now we only support 40Gbps for this device. */
 		value = cvmx_mdio_45_read(bus, phy_addr, 0,
@@ -3543,10 +3621,10 @@ cvmx_helper_link_info_t __cvmx_helper_board_link_get_from_dt(int ipd_port)
 #else
 			phy_info = cvmx_bootmem_alloc(sizeof(*phy_info), 0);
 #endif
-		if (!phy_info) {
+			if (!phy_info) {
 				cvmx_dprintf("%s: Out of memory\n", __func__);
-			return result;
-		}
+				return result;
+			}
 			memset(phy_info, 0, sizeof(*phy_info));
 			phy_info->phy_addr = -1;
 			if (dbg)
@@ -3795,17 +3873,26 @@ cvmx_helper_link_info_t __cvmx_helper_board_link_get(int ipd_port)
 	case CVMX_BOARD_TYPE_NIC68_4:
 		is_cortina_phy = 1;
 		break;
-
 	case CVMX_BOARD_TYPE_UBNT_E300:
 		if (octeon_bootinfo->board_rev_major == BOARD_E302_MAJOR || octeon_bootinfo->board_rev_major == BOARD_E303_MAJOR) {
-				/* On ER-12(E302), CN7130 QSGMII1 to QCA8511 use force-link */
-				if ((ipd_port >= 16) && (ipd_port <=19)) {
-					result.s.link_up = 1;
-					result.s.full_duplex = 1;
-					result.s.speed = 1000;
-					return result;
-				}
+			/* On ER-12(E302), CN7130 QSGMII1 to QCA8511 use force-link */
+			if ((ipd_port >= 16) && (ipd_port <=19)) {
+				result.s.link_up = 1;
+				result.s.full_duplex = 1;
+				result.s.speed = 1000;
+				return result;
 			}
+		}
+		break;
+
+	case CVMX_BOARD_TYPE_UBNT_E100:
+		if (ipd_port == 2
+		    && cvmx_sysinfo_get()->board_rev_major == 1) {
+			result.s.link_up = 1;
+			result.s.full_duplex = 1;
+			result.s.speed = 1000;
+			return result;
+		}
 		break;
 	}
 
@@ -4100,6 +4187,17 @@ int __cvmx_helper_board_interface_probe(int interface, int supported_ports)
  */
 int __cvmx_helper_board_hardware_enable(int interface)
 {
+	if (cvmx_sysinfo_get()->board_type == CVMX_BOARD_TYPE_UBNT_E100
+	    || cvmx_sysinfo_get()->board_type == CVMX_BOARD_TYPE_UBNT_E120) {
+		cvmx_write_csr(CVMX_ASXX_RX_CLK_SETX(0, interface), 0);
+		cvmx_write_csr(CVMX_ASXX_TX_CLK_SETX(0, interface), 0x10);
+		cvmx_write_csr(CVMX_ASXX_RX_CLK_SETX(1, interface), 0);
+		cvmx_write_csr(CVMX_ASXX_TX_CLK_SETX(1, interface), 0x10);
+		cvmx_write_csr(CVMX_ASXX_RX_CLK_SETX(2, interface), 0);
+		cvmx_write_csr(CVMX_ASXX_TX_CLK_SETX(2, interface), 0x10);
+		return 0;
+	}
+
 	if (cvmx_sysinfo_get()->board_type == CVMX_BOARD_TYPE_CN3005_EVB_HS5) {
 		if (interface == 0) {
 			/* Different config for switch port */
@@ -4219,6 +4317,7 @@ cvmx_helper_board_usb_clock_types_t __cvmx_helper_board_usb_get_clock_type(void)
 	case CVMX_BOARD_TYPE_LANAI2_G:
 	case CVMX_BOARD_TYPE_NIC10E_66:
 	case CVMX_BOARD_TYPE_UBNT_E100:
+	case CVMX_BOARD_TYPE_UBNT_E120:
 		return USB_CLOCK_TYPE_CRYSTAL_12;
 	case CVMX_BOARD_TYPE_NIC10E:
 		return USB_CLOCK_TYPE_REF_12;

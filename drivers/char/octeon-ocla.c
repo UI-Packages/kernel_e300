@@ -37,6 +37,7 @@
 #include <linux/of_address.h>
 #include <linux/interrupt.h>
 #include <linux/slab.h>
+#include <linux/uaccess.h>
 
 #include <asm/octeon/octeon.h>
 #include <asm/octeon/cvmx-ocla.h>

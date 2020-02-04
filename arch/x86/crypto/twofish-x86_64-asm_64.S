@@ -22,7 +22,6 @@
 
 #include <linux/linkage.h>
 #include <asm/asm-offsets.h>
-#include <asm/alternative-asm.h>
 
 #define a_offset	0
 #define b_offset	4
@@ -265,8 +264,7 @@ ENTRY(twofish_enc_blk)
 	movq	R1,	8(%rsi)
 
 	popq	R1
-	movq	$1,%rax
-	pax_force_retaddr 0, 1
+	movl	$1,%eax
 	ret
 ENDPROC(twofish_enc_blk)
 
@@ -318,7 +316,6 @@ ENTRY(twofish_dec_blk)
 	movq	R1,	8(%rsi)
 
 	popq	R1
-	movq	$1,%rax
-	pax_force_retaddr 0, 1
+	movl	$1,%eax
 	ret
 ENDPROC(twofish_dec_blk)

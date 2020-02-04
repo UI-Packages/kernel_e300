@@ -16,16 +16,37 @@ typedef struct {
 	long long counter;
 } atomic64_t;
 
-typedef atomic64_t atomic64_unchecked_t;
-
 #define ATOMIC64_INIT(i)	{ (i) }
 
 extern long long atomic64_read(const atomic64_t *v);
 extern void	 atomic64_set(atomic64_t *v, long long i);
-extern void	 atomic64_add(long long a, atomic64_t *v);
-extern long long atomic64_add_return(long long a, atomic64_t *v);
-extern void	 atomic64_sub(long long a, atomic64_t *v);
-extern long long atomic64_sub_return(long long a, atomic64_t *v);
+
+#define ATOMIC64_OP(op)							\
+extern void	 atomic64_##op(long long a, atomic64_t *v);
+
+#define ATOMIC64_OP_RETURN(op)						\
+extern long long atomic64_##op##_return(long long a, atomic64_t *v);
+
+#define ATOMIC64_FETCH_OP(op)						\
+extern long long atomic64_fetch_##op(long long a, atomic64_t *v);
+
+#define ATOMIC64_OPS(op)	ATOMIC64_OP(op) ATOMIC64_OP_RETURN(op) ATOMIC64_FETCH_OP(op)
+
+ATOMIC64_OPS(add)
+ATOMIC64_OPS(sub)
+
+#undef ATOMIC64_OPS
+#define ATOMIC64_OPS(op)	ATOMIC64_OP(op) ATOMIC64_FETCH_OP(op)
+
+ATOMIC64_OPS(and)
+ATOMIC64_OPS(or)
+ATOMIC64_OPS(xor)
+
+#undef ATOMIC64_OPS
+#undef ATOMIC64_FETCH_OP
+#undef ATOMIC64_OP_RETURN
+#undef ATOMIC64_OP
+
 extern long long atomic64_dec_if_positive(atomic64_t *v);
 extern long long atomic64_cmpxchg(atomic64_t *v, long long o, long long n);
 extern long long atomic64_xchg(atomic64_t *v, long long new);
@@ -40,15 +61,5 @@ extern int	 atomic64_add_unless(atomic64_t *v, long long a, long long u);
 #define atomic64_dec_return(v)		atomic64_sub_return(1LL, (v))
 #define atomic64_dec_and_test(v)	(atomic64_dec_return((v)) == 0)
 #define atomic64_inc_not_zero(v) 	atomic64_add_unless((v), 1LL, 0LL)
-
-#define atomic64_read_unchecked(v) atomic64_read(v)
-#define atomic64_set_unchecked(v, i) atomic64_set((v), (i))
-#define atomic64_add_unchecked(a, v) atomic64_add((a), (v))
-#define atomic64_add_return_unchecked(a, v) atomic64_add_return((a), (v))
-#define atomic64_sub_unchecked(a, v) atomic64_sub((a), (v))
-#define atomic64_inc_unchecked(v) atomic64_inc(v)
-#define atomic64_inc_return_unchecked(v) atomic64_inc_return(v)
-#define atomic64_dec_unchecked(v) atomic64_dec(v)
-#define atomic64_cmpxchg_unchecked(v, o, n) atomic64_cmpxchg((v), (o), (n))
 
 #endif  /*  _ASM_GENERIC_ATOMIC64_H  */

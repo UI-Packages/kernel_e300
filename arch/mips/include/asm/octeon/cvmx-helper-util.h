@@ -42,7 +42,7 @@
  *
  * Small helper utilities.
  *
- * <hr>$Revision: 160838 $<hr>
+ * <hr>$Revision: 163638 $<hr>
  */
 
 #ifndef __CVMX_HELPER_UTIL_H__

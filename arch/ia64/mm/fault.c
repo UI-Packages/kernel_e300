@@ -11,10 +11,10 @@
 #include <linux/kprobes.h>
 #include <linux/kdebug.h>
 #include <linux/prefetch.h>
+#include <linux/uaccess.h>
 
 #include <asm/pgtable.h>
 #include <asm/processor.h>
-#include <asm/uaccess.h>
 
 extern int die(char *, struct pt_regs *, long);
 
@@ -72,23 +72,6 @@ mapped_kernel_page_is_present (unsigned long address)
 	return pte_present(pte);
 }
 
-#ifdef CONFIG_PAX_PAGEEXEC
-void pax_report_insns(struct pt_regs *regs, void *pc, void *sp)
-{
-	unsigned long i;
-
-	printk(KERN_ERR "PAX: bytes at PC: ");
-	for (i = 0; i < 8; i++) {
-		unsigned int c;
-		if (get_user(c, (unsigned int *)pc+i))
-			printk(KERN_CONT "???????? ");
-		else
-			printk(KERN_CONT "%08x ", c);
-	}
-	printk("\n");
-}
-#endif
-
 #	define VM_READ_BIT	0
 #	define VM_WRITE_BIT	1
 #	define VM_EXEC_BIT	2
@@ -113,7 +96,7 @@ ia64_do_page_fault (unsigned long address, unsigned long isr, struct pt_regs *re
 	/*
 	 * If we're in an interrupt or have no user context, we must not take the fault..
 	 */
-	if (!mm || pagefault_disabled())
+	if (faulthandler_disabled() || !mm)
 		goto no_context;
 
 #ifdef CONFIG_VIRTUAL_MEM_MAP
@@ -168,28 +151,15 @@ retry:
 	if (((isr >> IA64_ISR_R_BIT) & 1UL) && (!(vma->vm_flags & (VM_READ | VM_WRITE))))
 		goto bad_area;
 
-	if ((vma->vm_flags & mask) != mask) {
-
-#ifdef CONFIG_PAX_PAGEEXEC
-		if (!(vma->vm_flags & VM_EXEC) && (mask & VM_EXEC)) {
-			if (!(mm->pax_flags & MF_PAX_PAGEEXEC) || address != regs->cr_iip)
-				goto bad_area;
-
-			up_read(&mm->mmap_sem);
-			pax_report_fault(regs, (void *)regs->cr_iip, (void *)regs->r12);
-			do_group_exit(SIGKILL);
-		}
-#endif
-
+	if ((vma->vm_flags & mask) != mask)
 		goto bad_area;
-	}
 
 	/*
 	 * If for any reason at all we couldn't handle the fault, make
 	 * sure we exit gracefully rather than endlessly redo the
 	 * fault.
 	 */
-	fault = handle_mm_fault(mm, vma, address, flags);
+	fault = handle_mm_fault(vma, address, flags);
 
 	if ((fault & VM_FAULT_RETRY) && fatal_signal_pending(current))
 		return;

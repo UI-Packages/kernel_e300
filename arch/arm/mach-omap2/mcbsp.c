@@ -25,6 +25,7 @@
 
 #include "soc.h"
 #include "omap_device.h"
+#include "clock.h"
 
 /*
  * FIXME: Find a mechanism to enable/disable runtime the McBSP ICLK autoidle.
@@ -33,22 +34,24 @@
 #include "cm3xxx.h"
 #include "cm-regbits-34xx.h"
 
-static int omap3_enable_st_clock(unsigned int id, bool enable)
+static int omap3_mcbsp_force_ick_on(struct clk *clk, bool force_on)
 {
-	unsigned int w;
+	if (!clk)
+		return 0;
 
-	/*
-	 * Sidetone uses McBSP ICLK - which must not idle when sidetones
-	 * are enabled or sidetones start sounding ugly.
-	 */
-	w = omap2_cm_read_mod_reg(OMAP3430_PER_MOD, CM_AUTOIDLE);
-	if (enable)
-		w &= ~(1 << (id - 2));
+	if (force_on)
+		return omap2_clk_deny_idle(clk);
 	else
-		w |= 1 << (id - 2);
-	omap2_cm_write_mod_reg(w, OMAP3430_PER_MOD, CM_AUTOIDLE);
+		return omap2_clk_allow_idle(clk);
+}
 
-	return 0;
+void __init omap3_mcbsp_init_pdata_callback(
+					struct omap_mcbsp_platform_data *pdata)
+{
+	if (!pdata)
+		return;
+
+	pdata->force_ick_on = omap3_mcbsp_force_ick_on;
 }
 
 static int __init omap_init_mcbsp(struct omap_hwmod *oh, void *unused)
@@ -98,7 +101,7 @@ static int __init omap_init_mcbsp(struct omap_hwmod *oh, void *unused)
 	if (oh->dev_attr) {
 		oh_device[1] = omap_hwmod_lookup((
 		(struct omap_mcbsp_dev_attr *)(oh->dev_attr))->sidetone);
-		pdata->enable_st_clock = omap3_enable_st_clock;
+		pdata->force_ick_on = omap3_mcbsp_force_ick_on;
 		count++;
 	}
 	pdev = omap_device_build_ss(name, id, oh_device, count, pdata,

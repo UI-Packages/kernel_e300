@@ -21,15 +21,43 @@
 #include <linux/init.h>
 #include <linux/linkage.h>
 
+#include <asm/alternative.h>
 #include <asm/assembler.h>
 #include <asm/asm-offsets.h>
+#include <asm/cpufeature.h>
 #include <asm/errno.h>
 #include <asm/esr.h>
+#include <asm/irq.h>
+#include <asm/memory.h>
 #include <asm/thread_info.h>
+#include <asm/asm-uaccess.h>
 #include <asm/unistd.h>
-#include <asm/unistd32.h>
-#include <asm/ftrace.h>
-#include <asm/pgtable.h>
+
+/*
+ * Context tracking subsystem.  Used to instrument transitions
+ * between user and kernel mode.
+ */
+	.macro ct_user_exit, syscall = 0
+#ifdef CONFIG_CONTEXT_TRACKING
+	bl	context_tracking_user_exit
+	.if \syscall == 1
+	/*
+	 * Save/restore needed during syscalls.  Restore syscall arguments from
+	 * the values already saved on stack during kernel_entry.
+	 */
+	ldp	x0, x1, [sp]
+	ldp	x2, x3, [sp, #S_X2]
+	ldp	x4, x5, [sp, #S_X4]
+	ldp	x6, x7, [sp, #S_X6]
+	.endif
+#endif
+	.endm
+
+	.macro ct_user_enter
+#ifdef CONFIG_CONTEXT_TRACKING
+	bl	context_tracking_user_enter
+#endif
+	.endm
 
 /*
  * Bad Abort numbers
@@ -41,35 +69,44 @@
 #define BAD_ERROR	3
 
 	.macro	kernel_entry, el, regsize = 64
-	sub	sp, sp, #S_FRAME_SIZE - S_LR	// room for LR, SP, SPSR, ELR
+	sub	sp, sp, #S_FRAME_SIZE
 	.if	\regsize == 32
 	mov	w0, w0				// zero upper 32 bits of x0
 	.endif
-#ifdef CONFIG_THUNDERX_PASS1_ERRATA_22558
-	str	q0, [sp, #-16]!
-	tbl     v0.8b, {v1.16b}, v0.8b
-	ldr	q0, [sp], #16
-#endif
-	push	x28, x29
-	push	x26, x27
-	push	x24, x25
-	push	x22, x23
-	push	x20, x21
-	push	x18, x19
-	push	x16, x17
-	push	x14, x15
-	push	x12, x13
-	push	x10, x11
-	push	x8, x9
-	push	x6, x7
-	push	x4, x5
-	push	x2, x3
-	push	x0, x1
+	stp	x0, x1, [sp, #16 * 0]
+	stp	x2, x3, [sp, #16 * 1]
+	stp	x4, x5, [sp, #16 * 2]
+	stp	x6, x7, [sp, #16 * 3]
+	stp	x8, x9, [sp, #16 * 4]
+	stp	x10, x11, [sp, #16 * 5]
+	stp	x12, x13, [sp, #16 * 6]
+	stp	x14, x15, [sp, #16 * 7]
+	stp	x16, x17, [sp, #16 * 8]
+	stp	x18, x19, [sp, #16 * 9]
+	stp	x20, x21, [sp, #16 * 10]
+	stp	x22, x23, [sp, #16 * 11]
+	stp	x24, x25, [sp, #16 * 12]
+	stp	x26, x27, [sp, #16 * 13]
+	stp	x28, x29, [sp, #16 * 14]
+
 	.if	\el == 0
 	mrs	x21, sp_el0
+	mov	tsk, sp
+	and	tsk, tsk, #~(THREAD_SIZE - 1)	// Ensure MDSCR_EL1.SS is clear,
+	ldr	x19, [tsk, #TI_FLAGS]		// since we can unmask debug
+	disable_step_tsk x19, x20		// exceptions when scheduling.
+
+	mov	x29, xzr			// fp pointed to user-space
 	.else
 	add	x21, sp, #S_FRAME_SIZE
-	.endif
+	get_thread_info tsk
+	/* Save the task's original addr_limit and set USER_DS (TASK_SIZE_64) */
+	ldr	x20, [tsk, #TI_ADDR_LIMIT]
+	str	x20, [sp, #S_ORIG_ADDR_LIMIT]
+	mov	x20, #TASK_SIZE_64
+	str	x20, [tsk, #TI_ADDR_LIMIT]
+	/* No need to reset PSTATE.UAO, hardware's already set it to 0 for us */
+	.endif /* \el == 0 */
 	mrs	x22, elr_el1
 	mrs	x23, spsr_el1
 	stp	lr, x21, [sp, #S_LR]
@@ -83,15 +120,13 @@
 	str	x21, [sp, #S_SYSCALLNO]
 	.endif
 
-#ifdef CONFIG_MICROSTATE_ACCT
-	bl	msa_kernel
-	/* Restore parameters and x8 (syscall nr). */
-	ldp	x0, x1, [sp, #S_X0]
-	ldp	x2, x3, [sp, #S_X2]
-	ldp	x4, x5, [sp, #S_X4]
-	ldp	x6, x7, [sp, #S_X6]
-	ldr	x8, [sp, #S_X8]
-#endif
+	/*
+	 * Set sp_el0 to current thread_info.
+	 */
+	.if	\el == 0
+	msr	sp_el0, tsk
+	.endif
+
 	/*
 	 * Registers that may be useful after this macro is invoked:
 	 *
@@ -101,48 +136,94 @@
 	*/
 	.endm
 
-	.macro	kernel_exit, el, ret = 0
+	.macro	kernel_exit, el
+	.if	\el != 0
+	/* Restore the task's original addr_limit. */
+	ldr	x20, [sp, #S_ORIG_ADDR_LIMIT]
+	str	x20, [tsk, #TI_ADDR_LIMIT]
+
+	/* No need to restore UAO, it will be restored from SPSR_EL1 */
+	.endif
+
 	ldp	x21, x22, [sp, #S_PC]		// load ELR, SPSR
 	.if	\el == 0
+	ct_user_enter
 	ldr	x23, [sp, #S_SP]		// load return stack pointer
-	.endif
-#ifdef CONFIG_THUNDERX_PASS1_ERRATA_22558
-	str	q0, [sp, #-16]!
-	tbl     v0.16b, {v1.16b}, v0.16b
-	ldr	q0, [sp], #16
+	msr	sp_el0, x23
+#ifdef CONFIG_ARM64_ERRATUM_845719
+alternative_if ARM64_WORKAROUND_845719
+	tbz	x22, #4, 1f
+#ifdef CONFIG_PID_IN_CONTEXTIDR
+	mrs	x29, contextidr_el1
+	msr	contextidr_el1, x29
+#else
+	msr contextidr_el1, xzr
 #endif
-	.if	\ret
-	ldr	x1, [sp, #S_X1]			// preserve x0 (syscall return)
-	add	sp, sp, S_X2
-	.else
-	pop	x0, x1
+1:
+alternative_else_nop_endif
+#endif
 	.endif
-	pop	x2, x3				// load the rest of the registers
-	pop	x4, x5
-	pop	x6, x7
-	pop	x8, x9
 	msr	elr_el1, x21			// set up the return data
 	msr	spsr_el1, x22
-	.if	\el == 0
-	msr	sp_el0, x23
-	.endif
-	pop	x10, x11
-	pop	x12, x13
-	pop	x14, x15
-	pop	x16, x17
-	pop	x18, x19
-	pop	x20, x21
-	pop	x22, x23
-	pop	x24, x25
-	pop	x26, x27
-	pop	x28, x29
-	ldr	lr, [sp], #S_FRAME_SIZE - S_LR	// load LR and restore SP
+	ldp	x0, x1, [sp, #16 * 0]
+	ldp	x2, x3, [sp, #16 * 1]
+	ldp	x4, x5, [sp, #16 * 2]
+	ldp	x6, x7, [sp, #16 * 3]
+	ldp	x8, x9, [sp, #16 * 4]
+	ldp	x10, x11, [sp, #16 * 5]
+	ldp	x12, x13, [sp, #16 * 6]
+	ldp	x14, x15, [sp, #16 * 7]
+	ldp	x16, x17, [sp, #16 * 8]
+	ldp	x18, x19, [sp, #16 * 9]
+	ldp	x20, x21, [sp, #16 * 10]
+	ldp	x22, x23, [sp, #16 * 11]
+	ldp	x24, x25, [sp, #16 * 12]
+	ldp	x26, x27, [sp, #16 * 13]
+	ldp	x28, x29, [sp, #16 * 14]
+	ldr	lr, [sp, #S_LR]
+	add	sp, sp, #S_FRAME_SIZE		// restore sp
 	eret					// return to kernel
 	.endm
 
 	.macro	get_thread_info, rd
-	mov	\rd, sp
-	and	\rd, \rd, #~(THREAD_SIZE - 1)	// top of stack
+	mrs	\rd, sp_el0
+	.endm
+
+	.macro	irq_stack_entry
+	mov	x19, sp			// preserve the original sp
+
+	/*
+	 * Compare sp with the current thread_info, if the top
+	 * ~(THREAD_SIZE - 1) bits match, we are on a task stack, and
+	 * should switch to the irq stack.
+	 */
+	and	x25, x19, #~(THREAD_SIZE - 1)
+	cmp	x25, tsk
+	b.ne	9998f
+
+	this_cpu_ptr irq_stack, x25, x26
+	mov	x26, #IRQ_STACK_START_SP
+	add	x26, x25, x26
+
+	/* switch to the irq stack */
+	mov	sp, x26
+
+	/*
+	 * Add a dummy stack frame, this non-standard format is fixed up
+	 * by unwind_frame()
+	 */
+	stp     x29, x19, [sp, #-16]!
+	mov	x29, sp
+
+9998:
+	.endm
+
+	/*
+	 * x19 should be preserved between irq_stack_entry and
+	 * irq_stack_exit.
+	 */
+	.macro	irq_stack_exit
+	mov	sp, x19
 	.endm
 
 /*
@@ -160,9 +241,11 @@ tsk	.req	x28		// current thread_info
  * Interrupt handling.
  */
 	.macro	irq_handler
-	ldr	x1, handle_arch_irq
+	ldr_l	x1, handle_arch_irq
 	mov	x0, sp
+	irq_stack_entry
 	blr	x1
+	irq_stack_exit
 	.endm
 
 	.text
@@ -170,6 +253,7 @@ tsk	.req	x28		// current thread_info
 /*
  * Exception vectors.
  */
+	.pushsection ".entry.text", "ax"
 
 	.align	11
 ENTRY(vectors)
@@ -188,7 +272,7 @@ ENTRY(vectors)
 	ventry	el0_fiq_invalid			// FIQ 64-bit EL0
 	ventry	el0_error_invalid		// Error 64-bit EL0
 
-#ifdef CONFIG_AARCH32_EL0
+#ifdef CONFIG_COMPAT
 	ventry	el0_sync_compat			// Synchronous 32-bit EL0
 	ventry	el0_irq_compat			// IRQ 32-bit EL0
 	ventry	el0_fiq_invalid_compat		// FIQ 32-bit EL0
@@ -205,7 +289,7 @@ END(vectors)
  * Invalid mode handlers
  */
 	.macro	inv_entry, el, reason, regsize = 64
-	kernel_entry el, \regsize
+	kernel_entry \el, \regsize
 	mov	x0, sp
 	mov	x1, #\reason
 	mrs	x2, esr_el1
@@ -228,7 +312,7 @@ el0_error_invalid:
 	inv_entry 0, BAD_ERROR
 ENDPROC(el0_error_invalid)
 
-#ifdef CONFIG_AARCH32_EL0
+#ifdef CONFIG_COMPAT
 el0_fiq_invalid_compat:
 	inv_entry 0, BAD_FIQ, 32
 ENDPROC(el0_fiq_invalid_compat)
@@ -261,30 +345,38 @@ ENDPROC(el1_error_invalid)
 el1_sync:
 	kernel_entry 1
 	mrs	x1, esr_el1			// read the syndrome register
-	lsr	x24, x1, #ESR_EL1_EC_SHIFT	// exception class
-	cmp	x24, #ESR_EL1_EC_DABT_EL1	// data abort in EL1
+	lsr	x24, x1, #ESR_ELx_EC_SHIFT	// exception class
+	cmp	x24, #ESR_ELx_EC_DABT_CUR	// data abort in EL1
 	b.eq	el1_da
-	cmp	x24, #ESR_EL1_EC_SYS64		// configurable trap
+	cmp	x24, #ESR_ELx_EC_IABT_CUR	// instruction abort in EL1
+	b.eq	el1_ia
+	cmp	x24, #ESR_ELx_EC_SYS64		// configurable trap
 	b.eq	el1_undef
-	cmp	x24, #ESR_EL1_EC_SP_ALIGN	// stack alignment exception
+	cmp	x24, #ESR_ELx_EC_SP_ALIGN	// stack alignment exception
 	b.eq	el1_sp_pc
-	cmp	x24, #ESR_EL1_EC_PC_ALIGN	// pc alignment exception
+	cmp	x24, #ESR_ELx_EC_PC_ALIGN	// pc alignment exception
 	b.eq	el1_sp_pc
-	cmp	x24, #ESR_EL1_EC_UNKNOWN	// unknown exception in EL1
+	cmp	x24, #ESR_ELx_EC_UNKNOWN	// unknown exception in EL1
 	b.eq	el1_undef
-	cmp	x24, #ESR_EL1_EC_BREAKPT_EL1	// debug exception in EL1
+	cmp	x24, #ESR_ELx_EC_BREAKPT_CUR	// debug exception in EL1
 	b.ge	el1_dbg
 	b	el1_inv
+
+el1_ia:
+	/*
+	 * Fall through to the Data abort case
+	 */
 el1_da:
 	/*
 	 * Data abort handling
 	 */
-	mrs	x0, far_el1
-	enable_dbg_if_not_stepping x2
+	mrs	x3, far_el1
+	enable_dbg
 	// re-enable interrupts if they were enabled in the aborted context
 	tbnz	x23, #7, 1f			// PSR_I_BIT
 	enable_irq
 1:
+	clear_address_tag x0, x3
 	mov	x2, sp				// struct pt_regs
 	bl	do_mem_abort
 
@@ -296,67 +388,56 @@ el1_sp_pc:
 	 * Stack or PC alignment exception handling
 	 */
 	mrs	x0, far_el1
+	enable_dbg
 	mov	x2, sp
 	b	do_sp_pc_abort
 el1_undef:
 	/*
 	 * Undefined instruction
 	 */
+	enable_dbg
 	mov	x0, sp
 	b	do_undefinstr
 el1_dbg:
 	/*
 	 * Debug exception handling
 	 */
-	cmp	x24, #ESR_EL1_EC_BRK64		// if BRK64
+	cmp	x24, #ESR_ELx_EC_BRK64		// if BRK64
 	cinc	x24, x24, eq			// set bit '0'
 	tbz	x24, #0, el1_inv		// EL1 only
 	mrs	x0, far_el1
 	mov	x2, sp				// struct pt_regs
 	bl	do_debug_exception
-
 	kernel_exit 1
 el1_inv:
 	// TODO: add support for undefined instructions in kernel mode
+	enable_dbg
 	mov	x0, sp
+	mov	x2, x1
 	mov	x1, #BAD_SYNC
-	mrs	x2, esr_el1
 	b	bad_mode
 ENDPROC(el1_sync)
 
 	.align	6
 el1_irq:
 	kernel_entry 1
-#ifdef CONFIG_PAX_KERNEXEC
-	bl pax_enter_irq
-#endif
-	enable_dbg_if_not_stepping x0
+	enable_dbg
 #ifdef CONFIG_TRACE_IRQFLAGS
 	bl	trace_hardirqs_off
 #endif
-#ifdef CONFIG_PREEMPT
-	get_thread_info tsk
-	ldr	x24, [tsk, #TI_PREEMPT]		// get preempt count
-	add	x0, x24, #1			// increment it
-	str	x0, [tsk, #TI_PREEMPT]
-#endif
+
 	irq_handler
+
 #ifdef CONFIG_PREEMPT
-	str	x24, [tsk, #TI_PREEMPT]		// restore preempt count
-	cbnz	x24, 1f				// preempt count != 0
+	ldr	w24, [tsk, #TI_PREEMPT]		// get preempt count
+	cbnz	w24, 1f				// preempt count != 0
 	ldr	x0, [tsk, #TI_FLAGS]		// get flags
-	// needs rescheduling?
-	mov	x2, #_TIF_NEED_RESCHED | _TIF_NEED_RESCHED_LAZY
-	tst	x0, x2
-	b.eq	1f
+	tbz	x0, #TIF_NEED_RESCHED, 1f	// needs rescheduling?
 	bl	el1_preempt
 1:
 #endif
 #ifdef CONFIG_TRACE_IRQFLAGS
 	bl	trace_hardirqs_on
-#endif
-#ifdef CONFIG_PAX_KERNEXEC
-	bl pax_exit_irq
 #endif
 	kernel_exit 1
 ENDPROC(el1_irq)
@@ -364,11 +445,9 @@ ENDPROC(el1_irq)
 #ifdef CONFIG_PREEMPT
 el1_preempt:
 	mov	x24, lr
-1:	enable_dbg
-	bl	preempt_schedule_irq		// irq en/disable is done inside
+1:	bl	preempt_schedule_irq		// irq en/disable is done inside
 	ldr	x0, [tsk, #TI_FLAGS]		// get new tasks TI_FLAGS
 	tbnz	x0, #TIF_NEED_RESCHED, 1b	// needs rescheduling?
-	tbnz    x0, #TIF_NEED_RESCHED_LAZY, 1b
 	ret	x24
 #endif
 
@@ -379,67 +458,67 @@ el1_preempt:
 el0_sync:
 	kernel_entry 0
 	mrs	x25, esr_el1			// read the syndrome register
-	lsr	x24, x25, #ESR_EL1_EC_SHIFT	// exception class
-	cmp	x24, #ESR_EL1_EC_SVC64		// SVC in 64-bit state
+	lsr	x24, x25, #ESR_ELx_EC_SHIFT	// exception class
+	cmp	x24, #ESR_ELx_EC_SVC64		// SVC in 64-bit state
 	b.eq	el0_svc
-	adr	lr, ret_from_exception
-	cmp	x24, #ESR_EL1_EC_DABT_EL0	// data abort in EL0
+	cmp	x24, #ESR_ELx_EC_DABT_LOW	// data abort in EL0
 	b.eq	el0_da
-	cmp	x24, #ESR_EL1_EC_IABT_EL0	// instruction abort in EL0
+	cmp	x24, #ESR_ELx_EC_IABT_LOW	// instruction abort in EL0
 	b.eq	el0_ia
-	cmp	x24, #ESR_EL1_EC_FP_ASIMD	// FP/ASIMD access
+	cmp	x24, #ESR_ELx_EC_FP_ASIMD	// FP/ASIMD access
 	b.eq	el0_fpsimd_acc
-	cmp	x24, #ESR_EL1_EC_FP_EXC64	// FP/ASIMD exception
+	cmp	x24, #ESR_ELx_EC_FP_EXC64	// FP/ASIMD exception
 	b.eq	el0_fpsimd_exc
-	cmp	x24, #ESR_EL1_EC_SYS64		// configurable trap
-	b.eq	el0_undef
-	cmp	x24, #ESR_EL1_EC_SP_ALIGN	// stack alignment exception
+	cmp	x24, #ESR_ELx_EC_SYS64		// configurable trap
+	b.eq	el0_sys
+	cmp	x24, #ESR_ELx_EC_SP_ALIGN	// stack alignment exception
 	b.eq	el0_sp_pc
-	cmp	x24, #ESR_EL1_EC_PC_ALIGN	// pc alignment exception
+	cmp	x24, #ESR_ELx_EC_PC_ALIGN	// pc alignment exception
 	b.eq	el0_sp_pc
-	cmp	x24, #ESR_EL1_EC_UNKNOWN	// unknown exception in EL0
+	cmp	x24, #ESR_ELx_EC_UNKNOWN	// unknown exception in EL0
 	b.eq	el0_undef
-	cmp	x24, #ESR_EL1_EC_BREAKPT_EL0	// debug exception in EL0
+	cmp	x24, #ESR_ELx_EC_BREAKPT_LOW	// debug exception in EL0
 	b.ge	el0_dbg
 	b	el0_inv
 
-#ifdef CONFIG_AARCH32_EL0
+#ifdef CONFIG_COMPAT
 	.align	6
 el0_sync_compat:
 	kernel_entry 0, 32
 	mrs	x25, esr_el1			// read the syndrome register
-	lsr	x24, x25, #ESR_EL1_EC_SHIFT	// exception class
-	cmp	x24, #ESR_EL1_EC_SVC32		// SVC in 32-bit state
+	lsr	x24, x25, #ESR_ELx_EC_SHIFT	// exception class
+	cmp	x24, #ESR_ELx_EC_SVC32		// SVC in 32-bit state
 	b.eq	el0_svc_compat
-	adr	lr, ret_from_exception
-	cmp	x24, #ESR_EL1_EC_DABT_EL0	// data abort in EL0
+	cmp	x24, #ESR_ELx_EC_DABT_LOW	// data abort in EL0
 	b.eq	el0_da
-	cmp	x24, #ESR_EL1_EC_IABT_EL0	// instruction abort in EL0
+	cmp	x24, #ESR_ELx_EC_IABT_LOW	// instruction abort in EL0
 	b.eq	el0_ia
-	cmp	x24, #ESR_EL1_EC_FP_ASIMD	// FP/ASIMD access
+	cmp	x24, #ESR_ELx_EC_FP_ASIMD	// FP/ASIMD access
 	b.eq	el0_fpsimd_acc
-	cmp	x24, #ESR_EL1_EC_FP_EXC32	// FP/ASIMD exception
+	cmp	x24, #ESR_ELx_EC_FP_EXC32	// FP/ASIMD exception
 	b.eq	el0_fpsimd_exc
-	cmp	x24, #ESR_EL1_EC_UNKNOWN	// unknown exception in EL0
+	cmp	x24, #ESR_ELx_EC_PC_ALIGN	// pc alignment exception
+	b.eq	el0_sp_pc
+	cmp	x24, #ESR_ELx_EC_UNKNOWN	// unknown exception in EL0
 	b.eq	el0_undef
-	cmp	x24, #ESR_EL1_EC_CP15_32	// CP15 MRC/MCR trap
+	cmp	x24, #ESR_ELx_EC_CP15_32	// CP15 MRC/MCR trap
 	b.eq	el0_undef
-	cmp	x24, #ESR_EL1_EC_CP15_64	// CP15 MRRC/MCRR trap
+	cmp	x24, #ESR_ELx_EC_CP15_64	// CP15 MRRC/MCRR trap
 	b.eq	el0_undef
-	cmp	x24, #ESR_EL1_EC_CP14_MR	// CP14 MRC/MCR trap
+	cmp	x24, #ESR_ELx_EC_CP14_MR	// CP14 MRC/MCR trap
 	b.eq	el0_undef
-	cmp	x24, #ESR_EL1_EC_CP14_LS	// CP14 LDC/STC trap
+	cmp	x24, #ESR_ELx_EC_CP14_LS	// CP14 LDC/STC trap
 	b.eq	el0_undef
-	cmp	x24, #ESR_EL1_EC_CP14_64	// CP14 MRRC/MCRR trap
+	cmp	x24, #ESR_ELx_EC_CP14_64	// CP14 MRRC/MCRR trap
 	b.eq	el0_undef
-	cmp	x24, #ESR_EL1_EC_BREAKPT_EL0	// debug exception in EL0
+	cmp	x24, #ESR_ELx_EC_BREAKPT_LOW	// debug exception in EL0
 	b.ge	el0_dbg
 	b	el0_inv
 el0_svc_compat:
 	/*
 	 * AArch32 syscall handling
 	 */
-	adr	stbl, compat_sys_call_table	// load compat syscall table pointer
+	adrp	stbl, compat_sys_call_table	// load compat syscall table pointer
 	uxtw	scno, w7			// syscall number in w7 (r7)
 	mov     sc_nr, #__NR_compat_syscalls
 	b	el0_svc_naked
@@ -454,117 +533,120 @@ el0_da:
 	/*
 	 * Data abort handling
 	 */
-	mrs	x0, far_el1
-	disable_step x1
-	isb
-	enable_dbg
+	mrs	x26, far_el1
 	// enable interrupts before calling the main handler
-	enable_irq
+	enable_dbg_and_irq
+	ct_user_exit
+	clear_address_tag x0, x26
 	mov	x1, x25
 	mov	x2, sp
-	b	do_mem_abort
+	bl	do_mem_abort
+	b	ret_to_user
 el0_ia:
 	/*
 	 * Instruction abort handling
 	 */
-	mrs	x0, far_el1
-	disable_step x1
-	isb
-	enable_dbg
+	mrs	x26, far_el1
 	// enable interrupts before calling the main handler
-	enable_irq
-	orr	x1, x25, #1 << 24		// use reserved ISS bit for instruction aborts
+	enable_dbg_and_irq
+	ct_user_exit
+	mov	x0, x26
+	mov	x1, x25
 	mov	x2, sp
-	b	do_mem_abort
+	bl	do_mem_abort
+	b	ret_to_user
 el0_fpsimd_acc:
 	/*
 	 * Floating Point or Advanced SIMD access
 	 */
+	enable_dbg
+	ct_user_exit
 	mov	x0, x25
 	mov	x1, sp
-	b	do_fpsimd_acc
+	bl	do_fpsimd_acc
+	b	ret_to_user
 el0_fpsimd_exc:
 	/*
 	 * Floating Point or Advanced SIMD exception
 	 */
+	enable_dbg
+	ct_user_exit
 	mov	x0, x25
 	mov	x1, sp
-	b	do_fpsimd_exc
+	bl	do_fpsimd_exc
+	b	ret_to_user
 el0_sp_pc:
 	/*
 	 * Stack or PC alignment exception handling
 	 */
-	mrs	x0, far_el1
-	disable_step x1
-	isb
-	enable_dbg
+	mrs	x26, far_el1
 	// enable interrupts before calling the main handler
-	enable_irq
+	enable_dbg_and_irq
+	ct_user_exit
+	mov	x0, x26
 	mov	x1, x25
 	mov	x2, sp
-	b	do_sp_pc_abort
+	bl	do_sp_pc_abort
+	b	ret_to_user
 el0_undef:
 	/*
 	 * Undefined instruction
 	 */
+	// enable interrupts before calling the main handler
+	enable_dbg_and_irq
+	ct_user_exit
 	mov	x0, sp
-	b	do_undefinstr
+	bl	do_undefinstr
+	b	ret_to_user
+el0_sys:
+	/*
+	 * System instructions, for trapped cache maintenance instructions
+	 */
+	enable_dbg_and_irq
+	ct_user_exit
+	mov	x0, x25
+	mov	x1, sp
+	bl	do_sysinstr
+	b	ret_to_user
 el0_dbg:
 	/*
 	 * Debug exception handling
 	 */
 	tbnz	x24, #0, el0_inv		// EL0 only
 	mrs	x0, far_el1
-	disable_step x1
 	mov	x1, x25
 	mov	x2, sp
-	b	do_debug_exception
+	bl	do_debug_exception
+	enable_dbg
+	ct_user_exit
+	b	ret_to_user
 el0_inv:
+	enable_dbg
+	ct_user_exit
 	mov	x0, sp
 	mov	x1, #BAD_SYNC
-	mrs	x2, esr_el1
-	b	bad_el0_sync
+	mov	x2, x25
+	bl	bad_el0_sync
+	b	ret_to_user
 ENDPROC(el0_sync)
 
 	.align	6
 el0_irq:
 	kernel_entry 0
 el0_irq_naked:
-	disable_step x1
-	isb
 	enable_dbg
 #ifdef CONFIG_TRACE_IRQFLAGS
 	bl	trace_hardirqs_off
 #endif
-	get_thread_info tsk
-#ifdef CONFIG_PREEMPT
-	ldr	x24, [tsk, #TI_PREEMPT]		// get preempt count
-	add	x23, x24, #1			// increment it
-	str	x23, [tsk, #TI_PREEMPT]
-#endif
+
+	ct_user_exit
 	irq_handler
-#ifdef CONFIG_PREEMPT
-	ldr	x0, [tsk, #TI_PREEMPT]
-	str	x24, [tsk, #TI_PREEMPT]
-	cmp	x0, x23
-	b.eq	1f
-	mov	x1, #0
-	str	x1, [x1]			// BUG
-1:
-#endif
+
 #ifdef CONFIG_TRACE_IRQFLAGS
 	bl	trace_hardirqs_on
 #endif
 	b	ret_to_user
 ENDPROC(el0_irq)
-
-/*
- * This is the return code to user mode for abort handlers
- */
-ret_from_exception:
-	get_thread_info tsk
-	b	ret_to_user
-ENDPROC(ret_from_exception)
 
 /*
  * Register switch for AArch64. The callee-saved registers need to be saved
@@ -575,7 +657,8 @@ ENDPROC(ret_from_exception)
  *
  */
 ENTRY(cpu_switch_to)
-	add	x8, x0, #THREAD_CPU_CONTEXT
+	mov	x10, #THREAD_CPU_CONTEXT
+	add	x8, x0, x10
 	mov	x9, sp
 	stp	x19, x20, [x8], #16		// store callee-saved registers
 	stp	x21, x22, [x8], #16
@@ -584,7 +667,7 @@ ENTRY(cpu_switch_to)
 	stp	x27, x28, [x8], #16
 	stp	x29, x9, [x8], #16
 	str	lr, [x8]
-	add	x8, x1, #THREAD_CPU_CONTEXT
+	add	x8, x1, x10
 	ldp	x19, x20, [x8], #16		// restore callee-saved registers
 	ldp	x21, x22, [x8], #16
 	ldp	x23, x24, [x8], #16
@@ -593,6 +676,8 @@ ENTRY(cpu_switch_to)
 	ldp	x29, x9, [x8], #16
 	ldr	lr, [x8]
 	mov	sp, x9
+	and	x9, x9, #~(THREAD_SIZE - 1)
+	msr	sp_el0, x9
 	ret
 ENDPROC(cpu_switch_to)
 
@@ -602,35 +687,29 @@ ENDPROC(cpu_switch_to)
  */
 ret_fast_syscall:
 	disable_irq				// disable interrupts
-	ldr	x1, [tsk, #TI_FLAGS]
+	str	x0, [sp, #S_X0]			// returned x0
+	ldr	x1, [tsk, #TI_FLAGS]		// re-check for syscall tracing
+	and	x2, x1, #_TIF_SYSCALL_WORK
+	cbnz	x2, ret_fast_syscall_trace
 	and	x2, x1, #_TIF_WORK_MASK
-	cbnz	x2, fast_work_pending
-	tbz	x1, #TIF_SINGLESTEP, fast_exit
-	disable_dbg
-	enable_step x2
-fast_exit:
-	kernel_exit 0, ret = 1
+	cbnz	x2, work_pending
+	enable_step_tsk x1, x2
+	kernel_exit 0
+ret_fast_syscall_trace:
+	enable_irq				// enable interrupts
+	b	__sys_trace_return_skipped	// we already saved x0
 
 /*
  * Ok, we need to do extra processing, enter the slow path.
  */
-fast_work_pending:
-	str	x0, [sp, #S_X0]			// returned x0
 work_pending:
-	tbnz	x1, #TIF_NEED_RESCHED, work_resched
-	tbnz	x1, #TIF_NEED_RESCHED_LAZY, work_resched
-	/* TIF_SIGPENDING or TIF_NOTIFY_RESUME case */
-	ldr	x2, [sp, #S_PSTATE]
 	mov	x0, sp				// 'regs'
-	tst	x2, #PSR_MODE_MASK		// user mode regs?
-	b.ne	no_work_pending			// returning to kernel
-	enable_irq				// enable interrupts for do_notify_resume()
 	bl	do_notify_resume
-	b	ret_to_user
-work_resched:
-	enable_dbg
-	bl	schedule
-
+#ifdef CONFIG_TRACE_IRQFLAGS
+	bl	trace_hardirqs_on		// enabled while in userspace
+#endif
+	ldr	x1, [tsk, #TI_FLAGS]		// re-check for single-step
+	b	finish_ret_to_user
 /*
  * "slow" syscall return path.
  */
@@ -639,14 +718,9 @@ ret_to_user:
 	ldr	x1, [tsk, #TI_FLAGS]
 	and	x2, x1, #_TIF_WORK_MASK
 	cbnz	x2, work_pending
-	tbz	x1, #TIF_SINGLESTEP, no_work_pending
-	disable_dbg
-	enable_step x2
-no_work_pending:
-#ifdef CONFIG_MICROSTATE_ACCT
-	bl	msa_user
-#endif
-	kernel_exit 0, ret = 0
+finish_ret_to_user:
+	enable_step_tsk x1, x2
+	kernel_exit 0
 ENDPROC(ret_to_user)
 
 /*
@@ -666,66 +740,66 @@ ENDPROC(ret_from_fork)
  */
 	.align	6
 el0_svc:
+	adrp	stbl, sys_call_table		// load syscall table pointer
 	uxtw	scno, w8			// syscall number in w8
 	mov	sc_nr, #__NR_syscalls
-#ifdef CONFIG_ARM64_ILP32
-	get_thread_info tsk
-	ldr	x16, [tsk, #TI_FLAGS]
-	tbnz	x16, #TIF_32BIT, el0_ilp32_svc	// We are using ILP32
-#endif
-	adrp	stbl, sys_call_table		// load syscall table pointer
 el0_svc_naked:					// compat entry point
 	stp	x0, scno, [sp, #S_ORIG_X0]	// save the original x0 and syscall number
-	disable_step x16
-	isb
-	enable_dbg
-	enable_irq
+	enable_dbg_and_irq
+	ct_user_exit 1
 
-	get_thread_info tsk
-	ldr	x16, [tsk, #TI_FLAGS]		// check for syscall tracing
-	tbnz	x16, #TIF_SYSCALL_TRACE, __sys_trace // are we tracing syscalls?
-	adr	lr, ret_fast_syscall		// return address
+	ldr	x16, [tsk, #TI_FLAGS]		// check for syscall hooks
+	tst	x16, #_TIF_SYSCALL_WORK
+	b.ne	__sys_trace
 	cmp     scno, sc_nr                     // check upper syscall limit
 	b.hs	ni_sys
 	ldr	x16, [stbl, scno, lsl #3]	// address in the syscall table
-	br	x16				// call sys_* routine
+	blr	x16				// call sys_* routine
+	b	ret_fast_syscall
 ni_sys:
 	mov	x0, sp
-	b	do_ni_syscall
+	bl	do_ni_syscall
+	b	ret_fast_syscall
 ENDPROC(el0_svc)
-
-#ifdef CONFIG_ARM64_ILP32
-el0_ilp32_svc:
-	adrp	stbl, sys_call_ilp32_table // load syscall table pointer
-	b el0_svc_naked
-#endif
 
 	/*
 	 * This is the really slow path.  We're going to be doing context
 	 * switches, and waiting for our parent to respond.
 	 */
 __sys_trace:
-	mov	x1, sp
-	mov	w0, #0				// trace entry
-	bl	syscall_trace
-	adr	lr, __sys_trace_return		// return address
+	mov	w0, #-1				// set default errno for
+	cmp     scno, x0			// user-issued syscall(-1)
+	b.ne	1f
+	mov	x0, #-ENOSYS
+	str	x0, [sp, #S_X0]
+1:	mov	x0, sp
+	bl	syscall_trace_enter
+	cmp	w0, #-1				// skip the syscall?
+	b.eq	__sys_trace_return_skipped
 	uxtw	scno, w0			// syscall number (possibly new)
 	mov	x1, sp				// pointer to regs
 	cmp	scno, sc_nr			// check upper syscall limit
-	b.hs	ni_sys
+	b.hs	__ni_sys_trace
 	ldp	x0, x1, [sp]			// restore the syscall args
 	ldp	x2, x3, [sp, #S_X2]
 	ldp	x4, x5, [sp, #S_X4]
 	ldp	x6, x7, [sp, #S_X6]
 	ldr	x16, [stbl, scno, lsl #3]	// address in the syscall table
-	br	x16				// call sys_* routine
+	blr	x16				// call sys_* routine
 
 __sys_trace_return:
-	str	x0, [sp]			// save returned x0
-	mov	x1, sp
-	mov	w0, #1				// trace exit
-	bl	syscall_trace
+	str	x0, [sp, #S_X0]			// save returned x0
+__sys_trace_return_skipped:
+	mov	x0, sp
+	bl	syscall_trace_exit
 	b	ret_to_user
+
+__ni_sys_trace:
+	mov	x0, sp
+	bl	do_ni_syscall
+	b	__sys_trace_return
+
+	.popsection				// .entry.text
 
 /*
  * Special system call wrappers.
@@ -734,195 +808,3 @@ ENTRY(sys_rt_sigreturn_wrapper)
 	mov	x0, sp
 	b	sys_rt_sigreturn
 ENDPROC(sys_rt_sigreturn_wrapper)
-
-ENTRY(handle_arch_irq)
-	.quad	0
-
-
-#ifdef CONFIG_FUNCTION_TRACER
-/*
- * When compiling with -pg, gcc inserts a call to the mcount routine at the
- * start of every function.  In _mcount, apart from the function's address (in
- * lr), we need to get hold of the function's caller's address.
- *
- * Make sure, your GNU compiler inserts the _mcount and x30(lr) stored beneath
- * the stack frame when compiled with -pg option as below,
- *
- *      ## echo 'main(){}' | ./aarch64-linux-gnu-gcc -x c -S -o - - -pg
- *		.cpu thunder+fp+simd+crypto+crc
- *		.file   ""
- *		.global _mcount
- *		.text
- *		.align  2
- *		.global main
- *		.type   main, %function
- *	main:
- *		stp     x29, x30, [sp, -16]!
- *		add     x29, sp, 0
- *		mov     x0, x30
- *		bl      _mcount
- *		ldp     x29, x30, [sp], 16
- *		ret
- *		.size   main, .-main
- *
- *
- *	Stack content after mcount_enter
- *
- *	  |------------------| x29 + 16
- *	  |                  |
- *	  |       x30        | <= lr of instrumented func
- *	  |                  |
- *	  |------------------| x29 + 8
- *	  |                  |
- *	  |       x29        | <= sp of instrumented func
- *	  |                  |
- *	  |------------------| x29 + 0  <= frame pointer/stack base address.
- *	  |                  |
- *	  |       x3         | <= used as temporary register
- *	  |                  |
- *	  |------------------| x29 - 8
- *	  |                  |
- *	  |       x2         | <= used as temporary register
- *	  |                  |
- *	  |------------------| x29 - 16
- *	  |                  |
- *	  |       x1         | <=  used as temporary register
- *	  |                  |
- *	  |------------------| x29 - 24
- *	  |                  |
- *	  |       x0         | <= used as temporary register
- *	  |                  |
- *	  |------------------| x29 - 32
- *	  |                  |
- *	  |       x30        | <=  lr of _mcount/__ftrace_caller
- *	  |                  |
- *	  |------------------| x29 - 40
- *	  |                  |
- *	  |       x29        | <= stack frame address.
- *	  |                  |
- *	  |------------------| x29 - 48
- *
- */
-
-.macro mcount_adjust_addr xd, xn
-	sub	\xd, \xn, #MCOUNT_INSN_SIZE
-.endm
-
-.macro mcount_enter
-	push	x2, x3
-	push	x0, x1
-	push 	x29, x30
-.endm
-
-.macro mcount_exit
-	pop 	x29,x30
-	pop	x0, x1
-	pop	x2, x3
-	ret
-.endm
-
-.macro __mcount
-	mcount_enter
-	ldr	x0, =ftrace_trace_function
-	ldr	x2, [x0]
-	adr	x0, .Lftrace_stub
-	cmp	x0, x2
-	bne	1f
-
-#ifdef CONFIG_FUNCTION_GRAPH_TRACER
-	ldr     x1, =ftrace_graph_return
-	ldr     x2, [x1]
-	cmp     x0, x2
-	bne     ftrace_graph_caller
-
-	ldr     x1, =ftrace_graph_entry
-	ldr     x2, [x1]
-	ldr     x0, =ftrace_graph_entry_stub
-	cmp     x0, x2
-	bne     ftrace_graph_caller
-#endif
-	mcount_exit
-
-1: 	ldr	x1, [x29, #8]           /* lr of instrumented func */
-	mcount_adjust_addr x0, lr	/* lr of _mcount */
-	blr x2
-	mcount_exit
-.endm
-
-.macro __ftrace_caller
-	mcount_enter
-	ldr	x1, [x29, #8]          /* lr of instrumented func */
-#ifdef CONFIG_DYNAMIC_FTRACE
-	/* lr of _mcount, called from __ftrace_caller, saved in mcount_enter */
-	ldr	x0, [x29, #-40]
-	mcount_adjust_addr	x0, x0
-#else
-	/* lr of _moucnt, called from __mcount, untouched lr */
-	mcount_adjust_addr x0, lr
-#endif
-	.globl ftrace_call
-ftrace_call:
-	nop
-#ifdef CONFIG_FUNCTION_GRAPH_TRACER
-	.globl ftrace_graph_call
-ftrace_graph_call:
-	nop
-#endif
-	mcount_exit
-.endm
-
-.macro __ftrace_graph_caller
-	/* &lr of instrumented routine (&parent) */
-	add	x0, x29, #8
-#ifdef CONFIG_DYNAMIC_FTRACE
-	/* lr of _mcount, called from __ftrace_caller, saved in mcount_enter */
-	ldr	x1, [x29, #-40]
-	mcount_adjust_addr	x1, x1
-#else
-	/* lr of _moucnt, called from __mcount, untouched lr */
-	mcount_adjust_addr x1, lr
-#endif
- 	ldr	x2, [x29]               /* frame pointer*/
-	bl	prepare_ftrace_return
-	mcount_exit
-.endm
-
-#ifdef CONFIG_FUNCTION_GRAPH_TRACER
-	.globl return_to_handler
-return_to_handler:
-	str	x0, [sp, #-16]!
-	mov     x0, x29			   /* frame pointer */
-	bl	ftrace_return_to_handler
-	mov 	lr, x0
-	ldr	x0, [sp], #16
-	ret
-#endif
-
-ENTRY(_mcount)
-#ifdef CONFIG_DYNAMIC_FTRACE
-	ret
-#else
-	__mcount
-#endif
-ENDPROC(_mcount)
-
-#ifdef CONFIG_DYNAMIC_FTRACE
-ENTRY(ftrace_caller)
-	__ftrace_caller
-ENDPROC(ftrace_caller)
-#endif
-
-#ifdef CONFIG_FUNCTION_GRAPH_TRACER
-ENTRY(ftrace_graph_caller)
-	__ftrace_graph_caller
-ENDPROC(ftrace_graph_caller)
-#endif
-
-ENTRY(ftrace_stub)
-.Lftrace_stub:
-	ret
-ENDPROC(ftrace_stub)
-
-.purgem mcount_enter
-.purgem mcount_exit
-#endif /* CONFIG_FUNCTION_TRACER */

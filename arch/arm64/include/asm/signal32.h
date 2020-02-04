@@ -17,29 +17,28 @@
 #define __ASM_SIGNAL32_H
 
 #ifdef __KERNEL__
-#ifdef CONFIG_AARCH32_EL0
+#ifdef CONFIG_COMPAT
 #include <linux/compat.h>
 
 #define AARCH32_KERN_SIGRET_CODE_OFFSET	0x500
 
 extern const compat_ulong_t aarch32_sigret_code[6];
 
-int compat_setup_frame(int usig, struct k_sigaction *ka, sigset_t *set,
+int compat_setup_frame(int usig, struct ksignal *ksig, sigset_t *set,
 		       struct pt_regs *regs);
-int compat_setup_rt_frame(int usig, struct k_sigaction *ka, siginfo_t *info,
-			  sigset_t *set, struct pt_regs *regs);
+int compat_setup_rt_frame(int usig, struct ksignal *ksig, sigset_t *set,
+			  struct pt_regs *regs);
 
 void compat_setup_restart_syscall(struct pt_regs *regs);
 #else
 
-static inline int compat_setup_frame(int usid, struct k_sigaction *ka,
+static inline int compat_setup_frame(int usid, struct ksignal *ksig,
 				     sigset_t *set, struct pt_regs *regs)
 {
 	return -ENOSYS;
 }
 
-static inline int compat_setup_rt_frame(int usig, struct k_sigaction *ka,
-					siginfo_t *info, sigset_t *set,
+static inline int compat_setup_rt_frame(int usig, struct ksignal *ksig, sigset_t *set,
 					struct pt_regs *regs)
 {
 	return -ENOSYS;
@@ -48,6 +47,6 @@ static inline int compat_setup_rt_frame(int usig, struct k_sigaction *ka,
 static inline void compat_setup_restart_syscall(struct pt_regs *regs)
 {
 }
-#endif /* CONFIG_AARCH32_EL0 */
+#endif /* CONFIG_COMPAT */
 #endif /* __KERNEL__ */
 #endif /* __ASM_SIGNAL32_H */

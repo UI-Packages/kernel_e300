@@ -7,7 +7,6 @@
 /*
  * Gives us 8 prio classes with 13-bits of data for each class
  */
-#define IOPRIO_BITS		(16)
 #define IOPRIO_CLASS_SHIFT	(13)
 #define IOPRIO_PRIO_MASK	((1UL << IOPRIO_CLASS_SHIFT) - 1)
 
@@ -75,6 +74,5 @@ static inline int task_nice_ioclass(struct task_struct *task)
 extern int ioprio_best(unsigned short aprio, unsigned short bprio);
 
 extern int set_task_ioprio(struct task_struct *task, int ioprio);
-extern int get_task_ioprio(struct task_struct *task);
 
 #endif

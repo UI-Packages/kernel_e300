@@ -456,7 +456,7 @@ static void octeon_lmc_edac_poll_o3(struct mem_ctl_info *mci)
 
 	if (lmc_ddr_pll_ctl.s.ddr4_mode && lmc_config.s.bg2_enable)
 		bank_bits = 4;
-		else
+	else
 		bank_bits = 3;
 
 	/* The err mask should contain multiple failures.  Detect the first
@@ -495,8 +495,8 @@ static void octeon_lmc_edac_poll_o3(struct mem_ctl_info *mci)
 
 		ctl2.u64 = cvmx_read_csr(CVMX_LMCX_DLL_CTL2(1));
 		interface_bits = (ctl2.cn73xx.intf_en | ctl2.cn73xx.quad_dll_ena);
-	}
-
+		}
+		
 
 	rank_bits = lmc_config.s.rank_ena;
 	pbank_lsb = lmc_config.s.pbank_lsb + 28 - rank_bits;
@@ -665,16 +665,16 @@ static int octeon_lmc_edac_probe(struct platform_device *pdev)
 			dev_info(&pdev->dev, "node: %d, intf: %d, intf_en: %d, quad_dll_en: %d\n",
 				node, intf, ctl2.cn78xx.intf_en, ctl2.cn78xx.quad_dll_ena);
 			if (!ctl2.cn78xx.quad_dll_ena) {
-				dev_info(&pdev->dev, "Disabled (LMC not present)\n");
-				return 0;
-			}
+			dev_info(&pdev->dev, "Disabled (LMC not present)\n");
+			return 0;
+		}
 		} else {
 			dev_info(&pdev->dev, "intf: %d, quad_dll_en: %d\n",
 				intf, ctl2.cn63xx.quad_dll_ena);
 			if (!ctl2.cn63xx.quad_dll_ena) {
-			dev_info(&pdev->dev, "Disabled (LMC not present)\n");
-			return 0;
-		}
+				dev_info(&pdev->dev, "Disabled (LMC not present)\n");
+				return 0;
+			}
 		}
 
 		config.u64 = cvmx_read_csr_node(node, CVMX_LMCX_CONFIG(intf));

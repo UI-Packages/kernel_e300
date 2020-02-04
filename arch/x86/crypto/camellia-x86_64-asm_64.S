@@ -21,7 +21,6 @@
  */
 
 #include <linux/linkage.h>
-#include <asm/alternative-asm.h>
 
 .file "camellia-x86_64-asm_64.S"
 .text
@@ -229,14 +228,12 @@ ENTRY(__camellia_enc_blk)
 	enc_outunpack(mov, RT1);
 
 	movq RRBP, %rbp;
-	pax_force_retaddr 0, 1
 	ret;
 
 .L__enc_xor:
 	enc_outunpack(xor, RT1);
 
 	movq RRBP, %rbp;
-	pax_force_retaddr 0, 1
 	ret;
 ENDPROC(__camellia_enc_blk)
 
@@ -275,7 +272,6 @@ ENTRY(camellia_dec_blk)
 	dec_outunpack();
 
 	movq RRBP, %rbp;
-	pax_force_retaddr 0, 1
 	ret;
 ENDPROC(camellia_dec_blk)
 
@@ -467,7 +463,6 @@ ENTRY(__camellia_enc_blk_2way)
 
 	movq RRBP, %rbp;
 	popq %rbx;
-	pax_force_retaddr 0, 1
 	ret;
 
 .L__enc2_xor:
@@ -475,7 +470,6 @@ ENTRY(__camellia_enc_blk_2way)
 
 	movq RRBP, %rbp;
 	popq %rbx;
-	pax_force_retaddr 0, 1
 	ret;
 ENDPROC(__camellia_enc_blk_2way)
 
@@ -516,6 +510,5 @@ ENTRY(camellia_dec_blk_2way)
 
 	movq RRBP, %rbp;
 	movq RXOR, %rbx;
-	pax_force_retaddr 0, 1
 	ret;
 ENDPROC(camellia_dec_blk_2way)

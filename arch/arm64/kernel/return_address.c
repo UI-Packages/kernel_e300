@@ -1,18 +1,16 @@
 /*
- * Copy of arch/arm/kernel/return_address.c
+ * arch/arm64/kernel/return_address.c
  *
- * Copyright (C) 2009 Uwe Kleine-Koenig <u.kleine-koenig@pengutronix.de>
- * for Pengutronix
+ * Copyright (C) 2013 Linaro Limited
+ * Author: AKASHI Takahiro <takahiro.akashi@linaro.org>
  *
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of the GNU General Public License version 2 as published by
- * the Free Software Foundation.
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
  */
+
 #include <linux/export.h>
 #include <linux/ftrace.h>
-
-#ifdef CONFIG_FRAME_POINTER
-#include <linux/sched.h>
 
 #include <asm/stacktrace.h>
 
@@ -27,7 +25,6 @@ static int save_return_addr(struct stackframe *frame, void *d)
 
 	if (!data->level) {
 		data->addr = (void *)frame->pc;
-
 		return 1;
 	} else {
 		--data->level;
@@ -39,29 +36,22 @@ void *return_address(unsigned int level)
 {
 	struct return_address_data data;
 	struct stackframe frame;
-	register unsigned long current_sp asm ("sp");
 
 	data.level = level + 2;
 	data.addr = NULL;
 
 	frame.fp = (unsigned long)__builtin_frame_address(0);
-	frame.sp = current_sp;
-	frame.lr = (unsigned long)__builtin_return_address(0);
-	frame.pc = (unsigned long)return_address;
+	frame.sp = current_stack_pointer;
+	frame.pc = (unsigned long)return_address; /* dummy */
+#ifdef CONFIG_FUNCTION_GRAPH_TRACER
+	frame.graph = current->curr_ret_stack;
+#endif
 
-	walk_stackframe(&frame, save_return_addr, &data);
+	walk_stackframe(current, &frame, save_return_addr, &data);
 
 	if (!data.level)
 		return data.addr;
 	else
 		return NULL;
 }
-#else /* ifdef CONFIG_FRAME_POINTER */
-
-void *return_address(unsigned int level)
-{
-	return NULL;
-}
-#endif /* ifdef CONFIG_FRAME_POINTER */
 EXPORT_SYMBOL_GPL(return_address);
-

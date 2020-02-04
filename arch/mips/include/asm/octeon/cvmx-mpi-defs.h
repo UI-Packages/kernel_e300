@@ -1,5 +1,5 @@
 /***********************license start***************
- * Copyright (c) 2003-2015  Cavium Inc. (support@cavium.com). All rights
+ * Copyright (c) 2003-2017  Cavium Inc. (support@cavium.com). All rights
  * reserved.
  *
  *
@@ -74,8 +74,8 @@ static inline uint64_t CVMX_MPI_DATX(unsigned long offset)
 	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((offset <= 8))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset <= 8))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 8))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 8))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 8))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 8))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && ((offset <= 8)))))
 		cvmx_warn("CVMX_MPI_DATX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001070000001080ull) + ((offset) & 15) * 8;
@@ -564,10 +564,8 @@ union cvmx_mpi_cfg {
                                                          0 = Clock idles to value given by IDLELO after completion of MPI/SPI transaction.
                                                          1 = Clock never idles, requires SPI_CSn_L deassertion/assertion between commands. */
 	uint64_t idlelo                       : 1;  /**< Clock idle low/clock invert.
-                                                         0 = SPI_CK idles high, first transition is high-to-low. This mode corresponds to SPI Block
-                                                         Guide options CPOL = 1, CPHA = 1.
-                                                         1 = SPI_CK idles low, first transition is low-to-high. This mode corresponds to SPI Block
-                                                         Guide options CPOL = 0, CPHA = 0. */
+                                                         0 = SPI_CK idles high, first transition is high-to-low.
+                                                         1 = SPI_CK idles low, first transition is low-to-high. */
 	uint64_t enable                       : 1;  /**< MPI/SPI enable.
                                                          0 = UART0_DTR_L/SPI_DO, UART0_DCD_L/SPI_DI, UART1_CTS_L/SPI_CS2_L, UART1_RTS_L/SPI_CS3_L
                                                          pins are UART pins.
@@ -594,7 +592,7 @@ union cvmx_mpi_cfg {
 #endif
 	} cn73xx;
 	struct cvmx_mpi_cfg_cn73xx            cn78xx;
-	struct cvmx_mpi_cfg_cn73xx            cn78xxp2;
+	struct cvmx_mpi_cfg_cn73xx            cn78xxp1;
 	struct cvmx_mpi_cfg_cn61xx            cnf71xx;
 };
 typedef union cvmx_mpi_cfg cvmx_mpi_cfg_t;
@@ -622,7 +620,7 @@ union cvmx_mpi_datx {
 	struct cvmx_mpi_datx_s                cn70xxp1;
 	struct cvmx_mpi_datx_s                cn73xx;
 	struct cvmx_mpi_datx_s                cn78xx;
-	struct cvmx_mpi_datx_s                cn78xxp2;
+	struct cvmx_mpi_datx_s                cn78xxp1;
 	struct cvmx_mpi_datx_s                cnf71xx;
 };
 typedef union cvmx_mpi_datx cvmx_mpi_datx_t;
@@ -670,7 +668,7 @@ union cvmx_mpi_sts {
 	struct cvmx_mpi_sts_cn30xx            cn70xxp1;
 	struct cvmx_mpi_sts_s                 cn73xx;
 	struct cvmx_mpi_sts_s                 cn78xx;
-	struct cvmx_mpi_sts_s                 cn78xxp2;
+	struct cvmx_mpi_sts_s                 cn78xxp1;
 	struct cvmx_mpi_sts_cn30xx            cnf71xx;
 };
 typedef union cvmx_mpi_sts cvmx_mpi_sts_t;
@@ -695,7 +693,7 @@ union cvmx_mpi_sts_w1s {
 #endif
 	} s;
 	struct cvmx_mpi_sts_w1s_s             cn73xx;
-	struct cvmx_mpi_sts_w1s_s             cn78xxp2;
+	struct cvmx_mpi_sts_w1s_s             cn78xx;
 };
 typedef union cvmx_mpi_sts_w1s cvmx_mpi_sts_w1s_t;
 
@@ -794,7 +792,7 @@ union cvmx_mpi_tx {
 	struct cvmx_mpi_tx_cn70xx             cn70xxp1;
 	struct cvmx_mpi_tx_s                  cn73xx;
 	struct cvmx_mpi_tx_s                  cn78xx;
-	struct cvmx_mpi_tx_s                  cn78xxp2;
+	struct cvmx_mpi_tx_s                  cn78xxp1;
 	struct cvmx_mpi_tx_cn61xx             cnf71xx;
 };
 typedef union cvmx_mpi_tx cvmx_mpi_tx_t;
@@ -818,7 +816,7 @@ union cvmx_mpi_wide_dat {
 	struct cvmx_mpi_wide_dat_s            cn70xxp1;
 	struct cvmx_mpi_wide_dat_s            cn73xx;
 	struct cvmx_mpi_wide_dat_s            cn78xx;
-	struct cvmx_mpi_wide_dat_s            cn78xxp2;
+	struct cvmx_mpi_wide_dat_s            cn78xxp1;
 };
 typedef union cvmx_mpi_wide_dat cvmx_mpi_wide_dat_t;
 

@@ -13,7 +13,6 @@
 #include <linux/in.h>
 #include <linux/string.h>
 #include <linux/delay.h>
-#include <linux/init.h>
 #include <linux/crc32.h>
 #include <linux/errno.h>
 #include <linux/ethtool.h>
@@ -624,6 +623,7 @@ static int bigmac_init_hw(struct bigmac *bp, int from_irq)
 	void __iomem *gregs        = bp->gregs;
 	void __iomem *cregs        = bp->creg;
 	void __iomem *bregs        = bp->bregs;
+	__u32 bblk_dvma = (__u32)bp->bblock_dvma;
 	unsigned char *e = &bp->dev->dev_addr[0];
 
 	/* Latch current counters into statistics. */
@@ -672,9 +672,9 @@ static int bigmac_init_hw(struct bigmac *bp, int from_irq)
 		    bregs + BMAC_XIFCFG);
 
 	/* Tell the QEC where the ring descriptors are. */
-	sbus_writel(bp->bblock_dvma + bib_offset(be_rxd, 0),
+	sbus_writel(bblk_dvma + bib_offset(be_rxd, 0),
 		    cregs + CREG_RXDS);
-	sbus_writel(bp->bblock_dvma + bib_offset(be_txd, 0),
+	sbus_writel(bblk_dvma + bib_offset(be_txd, 0),
 		    cregs + CREG_TXDS);
 
 	/* Setup the FIFO pointers into QEC local memory. */
@@ -995,7 +995,6 @@ static void bigmac_set_multicast(struct net_device *dev)
 	struct bigmac *bp = netdev_priv(dev);
 	void __iomem *bregs = bp->bregs;
 	struct netdev_hw_addr *ha;
-	int i;
 	u32 tmp, crc;
 
 	/* Disable the receiver.  The bit self-clears when
@@ -1017,10 +1016,7 @@ static void bigmac_set_multicast(struct net_device *dev)
 		tmp |= BIGMAC_RXCFG_PMISC;
 		sbus_writel(tmp, bregs + BMAC_RXCFG);
 	} else {
-		u16 hash_table[4];
-
-		for (i = 0; i < 4; i++)
-			hash_table[i] = 0;
+		u16 hash_table[4] = { 0 };
 
 		netdev_for_each_mc_addr(ha, dev) {
 			crc = ether_crc_le(6, ha->addr);
@@ -1243,7 +1239,7 @@ static int bigmac_sbus_probe(struct platform_device *op)
 
 static int bigmac_sbus_remove(struct platform_device *op)
 {
-	struct bigmac *bp = dev_get_drvdata(&op->dev);
+	struct bigmac *bp = platform_get_drvdata(op);
 	struct device *parent = op->dev.parent;
 	struct net_device *net_dev = bp->dev;
 	struct platform_device *qec_op;
@@ -1263,8 +1259,6 @@ static int bigmac_sbus_remove(struct platform_device *op)
 
 	free_netdev(net_dev);
 
-	dev_set_drvdata(&op->dev, NULL);
-
 	return 0;
 }
 
@@ -1280,7 +1274,6 @@ MODULE_DEVICE_TABLE(of, bigmac_sbus_match);
 static struct platform_driver bigmac_sbus_driver = {
 	.driver = {
 		.name = "sunbmac",
-		.owner = THIS_MODULE,
 		.of_match_table = bigmac_sbus_match,
 	},
 	.probe		= bigmac_sbus_probe,

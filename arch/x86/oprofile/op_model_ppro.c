@@ -19,7 +19,6 @@
 #include <asm/msr.h>
 #include <asm/apic.h>
 #include <asm/nmi.h>
-#include <asm/pgtable.h>
 
 #include "op_x86_model.h"
 #include "op_counter.h"
@@ -76,7 +75,7 @@ static void ppro_setup_ctrs(struct op_x86_model_spec const *model,
 	u64 val;
 	int i;
 
-	if (cpu_has_arch_perfmon) {
+	if (boot_cpu_has(X86_FEATURE_ARCH_PERFMON)) {
 		union cpuid10_eax eax;
 		eax.full = cpuid_eax(0xa);
 
@@ -213,8 +212,8 @@ static void arch_perfmon_setup_counters(void)
 	eax.full = cpuid_eax(0xa);
 
 	/* Workaround for BIOS bugs in 6/15. Taken from perfmon2 */
-	if (eax.split.version_id == 0 && __this_cpu_read(cpu_info.x86) == 6 &&
-		__this_cpu_read(cpu_info.x86_model) == 15) {
+	if (eax.split.version_id == 0 && boot_cpu_data.x86 == 6 &&
+	    boot_cpu_data.x86_model == 15) {
 		eax.split.version_id = 2;
 		eax.split.num_counters = 2;
 		eax.split.bit_width = 40;
@@ -222,10 +221,8 @@ static void arch_perfmon_setup_counters(void)
 
 	num_counters = min((int)eax.split.num_counters, OP_MAX_COUNTER);
 
-	pax_open_kernel();
-	*(unsigned int *)&op_arch_perfmon_spec.num_counters = num_counters;
-	*(unsigned int *)&op_arch_perfmon_spec.num_controls = num_counters;
-	pax_close_kernel();
+	op_arch_perfmon_spec.num_counters = num_counters;
+	op_arch_perfmon_spec.num_controls = num_counters;
 }
 
 static int arch_perfmon_init(struct oprofile_operations *ignore)

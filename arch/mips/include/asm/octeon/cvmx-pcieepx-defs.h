@@ -1,5 +1,5 @@
 /***********************license start***************
- * Copyright (c) 2003-2015  Cavium Inc. (support@cavium.com). All rights
+ * Copyright (c) 2003-2017  Cavium Inc. (support@cavium.com). All rights
  * reserved.
  *
  *
@@ -2844,7 +2844,7 @@ static inline uint64_t CVMX_PCIEEPX_CFG044(unsigned long offset)
 			break;
 		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			if ((offset <= 5))
-	return 0x00000300000000B0ull + ((offset) & 7) * 0x100000000ull;
+				return 0x00000300000000B0ull + ((offset) & 7) * 0x100000000ull;
 			break;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
 			if ((offset == 0))
@@ -2930,7 +2930,7 @@ static inline uint64_t CVMX_PCIEEPX_CFG046(unsigned long offset)
 			break;
 		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			if ((offset <= 5))
-	return 0x00000300000000B8ull + ((offset) & 7) * 0x100000000ull;
+				return 0x00000300000000B8ull + ((offset) & 7) * 0x100000000ull;
 			break;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
 			if ((offset == 0))
@@ -3754,7 +3754,7 @@ static inline uint64_t CVMX_PCIEEPX_CFG078(unsigned long offset)
 			break;
 		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			if ((offset <= 5))
-	return 0x0000030000000138ull + ((offset) & 7) * 0x100000000ull;
+				return 0x0000030000000138ull + ((offset) & 7) * 0x100000000ull;
 			break;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
 			if ((offset == 0))
@@ -3854,7 +3854,7 @@ static inline uint64_t CVMX_PCIEEPX_CFG083(unsigned long offset)
 			break;
 		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			if ((offset <= 5))
-	return 0x000003000000014Cull + ((offset) & 7) * 0x100000000ull;
+				return 0x000003000000014Cull + ((offset) & 7) * 0x100000000ull;
 			break;
 	}
 	cvmx_warn("CVMX_PCIEEPX_CFG083 (offset = %lu) not supported on this chip\n", offset);
@@ -3906,7 +3906,7 @@ static inline uint64_t CVMX_PCIEEPX_CFG086(unsigned long offset)
 			break;
 		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			if ((offset <= 5))
-	return 0x0000030000000158ull + ((offset) & 7) * 0x100000000ull;
+				return 0x0000030000000158ull + ((offset) & 7) * 0x100000000ull;
 			break;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
 			if ((offset == 0))
@@ -3949,7 +3949,7 @@ static inline uint64_t CVMX_PCIEEPX_CFG087(unsigned long offset)
 			break;
 		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			if ((offset <= 5))
-	return 0x000003000000015Cull + ((offset) & 7) * 0x100000000ull;
+				return 0x000003000000015Cull + ((offset) & 7) * 0x100000000ull;
 			break;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
 			if ((offset == 0))
@@ -3992,7 +3992,7 @@ static inline uint64_t CVMX_PCIEEPX_CFG088(unsigned long offset)
 			break;
 		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			if ((offset <= 5))
-	return 0x0000030000000160ull + ((offset) & 7) * 0x100000000ull;
+				return 0x0000030000000160ull + ((offset) & 7) * 0x100000000ull;
 			break;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
 			if ((offset == 0))
@@ -4035,7 +4035,7 @@ static inline uint64_t CVMX_PCIEEPX_CFG089(unsigned long offset)
 			break;
 		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			if ((offset <= 5))
-	return 0x0000030000000164ull + ((offset) & 7) * 0x100000000ull;
+				return 0x0000030000000164ull + ((offset) & 7) * 0x100000000ull;
 			break;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
 			if ((offset == 0))
@@ -4078,7 +4078,7 @@ static inline uint64_t CVMX_PCIEEPX_CFG090(unsigned long offset)
 			break;
 		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			if ((offset <= 5))
-	return 0x0000030000000168ull + ((offset) & 7) * 0x100000000ull;
+				return 0x0000030000000168ull + ((offset) & 7) * 0x100000000ull;
 			break;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
 			if ((offset == 0))
@@ -4121,7 +4121,7 @@ static inline uint64_t CVMX_PCIEEPX_CFG091(unsigned long offset)
 			break;
 		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			if ((offset <= 5))
-	return 0x000003000000016Cull + ((offset) & 7) * 0x100000000ull;
+				return 0x000003000000016Cull + ((offset) & 7) * 0x100000000ull;
 			break;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
 			if ((offset == 0))
@@ -4164,7 +4164,7 @@ static inline uint64_t CVMX_PCIEEPX_CFG092(unsigned long offset)
 			break;
 		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			if ((offset <= 5))
-	return 0x0000030000000170ull + ((offset) & 7) * 0x100000000ull;
+				return 0x0000030000000170ull + ((offset) & 7) * 0x100000000ull;
 			break;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
 			if ((offset == 0))
@@ -4207,7 +4207,7 @@ static inline uint64_t CVMX_PCIEEPX_CFG094(unsigned long offset)
 			break;
 		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			if ((offset <= 5))
-	return 0x0000030000000178ull + ((offset) & 7) * 0x100000000ull;
+				return 0x0000030000000178ull + ((offset) & 7) * 0x100000000ull;
 			break;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
 			if ((offset == 0))
@@ -4250,7 +4250,7 @@ static inline uint64_t CVMX_PCIEEPX_CFG095(unsigned long offset)
 			break;
 		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			if ((offset <= 5))
-	return 0x000003000000017Cull + ((offset) & 7) * 0x100000000ull;
+				return 0x000003000000017Cull + ((offset) & 7) * 0x100000000ull;
 			break;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
 			if ((offset == 0))
@@ -4293,7 +4293,7 @@ static inline uint64_t CVMX_PCIEEPX_CFG096(unsigned long offset)
 			break;
 		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			if ((offset <= 5))
-	return 0x0000030000000180ull + ((offset) & 7) * 0x100000000ull;
+				return 0x0000030000000180ull + ((offset) & 7) * 0x100000000ull;
 			break;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
 			if ((offset == 0))
@@ -4336,7 +4336,7 @@ static inline uint64_t CVMX_PCIEEPX_CFG097(unsigned long offset)
 			break;
 		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			if ((offset <= 5))
-	return 0x0000030000000184ull + ((offset) & 7) * 0x100000000ull;
+				return 0x0000030000000184ull + ((offset) & 7) * 0x100000000ull;
 			break;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
 			if ((offset == 0))
@@ -4379,7 +4379,7 @@ static inline uint64_t CVMX_PCIEEPX_CFG098(unsigned long offset)
 			break;
 		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			if ((offset <= 5))
-	return 0x0000030000000188ull + ((offset) & 7) * 0x100000000ull;
+				return 0x0000030000000188ull + ((offset) & 7) * 0x100000000ull;
 			break;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
 			if ((offset == 0))
@@ -4422,7 +4422,7 @@ static inline uint64_t CVMX_PCIEEPX_CFG099(unsigned long offset)
 			break;
 		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			if ((offset <= 5))
-	return 0x000003000000018Cull + ((offset) & 7) * 0x100000000ull;
+				return 0x000003000000018Cull + ((offset) & 7) * 0x100000000ull;
 			break;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
 			if ((offset == 0))
@@ -4465,7 +4465,7 @@ static inline uint64_t CVMX_PCIEEPX_CFG100(unsigned long offset)
 			break;
 		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			if ((offset <= 5))
-	return 0x0000030000000190ull + ((offset) & 7) * 0x100000000ull;
+				return 0x0000030000000190ull + ((offset) & 7) * 0x100000000ull;
 			break;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
 			if ((offset == 0))
@@ -4508,7 +4508,7 @@ static inline uint64_t CVMX_PCIEEPX_CFG101(unsigned long offset)
 			break;
 		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			if ((offset <= 5))
-	return 0x0000030000000194ull + ((offset) & 7) * 0x100000000ull;
+				return 0x0000030000000194ull + ((offset) & 7) * 0x100000000ull;
 			break;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
 			if ((offset == 0))
@@ -4551,7 +4551,7 @@ static inline uint64_t CVMX_PCIEEPX_CFG102(unsigned long offset)
 			break;
 		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			if ((offset <= 5))
-	return 0x0000030000000198ull + ((offset) & 7) * 0x100000000ull;
+				return 0x0000030000000198ull + ((offset) & 7) * 0x100000000ull;
 			break;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
 			if ((offset == 0))
@@ -4594,7 +4594,7 @@ static inline uint64_t CVMX_PCIEEPX_CFG103(unsigned long offset)
 			break;
 		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			if ((offset <= 5))
-	return 0x000003000000019Cull + ((offset) & 7) * 0x100000000ull;
+				return 0x000003000000019Cull + ((offset) & 7) * 0x100000000ull;
 			break;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
 			if ((offset == 0))
@@ -4680,7 +4680,7 @@ static inline uint64_t CVMX_PCIEEPX_CFG105(unsigned long offset)
 			break;
 		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			if ((offset <= 5))
-	return 0x00000300000001A4ull + ((offset) & 7) * 0x100000000ull;
+				return 0x00000300000001A4ull + ((offset) & 7) * 0x100000000ull;
 			break;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
 			if ((offset == 0))
@@ -4723,7 +4723,7 @@ static inline uint64_t CVMX_PCIEEPX_CFG106(unsigned long offset)
 			break;
 		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			if ((offset <= 5))
-	return 0x00000300000001A8ull + ((offset) & 7) * 0x100000000ull;
+				return 0x00000300000001A8ull + ((offset) & 7) * 0x100000000ull;
 			break;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
 			if ((offset == 0))
@@ -4766,7 +4766,7 @@ static inline uint64_t CVMX_PCIEEPX_CFG107(unsigned long offset)
 			break;
 		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			if ((offset <= 5))
-	return 0x00000300000001ACull + ((offset) & 7) * 0x100000000ull;
+				return 0x00000300000001ACull + ((offset) & 7) * 0x100000000ull;
 			break;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
 			if ((offset == 0))
@@ -4809,7 +4809,7 @@ static inline uint64_t CVMX_PCIEEPX_CFG108(unsigned long offset)
 			break;
 		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			if ((offset <= 5))
-	return 0x00000300000001B0ull + ((offset) & 7) * 0x100000000ull;
+				return 0x00000300000001B0ull + ((offset) & 7) * 0x100000000ull;
 			break;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
 			if ((offset == 0))
@@ -4852,7 +4852,7 @@ static inline uint64_t CVMX_PCIEEPX_CFG109(unsigned long offset)
 			break;
 		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			if ((offset <= 5))
-	return 0x00000300000001B4ull + ((offset) & 7) * 0x100000000ull;
+				return 0x00000300000001B4ull + ((offset) & 7) * 0x100000000ull;
 			break;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
 			if ((offset == 0))
@@ -4895,7 +4895,7 @@ static inline uint64_t CVMX_PCIEEPX_CFG110(unsigned long offset)
 			break;
 		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			if ((offset <= 5))
-	return 0x00000300000001B8ull + ((offset) & 7) * 0x100000000ull;
+				return 0x00000300000001B8ull + ((offset) & 7) * 0x100000000ull;
 			break;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
 			if ((offset == 0))
@@ -4938,7 +4938,7 @@ static inline uint64_t CVMX_PCIEEPX_CFG111(unsigned long offset)
 			break;
 		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			if ((offset <= 5))
-	return 0x00000300000001BCull + ((offset) & 7) * 0x100000000ull;
+				return 0x00000300000001BCull + ((offset) & 7) * 0x100000000ull;
 			break;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
 			if ((offset == 0))
@@ -4981,7 +4981,7 @@ static inline uint64_t CVMX_PCIEEPX_CFG112(unsigned long offset)
 			break;
 		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			if ((offset <= 5))
-	return 0x00000300000001C0ull + ((offset) & 7) * 0x100000000ull;
+				return 0x00000300000001C0ull + ((offset) & 7) * 0x100000000ull;
 			break;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
 			if ((offset == 0))
@@ -6949,7 +6949,7 @@ union cvmx_pcieepx_cfg000 {
 	uint32_t u32;
 	struct cvmx_pcieepx_cfg000_s {
 #ifdef __BIG_ENDIAN_BITFIELD
-	uint32_t devid                        : 16; /**< Device ID for CNF75XX, writable through PEM()_CFG_WR.
+	uint32_t devid                        : 16; /**< Device ID for CNXXXX, writable through PEM()_CFG_WR.
                                                          For EEPROM loads, also see VENDID of this register. */
 	uint32_t vendid                       : 16; /**< Cavium's vendor ID, writable through PEM()_CFG_WR.
                                                          During an EPROM Load, if a value of 0xFFFF is loaded to this field and
@@ -6975,7 +6975,7 @@ union cvmx_pcieepx_cfg000 {
 	struct cvmx_pcieepx_cfg000_s          cn70xxp1;
 	struct cvmx_pcieepx_cfg000_s          cn73xx;
 	struct cvmx_pcieepx_cfg000_s          cn78xx;
-	struct cvmx_pcieepx_cfg000_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg000_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg000_s          cnf71xx;
 	struct cvmx_pcieepx_cfg000_s          cnf75xx;
 };
@@ -7062,7 +7062,7 @@ union cvmx_pcieepx_cfg001 {
 	struct cvmx_pcieepx_cfg001_s          cn70xxp1;
 	struct cvmx_pcieepx_cfg001_s          cn73xx;
 	struct cvmx_pcieepx_cfg001_s          cn78xx;
-	struct cvmx_pcieepx_cfg001_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg001_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg001_s          cnf71xx;
 	struct cvmx_pcieepx_cfg001_s          cnf75xx;
 };
@@ -7108,7 +7108,7 @@ union cvmx_pcieepx_cfg002 {
 	struct cvmx_pcieepx_cfg002_s          cn70xxp1;
 	struct cvmx_pcieepx_cfg002_s          cn73xx;
 	struct cvmx_pcieepx_cfg002_s          cn78xx;
-	struct cvmx_pcieepx_cfg002_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg002_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg002_s          cnf71xx;
 	struct cvmx_pcieepx_cfg002_s          cnf75xx;
 };
@@ -7158,7 +7158,7 @@ union cvmx_pcieepx_cfg003 {
 	struct cvmx_pcieepx_cfg003_s          cn70xxp1;
 	struct cvmx_pcieepx_cfg003_s          cn73xx;
 	struct cvmx_pcieepx_cfg003_s          cn78xx;
-	struct cvmx_pcieepx_cfg003_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg003_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg003_s          cnf71xx;
 	struct cvmx_pcieepx_cfg003_s          cnf75xx;
 };
@@ -7254,7 +7254,8 @@ union cvmx_pcieepx_cfg004 {
 	uint32_t lbab                         : 9;
 #endif
 	} cn73xx;
-	struct cvmx_pcieepx_cfg004_cn78xx {
+	struct cvmx_pcieepx_cfg004_cn73xx     cn78xx;
+	struct cvmx_pcieepx_cfg004_cn78xxp1 {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint32_t lbab                         : 17; /**< Lower bits of the BAR 0 base address. */
 	uint32_t reserved_4_14                : 11;
@@ -7277,8 +7278,7 @@ union cvmx_pcieepx_cfg004 {
 	uint32_t reserved_4_14                : 11;
 	uint32_t lbab                         : 17;
 #endif
-	} cn78xx;
-	struct cvmx_pcieepx_cfg004_cn73xx     cn78xxp2;
+	} cn78xxp1;
 	struct cvmx_pcieepx_cfg004_cn52xx     cnf71xx;
 	struct cvmx_pcieepx_cfg004_cn73xx     cnf75xx;
 };
@@ -7318,7 +7318,7 @@ union cvmx_pcieepx_cfg004_mask {
 	struct cvmx_pcieepx_cfg004_mask_s     cn70xxp1;
 	struct cvmx_pcieepx_cfg004_mask_s     cn73xx;
 	struct cvmx_pcieepx_cfg004_mask_s     cn78xx;
-	struct cvmx_pcieepx_cfg004_mask_s     cn78xxp2;
+	struct cvmx_pcieepx_cfg004_mask_s     cn78xxp1;
 	struct cvmx_pcieepx_cfg004_mask_s     cnf71xx;
 	struct cvmx_pcieepx_cfg004_mask_s     cnf75xx;
 };
@@ -7353,7 +7353,7 @@ union cvmx_pcieepx_cfg005 {
 	struct cvmx_pcieepx_cfg005_s          cn70xxp1;
 	struct cvmx_pcieepx_cfg005_s          cn73xx;
 	struct cvmx_pcieepx_cfg005_s          cn78xx;
-	struct cvmx_pcieepx_cfg005_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg005_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg005_s          cnf71xx;
 	struct cvmx_pcieepx_cfg005_s          cnf75xx;
 };
@@ -7388,7 +7388,7 @@ union cvmx_pcieepx_cfg005_mask {
 	struct cvmx_pcieepx_cfg005_mask_s     cn70xxp1;
 	struct cvmx_pcieepx_cfg005_mask_s     cn73xx;
 	struct cvmx_pcieepx_cfg005_mask_s     cn78xx;
-	struct cvmx_pcieepx_cfg005_mask_s     cn78xxp2;
+	struct cvmx_pcieepx_cfg005_mask_s     cn78xxp1;
 	struct cvmx_pcieepx_cfg005_mask_s     cnf71xx;
 	struct cvmx_pcieepx_cfg005_mask_s     cnf75xx;
 };
@@ -7440,7 +7440,7 @@ union cvmx_pcieepx_cfg006 {
 	struct cvmx_pcieepx_cfg006_s          cn70xxp1;
 	struct cvmx_pcieepx_cfg006_s          cn73xx;
 	struct cvmx_pcieepx_cfg006_s          cn78xx;
-	struct cvmx_pcieepx_cfg006_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg006_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg006_s          cnf71xx;
 	struct cvmx_pcieepx_cfg006_s          cnf75xx;
 };
@@ -7480,7 +7480,7 @@ union cvmx_pcieepx_cfg006_mask {
 	struct cvmx_pcieepx_cfg006_mask_s     cn70xxp1;
 	struct cvmx_pcieepx_cfg006_mask_s     cn73xx;
 	struct cvmx_pcieepx_cfg006_mask_s     cn78xx;
-	struct cvmx_pcieepx_cfg006_mask_s     cn78xxp2;
+	struct cvmx_pcieepx_cfg006_mask_s     cn78xxp1;
 	struct cvmx_pcieepx_cfg006_mask_s     cnf71xx;
 	struct cvmx_pcieepx_cfg006_mask_s     cnf75xx;
 };
@@ -7515,7 +7515,7 @@ union cvmx_pcieepx_cfg007 {
 	struct cvmx_pcieepx_cfg007_s          cn70xxp1;
 	struct cvmx_pcieepx_cfg007_s          cn73xx;
 	struct cvmx_pcieepx_cfg007_s          cn78xx;
-	struct cvmx_pcieepx_cfg007_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg007_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg007_s          cnf71xx;
 	struct cvmx_pcieepx_cfg007_s          cnf75xx;
 };
@@ -7550,7 +7550,7 @@ union cvmx_pcieepx_cfg007_mask {
 	struct cvmx_pcieepx_cfg007_mask_s     cn70xxp1;
 	struct cvmx_pcieepx_cfg007_mask_s     cn73xx;
 	struct cvmx_pcieepx_cfg007_mask_s     cn78xx;
-	struct cvmx_pcieepx_cfg007_mask_s     cn78xxp2;
+	struct cvmx_pcieepx_cfg007_mask_s     cn78xxp1;
 	struct cvmx_pcieepx_cfg007_mask_s     cnf71xx;
 	struct cvmx_pcieepx_cfg007_mask_s     cnf75xx;
 };
@@ -7624,7 +7624,7 @@ union cvmx_pcieepx_cfg008 {
 	struct cvmx_pcieepx_cfg008_s          cn70xxp1;
 	struct cvmx_pcieepx_cfg008_s          cn73xx;
 	struct cvmx_pcieepx_cfg008_s          cn78xx;
-	struct cvmx_pcieepx_cfg008_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg008_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg008_cn52xx     cnf71xx;
 	struct cvmx_pcieepx_cfg008_s          cnf75xx;
 };
@@ -7664,7 +7664,7 @@ union cvmx_pcieepx_cfg008_mask {
 	struct cvmx_pcieepx_cfg008_mask_s     cn70xxp1;
 	struct cvmx_pcieepx_cfg008_mask_s     cn73xx;
 	struct cvmx_pcieepx_cfg008_mask_s     cn78xx;
-	struct cvmx_pcieepx_cfg008_mask_s     cn78xxp2;
+	struct cvmx_pcieepx_cfg008_mask_s     cn78xxp1;
 	struct cvmx_pcieepx_cfg008_mask_s     cnf71xx;
 	struct cvmx_pcieepx_cfg008_mask_s     cnf75xx;
 };
@@ -7721,7 +7721,7 @@ union cvmx_pcieepx_cfg009 {
 	struct cvmx_pcieepx_cfg009_cn70xx     cn70xxp1;
 	struct cvmx_pcieepx_cfg009_cn70xx     cn73xx;
 	struct cvmx_pcieepx_cfg009_cn70xx     cn78xx;
-	struct cvmx_pcieepx_cfg009_cn70xx     cn78xxp2;
+	struct cvmx_pcieepx_cfg009_cn70xx     cn78xxp1;
 	struct cvmx_pcieepx_cfg009_cn61xx     cnf71xx;
 	struct cvmx_pcieepx_cfg009_cn70xx     cnf75xx;
 };
@@ -7756,7 +7756,7 @@ union cvmx_pcieepx_cfg009_mask {
 	struct cvmx_pcieepx_cfg009_mask_s     cn70xxp1;
 	struct cvmx_pcieepx_cfg009_mask_s     cn73xx;
 	struct cvmx_pcieepx_cfg009_mask_s     cn78xx;
-	struct cvmx_pcieepx_cfg009_mask_s     cn78xxp2;
+	struct cvmx_pcieepx_cfg009_mask_s     cn78xxp1;
 	struct cvmx_pcieepx_cfg009_mask_s     cnf71xx;
 	struct cvmx_pcieepx_cfg009_mask_s     cnf75xx;
 };
@@ -7791,7 +7791,7 @@ union cvmx_pcieepx_cfg010 {
 	struct cvmx_pcieepx_cfg010_s          cn70xxp1;
 	struct cvmx_pcieepx_cfg010_s          cn73xx;
 	struct cvmx_pcieepx_cfg010_s          cn78xx;
-	struct cvmx_pcieepx_cfg010_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg010_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg010_s          cnf71xx;
 	struct cvmx_pcieepx_cfg010_s          cnf75xx;
 };
@@ -7830,7 +7830,7 @@ union cvmx_pcieepx_cfg011 {
 	struct cvmx_pcieepx_cfg011_s          cn70xxp1;
 	struct cvmx_pcieepx_cfg011_s          cn73xx;
 	struct cvmx_pcieepx_cfg011_s          cn78xx;
-	struct cvmx_pcieepx_cfg011_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg011_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg011_s          cnf71xx;
 	struct cvmx_pcieepx_cfg011_s          cnf75xx;
 };
@@ -7869,7 +7869,7 @@ union cvmx_pcieepx_cfg012 {
 	struct cvmx_pcieepx_cfg012_s          cn70xxp1;
 	struct cvmx_pcieepx_cfg012_s          cn73xx;
 	struct cvmx_pcieepx_cfg012_s          cn78xx;
-	struct cvmx_pcieepx_cfg012_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg012_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg012_s          cnf71xx;
 	struct cvmx_pcieepx_cfg012_s          cnf75xx;
 };
@@ -7909,7 +7909,7 @@ union cvmx_pcieepx_cfg012_mask {
 	struct cvmx_pcieepx_cfg012_mask_s     cn70xxp1;
 	struct cvmx_pcieepx_cfg012_mask_s     cn73xx;
 	struct cvmx_pcieepx_cfg012_mask_s     cn78xx;
-	struct cvmx_pcieepx_cfg012_mask_s     cn78xxp2;
+	struct cvmx_pcieepx_cfg012_mask_s     cn78xxp1;
 	struct cvmx_pcieepx_cfg012_mask_s     cnf71xx;
 	struct cvmx_pcieepx_cfg012_mask_s     cnf75xx;
 };
@@ -7947,7 +7947,7 @@ union cvmx_pcieepx_cfg013 {
 	struct cvmx_pcieepx_cfg013_s          cn70xxp1;
 	struct cvmx_pcieepx_cfg013_s          cn73xx;
 	struct cvmx_pcieepx_cfg013_s          cn78xx;
-	struct cvmx_pcieepx_cfg013_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg013_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg013_s          cnf71xx;
 	struct cvmx_pcieepx_cfg013_s          cnf75xx;
 };
@@ -7991,7 +7991,7 @@ union cvmx_pcieepx_cfg015 {
 	struct cvmx_pcieepx_cfg015_s          cn70xxp1;
 	struct cvmx_pcieepx_cfg015_s          cn73xx;
 	struct cvmx_pcieepx_cfg015_s          cn78xx;
-	struct cvmx_pcieepx_cfg015_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg015_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg015_s          cnf71xx;
 	struct cvmx_pcieepx_cfg015_s          cnf75xx;
 };
@@ -8055,7 +8055,7 @@ union cvmx_pcieepx_cfg016 {
 	struct cvmx_pcieepx_cfg016_s          cn70xxp1;
 	struct cvmx_pcieepx_cfg016_s          cn73xx;
 	struct cvmx_pcieepx_cfg016_s          cn78xx;
-	struct cvmx_pcieepx_cfg016_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg016_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg016_s          cnf71xx;
 	struct cvmx_pcieepx_cfg016_s          cnf75xx;
 };
@@ -8117,7 +8117,7 @@ union cvmx_pcieepx_cfg017 {
 	struct cvmx_pcieepx_cfg017_s          cn70xxp1;
 	struct cvmx_pcieepx_cfg017_s          cn73xx;
 	struct cvmx_pcieepx_cfg017_s          cn78xx;
-	struct cvmx_pcieepx_cfg017_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg017_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg017_s          cnf71xx;
 	struct cvmx_pcieepx_cfg017_s          cnf75xx;
 };
@@ -8198,7 +8198,7 @@ union cvmx_pcieepx_cfg020 {
 	struct cvmx_pcieepx_cfg020_s          cn70xxp1;
 	struct cvmx_pcieepx_cfg020_s          cn73xx;
 	struct cvmx_pcieepx_cfg020_s          cn78xx;
-	struct cvmx_pcieepx_cfg020_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg020_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg020_s          cnf71xx;
 	struct cvmx_pcieepx_cfg020_s          cnf75xx;
 };
@@ -8235,7 +8235,7 @@ union cvmx_pcieepx_cfg021 {
 	struct cvmx_pcieepx_cfg021_s          cn70xxp1;
 	struct cvmx_pcieepx_cfg021_s          cn73xx;
 	struct cvmx_pcieepx_cfg021_s          cn78xx;
-	struct cvmx_pcieepx_cfg021_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg021_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg021_s          cnf71xx;
 	struct cvmx_pcieepx_cfg021_s          cnf75xx;
 };
@@ -8270,7 +8270,7 @@ union cvmx_pcieepx_cfg022 {
 	struct cvmx_pcieepx_cfg022_s          cn70xxp1;
 	struct cvmx_pcieepx_cfg022_s          cn73xx;
 	struct cvmx_pcieepx_cfg022_s          cn78xx;
-	struct cvmx_pcieepx_cfg022_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg022_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg022_s          cnf71xx;
 	struct cvmx_pcieepx_cfg022_s          cnf75xx;
 };
@@ -8308,7 +8308,7 @@ union cvmx_pcieepx_cfg023 {
 	struct cvmx_pcieepx_cfg023_s          cn70xxp1;
 	struct cvmx_pcieepx_cfg023_s          cn73xx;
 	struct cvmx_pcieepx_cfg023_s          cn78xx;
-	struct cvmx_pcieepx_cfg023_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg023_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg023_s          cnf71xx;
 	struct cvmx_pcieepx_cfg023_s          cnf75xx;
 };
@@ -8334,7 +8334,7 @@ union cvmx_pcieepx_cfg024 {
 	struct cvmx_pcieepx_cfg024_s          cn70xxp1;
 	struct cvmx_pcieepx_cfg024_s          cn73xx;
 	struct cvmx_pcieepx_cfg024_s          cn78xx;
-	struct cvmx_pcieepx_cfg024_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg024_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg024_s          cnf75xx;
 };
 typedef union cvmx_pcieepx_cfg024 cvmx_pcieepx_cfg024_t;
@@ -8358,7 +8358,7 @@ union cvmx_pcieepx_cfg025 {
 	struct cvmx_pcieepx_cfg025_s          cn70xxp1;
 	struct cvmx_pcieepx_cfg025_s          cn73xx;
 	struct cvmx_pcieepx_cfg025_s          cn78xx;
-	struct cvmx_pcieepx_cfg025_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg025_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg025_s          cnf75xx;
 };
 typedef union cvmx_pcieepx_cfg025 cvmx_pcieepx_cfg025_t;
@@ -8410,7 +8410,7 @@ union cvmx_pcieepx_cfg028 {
 	struct cvmx_pcieepx_cfg028_s          cn70xxp1;
 	struct cvmx_pcieepx_cfg028_s          cn73xx;
 	struct cvmx_pcieepx_cfg028_s          cn78xx;
-	struct cvmx_pcieepx_cfg028_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg028_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg028_s          cnf71xx;
 	struct cvmx_pcieepx_cfg028_s          cnf75xx;
 };
@@ -8554,7 +8554,7 @@ union cvmx_pcieepx_cfg029 {
 	struct cvmx_pcieepx_cfg029_cn61xx     cn70xxp1;
 	struct cvmx_pcieepx_cfg029_cn61xx     cn73xx;
 	struct cvmx_pcieepx_cfg029_cn61xx     cn78xx;
-	struct cvmx_pcieepx_cfg029_cn61xx     cn78xxp2;
+	struct cvmx_pcieepx_cfg029_cn61xx     cn78xxp1;
 	struct cvmx_pcieepx_cfg029_cn61xx     cnf71xx;
 	struct cvmx_pcieepx_cfg029_cn61xx     cnf75xx;
 };
@@ -8742,7 +8742,7 @@ union cvmx_pcieepx_cfg030 {
 	struct cvmx_pcieepx_cfg030_s          cn70xxp1;
 	struct cvmx_pcieepx_cfg030_s          cn73xx;
 	struct cvmx_pcieepx_cfg030_s          cn78xx;
-	struct cvmx_pcieepx_cfg030_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg030_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg030_s          cnf71xx;
 	struct cvmx_pcieepx_cfg030_s          cnf75xx;
 };
@@ -8873,7 +8873,7 @@ union cvmx_pcieepx_cfg031 {
 	struct cvmx_pcieepx_cfg031_s          cn70xxp1;
 	struct cvmx_pcieepx_cfg031_s          cn73xx;
 	struct cvmx_pcieepx_cfg031_s          cn78xx;
-	struct cvmx_pcieepx_cfg031_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg031_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg031_s          cnf71xx;
 	struct cvmx_pcieepx_cfg031_s          cnf75xx;
 };
@@ -9075,7 +9075,7 @@ union cvmx_pcieepx_cfg032 {
 	struct cvmx_pcieepx_cfg032_s          cn70xxp1;
 	struct cvmx_pcieepx_cfg032_s          cn73xx;
 	struct cvmx_pcieepx_cfg032_s          cn78xx;
-	struct cvmx_pcieepx_cfg032_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg032_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg032_s          cnf71xx;
 	struct cvmx_pcieepx_cfg032_s          cnf75xx;
 };
@@ -9370,7 +9370,7 @@ union cvmx_pcieepx_cfg037 {
 #endif
 	} cn73xx;
 	struct cvmx_pcieepx_cfg037_cn73xx     cn78xx;
-	struct cvmx_pcieepx_cfg037_cn73xx     cn78xxp2;
+	struct cvmx_pcieepx_cfg037_cn73xx     cn78xxp1;
 	struct cvmx_pcieepx_cfg037_cnf71xx {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint32_t reserved_20_31               : 12;
@@ -9515,7 +9515,7 @@ union cvmx_pcieepx_cfg038 {
 	struct cvmx_pcieepx_cfg038_cn61xx     cn70xxp1;
 	struct cvmx_pcieepx_cfg038_s          cn73xx;
 	struct cvmx_pcieepx_cfg038_s          cn78xx;
-	struct cvmx_pcieepx_cfg038_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg038_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg038_cnf71xx {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint32_t reserved_15_31               : 17;
@@ -9608,7 +9608,7 @@ union cvmx_pcieepx_cfg039 {
 	struct cvmx_pcieepx_cfg039_s          cn70xxp1;
 	struct cvmx_pcieepx_cfg039_s          cn73xx;
 	struct cvmx_pcieepx_cfg039_s          cn78xx;
-	struct cvmx_pcieepx_cfg039_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg039_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg039_s          cnf71xx;
 	struct cvmx_pcieepx_cfg039_s          cnf75xx;
 };
@@ -9806,7 +9806,7 @@ union cvmx_pcieepx_cfg040 {
 	struct cvmx_pcieepx_cfg040_cn61xx     cn70xxp1;
 	struct cvmx_pcieepx_cfg040_s          cn73xx;
 	struct cvmx_pcieepx_cfg040_s          cn78xx;
-	struct cvmx_pcieepx_cfg040_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg040_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg040_cn61xx     cnf71xx;
 	struct cvmx_pcieepx_cfg040_s          cnf75xx;
 };
@@ -9892,7 +9892,7 @@ union cvmx_pcieepx_cfg044 {
 	} s;
 	struct cvmx_pcieepx_cfg044_s          cn73xx;
 	struct cvmx_pcieepx_cfg044_s          cn78xx;
-	struct cvmx_pcieepx_cfg044_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg044_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg044_s          cnf75xx;
 };
 typedef union cvmx_pcieepx_cfg044 cvmx_pcieepx_cfg044_t;
@@ -9920,7 +9920,7 @@ union cvmx_pcieepx_cfg045 {
 	} s;
 	struct cvmx_pcieepx_cfg045_s          cn73xx;
 	struct cvmx_pcieepx_cfg045_s          cn78xx;
-	struct cvmx_pcieepx_cfg045_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg045_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg045_s          cnf75xx;
 };
 typedef union cvmx_pcieepx_cfg045 cvmx_pcieepx_cfg045_t;
@@ -9948,7 +9948,7 @@ union cvmx_pcieepx_cfg046 {
 	} s;
 	struct cvmx_pcieepx_cfg046_s          cn73xx;
 	struct cvmx_pcieepx_cfg046_s          cn78xx;
-	struct cvmx_pcieepx_cfg046_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg046_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg046_s          cnf75xx;
 };
 typedef union cvmx_pcieepx_cfg046 cvmx_pcieepx_cfg046_t;
@@ -9986,7 +9986,7 @@ union cvmx_pcieepx_cfg064 {
 	struct cvmx_pcieepx_cfg064_s          cn70xxp1;
 	struct cvmx_pcieepx_cfg064_s          cn73xx;
 	struct cvmx_pcieepx_cfg064_s          cn78xx;
-	struct cvmx_pcieepx_cfg064_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg064_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg064_s          cnf71xx;
 	struct cvmx_pcieepx_cfg064_s          cnf75xx;
 };
@@ -10205,7 +10205,7 @@ union cvmx_pcieepx_cfg065 {
 #endif
 	} cn73xx;
 	struct cvmx_pcieepx_cfg065_cn73xx     cn78xx;
-	struct cvmx_pcieepx_cfg065_cn73xx     cn78xxp2;
+	struct cvmx_pcieepx_cfg065_cn73xx     cn78xxp1;
 	struct cvmx_pcieepx_cfg065_cnf71xx {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint32_t reserved_25_31               : 7;
@@ -10462,7 +10462,7 @@ union cvmx_pcieepx_cfg066 {
 #endif
 	} cn73xx;
 	struct cvmx_pcieepx_cfg066_cn73xx     cn78xx;
-	struct cvmx_pcieepx_cfg066_cn73xx     cn78xxp2;
+	struct cvmx_pcieepx_cfg066_cn73xx     cn78xxp1;
 	struct cvmx_pcieepx_cfg066_cnf71xx {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint32_t reserved_25_31               : 7;
@@ -10719,7 +10719,7 @@ union cvmx_pcieepx_cfg067 {
 #endif
 	} cn73xx;
 	struct cvmx_pcieepx_cfg067_cn73xx     cn78xx;
-	struct cvmx_pcieepx_cfg067_cn73xx     cn78xxp2;
+	struct cvmx_pcieepx_cfg067_cn73xx     cn78xxp1;
 	struct cvmx_pcieepx_cfg067_cnf71xx {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint32_t reserved_25_31               : 7;
@@ -10832,7 +10832,7 @@ union cvmx_pcieepx_cfg068 {
 	struct cvmx_pcieepx_cfg068_s          cn70xxp1;
 	struct cvmx_pcieepx_cfg068_s          cn73xx;
 	struct cvmx_pcieepx_cfg068_s          cn78xx;
-	struct cvmx_pcieepx_cfg068_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg068_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg068_s          cnf71xx;
 	struct cvmx_pcieepx_cfg068_s          cnf75xx;
 };
@@ -10907,7 +10907,7 @@ union cvmx_pcieepx_cfg069 {
 	struct cvmx_pcieepx_cfg069_s          cn70xxp1;
 	struct cvmx_pcieepx_cfg069_s          cn73xx;
 	struct cvmx_pcieepx_cfg069_s          cn78xx;
-	struct cvmx_pcieepx_cfg069_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg069_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg069_s          cnf71xx;
 	struct cvmx_pcieepx_cfg069_s          cnf75xx;
 };
@@ -10972,7 +10972,7 @@ union cvmx_pcieepx_cfg070 {
 	struct cvmx_pcieepx_cfg070_cn52xx     cn70xxp1;
 	struct cvmx_pcieepx_cfg070_s          cn73xx;
 	struct cvmx_pcieepx_cfg070_s          cn78xx;
-	struct cvmx_pcieepx_cfg070_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg070_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg070_cn52xx     cnf71xx;
 	struct cvmx_pcieepx_cfg070_s          cnf75xx;
 };
@@ -11007,7 +11007,7 @@ union cvmx_pcieepx_cfg071 {
 	struct cvmx_pcieepx_cfg071_s          cn70xxp1;
 	struct cvmx_pcieepx_cfg071_s          cn73xx;
 	struct cvmx_pcieepx_cfg071_s          cn78xx;
-	struct cvmx_pcieepx_cfg071_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg071_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg071_s          cnf71xx;
 	struct cvmx_pcieepx_cfg071_s          cnf75xx;
 };
@@ -11042,7 +11042,7 @@ union cvmx_pcieepx_cfg072 {
 	struct cvmx_pcieepx_cfg072_s          cn70xxp1;
 	struct cvmx_pcieepx_cfg072_s          cn73xx;
 	struct cvmx_pcieepx_cfg072_s          cn78xx;
-	struct cvmx_pcieepx_cfg072_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg072_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg072_s          cnf71xx;
 	struct cvmx_pcieepx_cfg072_s          cnf75xx;
 };
@@ -11077,7 +11077,7 @@ union cvmx_pcieepx_cfg073 {
 	struct cvmx_pcieepx_cfg073_s          cn70xxp1;
 	struct cvmx_pcieepx_cfg073_s          cn73xx;
 	struct cvmx_pcieepx_cfg073_s          cn78xx;
-	struct cvmx_pcieepx_cfg073_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg073_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg073_s          cnf71xx;
 	struct cvmx_pcieepx_cfg073_s          cnf75xx;
 };
@@ -11112,7 +11112,7 @@ union cvmx_pcieepx_cfg074 {
 	struct cvmx_pcieepx_cfg074_s          cn70xxp1;
 	struct cvmx_pcieepx_cfg074_s          cn73xx;
 	struct cvmx_pcieepx_cfg074_s          cn78xx;
-	struct cvmx_pcieepx_cfg074_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg074_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg074_s          cnf71xx;
 	struct cvmx_pcieepx_cfg074_s          cnf75xx;
 };
@@ -11135,7 +11135,7 @@ union cvmx_pcieepx_cfg078 {
 	} s;
 	struct cvmx_pcieepx_cfg078_s          cn73xx;
 	struct cvmx_pcieepx_cfg078_s          cn78xx;
-	struct cvmx_pcieepx_cfg078_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg078_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg078_s          cnf75xx;
 };
 typedef union cvmx_pcieepx_cfg078 cvmx_pcieepx_cfg078_t;
@@ -11183,7 +11183,7 @@ union cvmx_pcieepx_cfg082 {
 #endif
 	} cn73xx;
 	struct cvmx_pcieepx_cfg082_cn73xx     cn78xx;
-	struct cvmx_pcieepx_cfg082_cn73xx     cn78xxp2;
+	struct cvmx_pcieepx_cfg082_cn73xx     cn78xxp1;
 	struct cvmx_pcieepx_cfg082_cn73xx     cnf75xx;
 };
 typedef union cvmx_pcieepx_cfg082 cvmx_pcieepx_cfg082_t;
@@ -11248,7 +11248,7 @@ union cvmx_pcieepx_cfg083 {
 #endif
 	} cn73xx;
 	struct cvmx_pcieepx_cfg083_cn73xx     cn78xx;
-	struct cvmx_pcieepx_cfg083_cn73xx     cn78xxp2;
+	struct cvmx_pcieepx_cfg083_cn73xx     cn78xxp1;
 	struct cvmx_pcieepx_cfg083_cn73xx     cnf75xx;
 };
 typedef union cvmx_pcieepx_cfg083 cvmx_pcieepx_cfg083_t;
@@ -11307,7 +11307,7 @@ union cvmx_pcieepx_cfg086 {
 	} s;
 	struct cvmx_pcieepx_cfg086_s          cn73xx;
 	struct cvmx_pcieepx_cfg086_s          cn78xx;
-	struct cvmx_pcieepx_cfg086_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg086_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg086_s          cnf75xx;
 };
 typedef union cvmx_pcieepx_cfg086 cvmx_pcieepx_cfg086_t;
@@ -11329,7 +11329,7 @@ union cvmx_pcieepx_cfg087 {
 	} s;
 	struct cvmx_pcieepx_cfg087_s          cn73xx;
 	struct cvmx_pcieepx_cfg087_s          cn78xx;
-	struct cvmx_pcieepx_cfg087_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg087_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg087_s          cnf75xx;
 };
 typedef union cvmx_pcieepx_cfg087 cvmx_pcieepx_cfg087_t;
@@ -11353,7 +11353,7 @@ union cvmx_pcieepx_cfg088 {
 	} s;
 	struct cvmx_pcieepx_cfg088_s          cn73xx;
 	struct cvmx_pcieepx_cfg088_s          cn78xx;
-	struct cvmx_pcieepx_cfg088_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg088_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg088_s          cnf75xx;
 };
 typedef union cvmx_pcieepx_cfg088 cvmx_pcieepx_cfg088_t;
@@ -11387,7 +11387,7 @@ union cvmx_pcieepx_cfg089 {
 	} s;
 	struct cvmx_pcieepx_cfg089_s          cn73xx;
 	struct cvmx_pcieepx_cfg089_s          cn78xx;
-	struct cvmx_pcieepx_cfg089_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg089_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg089_s          cnf75xx;
 };
 typedef union cvmx_pcieepx_cfg089 cvmx_pcieepx_cfg089_t;
@@ -11421,7 +11421,7 @@ union cvmx_pcieepx_cfg090 {
 	} s;
 	struct cvmx_pcieepx_cfg090_s          cn73xx;
 	struct cvmx_pcieepx_cfg090_s          cn78xx;
-	struct cvmx_pcieepx_cfg090_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg090_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg090_s          cnf75xx;
 };
 typedef union cvmx_pcieepx_cfg090 cvmx_pcieepx_cfg090_t;
@@ -11455,7 +11455,7 @@ union cvmx_pcieepx_cfg091 {
 	} s;
 	struct cvmx_pcieepx_cfg091_s          cn73xx;
 	struct cvmx_pcieepx_cfg091_s          cn78xx;
-	struct cvmx_pcieepx_cfg091_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg091_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg091_s          cnf75xx;
 };
 typedef union cvmx_pcieepx_cfg091 cvmx_pcieepx_cfg091_t;
@@ -11489,7 +11489,7 @@ union cvmx_pcieepx_cfg092 {
 	} s;
 	struct cvmx_pcieepx_cfg092_s          cn73xx;
 	struct cvmx_pcieepx_cfg092_s          cn78xx;
-	struct cvmx_pcieepx_cfg092_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg092_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg092_s          cnf75xx;
 };
 typedef union cvmx_pcieepx_cfg092 cvmx_pcieepx_cfg092_t;
@@ -11515,7 +11515,7 @@ union cvmx_pcieepx_cfg094 {
 	} s;
 	struct cvmx_pcieepx_cfg094_s          cn73xx;
 	struct cvmx_pcieepx_cfg094_s          cn78xx;
-	struct cvmx_pcieepx_cfg094_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg094_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg094_s          cnf75xx;
 };
 typedef union cvmx_pcieepx_cfg094 cvmx_pcieepx_cfg094_t;
@@ -11544,7 +11544,7 @@ union cvmx_pcieepx_cfg095 {
 	} s;
 	struct cvmx_pcieepx_cfg095_s          cn73xx;
 	struct cvmx_pcieepx_cfg095_s          cn78xx;
-	struct cvmx_pcieepx_cfg095_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg095_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg095_s          cnf75xx;
 };
 typedef union cvmx_pcieepx_cfg095 cvmx_pcieepx_cfg095_t;
@@ -11583,7 +11583,7 @@ union cvmx_pcieepx_cfg096 {
 	} s;
 	struct cvmx_pcieepx_cfg096_s          cn73xx;
 	struct cvmx_pcieepx_cfg096_s          cn78xx;
-	struct cvmx_pcieepx_cfg096_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg096_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg096_s          cnf75xx;
 };
 typedef union cvmx_pcieepx_cfg096 cvmx_pcieepx_cfg096_t;
@@ -11617,7 +11617,7 @@ union cvmx_pcieepx_cfg097 {
 	} s;
 	struct cvmx_pcieepx_cfg097_s          cn73xx;
 	struct cvmx_pcieepx_cfg097_s          cn78xx;
-	struct cvmx_pcieepx_cfg097_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg097_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg097_s          cnf75xx;
 };
 typedef union cvmx_pcieepx_cfg097 cvmx_pcieepx_cfg097_t;
@@ -11643,7 +11643,7 @@ union cvmx_pcieepx_cfg098 {
 	} s;
 	struct cvmx_pcieepx_cfg098_s          cn73xx;
 	struct cvmx_pcieepx_cfg098_s          cn78xx;
-	struct cvmx_pcieepx_cfg098_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg098_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg098_s          cnf75xx;
 };
 typedef union cvmx_pcieepx_cfg098 cvmx_pcieepx_cfg098_t;
@@ -11687,7 +11687,7 @@ union cvmx_pcieepx_cfg099 {
 	} s;
 	struct cvmx_pcieepx_cfg099_s          cn73xx;
 	struct cvmx_pcieepx_cfg099_s          cn78xx;
-	struct cvmx_pcieepx_cfg099_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg099_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg099_s          cnf75xx;
 };
 typedef union cvmx_pcieepx_cfg099 cvmx_pcieepx_cfg099_t;
@@ -11711,7 +11711,7 @@ union cvmx_pcieepx_cfg100 {
 	} s;
 	struct cvmx_pcieepx_cfg100_s          cn73xx;
 	struct cvmx_pcieepx_cfg100_s          cn78xx;
-	struct cvmx_pcieepx_cfg100_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg100_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg100_s          cnf75xx;
 };
 typedef union cvmx_pcieepx_cfg100 cvmx_pcieepx_cfg100_t;
@@ -11733,7 +11733,7 @@ union cvmx_pcieepx_cfg101 {
 	} s;
 	struct cvmx_pcieepx_cfg101_s          cn73xx;
 	struct cvmx_pcieepx_cfg101_s          cn78xx;
-	struct cvmx_pcieepx_cfg101_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg101_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg101_s          cnf75xx;
 };
 typedef union cvmx_pcieepx_cfg101 cvmx_pcieepx_cfg101_t;
@@ -11755,7 +11755,7 @@ union cvmx_pcieepx_cfg102 {
 	} s;
 	struct cvmx_pcieepx_cfg102_s          cn73xx;
 	struct cvmx_pcieepx_cfg102_s          cn78xx;
-	struct cvmx_pcieepx_cfg102_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg102_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg102_s          cnf75xx;
 };
 typedef union cvmx_pcieepx_cfg102 cvmx_pcieepx_cfg102_t;
@@ -11804,7 +11804,8 @@ union cvmx_pcieepx_cfg103 {
 	uint32_t lbab                         : 12;
 #endif
 	} cn73xx;
-	struct cvmx_pcieepx_cfg103_cn78xx {
+	struct cvmx_pcieepx_cfg103_cn73xx     cn78xx;
+	struct cvmx_pcieepx_cfg103_cn78xxp1 {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint32_t lbab                         : 17; /**< Lower bits of the VF BAR 0 base address. */
 	uint32_t reserved_4_14                : 11;
@@ -11822,8 +11823,7 @@ union cvmx_pcieepx_cfg103 {
 	uint32_t reserved_4_14                : 11;
 	uint32_t lbab                         : 17;
 #endif
-	} cn78xx;
-	struct cvmx_pcieepx_cfg103_cn73xx     cn78xxp2;
+	} cn78xxp1;
 	struct cvmx_pcieepx_cfg103_cn73xx     cnf75xx;
 };
 typedef union cvmx_pcieepx_cfg103 cvmx_pcieepx_cfg103_t;
@@ -11845,7 +11845,7 @@ union cvmx_pcieepx_cfg104 {
 	} s;
 	struct cvmx_pcieepx_cfg104_s          cn73xx;
 	struct cvmx_pcieepx_cfg104_s          cn78xx;
-	struct cvmx_pcieepx_cfg104_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg104_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg104_s          cnf75xx;
 };
 typedef union cvmx_pcieepx_cfg104 cvmx_pcieepx_cfg104_t;
@@ -11867,7 +11867,7 @@ union cvmx_pcieepx_cfg105 {
 	} s;
 	struct cvmx_pcieepx_cfg105_s          cn73xx;
 	struct cvmx_pcieepx_cfg105_s          cn78xx;
-	struct cvmx_pcieepx_cfg105_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg105_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg105_s          cnf75xx;
 };
 typedef union cvmx_pcieepx_cfg105 cvmx_pcieepx_cfg105_t;
@@ -11889,7 +11889,7 @@ union cvmx_pcieepx_cfg106 {
 	} s;
 	struct cvmx_pcieepx_cfg106_s          cn73xx;
 	struct cvmx_pcieepx_cfg106_s          cn78xx;
-	struct cvmx_pcieepx_cfg106_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg106_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg106_s          cnf75xx;
 };
 typedef union cvmx_pcieepx_cfg106 cvmx_pcieepx_cfg106_t;
@@ -11911,7 +11911,7 @@ union cvmx_pcieepx_cfg107 {
 	} s;
 	struct cvmx_pcieepx_cfg107_s          cn73xx;
 	struct cvmx_pcieepx_cfg107_s          cn78xx;
-	struct cvmx_pcieepx_cfg107_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg107_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg107_s          cnf75xx;
 };
 typedef union cvmx_pcieepx_cfg107 cvmx_pcieepx_cfg107_t;
@@ -11933,7 +11933,7 @@ union cvmx_pcieepx_cfg108 {
 	} s;
 	struct cvmx_pcieepx_cfg108_s          cn73xx;
 	struct cvmx_pcieepx_cfg108_s          cn78xx;
-	struct cvmx_pcieepx_cfg108_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg108_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg108_s          cnf75xx;
 };
 typedef union cvmx_pcieepx_cfg108 cvmx_pcieepx_cfg108_t;
@@ -11957,7 +11957,7 @@ union cvmx_pcieepx_cfg109 {
 	} s;
 	struct cvmx_pcieepx_cfg109_s          cn73xx;
 	struct cvmx_pcieepx_cfg109_s          cn78xx;
-	struct cvmx_pcieepx_cfg109_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg109_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg109_s          cnf75xx;
 };
 typedef union cvmx_pcieepx_cfg109 cvmx_pcieepx_cfg109_t;
@@ -11983,7 +11983,7 @@ union cvmx_pcieepx_cfg110 {
 	} s;
 	struct cvmx_pcieepx_cfg110_s          cn73xx;
 	struct cvmx_pcieepx_cfg110_s          cn78xx;
-	struct cvmx_pcieepx_cfg110_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg110_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg110_s          cnf75xx;
 };
 typedef union cvmx_pcieepx_cfg110 cvmx_pcieepx_cfg110_t;
@@ -12012,7 +12012,7 @@ union cvmx_pcieepx_cfg111 {
 	} s;
 	struct cvmx_pcieepx_cfg111_s          cn73xx;
 	struct cvmx_pcieepx_cfg111_s          cn78xx;
-	struct cvmx_pcieepx_cfg111_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg111_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg111_s          cnf75xx;
 };
 typedef union cvmx_pcieepx_cfg111 cvmx_pcieepx_cfg111_t;
@@ -12043,7 +12043,7 @@ union cvmx_pcieepx_cfg112 {
 	} s;
 	struct cvmx_pcieepx_cfg112_s          cn73xx;
 	struct cvmx_pcieepx_cfg112_s          cn78xx;
-	struct cvmx_pcieepx_cfg112_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg112_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg112_s          cnf75xx;
 };
 typedef union cvmx_pcieepx_cfg112 cvmx_pcieepx_cfg112_t;
@@ -12086,7 +12086,7 @@ union cvmx_pcieepx_cfg448 {
 	struct cvmx_pcieepx_cfg448_s          cn70xxp1;
 	struct cvmx_pcieepx_cfg448_s          cn73xx;
 	struct cvmx_pcieepx_cfg448_s          cn78xx;
-	struct cvmx_pcieepx_cfg448_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg448_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg448_s          cnf71xx;
 	struct cvmx_pcieepx_cfg448_s          cnf75xx;
 };
@@ -12128,7 +12128,7 @@ union cvmx_pcieepx_cfg449 {
 	struct cvmx_pcieepx_cfg449_s          cn70xxp1;
 	struct cvmx_pcieepx_cfg449_s          cn73xx;
 	struct cvmx_pcieepx_cfg449_s          cn78xx;
-	struct cvmx_pcieepx_cfg449_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg449_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg449_s          cnf71xx;
 	struct cvmx_pcieepx_cfg449_s          cnf75xx;
 };
@@ -12260,8 +12260,8 @@ union cvmx_pcieepx_cfg450 {
                                                          Forces the Link to the state specified by the Link State field.
                                                          The Force Link pulse will trigger Link re-negotiation.
                                                          * As the The Force Link is a pulse, writing a 1 to it does
-                                                           trigger the forced link state event, even thought reading it
-                                                           always returns a 0. */
+                                                         trigger the forced link state event, even thought reading it
+                                                         always returns a 0. */
 	uint32_t reserved_12_14               : 3;
 	uint32_t link_cmd                     : 4;  /**< Link Command
                                                          The Link command that the PCI Express Core will be forced to
@@ -12356,7 +12356,7 @@ union cvmx_pcieepx_cfg450 {
 #endif
 	} cn73xx;
 	struct cvmx_pcieepx_cfg450_cn73xx     cn78xx;
-	struct cvmx_pcieepx_cfg450_cn73xx     cn78xxp2;
+	struct cvmx_pcieepx_cfg450_cn73xx     cn78xxp1;
 	struct cvmx_pcieepx_cfg450_s          cnf71xx;
 	struct cvmx_pcieepx_cfg450_cn73xx     cnf75xx;
 };
@@ -12474,7 +12474,7 @@ union cvmx_pcieepx_cfg451 {
 	struct cvmx_pcieepx_cfg451_s          cn70xxp1;
 	struct cvmx_pcieepx_cfg451_s          cn73xx;
 	struct cvmx_pcieepx_cfg451_s          cn78xx;
-	struct cvmx_pcieepx_cfg451_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg451_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg451_s          cnf71xx;
 	struct cvmx_pcieepx_cfg451_s          cnf75xx;
 };
@@ -12752,7 +12752,7 @@ union cvmx_pcieepx_cfg452 {
 	struct cvmx_pcieepx_cfg452_cn70xx     cn70xxp1;
 	struct cvmx_pcieepx_cfg452_cn70xx     cn73xx;
 	struct cvmx_pcieepx_cfg452_cn70xx     cn78xx;
-	struct cvmx_pcieepx_cfg452_cn70xx     cn78xxp2;
+	struct cvmx_pcieepx_cfg452_cn70xx     cn78xxp1;
 	struct cvmx_pcieepx_cfg452_cn61xx     cnf71xx;
 	struct cvmx_pcieepx_cfg452_cn70xx     cnf75xx;
 };
@@ -12799,7 +12799,7 @@ union cvmx_pcieepx_cfg453 {
 	struct cvmx_pcieepx_cfg453_s          cn70xxp1;
 	struct cvmx_pcieepx_cfg453_s          cn73xx;
 	struct cvmx_pcieepx_cfg453_s          cn78xx;
-	struct cvmx_pcieepx_cfg453_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg453_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg453_s          cnf71xx;
 	struct cvmx_pcieepx_cfg453_s          cnf75xx;
 };
@@ -12942,7 +12942,7 @@ union cvmx_pcieepx_cfg454 {
 #endif
 	} cn73xx;
 	struct cvmx_pcieepx_cfg454_cn73xx     cn78xx;
-	struct cvmx_pcieepx_cfg454_cn73xx     cn78xxp2;
+	struct cvmx_pcieepx_cfg454_cn73xx     cn78xxp1;
 	struct cvmx_pcieepx_cfg454_cn61xx     cnf71xx;
 	struct cvmx_pcieepx_cfg454_cn73xx     cnf75xx;
 };
@@ -13013,7 +13013,7 @@ union cvmx_pcieepx_cfg455 {
 	struct cvmx_pcieepx_cfg455_s          cn70xxp1;
 	struct cvmx_pcieepx_cfg455_s          cn73xx;
 	struct cvmx_pcieepx_cfg455_s          cn78xx;
-	struct cvmx_pcieepx_cfg455_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg455_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg455_s          cnf71xx;
 	struct cvmx_pcieepx_cfg455_s          cnf75xx;
 };
@@ -13066,7 +13066,7 @@ union cvmx_pcieepx_cfg456 {
 	struct cvmx_pcieepx_cfg456_s          cn70xxp1;
 	struct cvmx_pcieepx_cfg456_s          cn73xx;
 	struct cvmx_pcieepx_cfg456_s          cn78xx;
-	struct cvmx_pcieepx_cfg456_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg456_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg456_s          cnf71xx;
 	struct cvmx_pcieepx_cfg456_s          cnf75xx;
 };
@@ -13101,7 +13101,7 @@ union cvmx_pcieepx_cfg458 {
 	struct cvmx_pcieepx_cfg458_s          cn70xxp1;
 	struct cvmx_pcieepx_cfg458_s          cn73xx;
 	struct cvmx_pcieepx_cfg458_s          cn78xx;
-	struct cvmx_pcieepx_cfg458_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg458_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg458_s          cnf71xx;
 	struct cvmx_pcieepx_cfg458_s          cnf75xx;
 };
@@ -13136,7 +13136,7 @@ union cvmx_pcieepx_cfg459 {
 	struct cvmx_pcieepx_cfg459_s          cn70xxp1;
 	struct cvmx_pcieepx_cfg459_s          cn73xx;
 	struct cvmx_pcieepx_cfg459_s          cn78xx;
-	struct cvmx_pcieepx_cfg459_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg459_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg459_s          cnf71xx;
 	struct cvmx_pcieepx_cfg459_s          cnf75xx;
 };
@@ -13177,7 +13177,7 @@ union cvmx_pcieepx_cfg460 {
 	struct cvmx_pcieepx_cfg460_s          cn70xxp1;
 	struct cvmx_pcieepx_cfg460_s          cn73xx;
 	struct cvmx_pcieepx_cfg460_s          cn78xx;
-	struct cvmx_pcieepx_cfg460_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg460_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg460_s          cnf71xx;
 	struct cvmx_pcieepx_cfg460_s          cnf75xx;
 };
@@ -13218,7 +13218,7 @@ union cvmx_pcieepx_cfg461 {
 	struct cvmx_pcieepx_cfg461_s          cn70xxp1;
 	struct cvmx_pcieepx_cfg461_s          cn73xx;
 	struct cvmx_pcieepx_cfg461_s          cn78xx;
-	struct cvmx_pcieepx_cfg461_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg461_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg461_s          cnf71xx;
 	struct cvmx_pcieepx_cfg461_s          cnf75xx;
 };
@@ -13259,7 +13259,7 @@ union cvmx_pcieepx_cfg462 {
 	struct cvmx_pcieepx_cfg462_s          cn70xxp1;
 	struct cvmx_pcieepx_cfg462_s          cn73xx;
 	struct cvmx_pcieepx_cfg462_s          cn78xx;
-	struct cvmx_pcieepx_cfg462_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg462_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg462_s          cnf71xx;
 	struct cvmx_pcieepx_cfg462_s          cnf75xx;
 };
@@ -13330,7 +13330,7 @@ union cvmx_pcieepx_cfg463 {
 	struct cvmx_pcieepx_cfg463_cn52xx     cn70xxp1;
 	struct cvmx_pcieepx_cfg463_s          cn73xx;
 	struct cvmx_pcieepx_cfg463_s          cn78xx;
-	struct cvmx_pcieepx_cfg463_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg463_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg463_cn52xx     cnf71xx;
 	struct cvmx_pcieepx_cfg463_s          cnf75xx;
 };
@@ -13371,7 +13371,7 @@ union cvmx_pcieepx_cfg464 {
 	struct cvmx_pcieepx_cfg464_s          cn70xxp1;
 	struct cvmx_pcieepx_cfg464_s          cn73xx;
 	struct cvmx_pcieepx_cfg464_s          cn78xx;
-	struct cvmx_pcieepx_cfg464_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg464_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg464_s          cnf71xx;
 	struct cvmx_pcieepx_cfg464_s          cnf75xx;
 };
@@ -13412,7 +13412,7 @@ union cvmx_pcieepx_cfg465 {
 	struct cvmx_pcieepx_cfg465_s          cn70xxp1;
 	struct cvmx_pcieepx_cfg465_s          cn73xx;
 	struct cvmx_pcieepx_cfg465_s          cn78xx;
-	struct cvmx_pcieepx_cfg465_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg465_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg465_s          cnf71xx;
 	struct cvmx_pcieepx_cfg465_s          cnf75xx;
 };
@@ -13479,7 +13479,7 @@ union cvmx_pcieepx_cfg466 {
 	struct cvmx_pcieepx_cfg466_s          cn70xxp1;
 	struct cvmx_pcieepx_cfg466_s          cn73xx;
 	struct cvmx_pcieepx_cfg466_s          cn78xx;
-	struct cvmx_pcieepx_cfg466_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg466_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg466_s          cnf71xx;
 	struct cvmx_pcieepx_cfg466_s          cnf75xx;
 };
@@ -13533,7 +13533,7 @@ union cvmx_pcieepx_cfg467 {
 	struct cvmx_pcieepx_cfg467_s          cn70xxp1;
 	struct cvmx_pcieepx_cfg467_s          cn73xx;
 	struct cvmx_pcieepx_cfg467_s          cn78xx;
-	struct cvmx_pcieepx_cfg467_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg467_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg467_s          cnf71xx;
 	struct cvmx_pcieepx_cfg467_s          cnf75xx;
 };
@@ -13587,7 +13587,7 @@ union cvmx_pcieepx_cfg468 {
 	struct cvmx_pcieepx_cfg468_s          cn70xxp1;
 	struct cvmx_pcieepx_cfg468_s          cn73xx;
 	struct cvmx_pcieepx_cfg468_s          cn78xx;
-	struct cvmx_pcieepx_cfg468_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg468_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg468_s          cnf71xx;
 	struct cvmx_pcieepx_cfg468_s          cnf75xx;
 };
@@ -13746,16 +13746,51 @@ union cvmx_pcieepx_cfg515 {
                                                          indicates full swing. When set to 0, indicates low swing. */
 	uint32_t dsc                          : 1;  /**< Directed speed change. A write of 1 initiates a speed change.
                                                          When the speed change occurs, the controller will clear the contents of this field. */
-	uint32_t le                           : 9;  /**< Lane enable. Indicates the number of lanes to check for exit from electrical idle in
-                                                         Polling.Active and Polling.Compliance. 0x1 = x1, 0x2 = x2, etc. Used to limit the maximum
-                                                         link width to ignore broken lanes that detect a receiver, but will not exit electrical
-                                                         idle and would otherwise prevent a valid link from being configured. */
+	uint32_t reserved_8_16                : 9;
 	uint32_t n_fts                        : 8;  /**< N_FTS. Sets the number of fast training sequences (N_FTS) that the core advertises as its
                                                          N_FTS during GEN2 Link training. This value is used to inform the link partner about the
                                                          PHY's ability to recover synchronization after a low power state.
-                                                         Do not set [N_FTS] to zero; doing so can cause the LTSSM to go into the recovery state
-                                                         when
-                                                         exiting from L0s. */
+                                                         Do not set [N_FTS] to zero; doing so can cause the LTSSM to go into the recovery
+                                                         state when exiting from L0s. */
+#else
+	uint32_t n_fts                        : 8;
+	uint32_t reserved_8_16                : 9;
+	uint32_t dsc                          : 1;
+	uint32_t cpyts                        : 1;
+	uint32_t ctcrb                        : 1;
+	uint32_t s_d_e                        : 1;
+	uint32_t reserved_21_31               : 11;
+#endif
+	} s;
+	struct cvmx_pcieepx_cfg515_cn61xx {
+#ifdef __BIG_ENDIAN_BITFIELD
+	uint32_t reserved_21_31               : 11;
+	uint32_t s_d_e                        : 1;  /**< SEL_DE_EMPHASIS
+                                                         Used to set the de-emphasis level for upstream ports. */
+	uint32_t ctcrb                        : 1;  /**< Config Tx Compliance Receive Bit
+                                                         When set to 1, signals LTSSM to transmit TS ordered sets
+                                                         with the compliance receive bit assert (equal to 1). */
+	uint32_t cpyts                        : 1;  /**< Config PHY Tx Swing
+                                                         Indicates the voltage level the PHY should drive. When set to
+                                                         1, indicates Full Swing. When set to 0, indicates Low Swing */
+	uint32_t dsc                          : 1;  /**< Directed Speed Change
+                                                         o a write of '1' will initiate a speed change
+                                                         o always reads a zero */
+	uint32_t le                           : 9;  /**< Lane Enable
+                                                         Indicates the number of lanes to check for exit from electrical
+                                                         idle in Polling.Active and Polling.Compliance. 1 = x1, 2 = x2,
+                                                         etc. Used to limit the maximum link width to ignore broken
+                                                         lanes that detect a receiver, but will not exit electrical
+                                                         idle and
+                                                         would otherwise prevent a valid link from being configured. */
+	uint32_t n_fts                        : 8;  /**< N_FTS
+                                                         Sets the Number of Fast Training Sequences (N_FTS) that
+                                                         the core advertises as its N_FTS during GEN2 Link training.
+                                                         This value is used to inform the Link partner about the PHYs
+                                                         ability to recover synchronization after a low power state.
+                                                         Note: Do not set N_FTS to zero; doing so can cause the
+                                                               LTSSM to go into the recovery state when exiting from
+                                                               L0s. */
 #else
 	uint32_t n_fts                        : 8;
 	uint32_t le                           : 9;
@@ -13765,20 +13800,68 @@ union cvmx_pcieepx_cfg515 {
 	uint32_t s_d_e                        : 1;
 	uint32_t reserved_21_31               : 11;
 #endif
-	} s;
-	struct cvmx_pcieepx_cfg515_s          cn61xx;
-	struct cvmx_pcieepx_cfg515_s          cn63xx;
-	struct cvmx_pcieepx_cfg515_s          cn63xxp1;
-	struct cvmx_pcieepx_cfg515_s          cn66xx;
-	struct cvmx_pcieepx_cfg515_s          cn68xx;
-	struct cvmx_pcieepx_cfg515_s          cn68xxp1;
-	struct cvmx_pcieepx_cfg515_s          cn70xx;
-	struct cvmx_pcieepx_cfg515_s          cn70xxp1;
-	struct cvmx_pcieepx_cfg515_s          cn73xx;
-	struct cvmx_pcieepx_cfg515_s          cn78xx;
-	struct cvmx_pcieepx_cfg515_s          cn78xxp2;
-	struct cvmx_pcieepx_cfg515_s          cnf71xx;
-	struct cvmx_pcieepx_cfg515_s          cnf75xx;
+	} cn61xx;
+	struct cvmx_pcieepx_cfg515_cn61xx     cn63xx;
+	struct cvmx_pcieepx_cfg515_cn61xx     cn63xxp1;
+	struct cvmx_pcieepx_cfg515_cn61xx     cn66xx;
+	struct cvmx_pcieepx_cfg515_cn61xx     cn68xx;
+	struct cvmx_pcieepx_cfg515_cn61xx     cn68xxp1;
+	struct cvmx_pcieepx_cfg515_cn61xx     cn70xx;
+	struct cvmx_pcieepx_cfg515_cn61xx     cn70xxp1;
+	struct cvmx_pcieepx_cfg515_cn61xx     cn73xx;
+	struct cvmx_pcieepx_cfg515_cn78xx {
+#ifdef __BIG_ENDIAN_BITFIELD
+	uint32_t reserved_21_31               : 11;
+	uint32_t s_d_e                        : 1;  /**< SEL_DE_EMPHASIS. Used to set the deemphasis level for upstream ports. */
+	uint32_t ctcrb                        : 1;  /**< Config TX compliance receive bit. When set to 1, signals LTSSM to transmit TS ordered sets
+                                                         with the compliance receive bit assert (equal to 1). */
+	uint32_t cpyts                        : 1;  /**< Config PHY TX swing. Indicates the voltage level that the PHY should drive. When set to 1,
+                                                         indicates full swing. When set to 0, indicates low swing. */
+	uint32_t dsc                          : 1;  /**< Directed speed change. A write of 1 initiates a speed change.
+                                                         When the speed change occurs, the controller will clear the contents of this field. */
+	uint32_t alaneflip                    : 1;  /**< Enable auto flipping of the lanes. */
+	uint32_t pdetlane                     : 3;  /**< Predetermined lane for auto flip. This field defines which
+                                                         physical lane is connected to logical Lane0 by the flip
+                                                         operation performed in detect.
+                                                           0x0 = Auto flipping not supported.
+                                                           0x1 = Connect logical Lane0 to physical lane 1.
+                                                           0x2 = Connect logical Lane0 to physical lane 3.
+                                                           0x3 = Connect logical Lane0 to physical lane 7.
+                                                           0x4 = Connect logical Lane0 to physical lane 15.
+                                                           0x5 - 0x7 = Reserved. */
+	uint32_t nlanes                       : 5;  /**< Predetermined number of lanes.  Defines the number of
+                                                         lanes which are connected and not bad. Used to limit the
+                                                         effective link width to ignore "broken" or "unused" lanes that
+                                                         detect a receiver. Indicates the number of lanes to check for
+                                                         exit from electrical idle in Polling.Active and L2.Idle.
+                                                         0x1 = 1 lane.
+                                                         0x2 = 2 lanes.
+                                                         0x3 = 3 lanes.
+                                                         - ...
+                                                         0x8 = 8 lanes.
+                                                         0x9-0x1F = Reserved.
+                                                         When there are unused lanes in the system, then this value must reflect the
+                                                         number of lanes. PCIEEP()_CFG452[LME] must also be changed likewise. */
+	uint32_t n_fts                        : 8;  /**< N_FTS. Sets the number of fast training sequences (N_FTS) that the core advertises as its
+                                                         N_FTS during GEN2 Link training. This value is used to inform the link partner about the
+                                                         PHY's ability to recover synchronization after a low power state.
+                                                         Do not set [N_FTS] to zero; doing so can cause the LTSSM to go into the recovery
+                                                         state when exiting from L0s. */
+#else
+	uint32_t n_fts                        : 8;
+	uint32_t nlanes                       : 5;
+	uint32_t pdetlane                     : 3;
+	uint32_t alaneflip                    : 1;
+	uint32_t dsc                          : 1;
+	uint32_t cpyts                        : 1;
+	uint32_t ctcrb                        : 1;
+	uint32_t s_d_e                        : 1;
+	uint32_t reserved_21_31               : 11;
+#endif
+	} cn78xx;
+	struct cvmx_pcieepx_cfg515_cn61xx     cn78xxp1;
+	struct cvmx_pcieepx_cfg515_cn61xx     cnf71xx;
+	struct cvmx_pcieepx_cfg515_cn78xx     cnf75xx;
 };
 typedef union cvmx_pcieepx_cfg515 cvmx_pcieepx_cfg515_t;
 
@@ -13811,7 +13894,7 @@ union cvmx_pcieepx_cfg516 {
 	struct cvmx_pcieepx_cfg516_s          cn70xxp1;
 	struct cvmx_pcieepx_cfg516_s          cn73xx;
 	struct cvmx_pcieepx_cfg516_s          cn78xx;
-	struct cvmx_pcieepx_cfg516_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg516_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg516_s          cnf71xx;
 	struct cvmx_pcieepx_cfg516_s          cnf75xx;
 };
@@ -13846,7 +13929,7 @@ union cvmx_pcieepx_cfg517 {
 	struct cvmx_pcieepx_cfg517_s          cn70xxp1;
 	struct cvmx_pcieepx_cfg517_s          cn73xx;
 	struct cvmx_pcieepx_cfg517_s          cn78xx;
-	struct cvmx_pcieepx_cfg517_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg517_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg517_s          cnf71xx;
 	struct cvmx_pcieepx_cfg517_s          cnf75xx;
 };
@@ -13901,7 +13984,7 @@ union cvmx_pcieepx_cfg548 {
 	} s;
 	struct cvmx_pcieepx_cfg548_s          cn73xx;
 	struct cvmx_pcieepx_cfg548_s          cn78xx;
-	struct cvmx_pcieepx_cfg548_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg548_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg548_s          cnf75xx;
 };
 typedef union cvmx_pcieepx_cfg548 cvmx_pcieepx_cfg548_t;
@@ -14026,7 +14109,7 @@ union cvmx_pcieepx_cfg554 {
 #endif
 	} cn73xx;
 	struct cvmx_pcieepx_cfg554_s          cn78xx;
-	struct cvmx_pcieepx_cfg554_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg554_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg554_s          cnf75xx;
 };
 typedef union cvmx_pcieepx_cfg554 cvmx_pcieepx_cfg554_t;
@@ -14050,7 +14133,7 @@ union cvmx_pcieepx_cfg558 {
 	} s;
 	struct cvmx_pcieepx_cfg558_s          cn73xx;
 	struct cvmx_pcieepx_cfg558_s          cn78xx;
-	struct cvmx_pcieepx_cfg558_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg558_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg558_s          cnf75xx;
 };
 typedef union cvmx_pcieepx_cfg558 cvmx_pcieepx_cfg558_t;
@@ -14075,7 +14158,7 @@ union cvmx_pcieepx_cfg559 {
 	} s;
 	struct cvmx_pcieepx_cfg559_s          cn73xx;
 	struct cvmx_pcieepx_cfg559_s          cn78xx;
-	struct cvmx_pcieepx_cfg559_s          cn78xxp2;
+	struct cvmx_pcieepx_cfg559_s          cn78xxp1;
 	struct cvmx_pcieepx_cfg559_s          cnf75xx;
 };
 typedef union cvmx_pcieepx_cfg559 cvmx_pcieepx_cfg559_t;

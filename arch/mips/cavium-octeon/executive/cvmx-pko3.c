@@ -195,7 +195,7 @@ int cvmx_pko3_hw_init_global(int node, uint16_t aura)
 	else
 		/* Reduce the value from recommended 0x10 to avoid
 		 * getting "underflow" condition in the BGX TX FIFO.*/
-	ptf_iobp_cfg.s.max_read_size = 3;
+		ptf_iobp_cfg.s.max_read_size = 3;
 	cvmx_write_csr_node(node, CVMX_PKO_PTF_IOBP_CFG, ptf_iobp_cfg.u64);
 
 	/* Set minimum packet size per Ethernet standard */
@@ -838,6 +838,7 @@ static int cvmx_pko_setup_macs(int node)
 		unsigned pko_fifo_cnt, fifo_size;
 		unsigned mac_fifo_cnt;
 		unsigned tmp;
+		int saved_fifo_num;
 
 		pko_fifo_cnt = cvmx_pko3_mac_table[mac_num].fifo_cnt;
 		mac_fifo_cnt = cvmx_pko3_mac_table[mac_num].mac_fifo_cnt;
@@ -915,16 +916,34 @@ static int cvmx_pko_setup_macs(int node)
 		tmp = (skid_credit / 256) >> 1; /* valid 0,1,2 */
 		pko_mac_cfg.u64 =
 			cvmx_read_csr_node(node, CVMX_PKO_MACX_CFG(mac_num));
+
+		/* The PKO_MACX_CFG bits cannot be changed unless FIFO_MUM=0x1f (unused fifo) */
+		saved_fifo_num = pko_mac_cfg.s.fifo_num;
+		pko_mac_cfg.s.fifo_num = 0x1f;
 		pko_mac_cfg.s.skid_max_cnt = tmp;
 		cvmx_write_csr_node(node, CVMX_PKO_MACX_CFG(mac_num),
 			pko_mac_cfg.u64);
 
-		if(debug) cvmx_dprintf(
+		pko_mac_cfg.u64 =
+			cvmx_read_csr_node(node, CVMX_PKO_MACX_CFG(mac_num));
+		pko_mac_cfg.s.fifo_num = saved_fifo_num;
+		cvmx_write_csr_node(node, CVMX_PKO_MACX_CFG(mac_num),
+			pko_mac_cfg.u64);
+
+		if (debug) {
+			pko_mci0_max_cred.u64 =
+			     cvmx_read_csr_node(node, CVMX_PKO_MCI0_MAX_CREDX(mac_num));
+			pko_mci1_max_cred.u64 =
+			     cvmx_read_csr_node(node, CVMX_PKO_MCI1_MAX_CREDX(mac_num));
+			pko_mac_cfg.u64 =
+			     cvmx_read_csr_node(node, CVMX_PKO_MACX_CFG(mac_num));
+			cvmx_dprintf(
 			"%s: mac %u PKO_MCI0_MAX_CREDX=%u PKO_MCI1_MAX_CREDX=%u PKO_MACX_CFG[SKID_MAX_CNT]=%u\n",
 			__FUNCTION__,  mac_num,
 			pko_mci0_max_cred.s.max_cred_lim,
 			pko_mci1_max_cred.s.max_cred_lim,
 			pko_mac_cfg.s.skid_max_cnt);
+		}
 	} /* for mac_num */
 
 	return 0;
@@ -2113,7 +2132,7 @@ int cvmx_pko3_pdesc_hdr_push(cvmx_pko3_pdesc_t *pdesc,
 		/* Set CKL3 only for IPv4 */
 		if ((pdesc->pki_word2.lc_hdr_type & 0x1e)
 			== CVMX_PKI_LTYPE_E_IP4)
-		hdr_s->s.ckl3 = 1;
+			hdr_s->s.ckl3 = 1;
 		hdr_s->s.ckl4 = pdesc->ckl4_alg;
 	}
 

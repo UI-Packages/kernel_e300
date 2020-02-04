@@ -1,3 +1,5 @@
+OBJECT_FILES_NON_STANDARD := y
+
 hostprogs-y	:= modpost mk_elfconfig
 always		:= $(hostprogs-y) empty.o
 
@@ -15,8 +17,8 @@ endef
 quiet_cmd_offsets = GEN     $@
 define cmd_offsets
 	(set -e; \
-	 echo "#ifndef __DEVICEVTABLE_OFFSETS_H__"; \
-	 echo "#define __DEVICEVTABLE_OFFSETS_H__"; \
+	 echo "#ifndef __DEVICETABLE_OFFSETS_H__"; \
+	 echo "#define __DEVICETABLE_OFFSETS_H__"; \
 	 echo "/*"; \
 	 echo " * DO NOT MODIFY."; \
 	 echo " *"; \
@@ -29,15 +31,10 @@ define cmd_offsets
 	 echo "#endif" ) > $@
 endef
 
-# We use internal kbuild rules to avoid the "is up to date" message from make
-scripts/mod/devicetable-offsets.s: scripts/mod/devicetable-offsets.c FORCE
-	$(Q)mkdir -p $(dir $@)
-	$(call if_changed_dep,cc_s_c)
+$(obj)/$(devicetable-offsets-file): $(obj)/devicetable-offsets.s
+	$(call if_changed,offsets)
 
-$(obj)/$(devicetable-offsets-file): scripts/mod/devicetable-offsets.s
-	$(call cmd,offsets)
-
-targets += $(devicetable-offsets-file)
+targets += $(devicetable-offsets-file) devicetable-offsets.s
 
 # dependencies on generated files need to be listed explicitly
 

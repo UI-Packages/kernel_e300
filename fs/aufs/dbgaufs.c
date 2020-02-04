@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2005-2014 Junjiro R. Okajima
+ * Copyright (C) 2005-2017 Junjiro R. Okajima
  *
  * This program, aufs is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -114,7 +114,7 @@ static int dbgaufs_plink_open(struct inode *inode, struct file *file)
 	struct dbgaufs_plink_arg *p;
 	struct au_sbinfo *sbinfo;
 	struct super_block *sb;
-	struct au_sphlhead *sphl;
+	struct hlist_bl_head *hbl;
 
 	err = -ENOMEM;
 	p = (void *)get_zeroed_page(GFP_NOFS);
@@ -134,10 +134,9 @@ static int dbgaufs_plink_open(struct inode *inode, struct file *file)
 		limit -= n;
 
 		sum = 0;
-		for (i = 0, sphl = sbinfo->si_plink;
-		     i < AuPlink_NHASH;
-		     i++, sphl++) {
-			n = au_sphl_count(sphl);
+		for (i = 0, hbl = sbinfo->si_plink; i < AuPlink_NHASH;
+		     i++, hbl++) {
+			n = au_hbl_count(hbl);
 			sum += n;
 
 			n = snprintf(p->a + p->n, limit, "%lu ", n);
@@ -226,7 +225,7 @@ static int dbgaufs_xino_open(struct inode *inode, struct file *file)
 
 	err = -ENOENT;
 	xf = NULL;
-	name = &file->f_dentry->d_name;
+	name = &file->f_path.dentry->d_name;
 	if (unlikely(name->len < sizeof(DbgaufsXi_PREFIX)
 		     || memcmp(name->name, DbgaufsXi_PREFIX,
 			       sizeof(DbgaufsXi_PREFIX) - 1)))
@@ -238,7 +237,7 @@ static int dbgaufs_xino_open(struct inode *inode, struct file *file)
 	sbinfo = inode->i_private;
 	sb = sbinfo->si_sb;
 	si_noflush_read_lock(sb);
-	if (l <= au_sbend(sb)) {
+	if (l <= au_sbbot(sb)) {
 		xf = au_sbr(sb, (aufs_bindex_t)l)->br_xino.xi_file;
 		err = dbgaufs_xi_open(xf, file, /*do_fcnt*/1);
 	} else
@@ -258,18 +257,21 @@ static const struct file_operations dbgaufs_xino_fop = {
 
 void dbgaufs_brs_del(struct super_block *sb, aufs_bindex_t bindex)
 {
-	aufs_bindex_t bend;
+	aufs_bindex_t bbot;
 	struct au_branch *br;
 	struct au_xino_file *xi;
 
 	if (!au_sbi(sb)->si_dbgaufs)
 		return;
 
-	bend = au_sbend(sb);
-	for (; bindex <= bend; bindex++) {
+	bbot = au_sbbot(sb);
+	for (; bindex <= bbot; bindex++) {
 		br = au_sbr(sb, bindex);
 		xi = &br->br_xino;
+		/* debugfs acquires the parent i_mutex */
+		lockdep_off();
 		debugfs_remove(xi->xi_dbgaufs);
+		lockdep_on();
 		xi->xi_dbgaufs = NULL;
 	}
 }
@@ -280,7 +282,7 @@ void dbgaufs_brs_add(struct super_block *sb, aufs_bindex_t bindex)
 	struct dentry *parent;
 	struct au_branch *br;
 	struct au_xino_file *xi;
-	aufs_bindex_t bend;
+	aufs_bindex_t bbot;
 	char name[sizeof(DbgaufsXi_PREFIX) + 5]; /* "xi" bindex NULL */
 
 	sbinfo = au_sbi(sb);
@@ -288,14 +290,17 @@ void dbgaufs_brs_add(struct super_block *sb, aufs_bindex_t bindex)
 	if (!parent)
 		return;
 
-	bend = au_sbend(sb);
-	for (; bindex <= bend; bindex++) {
+	bbot = au_sbbot(sb);
+	for (; bindex <= bbot; bindex++) {
 		snprintf(name, sizeof(name), DbgaufsXi_PREFIX "%d", bindex);
 		br = au_sbr(sb, bindex);
 		xi = &br->br_xino;
 		AuDebugOn(xi->xi_dbgaufs);
+		/* debugfs acquires the parent i_mutex */
+		lockdep_off();
 		xi->xi_dbgaufs = debugfs_create_file(name, dbgaufs_mode, parent,
 						     sbinfo, &dbgaufs_xino_fop);
+		lockdep_on();
 		/* ignore an error */
 		if (unlikely(!xi->xi_dbgaufs))
 			AuWarn1("failed %s under debugfs\n", name);
@@ -357,7 +362,7 @@ static int dbgaufs_xigen_init(struct au_sbinfo *sbinfo)
 void dbgaufs_si_fin(struct au_sbinfo *sbinfo)
 {
 	/*
-	 * This function is a dynamic '__init' function actually,
+	 * This function is a dynamic '__fin' function actually,
 	 * so the tiny check for si_rwsem is unnecessary.
 	 */
 	/* AuRwMustWriteLock(&sbinfo->si_rwsem); */

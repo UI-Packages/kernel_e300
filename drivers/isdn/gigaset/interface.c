@@ -130,9 +130,9 @@ static int if_open(struct tty_struct *tty, struct file *filp)
 	}
 	tty->driver_data = cs;
 
-	atomic_inc(&cs->port.count);
+	++cs->port.count;
 
-	if (atomic_read(&cs->port.count) == 1) {
+	if (cs->port.count == 1) {
 		tty_port_tty_set(&cs->port, tty);
 		cs->port.low_latency = 1;
 	}
@@ -156,9 +156,9 @@ static void if_close(struct tty_struct *tty, struct file *filp)
 
 	if (!cs->connected)
 		gig_dbg(DEBUG_IF, "not connected");	/* nothing to do */
-	else if (!atomic_read(&cs->port.count))
+	else if (!cs->port.count)
 		dev_warn(cs->dev, "%s: device not opened\n", __func__);
-	else if (!atomic_dec_return(&cs->port.count))
+	else if (!--cs->port.count)
 		tty_port_tty_set(&cs->port, NULL);
 
 	mutex_unlock(&cs->mutex);

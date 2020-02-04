@@ -6,13 +6,13 @@
 struct pt_regs;
 
 struct machine_ops {
-	void (* __noreturn restart)(char *cmd);
-	void (* __noreturn halt)(void);
-	void (* __noreturn power_off)(void);
+	void (*restart)(char *cmd);
+	void (*halt)(void);
+	void (*power_off)(void);
 	void (*shutdown)(void);
 	void (*crash_shutdown)(struct pt_regs *);
-	void (* __noreturn emergency_restart)(void);
-} __no_const;
+	void (*emergency_restart)(void);
+};
 
 extern struct machine_ops machine_ops;
 
@@ -25,5 +25,6 @@ void __noreturn machine_real_restart(unsigned int type);
 
 typedef void (*nmi_shootdown_cb)(int, struct pt_regs*);
 void nmi_shootdown_cpus(nmi_shootdown_cb callback);
+void run_crash_ipi_callback(struct pt_regs *regs);
 
 #endif /* _ASM_X86_REBOOT_H */

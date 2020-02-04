@@ -12,7 +12,6 @@
 #include <linux/init.h>
 #include <asm/assembler.h>
 
-
 /*
  * Realview/Versatile Express specific entry point for secondary CPUs.
  * This provides a "holding pen" into which all secondary cores are held

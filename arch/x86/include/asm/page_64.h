@@ -7,9 +7,9 @@
 
 /* duplicated to the one in bootmem.h */
 extern unsigned long max_pfn;
-extern const unsigned long phys_base;
+extern unsigned long phys_base;
 
-static inline unsigned long __intentional_overflow(-1) __phys_addr_nodebug(unsigned long x)
+static inline unsigned long __phys_addr_nodebug(unsigned long x)
 {
 	unsigned long y = x - __START_KERNEL_map;
 
@@ -38,5 +38,9 @@ void clear_page(void *page);
 void copy_page(void *to, void *from);
 
 #endif	/* !__ASSEMBLY__ */
+
+#ifdef CONFIG_X86_VSYSCALL_EMULATION
+# define __HAVE_ARCH_GATE_AREA 1
+#endif
 
 #endif /* _ASM_X86_PAGE_64_H */

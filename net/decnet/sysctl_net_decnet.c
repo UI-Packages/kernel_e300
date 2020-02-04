@@ -132,7 +132,7 @@ static int parse_addr(__le16 *addr, char *str)
 	return 0;
 }
 
-static int dn_node_address_handler(ctl_table *table, int write,
+static int dn_node_address_handler(struct ctl_table *table, int write,
 				void __user *buffer,
 				size_t *lenp, loff_t *ppos)
 {
@@ -174,7 +174,7 @@ static int dn_node_address_handler(ctl_table *table, int write,
 
 	if (len > *lenp) len = *lenp;
 
-	if (len > sizeof addr || copy_to_user(buffer, addr, len))
+	if (copy_to_user(buffer, addr, len))
 		return -EFAULT;
 
 	*lenp = len;
@@ -183,7 +183,7 @@ static int dn_node_address_handler(ctl_table *table, int write,
 	return 0;
 }
 
-static int dn_def_dev_handler(ctl_table *table, int write,
+static int dn_def_dev_handler(struct ctl_table *table, int write,
 				void __user *buffer,
 				size_t *lenp, loff_t *ppos)
 {
@@ -237,7 +237,7 @@ static int dn_def_dev_handler(ctl_table *table, int write,
 
 	if (len > *lenp) len = *lenp;
 
-	if (len > sizeof devname || copy_to_user(buffer, devname, len))
+	if (copy_to_user(buffer, devname, len))
 		return -EFAULT;
 
 	*lenp = len;
@@ -246,7 +246,7 @@ static int dn_def_dev_handler(ctl_table *table, int write,
 	return 0;
 }
 
-static ctl_table dn_table[] = {
+static struct ctl_table dn_table[] = {
 	{
 		.procname = "node_address",
 		.maxlen = 7,

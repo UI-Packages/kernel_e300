@@ -56,8 +56,6 @@ void start_thread(struct pt_regs *regs, unsigned long pc, unsigned long sp)
 	regs->regs[0] = sp;
 }
 
-void exit_thread(void) {}
-
 /*
  * When a process does an "exec", machine state like FPU and debug
  * registers need to be reset.  This is a hook function for that.
@@ -115,4 +113,9 @@ unsigned long get_wchan(struct task_struct *task)
 		return 0;
 
 	return task_pt_regs(task)->cp0_epc;
+}
+
+unsigned long arch_align_stack(unsigned long sp)
+{
+	return sp;
 }

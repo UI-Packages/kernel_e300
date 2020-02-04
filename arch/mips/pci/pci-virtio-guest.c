@@ -25,7 +25,7 @@ union pci_config_address {
 		__BITFIELD_FIELD(unsigned bus_number	  : 8,	/* 23 .. 16 */
 		__BITFIELD_FIELD(unsigned devfn_number	  : 8,	/* 15 .. 8  */
 		__BITFIELD_FIELD(unsigned register_number : 8,	/* 7  .. 0  */
-		;)))))
+		)))));
 	};
 	u32 w;
 };
@@ -37,7 +37,7 @@ int pcibios_plat_dev_init(struct pci_dev *dev)
 
 int pcibios_map_irq(const struct pci_dev *dev, u8 slot, u8 pin)
 {
-	return ((pin + slot) % 4) + MIPS_IRQ_PCIA;
+	return ((pin + slot) % 4)+ MIPS_IRQ_PCIA;
 }
 
 static void pci_virtio_guest_write_config_addr(struct pci_bus *bus,

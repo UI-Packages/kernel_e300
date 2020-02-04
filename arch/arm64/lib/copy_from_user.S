@@ -16,6 +16,12 @@
 
 #include <linux/linkage.h>
 
+#include <asm/alternative.h>
+#include <asm/assembler.h>
+#include <asm/cache.h>
+#include <asm/cpufeature.h>
+#include <asm/sysreg.h>
+
 /*
  * Copy from user space to a kernel buffer (alignment handled by the hardware)
  *
@@ -26,64 +32,53 @@
  * Returns:
  *	x0 - bytes not copied
  */
-ENTRY(__copy_from_user)
+
+	.macro ldrb1 ptr, regB, val
+	uao_user_alternative 9998f, ldrb, ldtrb, \ptr, \regB, \val
+	.endm
+
+	.macro strb1 ptr, regB, val
+	strb \ptr, [\regB], \val
+	.endm
+
+	.macro ldrh1 ptr, regB, val
+	uao_user_alternative 9998f, ldrh, ldtrh, \ptr, \regB, \val
+	.endm
+
+	.macro strh1 ptr, regB, val
+	strh \ptr, [\regB], \val
+	.endm
+
+	.macro ldr1 ptr, regB, val
+	uao_user_alternative 9998f, ldr, ldtr, \ptr, \regB, \val
+	.endm
+
+	.macro str1 ptr, regB, val
+	str \ptr, [\regB], \val
+	.endm
+
+	.macro ldp1 ptr, regB, regC, val
+	uao_ldp 9998f, \ptr, \regB, \regC, \val
+	.endm
+
+	.macro stp1 ptr, regB, regC, val
+	stp \ptr, \regB, [\regC], \val
+	.endm
+
+end	.req	x5
+ENTRY(__arch_copy_from_user)
+ALTERNATIVE("nop", __stringify(SET_PSTATE_PAN(0)), ARM64_ALT_PAN_NOT_UAO, \
+	    CONFIG_ARM64_PAN)
+	add	end, x0, x2
 #include "copy_template.S"
-ENDPROC(__copy_from_user)
+ALTERNATIVE("nop", __stringify(SET_PSTATE_PAN(1)), ARM64_ALT_PAN_NOT_UAO, \
+	    CONFIG_ARM64_PAN)
+	mov	x0, #0				// Nothing to copy
+	ret
+ENDPROC(__arch_copy_from_user)
 
 	.section .fixup,"ax"
-	.align    2
-8:
-	/*
-	 * Count bytes remain
-	 * dst points to (dst + tmp1)
-	 */
-	mov	x0, count
-	sub	dst, dst, tmp1
-	b	.Lfinalize
-9:
-	/*
-	 * 16 bytes remain
-	 * dst is accurate
-	 */
-	mov	x0, #16
-	b	.Lfinalize
-10:
-	/*
-	 * count is accurate
-	 * dst is accurate
-	 */
-	mov	x0, count
-	b	.Lfinalize
-11:
-	/*
-	 *(count + tmp2) bytes remain
-	 * dst points to the start of the remaining bytes
-	 */
-	add	x0, count, tmp2
-	b	.Lfinalize
-12:
-	/*
-	 * (count + 128) bytes remain
-	 * dst is accurate
-	 */
-	add	x0, count, #128
-	b	.Lfinalize
-13:
-	/*
-	 * (count + 128) bytes remain
-	 * dst is pre-biased to (dst + 16)
-	 */
-	add	x0, count, #128
-	add	dst, dst, #16
-.Lfinalize:
-	/*
-	 * Zeroize remaining destination-buffer
-	 */
-	mov	count, x0
-20:
-	/* Zero remaining buffer space */
-	strb	wzr, [dst], #1
-	subs	count, count, #1
-	b.ne	20b
+	.align	2
+9998:	sub	x0, end, dst			// bytes not copied
 	ret
 	.previous

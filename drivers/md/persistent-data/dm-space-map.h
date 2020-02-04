@@ -71,7 +71,6 @@ struct dm_space_map {
 					   dm_sm_threshold_fn fn,
 					   void *context);
 };
-typedef struct dm_space_map __no_const dm_space_map_no_const;
 
 /*----------------------------------------------------------------*/
 

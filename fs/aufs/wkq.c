@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2005-2014 Junjiro R. Okajima
+ * Copyright (C) 2005-2017 Junjiro R. Okajima
  *
  * This program, aufs is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -103,7 +103,8 @@ static void au_wkq_run(struct au_wkinfo *wkinfo)
 {
 	if (au_ftest_wkq(wkinfo->flags, NEST)) {
 		if (au_wkq_test()) {
-			AuWarn1("wkq from wkq, due to a dead dir by UDBA?\n");
+			AuWarn1("wkq from wkq, unless silly-rename on NFS,"
+				" due to a dead dir by UDBA?\n");
 			AuDebugOn(au_ftest_wkq(wkinfo->flags, WAIT));
 		}
 	} else
@@ -140,11 +141,10 @@ int au_wkq_do_wait(unsigned int flags, au_wkq_func_t func, void *args)
 		/* no timeout, no interrupt */
 		wait_for_completion(wkinfo.comp);
 		au_wkq_comp_free(comp);
-		destroy_work_on_stack(&wkinfo.wk);
 	}
 
+	destroy_work_on_stack(&wkinfo.wk);
 	return err;
-
 }
 
 /*

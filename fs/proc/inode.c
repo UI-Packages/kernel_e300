@@ -23,7 +23,6 @@
 #include <linux/slab.h>
 #include <linux/mount.h>
 #include <linux/magic.h>
-#include <linux/namei.h>
 
 #include <asm/uaccess.h>
 
@@ -33,29 +32,22 @@ static void proc_evict_inode(struct inode *inode)
 {
 	struct proc_dir_entry *de;
 	struct ctl_table_header *head;
-	const struct proc_ns_operations *ns_ops;
-	void *ns;
 
-	truncate_inode_pages(&inode->i_data, 0);
+	truncate_inode_pages_final(&inode->i_data);
 	clear_inode(inode);
 
 	/* Stop tracking associated processes */
 	put_pid(PROC_I(inode)->pid);
 
 	/* Let go of any associated proc directory entry */
-	de = PROC_I(inode)->pde;
+	de = PDE(inode);
 	if (de)
 		pde_put(de);
 	head = PROC_I(inode)->sysctl;
 	if (head) {
-		rcu_assign_pointer(PROC_I(inode)->sysctl, NULL);
+		RCU_INIT_POINTER(PROC_I(inode)->sysctl, NULL);
 		sysctl_head_put(head);
 	}
-	/* Release any associated namespace */
-	ns_ops = PROC_I(inode)->ns.ns_ops;
-	ns = PROC_I(inode)->ns.ns;
-	if (ns_ops && ns)
-		ns_ops->put(ns);
 }
 
 static struct kmem_cache * proc_inode_cachep;
@@ -74,10 +66,8 @@ static struct inode *proc_alloc_inode(struct super_block *sb)
 	ei->pde = NULL;
 	ei->sysctl = NULL;
 	ei->sysctl_entry = NULL;
-	ei->ns.ns = NULL;
-	ei->ns.ns_ops = NULL;
+	ei->ns_ops = NULL;
 	inode = &ei->vfs_inode;
-	inode->i_mtime = inode->i_atime = inode->i_ctime = CURRENT_TIME;
 	return inode;
 }
 
@@ -104,7 +94,8 @@ void __init proc_init_inodecache(void)
 	proc_inode_cachep = kmem_cache_create("proc_inode_cache",
 					     sizeof(struct proc_inode),
 					     0, (SLAB_RECLAIM_ACCOUNT|
-						SLAB_MEM_SPREAD|SLAB_PANIC),
+						SLAB_MEM_SPREAD|SLAB_ACCOUNT|
+						SLAB_PANIC),
 					     init_once);
 }
 
@@ -286,6 +277,32 @@ static int proc_reg_mmap(struct file *file, struct vm_area_struct *vma)
 	return rv;
 }
 
+static unsigned long
+proc_reg_get_unmapped_area(struct file *file, unsigned long orig_addr,
+			   unsigned long len, unsigned long pgoff,
+			   unsigned long flags)
+{
+	struct proc_dir_entry *pde = PDE(file_inode(file));
+	unsigned long rv = -EIO;
+
+	if (use_pde(pde)) {
+		typeof(proc_reg_get_unmapped_area) *get_area;
+
+		get_area = pde->proc_fops->get_unmapped_area;
+#ifdef CONFIG_MMU
+		if (!get_area)
+			get_area = current->mm->get_unmapped_area;
+#endif
+
+		if (get_area)
+			rv = get_area(file, orig_addr, len, pgoff, flags);
+		else
+			rv = orig_addr;
+		unuse_pde(pde);
+	}
+	return rv;
+}
+
 static int proc_reg_open(struct inode *inode, struct file *file)
 {
 	struct proc_dir_entry *pde = PDE(inode);
@@ -357,6 +374,7 @@ static const struct file_operations proc_reg_file_ops = {
 	.compat_ioctl	= proc_reg_compat_ioctl,
 #endif
 	.mmap		= proc_reg_mmap,
+	.get_unmapped_area = proc_reg_get_unmapped_area,
 	.open		= proc_reg_open,
 	.release	= proc_reg_release,
 };
@@ -369,29 +387,31 @@ static const struct file_operations proc_reg_file_ops_no_compat = {
 	.poll		= proc_reg_poll,
 	.unlocked_ioctl	= proc_reg_unlocked_ioctl,
 	.mmap		= proc_reg_mmap,
+	.get_unmapped_area = proc_reg_get_unmapped_area,
 	.open		= proc_reg_open,
 	.release	= proc_reg_release,
 };
 #endif
 
-static void *proc_follow_link(struct dentry *dentry, struct nameidata *nd)
-{
-	struct proc_dir_entry *pde = PDE(dentry->d_inode);
-	if (unlikely(!use_pde(pde)))
-		return ERR_PTR(-EINVAL);
-	nd_set_link(nd, pde->data);
-	return pde;
-}
-
-static void proc_put_link(struct dentry *dentry, struct nameidata *nd, void *p)
+static void proc_put_link(void *p)
 {
 	unuse_pde(p);
 }
 
+static const char *proc_get_link(struct dentry *dentry,
+				 struct inode *inode,
+				 struct delayed_call *done)
+{
+	struct proc_dir_entry *pde = PDE(inode);
+	if (unlikely(!use_pde(pde)))
+		return ERR_PTR(-EINVAL);
+	set_delayed_call(done, proc_put_link, pde);
+	return pde->data;
+}
+
 const struct inode_operations proc_link_inode_operations = {
 	.readlink	= generic_readlink,
-	.follow_link	= proc_follow_link,
-	.put_link	= proc_put_link,
+	.get_link	= proc_get_link,
 };
 
 struct inode *proc_get_inode(struct super_block *sb, struct proc_dir_entry *de)
@@ -400,9 +420,13 @@ struct inode *proc_get_inode(struct super_block *sb, struct proc_dir_entry *de)
 
 	if (inode) {
 		inode->i_ino = de->low_ino;
-		inode->i_mtime = inode->i_atime = inode->i_ctime = CURRENT_TIME;
+		inode->i_mtime = inode->i_atime = inode->i_ctime = current_time(inode);
 		PROC_I(inode)->pde = de;
 
+		if (is_empty_pde(de)) {
+			make_empty_dir_inode(inode);
+			return inode;
+		}
 		if (de->mode) {
 			inode->i_mode = de->mode;
 			inode->i_uid = de->uid;
@@ -432,16 +456,30 @@ struct inode *proc_get_inode(struct super_block *sb, struct proc_dir_entry *de)
 	return inode;
 }
 
-int proc_fill_super(struct super_block *s)
+int proc_fill_super(struct super_block *s, void *data, int silent)
 {
+	struct pid_namespace *ns = get_pid_ns(s->s_fs_info);
 	struct inode *root_inode;
+	int ret;
 
+	if (!proc_parse_options(data, ns))
+		return -EINVAL;
+
+	/* User space would break if executables or devices appear on proc */
+	s->s_iflags |= SB_I_USERNS_VISIBLE | SB_I_NOEXEC | SB_I_NODEV;
 	s->s_flags |= MS_NODIRATIME | MS_NOSUID | MS_NOEXEC;
 	s->s_blocksize = 1024;
 	s->s_blocksize_bits = 10;
 	s->s_magic = PROC_SUPER_MAGIC;
 	s->s_op = &proc_sops;
 	s->s_time_gran = 1;
+
+	/*
+	 * procfs isn't actually a stacking filesystem; however, there is
+	 * too much magic going on inside it to permit stacking things on
+	 * top of it
+	 */
+	s->s_stack_depth = FILESYSTEM_MAX_STACK_DEPTH;
 	
 	pde_get(&proc_root);
 	root_inode = proc_get_inode(s, &proc_root);
@@ -456,5 +494,9 @@ int proc_fill_super(struct super_block *s)
 		return -ENOMEM;
 	}
 
-	return proc_setup_self(s);
+	ret = proc_setup_self(s);
+	if (ret) {
+		return ret;
+	}
+	return proc_setup_thread_self(s);
 }

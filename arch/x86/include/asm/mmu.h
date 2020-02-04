@@ -9,8 +9,9 @@
  * we put the segment information here.
  */
 typedef struct {
-	struct desc_struct *ldt;
-	int size;
+#ifdef CONFIG_MODIFY_LDT_SYSCALL
+	struct ldt_struct *ldt;
+#endif
 
 #ifdef CONFIG_X86_64
 	/* True if mm supports a task running in 32 bit compatibility mode. */
@@ -18,27 +19,20 @@ typedef struct {
 #endif
 
 	struct mutex lock;
-	unsigned long vdso;
+	void __user *vdso;			/* vdso base address */
+	const struct vdso_image *vdso_image;	/* vdso image in use */
 
-#ifdef CONFIG_X86_32
-#if defined(CONFIG_PAX_PAGEEXEC) || defined(CONFIG_PAX_SEGMEXEC)
-	unsigned long user_cs_base;
-	unsigned long user_cs_limit;
-
-#if defined(CONFIG_PAX_PAGEEXEC) && defined(CONFIG_SMP)
-	cpumask_t cpu_user_cs_mask;
-#endif
-
-#endif
+	atomic_t perf_rdpmc_allowed;	/* nonzero if rdpmc is allowed */
+#ifdef CONFIG_X86_INTEL_MEMORY_PROTECTION_KEYS
+	/*
+	 * One bit per protection key says whether userspace can
+	 * use it or not.  protected by mmap_sem.
+	 */
+	u16 pkey_allocation_map;
+	s16 execute_only_pkey;
 #endif
 } mm_context_t;
 
-#ifdef CONFIG_SMP
 void leave_mm(int cpu);
-#else
-static inline void leave_mm(int cpu)
-{
-}
-#endif
 
 #endif /* _ASM_X86_MMU_H */

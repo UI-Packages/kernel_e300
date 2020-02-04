@@ -1,5 +1,5 @@
 /***********************license start***************
- * Copyright (c) 2003-2015  Cavium Inc. (support@cavium.com). All rights
+ * Copyright (c) 2003-2017  Cavium Inc. (support@cavium.com). All rights
  * reserved.
  *
  *
@@ -167,8 +167,8 @@ static inline uint64_t CVMX_IOBN_NCBX_CTL(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 3))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 3))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 3)))))
 		cvmx_warn("CVMX_IOBN_NCBX_CTL(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800F0004000ull) + ((offset) & 3) * 8;
@@ -270,7 +270,7 @@ union cvmx_iobn_bist_status {
 	} s;
 	struct cvmx_iobn_bist_status_s        cn73xx;
 	struct cvmx_iobn_bist_status_s        cn78xx;
-	struct cvmx_iobn_bist_status_s        cn78xxp2;
+	struct cvmx_iobn_bist_status_s        cn78xxp1;
 	struct cvmx_iobn_bist_status_s        cnf75xx;
 };
 typedef union cvmx_iobn_bist_status cvmx_iobn_bist_status_t;
@@ -305,7 +305,7 @@ union cvmx_iobn_chip_cur_pwr {
 	} s;
 	struct cvmx_iobn_chip_cur_pwr_s       cn73xx;
 	struct cvmx_iobn_chip_cur_pwr_s       cn78xx;
-	struct cvmx_iobn_chip_cur_pwr_s       cn78xxp2;
+	struct cvmx_iobn_chip_cur_pwr_s       cn78xxp1;
 	struct cvmx_iobn_chip_cur_pwr_s       cnf75xx;
 };
 typedef union cvmx_iobn_chip_cur_pwr cvmx_iobn_chip_cur_pwr_t;
@@ -349,7 +349,7 @@ union cvmx_iobn_chip_glb_pwr_throttle {
 	} s;
 	struct cvmx_iobn_chip_glb_pwr_throttle_s cn73xx;
 	struct cvmx_iobn_chip_glb_pwr_throttle_s cn78xx;
-	struct cvmx_iobn_chip_glb_pwr_throttle_s cn78xxp2;
+	struct cvmx_iobn_chip_glb_pwr_throttle_s cn78xxp1;
 	struct cvmx_iobn_chip_glb_pwr_throttle_s cnf75xx;
 };
 typedef union cvmx_iobn_chip_glb_pwr_throttle cvmx_iobn_chip_glb_pwr_throttle_t;
@@ -385,7 +385,7 @@ union cvmx_iobn_chip_pwr_out {
 	} s;
 	struct cvmx_iobn_chip_pwr_out_s       cn73xx;
 	struct cvmx_iobn_chip_pwr_out_s       cn78xx;
-	struct cvmx_iobn_chip_pwr_out_s       cn78xxp2;
+	struct cvmx_iobn_chip_pwr_out_s       cn78xxp1;
 	struct cvmx_iobn_chip_pwr_out_s       cnf75xx;
 };
 typedef union cvmx_iobn_chip_pwr_out cvmx_iobn_chip_pwr_out_t;
@@ -409,7 +409,7 @@ union cvmx_iobn_control {
 	} s;
 	struct cvmx_iobn_control_s            cn73xx;
 	struct cvmx_iobn_control_s            cn78xx;
-	struct cvmx_iobn_control_s            cn78xxp2;
+	struct cvmx_iobn_control_s            cn78xxp1;
 	struct cvmx_iobn_control_s            cnf75xx;
 };
 typedef union cvmx_iobn_control cvmx_iobn_control_t;
@@ -469,7 +469,7 @@ union cvmx_iobn_credits {
 	} s;
 	struct cvmx_iobn_credits_s            cn73xx;
 	struct cvmx_iobn_credits_s            cn78xx;
-	struct cvmx_iobn_credits_s            cn78xxp2;
+	struct cvmx_iobn_credits_s            cn78xxp1;
 	struct cvmx_iobn_credits_s            cnf75xx;
 };
 typedef union cvmx_iobn_credits cvmx_iobn_credits_t;
@@ -571,7 +571,7 @@ union cvmx_iobn_ecc {
 	} s;
 	struct cvmx_iobn_ecc_s                cn73xx;
 	struct cvmx_iobn_ecc_s                cn78xx;
-	struct cvmx_iobn_ecc_s                cn78xxp2;
+	struct cvmx_iobn_ecc_s                cn78xxp1;
 	struct cvmx_iobn_ecc_s                cnf75xx;
 };
 typedef union cvmx_iobn_ecc cvmx_iobn_ecc_t;
@@ -613,7 +613,7 @@ union cvmx_iobn_gbl_dll {
 	} s;
 	struct cvmx_iobn_gbl_dll_s            cn73xx;
 	struct cvmx_iobn_gbl_dll_s            cn78xx;
-	struct cvmx_iobn_gbl_dll_s            cn78xxp2;
+	struct cvmx_iobn_gbl_dll_s            cn78xxp1;
 	struct cvmx_iobn_gbl_dll_s            cnf75xx;
 };
 typedef union cvmx_iobn_gbl_dll cvmx_iobn_gbl_dll_t;
@@ -642,7 +642,7 @@ union cvmx_iobn_high_priority {
 	} s;
 	struct cvmx_iobn_high_priority_s      cn73xx;
 	struct cvmx_iobn_high_priority_s      cn78xx;
-	struct cvmx_iobn_high_priority_s      cn78xxp2;
+	struct cvmx_iobn_high_priority_s      cn78xxp1;
 	struct cvmx_iobn_high_priority_s      cnf75xx;
 };
 typedef union cvmx_iobn_high_priority cvmx_iobn_high_priority_t;
@@ -820,7 +820,7 @@ union cvmx_iobn_int_sum {
 	} s;
 	struct cvmx_iobn_int_sum_s            cn73xx;
 	struct cvmx_iobn_int_sum_s            cn78xx;
-	struct cvmx_iobn_int_sum_s            cn78xxp2;
+	struct cvmx_iobn_int_sum_s            cn78xxp1;
 	struct cvmx_iobn_int_sum_s            cnf75xx;
 };
 typedef union cvmx_iobn_int_sum cvmx_iobn_int_sum_t;
@@ -856,7 +856,7 @@ union cvmx_iobn_ncbx_ctl {
 	} s;
 	struct cvmx_iobn_ncbx_ctl_s           cn73xx;
 	struct cvmx_iobn_ncbx_ctl_s           cn78xx;
-	struct cvmx_iobn_ncbx_ctl_s           cn78xxp2;
+	struct cvmx_iobn_ncbx_ctl_s           cn78xxp1;
 	struct cvmx_iobn_ncbx_ctl_s           cnf75xx;
 };
 typedef union cvmx_iobn_ncbx_ctl cvmx_iobn_ncbx_ctl_t;
@@ -872,9 +872,11 @@ union cvmx_iobn_pp_bist_status {
 	struct cvmx_iobn_pp_bist_status_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_48_63               : 16;
-	uint64_t pp_bstat                     : 48; /**< BIST Status of the cores. Bit vector position is the number of the core (i.e. core 0 ==
-                                                         PP_BSTAT<0>). Only even number bits are valid; all odd number bits are read as 0. For odd
-                                                         number cores, see IOBP_PP_BIST_STATUS. */
+	uint64_t pp_bstat                     : 48; /**< BIST Status of the cores. Bit vector position is the physical number of the core
+                                                         (i.e. core 0 == PP_BSTAT<0>). Only even number bits are valid; all odd number bits
+                                                         are read as 0. For odd number cores, see IOBP_PP_BIST_STATUS.
+                                                         Software must bit-wise logical AND IOBN_PP_BIST_STATUS with CIU_FUSE before using
+                                                         it. */
 #else
 	uint64_t pp_bstat                     : 48;
 	uint64_t reserved_48_63               : 16;
@@ -882,7 +884,7 @@ union cvmx_iobn_pp_bist_status {
 	} s;
 	struct cvmx_iobn_pp_bist_status_s     cn73xx;
 	struct cvmx_iobn_pp_bist_status_s     cn78xx;
-	struct cvmx_iobn_pp_bist_status_s     cn78xxp2;
+	struct cvmx_iobn_pp_bist_status_s     cn78xxp1;
 	struct cvmx_iobn_pp_bist_status_s     cnf75xx;
 };
 typedef union cvmx_iobn_pp_bist_status cvmx_iobn_pp_bist_status_t;

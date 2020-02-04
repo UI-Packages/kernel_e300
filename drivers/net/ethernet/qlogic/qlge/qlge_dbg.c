@@ -724,7 +724,7 @@ static void ql_build_coredump_seg_header(
 	seg_hdr->cookie = MPI_COREDUMP_COOKIE;
 	seg_hdr->segNum = seg_number;
 	seg_hdr->segSize = seg_size;
-	memcpy(seg_hdr->description, desc, (sizeof(seg_hdr->description)) - 1);
+	strncpy(seg_hdr->description, desc, (sizeof(seg_hdr->description)) - 1);
 }
 
 /*
@@ -740,8 +740,8 @@ int ql_core_dump(struct ql_adapter *qdev, struct ql_mpi_coredump *mpi_coredump)
 	int i;
 
 	if (!mpi_coredump) {
-		netif_err(qdev, drv, qdev->ndev, "No memory available\n");
-		return -ENOMEM;
+		netif_err(qdev, drv, qdev->ndev, "No memory allocated\n");
+		return -EINVAL;
 	}
 
 	/* Try to get the spinlock, but dont worry if
@@ -1242,8 +1242,8 @@ static void ql_get_core_dump(struct ql_adapter *qdev)
 	ql_queue_fw_error(qdev);
 }
 
-void ql_gen_reg_dump(struct ql_adapter *qdev,
-			struct ql_reg_dump *mpi_coredump)
+static void ql_gen_reg_dump(struct ql_adapter *qdev,
+			    struct ql_reg_dump *mpi_coredump)
 {
 	int i, status;
 

@@ -16,12 +16,7 @@
 #include <linux/dmi.h>
 #include <linux/jiffies.h>
 #include <linux/err.h>
-
-#include <acpi/acpi.h>
-#include <acpi/acpixf.h>
-#include <acpi/acpi_drivers.h>
-#include <acpi/acpi_bus.h>
-
+#include <linux/acpi.h>
 
 #define ATK_HID "ATK0110"
 
@@ -119,7 +114,7 @@ struct atk_data {
 	acpi_handle rtmp_handle;
 	acpi_handle rvlt_handle;
 	acpi_handle rfan_handle;
-	/* new inteface */
+	/* new interface */
 	acpi_handle enumerate_handle;
 	acpi_handle read_handle;
 	acpi_handle write_handle;
@@ -152,10 +147,10 @@ MODULE_DEVICE_TABLE(acpi, atk_ids);
 struct atk_sensor_data {
 	struct list_head list;
 	struct atk_data *data;
-	device_attribute_no_const label_attr;
-	device_attribute_no_const input_attr;
-	device_attribute_no_const limit1_attr;
-	device_attribute_no_const limit2_attr;
+	struct device_attribute label_attr;
+	struct device_attribute input_attr;
+	struct device_attribute limit1_attr;
+	struct device_attribute limit2_attr;
 	char label_attr_name[ATTR_NAME_SIZE];
 	char input_attr_name[ATTR_NAME_SIZE];
 	char limit1_attr_name[ATTR_NAME_SIZE];
@@ -275,7 +270,7 @@ static ssize_t atk_name_show(struct device *dev,
 static struct device_attribute atk_name_attr =
 		__ATTR(name, 0444, atk_name_show, NULL);
 
-static void atk_init_attribute(device_attribute_no_const *attr, char *name,
+static void atk_init_attribute(struct device_attribute *attr, char *name,
 		sysfs_show_func show)
 {
 	sysfs_attr_init(&attr->attr);
@@ -651,6 +646,9 @@ static int atk_read_value(struct atk_sensor_data *sensor, u64 *value)
 		else
 			err = atk_read_value_new(sensor, value);
 
+		if (err)
+			return err;
+
 		sensor->is_valid = true;
 		sensor->last_updated = jiffies;
 		sensor->cached_value = *value;
@@ -693,7 +691,7 @@ static int atk_debugfs_gitm_get(void *p, u64 *val)
 DEFINE_SIMPLE_ATTRIBUTE(atk_debugfs_gitm,
 			atk_debugfs_gitm_get,
 			NULL,
-			"0x%08llx\n")
+			"0x%08llx\n");
 
 static int atk_acpi_print(char *buf, size_t sz, union acpi_object *obj)
 {

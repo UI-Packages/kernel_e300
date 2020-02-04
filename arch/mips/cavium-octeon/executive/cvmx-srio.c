@@ -677,15 +677,15 @@ cvmx_srio_init_cn75xx(int srio_port, cvmx_srio_initialize_flags_t flags)
 				CVMX_SRIOMAINTX_PORT_0_LOCAL_ACKID(srio_port), 0))
 			return -1;
 		
-	/* Bring the link down, then up,
-	 * by writing to the SRIO port's PORT_0_CTL2 CSR.
-	 */
-	if (__cvmx_srio_local_read32(srio_port,
-	    CVMX_SRIOMAINTX_PORT_0_CTL2(srio_port), &port_0_ctl2.u32))
-		return -1;
-	if (__cvmx_srio_local_write32(srio_port,
-	    CVMX_SRIOMAINTX_PORT_0_CTL2(srio_port), port_0_ctl2.u32))
-		return -1;
+		/* Bring the link down, then up,
+	 	* by writing to the SRIO port's PORT_0_CTL2 CSR.
+	 	*/
+		if (__cvmx_srio_local_read32(srio_port,
+				CVMX_SRIOMAINTX_PORT_0_CTL2(srio_port), &port_0_ctl2.u32))
+			return -1;
+		if (__cvmx_srio_local_write32(srio_port,
+				CVMX_SRIOMAINTX_PORT_0_CTL2(srio_port), port_0_ctl2.u32))
+			return -1;
 	}
 
 	/* Clear any pending interrupts */
@@ -1891,38 +1891,38 @@ uint64_t cvmx_srio_physical_map(int srio_port, cvmx_srio_write_mode_t write_op,
 		needed_subid.cnf75xx.ba |= (((uint64_t) s2m_index >> 2) & 1) << (50 - 34);
 		needed_subid.cnf75xx.ba |= (((uint64_t) s2m_index >> 3) & 1) << (59 - 34);
 	} else {
-	if (base < (1ull << 34)) {
-		needed_subid.cn63xx.ba = destid;
-		needed_s2m_type.s.iaow_sel = 0;
-	} else if (base < (1ull << 42)) {
-		needed_subid.cn63xx.ba = (base >> 34) & 0xff;
-		needed_subid.cn63xx.ba |= ((uint64_t) destid & 0xff) << (42 - 34);
-		needed_subid.cn63xx.ba |= (((uint64_t) destid >> 8) & 0xff) << (51 - 34);
-		needed_s2m_type.s.iaow_sel = 1;
-	} else {
-		if (destid >> 8) {
-			cvmx_dprintf("SRIO%d: Attempt to map 16bit device ID 0x%x using 66bit addressing\n", srio_port, destid);
-			return 0;
+		if (base < (1ull << 34)) {
+			needed_subid.cn63xx.ba = destid;
+			needed_s2m_type.s.iaow_sel = 0;
+		} else if (base < (1ull << 42)) {
+			needed_subid.cn63xx.ba = (base >> 34) & 0xff;
+			needed_subid.cn63xx.ba |= ((uint64_t) destid & 0xff) << (42 - 34);
+			needed_subid.cn63xx.ba |= (((uint64_t) destid >> 8) & 0xff) << (51 - 34);
+			needed_s2m_type.s.iaow_sel = 1;
+		} else {
+			if (destid >> 8) {
+				cvmx_dprintf("SRIO%d: Attempt to map 16bit device ID 0x%x using 66bit addressing\n", srio_port, destid);
+				return 0;
+			}
+			if (base >> 50) {
+				cvmx_dprintf("SRIO%d: Attempt to map address 0x%llx using 66bit addressing\n", srio_port, CAST_ULL(base));
+				return 0;
+			}
+			needed_subid.cn63xx.ba = (base >> 34) & 0xffff;
+			needed_subid.cn63xx.ba |= ((uint64_t) destid & 0xff) << (51 - 34);
+			needed_s2m_type.s.iaow_sel = 2;
 		}
-		if (base >> 50) {
-			cvmx_dprintf("SRIO%d: Attempt to map address 0x%llx using 66bit addressing\n", srio_port, CAST_ULL(base));
+
+		/* Find a S2M_TYPE index to use. If this fails return 0 */
+		s2m_index = __cvmx_srio_alloc_s2m(srio_port, needed_s2m_type);
+		if (s2m_index == -1)
 			return 0;
-		}
-		needed_subid.cn63xx.ba = (base >> 34) & 0xffff;
-		needed_subid.cn63xx.ba |= ((uint64_t) destid & 0xff) << (51 - 34);
-		needed_s2m_type.s.iaow_sel = 2;
-	}
 
-	/* Find a S2M_TYPE index to use. If this fails return 0 */
-	s2m_index = __cvmx_srio_alloc_s2m(srio_port, needed_s2m_type);
-	if (s2m_index == -1)
-		return 0;
-
-	/* Attach the SubID to the S2M_TYPE index */
-	needed_subid.s.rtype = s2m_index & 3;
-	needed_subid.s.wtype = s2m_index & 3;
-	needed_subid.cn63xx.ba |= (((uint64_t) s2m_index >> 2) & 1) << (50 - 34);
-	needed_subid.cn63xx.ba |= (((uint64_t) s2m_index >> 3) & 1) << (59 - 34);
+		/* Attach the SubID to the S2M_TYPE index */
+		needed_subid.s.rtype = s2m_index & 3;
+		needed_subid.s.wtype = s2m_index & 3;
+		needed_subid.cn63xx.ba |= (((uint64_t) s2m_index >> 2) & 1) << (50 - 34);
+		needed_subid.cn63xx.ba |= (((uint64_t) s2m_index >> 3) & 1) << (59 - 34);
 	}
 
 	/* Allocate a SubID for use */
@@ -1971,8 +1971,8 @@ int cvmx_srio_physical_unmap(uint64_t physical_address, uint64_t size)
 			(((subid.cnf75xx.ba >> (59 - 34)) & 1) << 3);
 		read_s2m_type |= subid.s.rtype;
 	} else {
-	read_s2m_type = (((subid.cn63xx.ba >> (50 - 34)) & 1) << 2) | 
-		(((subid.cn63xx.ba >> (59 - 34)) & 1) << 3);
+		read_s2m_type = (((subid.cn63xx.ba >> (50 - 34)) & 1) << 2) |
+			(((subid.cn63xx.ba >> (59 - 34)) & 1) << 3);
 	}
 	__cvmx_srio_free_subid(mem_index);
 	__cvmx_srio_free_s2m(subid.s.port, read_s2m_type);

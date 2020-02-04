@@ -123,15 +123,10 @@ int pvr2_eeprom_analyze(struct pvr2_hdw *hdw)
 	memset(&tvdata,0,sizeof(tvdata));
 
 	eeprom = pvr2_eeprom_fetch(hdw);
-	if (!eeprom) return -EINVAL;
+	if (!eeprom)
+		return -EINVAL;
 
-	{
-		struct i2c_client fake_client;
-		/* Newer version expects a useless client interface */
-		fake_client.addr = hdw->eeprom_addr;
-		fake_client.adapter = &hdw->i2c_adap;
-		tveeprom_hauppauge_analog(&fake_client,&tvdata,eeprom);
-	}
+	tveeprom_hauppauge_analog(NULL, &tvdata, eeprom);
 
 	trace_eeprom("eeprom assumed v4l tveeprom module");
 	trace_eeprom("eeprom direct call results:");
@@ -152,13 +147,3 @@ int pvr2_eeprom_analyze(struct pvr2_hdw *hdw)
 
 	return 0;
 }
-
-/*
-  Stuff for Emacs to see, in order to encourage consistent editing style:
-  *** Local Variables: ***
-  *** mode: c ***
-  *** fill-column: 70 ***
-  *** tab-width: 8 ***
-  *** c-basic-offset: 8 ***
-  *** End: ***
-  */

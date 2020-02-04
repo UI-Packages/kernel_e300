@@ -1133,14 +1133,14 @@ const struct cs4321_multi_seq cs4321_init_sgmii_seq[] = {
 
 static int cs4321_phy_read_x(struct phy_device *phydev, int off, u16 regnum)
 {
-	return mdiobus_read(phydev->bus, phydev->addr + off,
+	return mdiobus_read(phydev->mdio.bus, phydev->mdio.addr + off,
 			    MII_ADDR_C45 | regnum);
 }
 
 static int cs4321_phy_write_x(struct phy_device *phydev, int off,
 			      u16 regnum, u16 val)
 {
-	return mdiobus_write(phydev->bus, phydev->addr + off,
+	return mdiobus_write(phydev->mdio.bus, phydev->mdio.addr + off,
 			     MII_ADDR_C45 | regnum, val);
 }
 static int cs4321_phy_read(struct phy_device *phydev, u16 regnum)
@@ -1439,7 +1439,7 @@ int cs4321_probe(struct phy_device *phydev)
 		ret = -ENODEV;
 		goto err;
 	}
-	ret = of_property_read_string(phydev->dev.of_node,
+	ret = of_property_read_string(phydev->mdio.dev.of_node,
 				      "cortina,host-mode", &prop_val);
 	if (ret)
 		goto err;
@@ -1451,13 +1451,13 @@ int cs4321_probe(struct phy_device *phydev)
 	else if (strcmp(prop_val, "sgmii") == 0)
 		host_mode = SGMII;
 	else {
-		dev_err(&phydev->dev,
+		dev_err(&phydev->mdio.dev,
 			"Invalid \"cortina,host-mode\" property: \"%s\"\n",
 			prop_val);
 		ret = -EINVAL;
 		goto err;
 	}
-	p = devm_kzalloc(&phydev->dev, sizeof(*p), GFP_KERNEL);
+	p = devm_kzalloc(&phydev->mdio.dev, sizeof(*p), GFP_KERNEL);
 	if (!p) {
 		ret = -ENOMEM;
 		goto err;
@@ -1498,8 +1498,8 @@ static struct phy_driver cs4321_phy_driver = {
 	.probe		= cs4321_probe,
 	.config_aneg	= cs4321_config_aneg,
 	.read_status	= cs4321_read_status,
-	.driver		= {
-		.owner = THIS_MODULE,
+	.mdiodrv.driver		= {
+		/* .owner = THIS_MODULE, */
 		.of_match_table = cs4321_match,
 	},
 };
@@ -1508,7 +1508,7 @@ static int __init cs4321_drv_init(void)
 {
 	int ret;
 
-	ret = phy_driver_register(&cs4321_phy_driver);
+	ret = phy_driver_register(&cs4321_phy_driver, THIS_MODULE);
 
 	return ret;
 }

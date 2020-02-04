@@ -10,6 +10,12 @@
  *
  */
 
+#ifdef pr_fmt
+#undef pr_fmt
+#endif
+
+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+
 #include <linux/fs.h>
 #include <linux/pagemap.h>
 
@@ -18,12 +24,6 @@ typedef __u32 __bitwise __fs32;
 typedef __u64 __bitwise __fs64;
 
 #include <linux/qnx6_fs.h>
-
-#ifdef CONFIG_QNX6FS_DEBUG
-#define QNX6DEBUG(X) printk X
-#else
-#define QNX6DEBUG(X) (void) 0
-#endif
 
 struct qnx6_sb_info {
 	struct buffer_head	*sb_buf;	/* superblock buffer */
@@ -74,7 +74,7 @@ enum {
 	BYTESEX_BE,
 };
 
-static inline __u64 __intentional_overflow(-1) fs64_to_cpu(struct qnx6_sb_info *sbi, __fs64 n)
+static inline __u64 fs64_to_cpu(struct qnx6_sb_info *sbi, __fs64 n)
 {
 	if (sbi->s_bytesex == BYTESEX_LE)
 		return le64_to_cpu((__force __le64)n);
@@ -90,7 +90,7 @@ static inline __fs64 cpu_to_fs64(struct qnx6_sb_info *sbi, __u64 n)
 		return (__force __fs64)cpu_to_be64(n);
 }
 
-static inline __u32 __intentional_overflow(-1) fs32_to_cpu(struct qnx6_sb_info *sbi, __fs32 n)
+static inline __u32 fs32_to_cpu(struct qnx6_sb_info *sbi, __fs32 n)
 {
 	if (sbi->s_bytesex == BYTESEX_LE)
 		return le32_to_cpu((__force __le32)n);
@@ -128,7 +128,7 @@ extern struct qnx6_super_block *qnx6_mmi_fill_super(struct super_block *s,
 static inline void qnx6_put_page(struct page *page)
 {
 	kunmap(page);
-	page_cache_release(page);
+	put_page(page);
 }
 
 extern unsigned qnx6_find_entry(int len, struct inode *dir, const char *name,

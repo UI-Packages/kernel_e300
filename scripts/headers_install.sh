@@ -1,8 +1,8 @@
 #!/bin/sh
 
-if [ $# -lt 1 ]
+if [ $# -lt 2 ]
 then
-	echo "Usage: headers_install.sh OUTDIR SRCDIR [FILES...]
+	echo "Usage: headers_install.sh OUTDIR SRCDIR [FILES...]"
 	echo
 	echo "Prepares kernel header files for use by user space, by removing"
 	echo "all compiler.h definitions and #includes, removing any"
@@ -32,7 +32,6 @@ do
 	FILE="$(basename "$i")"
 	sed -r \
 		-e 's/([ \t(])(__user|__force|__iomem)[ \t]/\1/g' \
-		-e 's/__intentional_overflow\([- \t,0-9]*\)//g' \
 		-e 's/__attribute_const__([ \t]|$)/\1/g' \
 		-e 's@^#include <linux/compiler.h>@@' \
 		-e 's/(^|[^a-zA-Z0-9])__packed([^a-zA-Z0-9_]|$)/\1__attribute__((packed))\2/g' \

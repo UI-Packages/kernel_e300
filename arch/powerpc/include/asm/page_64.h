@@ -42,20 +42,40 @@
 
 typedef unsigned long pte_basic_t;
 
-static __inline__ void clear_page(void *addr)
+static inline void clear_page(void *addr)
 {
-	unsigned long lines, line_size;
+	unsigned long iterations;
+	unsigned long onex, twox, fourx, eightx;
 
-	line_size = ppc64_caches.dline_size;
-	lines = ppc64_caches.dlines_per_page;
+	iterations = ppc64_caches.dlines_per_page / 8;
 
-	__asm__ __volatile__(
+	/*
+	 * Some verisions of gcc use multiply instructions to
+	 * calculate the offsets so lets give it a hand to
+	 * do better.
+	 */
+	onex = ppc64_caches.dline_size;
+	twox = onex << 1;
+	fourx = onex << 2;
+	eightx = onex << 3;
+
+	asm volatile(
 	"mtctr	%1	# clear_page\n\
-1:      dcbz	0,%0\n\
-	add	%0,%0,%3\n\
+	.balign	16\n\
+1:	dcbz	0,%0\n\
+	dcbz	%3,%0\n\
+	dcbz	%4,%0\n\
+	dcbz	%5,%0\n\
+	dcbz	%6,%0\n\
+	dcbz	%7,%0\n\
+	dcbz	%8,%0\n\
+	dcbz	%9,%0\n\
+	add	%0,%0,%10\n\
 	bdnz+	1b"
-        : "=r" (addr)
-        : "r" (lines), "0" (addr), "r" (line_size)
+	: "=&r" (addr)
+	: "r" (iterations), "0" (addr), "b" (onex), "b" (twox),
+		"b" (twox+onex), "b" (fourx), "b" (fourx+onex),
+		"b" (twox+fourx), "b" (eightx-onex), "r" (eightx)
 	: "ctr", "memory");
 }
 
@@ -73,7 +93,7 @@ extern u64 ppc64_pft_size;
 
 #define SLICE_LOW_TOP		(0x100000000ul)
 #define SLICE_NUM_LOW		(SLICE_LOW_TOP >> SLICE_LOW_SHIFT)
-#define SLICE_NUM_HIGH		(PGTABLE_RANGE >> SLICE_HIGH_SHIFT)
+#define SLICE_NUM_HIGH		(H_PGTABLE_RANGE >> SLICE_HIGH_SHIFT)
 
 #define GET_LOW_SLICE_INDEX(addr)	((addr) >> SLICE_LOW_SHIFT)
 #define GET_HIGH_SLICE_INDEX(addr)	((addr) >> SLICE_HIGH_SHIFT)
@@ -104,12 +124,9 @@ extern unsigned long slice_get_unmapped_area(unsigned long addr,
 extern unsigned int get_slice_psize(struct mm_struct *mm,
 				    unsigned long addr);
 
-extern void slice_init_context(struct mm_struct *mm, unsigned int psize);
 extern void slice_set_user_psize(struct mm_struct *mm, unsigned int psize);
 extern void slice_set_range_psize(struct mm_struct *mm, unsigned long start,
 				  unsigned long len, unsigned int psize);
-
-#define slice_mm_new_context(mm)	((mm)->context.id == MMU_NO_CONTEXT)
 
 #endif /* __ASSEMBLY__ */
 #else
@@ -132,7 +149,6 @@ do {						\
 
 #define slice_set_range_psize(mm, start, len, psize)	\
 	slice_set_user_psize((mm), (psize))
-#define slice_mm_new_context(mm)	1
 #endif /* CONFIG_PPC_MM_SLICES */
 
 #ifdef CONFIG_HUGETLB_PAGE
@@ -153,18 +169,15 @@ do {						\
  * stack by default, so in the absence of a PT_GNU_STACK program header
  * we turn execute permission off.
  */
-#define VM_STACK_DEFAULT_FLAGS32 \
-	(((current->personality & READ_IMPLIES_EXEC) ? VM_EXEC : 0) | \
-	 VM_READ | VM_WRITE | VM_MAYREAD | VM_MAYWRITE | VM_MAYEXEC)
+#define VM_STACK_DEFAULT_FLAGS32	(VM_READ | VM_WRITE | VM_EXEC | \
+					 VM_MAYREAD | VM_MAYWRITE | VM_MAYEXEC)
 
 #define VM_STACK_DEFAULT_FLAGS64	(VM_READ | VM_WRITE | \
 					 VM_MAYREAD | VM_MAYWRITE | VM_MAYEXEC)
 
-#ifndef CONFIG_PAX_PAGEEXEC
 #define VM_STACK_DEFAULT_FLAGS \
 	(is_32bit_task() ? \
 	 VM_STACK_DEFAULT_FLAGS32 : VM_STACK_DEFAULT_FLAGS64)
-#endif
 
 #include <asm-generic/getorder.h>
 

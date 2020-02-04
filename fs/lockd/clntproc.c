@@ -36,11 +36,11 @@ static const struct rpc_call_ops nlmclnt_cancel_ops;
 /*
  * Cookie counter for NLM requests
  */
-static atomic_unchecked_t	nlm_cookie = ATOMIC_INIT(0x1234);
+static atomic_t	nlm_cookie = ATOMIC_INIT(0x1234);
 
 void nlmclnt_next_cookie(struct nlm_cookie *c)
 {
-	u32	cookie = atomic_inc_return_unchecked(&nlm_cookie);
+	u32	cookie = atomic_inc_return(&nlm_cookie);
 
 	memcpy(c->data, &cookie, 4);
 	c->len=4;
@@ -474,18 +474,7 @@ static void nlmclnt_locks_init_private(struct file_lock *fl, struct nlm_host *ho
 
 static int do_vfs_lock(struct file_lock *fl)
 {
-	int res = 0;
-	switch (fl->fl_flags & (FL_POSIX|FL_FLOCK)) {
-		case FL_POSIX:
-			res = posix_lock_file_wait(fl->fl_file, fl);
-			break;
-		case FL_FLOCK:
-			res = flock_lock_file_wait(fl->fl_file, fl);
-			break;
-		default:
-			BUG();
-	}
-	return res;
+	return locks_lock_file_wait(fl->fl_file, fl);
 }
 
 /*

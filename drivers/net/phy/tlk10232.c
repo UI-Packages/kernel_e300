@@ -45,17 +45,17 @@ static int tlk10232_probe(struct phy_device *phydev)
 	int ret;
 	struct tlk10232_phy *priv;
 
-	priv = devm_kzalloc(&phydev->dev, sizeof(*priv), GFP_KERNEL);
+	priv = devm_kzalloc(&phydev->mdio.dev, sizeof(*priv), GFP_KERNEL);
 	if (priv == NULL)
 		return -ENOMEM;
 	phydev->priv = priv;
 
-	priv->tx_disable_gpio = of_get_named_gpio_flags(phydev->dev.of_node,
+	priv->tx_disable_gpio = of_get_named_gpio_flags(phydev->mdio.dev.of_node,
 							"tx-disable", 0, &f);
 	if (priv->tx_disable_gpio >= 0) {
 		ret = gpio_request(priv->tx_disable_gpio, "phy tx-disable");
 		if (ret) {
-			dev_err(&phydev->dev,
+			dev_err(&phydev->mdio.dev,
 				"Error: could not request tx-disable gpio.\n");
 			return ret;
 		}
@@ -180,9 +180,8 @@ static struct phy_driver tlk10232_phy_driver = {
 	.remove		= tlk10232_remove,
 	.config_aneg	= tlk10232_config_aneg,
 	.read_status	= tlk10232_read_status,
-	.driver		= {
-		.owner = THIS_MODULE,
-			 .of_match_table = tlk10232_match,
+	.mdiodrv.driver	= {
+		 .of_match_table = tlk10232_match,
 	},
 };
 
@@ -248,7 +247,7 @@ static int tlk10232_nexus_probe(struct platform_device *pdev)
 		return -ENOMEM;
 
 	bus->mii_bus->priv = bus;
-	bus->mii_bus->irq = bus->phy_irq;
+	/* bus->mii_bus->irq = bus->phy_irq; */
 	bus->mii_bus->name = "tlk10232_nexus";
 	bus_id = bus->parent_mii_bus->id;
 	len = strlen(bus_id);
@@ -266,7 +265,7 @@ static int tlk10232_nexus_probe(struct platform_device *pdev)
 
 	if (reset_gpio >= 0) {
 		unsigned long flags;
-		flags = (f & OF_GPIO_OPEN_DRAIN) ? GPIOF_OPEN_DRAIN : 0;
+		flags = (f & OF_GPIO_SINGLE_ENDED) ? GPIOF_OPEN_DRAIN : 0;
 		ret = gpio_request_one(reset_gpio, flags, "phy-reset");
 		if (ret) {
 			dev_err(&pdev->dev, "Error requesting reset gpio.\n");
@@ -327,7 +326,7 @@ static int __init tlk10232_mod_init(void)
 	if (rv)
 		return rv;
 
-	rv = phy_driver_register(&tlk10232_phy_driver);
+	rv = phy_driver_register(&tlk10232_phy_driver, THIS_MODULE);
 
 	return rv;
 }

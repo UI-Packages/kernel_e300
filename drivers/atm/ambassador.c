@@ -454,7 +454,7 @@ static void tx_complete (amb_dev * dev, tx_out * tx) {
   PRINTD (DBG_FLOW|DBG_TX, "tx_complete %p %p", dev, tx);
   
   // VC layer stats
-  atomic_inc_unchecked(&ATM_SKB(skb)->vcc->stats->tx);
+  atomic_inc(&ATM_SKB(skb)->vcc->stats->tx);
   
   // free the descriptor
   kfree (tx_descr);
@@ -495,7 +495,7 @@ static void rx_complete (amb_dev * dev, rx_out * rx) {
 	  dump_skb ("<<<", vc, skb);
 	  
 	  // VC layer stats
-	  atomic_inc_unchecked(&atm_vcc->stats->rx);
+	  atomic_inc(&atm_vcc->stats->rx);
 	  __net_timestamp(skb);
 	  // end of our responsibility
 	  atm_vcc->push (atm_vcc, skb);
@@ -510,7 +510,7 @@ static void rx_complete (amb_dev * dev, rx_out * rx) {
       } else {
       	PRINTK (KERN_INFO, "dropped over-size frame");
 	// should we count this?
-	atomic_inc_unchecked(&atm_vcc->stats->rx_drop);
+	atomic_inc(&atm_vcc->stats->rx_drop);
       }
       
     } else {
@@ -1338,7 +1338,7 @@ static int amb_send (struct atm_vcc * atm_vcc, struct sk_buff * skb) {
   }
   
   if (check_area (skb->data, skb->len)) {
-    atomic_inc_unchecked(&atm_vcc->stats->tx_err);
+    atomic_inc(&atm_vcc->stats->tx_err);
     return -ENOMEM; // ?
   }
   
@@ -1403,7 +1403,7 @@ static void amb_free_rx_skb (struct atm_vcc * atm_vcc, struct sk_buff * skb) {
   rx.host_address = cpu_to_be32 (virt_to_bus (skb->data));
   
   skb->data = skb->head;
-  skb->tail = skb->head;
+  skb_reset_tail_pointer(skb);
   skb->len = 0;
   
   if (!rx_give (dev, &rx, pool)) {
@@ -1925,7 +1925,7 @@ static int ucode_init(loader_block *lb, amb_dev *dev)
   const struct firmware *fw;
   unsigned long start_address;
   const struct ihex_binrec *rec;
-  const char *errmsg = 0;
+  const char *errmsg = NULL;
   int res;
 
   res = request_ihex_firmware(&fw, "atmsar11.fw", &dev->pci_dev->dev);

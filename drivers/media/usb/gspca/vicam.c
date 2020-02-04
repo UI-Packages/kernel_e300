@@ -6,7 +6,7 @@
  * Based on the usbvideo vicam driver, which is:
  *
  * Copyright (c) 2002 Joe Burks (jburks@wavicle.org),
- *                    Christopher L Cheney (ccheney@cheney.cx),
+ *                    Chris Cheney (chris.cheney@gmail.com),
  *                    Pavel Machek (pavel@ucw.cz),
  *                    John Tyner (jtyner@cs.ucr.edu),
  *                    Monroe Williams (monroe@pobox.com)
@@ -47,7 +47,6 @@ MODULE_FIRMWARE(VICAM_FIRMWARE);
 struct sd {
 	struct gspca_dev gspca_dev;	/* !! must be the first item */
 	struct work_struct work_struct;
-	struct workqueue_struct *work_thread;
 };
 
 /* The vicam sensor has a resolution of 512 x 244, with I believe square
@@ -121,13 +120,13 @@ static int vicam_read_frame(struct gspca_dev *gspca_dev, u8 *data, int size)
 
 	memset(req_data, 0, 16);
 	req_data[0] = gain;
-	if (gspca_dev->width == 256)
+	if (gspca_dev->pixfmt.width == 256)
 		req_data[1] |= 0x01; /* low nibble x-scale */
-	if (gspca_dev->height <= 122) {
+	if (gspca_dev->pixfmt.height <= 122) {
 		req_data[1] |= 0x10; /* high nibble y-scale */
-		unscaled_height = gspca_dev->height * 2;
+		unscaled_height = gspca_dev->pixfmt.height * 2;
 	} else
-		unscaled_height = gspca_dev->height;
+		unscaled_height = gspca_dev->pixfmt.height;
 	req_data[2] = 0x90; /* unknown, does not seem to do anything */
 	if (unscaled_height <= 200)
 		req_data[3] = 0x06; /* vend? */
@@ -278,9 +277,7 @@ static int sd_start(struct gspca_dev *gspca_dev)
 	if (ret < 0)
 		return ret;
 
-	/* Start the workqueue function to do the streaming */
-	sd->work_thread = create_singlethread_workqueue(MODULE_NAME);
-	queue_work(sd->work_thread, &sd->work_struct);
+	schedule_work(&sd->work_struct);
 
 	return 0;
 }
@@ -294,8 +291,7 @@ static void sd_stop0(struct gspca_dev *gspca_dev)
 	/* wait for the work queue to terminate */
 	mutex_unlock(&gspca_dev->usb_lock);
 	/* This waits for vicam_dostream to finish */
-	destroy_workqueue(dev->work_thread);
-	dev->work_thread = NULL;
+	flush_work(&dev->work_struct);
 	mutex_lock(&gspca_dev->usb_lock);
 
 	if (gspca_dev->present)

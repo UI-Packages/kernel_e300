@@ -39,7 +39,7 @@ void octeon_setup_numa(void)
 	node = (coreid >> 7) & 7;
 	mask = cpumask_of_node(node);
 	/* The boot CPU will be CPU 0 */
-	cpu_set(0, *mask);
+	cpumask_set_cpu(0, mask);
 }
 
 void octeon_numa_cpu_online(void)
@@ -50,7 +50,7 @@ void octeon_numa_cpu_online(void)
 
 	node = (coreid >> 7) & 7;
 	mask = cpumask_of_node(node);
-	cpu_set(smp_processor_id(), *mask);
+	cpumask_set_cpu(smp_processor_id(), mask);
 }
 
 void __init paging_init(void)
@@ -84,13 +84,8 @@ void setup_zero_pages(void);
 void __init mem_init(void)
 {
 	unsigned long codesize, datasize, initsize, tmp;
-	int node;
 
-	for_each_online_node(node) {
-		if (__node_data[node].endpfn == 0)
-			continue;
-		totalram_pages += free_all_bootmem_node(NODE_DATA(node));
-	}
+	free_all_bootmem();
 	setup_zero_pages();	/* This comes from node 0 */
 
 	codesize =  (unsigned long) &_etext - (unsigned long) &_text;
@@ -100,9 +95,9 @@ void __init mem_init(void)
 	tmp = nr_free_pages();
 	pr_info("Memory: %luk/%luk available (%ldk kernel code, %ldk reserved, %ldk data, %ldk init)\n",
 	       tmp << (PAGE_SHIFT-10),
-	       num_physpages << (PAGE_SHIFT-10),
+	       totalram_pages << (PAGE_SHIFT-10),
 	       codesize >> 10,
-	       (num_physpages - tmp) << (PAGE_SHIFT-10),
+	       (totalram_pages - tmp) << (PAGE_SHIFT-10),
 	       datasize >> 10,
 	       initsize >> 10);
 }

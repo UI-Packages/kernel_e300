@@ -17,13 +17,13 @@ static struct ctl_table xfrm_table[] = {
 		.procname	= "xfrm_aevent_etime",
 		.maxlen		= sizeof(u32),
 		.mode		= 0644,
-		.proc_handler	= proc_dointvec
+		.proc_handler	= proc_douintvec
 	},
 	{
 		.procname	= "xfrm_aevent_rseqth",
 		.maxlen		= sizeof(u32),
 		.mode		= 0644,
-		.proc_handler	= proc_dointvec
+		.proc_handler	= proc_douintvec
 	},
 	{
 		.procname	= "xfrm_larval_drop",
@@ -42,7 +42,7 @@ static struct ctl_table xfrm_table[] = {
 
 int __net_init xfrm_sysctl_init(struct net *net)
 {
-	ctl_table_no_const *table;
+	struct ctl_table *table;
 
 	__xfrm_sysctl_init(net);
 

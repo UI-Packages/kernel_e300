@@ -39,17 +39,18 @@
 #include <linux/sched.h>
 #include <linux/delay.h>
 #include <linux/kgdb.h>
-#include <linux/init.h>
 #include <linux/smp.h>
 #include <linux/nmi.h>
 #include <linux/hw_breakpoint.h>
 #include <linux/uaccess.h>
 #include <linux/memory.h>
 
+#include <asm/text-patching.h>
 #include <asm/debugreg.h>
 #include <asm/apicdef.h>
 #include <asm/apic.h>
 #include <asm/nmi.h>
+#include <asm/switch_to.h>
 
 struct dbg_reg_def_t dbg_reg_def[DBG_MAX_REG_NUM] =
 {
@@ -73,7 +74,7 @@ struct dbg_reg_def_t dbg_reg_def[DBG_MAX_REG_NUM] =
 	{ "bx", 8, offsetof(struct pt_regs, bx) },
 	{ "cx", 8, offsetof(struct pt_regs, cx) },
 	{ "dx", 8, offsetof(struct pt_regs, dx) },
-	{ "si", 8, offsetof(struct pt_regs, dx) },
+	{ "si", 8, offsetof(struct pt_regs, si) },
 	{ "di", 8, offsetof(struct pt_regs, di) },
 	{ "bp", 8, offsetof(struct pt_regs, bp) },
 	{ "sp", 8, offsetof(struct pt_regs, sp) },
@@ -166,21 +167,19 @@ void sleeping_thread_to_gdb_regs(unsigned long *gdb_regs, struct task_struct *p)
 	gdb_regs[GDB_DX]	= 0;
 	gdb_regs[GDB_SI]	= 0;
 	gdb_regs[GDB_DI]	= 0;
-	gdb_regs[GDB_BP]	= *(unsigned long *)p->thread.sp;
+	gdb_regs[GDB_BP]	= ((struct inactive_task_frame *)p->thread.sp)->bp;
 #ifdef CONFIG_X86_32
 	gdb_regs[GDB_DS]	= __KERNEL_DS;
 	gdb_regs[GDB_ES]	= __KERNEL_DS;
 	gdb_regs[GDB_PS]	= 0;
 	gdb_regs[GDB_CS]	= __KERNEL_CS;
-	gdb_regs[GDB_PC]	= p->thread.ip;
 	gdb_regs[GDB_SS]	= __KERNEL_DS;
 	gdb_regs[GDB_FS]	= 0xFFFF;
 	gdb_regs[GDB_GS]	= 0xFFFF;
 #else
-	gdb_regs32[GDB_PS]	= *(unsigned long *)(p->thread.sp + 8);
+	gdb_regs32[GDB_PS]	= 0;
 	gdb_regs32[GDB_CS]	= __KERNEL_CS;
 	gdb_regs32[GDB_SS]	= __KERNEL_DS;
-	gdb_regs[GDB_PC]	= 0;
 	gdb_regs[GDB_R8]	= 0;
 	gdb_regs[GDB_R9]	= 0;
 	gdb_regs[GDB_R10]	= 0;
@@ -190,6 +189,7 @@ void sleeping_thread_to_gdb_regs(unsigned long *gdb_regs, struct task_struct *p)
 	gdb_regs[GDB_R14]	= 0;
 	gdb_regs[GDB_R15]	= 0;
 #endif
+	gdb_regs[GDB_PC]	= 0;
 	gdb_regs[GDB_SP]	= p->thread.sp;
 }
 
@@ -229,10 +229,7 @@ static void kgdb_correct_hw_break(void)
 		bp->attr.bp_addr = breakinfo[breakno].addr;
 		bp->attr.bp_len = breakinfo[breakno].len;
 		bp->attr.bp_type = breakinfo[breakno].type;
-		if (breakinfo[breakno].type == X86_BREAKPOINT_EXECUTE)
-			info->address = ktla_ktva(breakinfo[breakno].addr);
-		else
-			info->address = breakinfo[breakno].addr;
+		info->address = breakinfo[breakno].addr;
 		info->len = breakinfo[breakno].len;
 		info->type = breakinfo[breakno].type;
 		val = arch_install_hw_breakpoint(bp);
@@ -479,12 +476,12 @@ int kgdb_arch_handle_exception(int e_vector, int signo, int err_code,
 	case 'k':
 		/* clear the trace bit */
 		linux_regs->flags &= ~X86_EFLAGS_TF;
-		atomic_set_unchecked(&kgdb_cpu_doing_single_step, -1);
+		atomic_set(&kgdb_cpu_doing_single_step, -1);
 
 		/* set the trace bit if we're stepping */
 		if (remcomInBuffer[0] == 's') {
 			linux_regs->flags |= X86_EFLAGS_TF;
-			atomic_set_unchecked(&kgdb_cpu_doing_single_step,
+			atomic_set(&kgdb_cpu_doing_single_step,
 				   raw_smp_processor_id());
 		}
 
@@ -515,26 +512,31 @@ single_step_cont(struct pt_regs *regs, struct die_args *args)
 	return NOTIFY_STOP;
 }
 
-static int was_in_debug_nmi[NR_CPUS];
+static DECLARE_BITMAP(was_in_debug_nmi, NR_CPUS);
 
 static int kgdb_nmi_handler(unsigned int cmd, struct pt_regs *regs)
 {
+	int cpu;
+
 	switch (cmd) {
 	case NMI_LOCAL:
 		if (atomic_read(&kgdb_active) != -1) {
 			/* KGDB CPU roundup */
-			kgdb_nmicallback(raw_smp_processor_id(), regs);
-			was_in_debug_nmi[raw_smp_processor_id()] = 1;
+			cpu = raw_smp_processor_id();
+			kgdb_nmicallback(cpu, regs);
+			set_bit(cpu, was_in_debug_nmi);
 			touch_nmi_watchdog();
+
 			return NMI_HANDLED;
 		}
 		break;
 
 	case NMI_UNKNOWN:
-		if (was_in_debug_nmi[raw_smp_processor_id()]) {
-			was_in_debug_nmi[raw_smp_processor_id()] = 0;
+		cpu = raw_smp_processor_id();
+
+		if (__test_and_clear_bit(cpu, was_in_debug_nmi))
 			return NMI_HANDLED;
-		}
+
 		break;
 	default:
 		/* do nothing */
@@ -549,7 +551,7 @@ static int __kgdb_notify(struct die_args *args, unsigned long cmd)
 
 	switch (cmd) {
 	case DIE_DEBUG:
-		if (atomic_read_unchecked(&kgdb_cpu_doing_single_step) != -1) {
+		if (atomic_read(&kgdb_cpu_doing_single_step) != -1) {
 			if (user_mode(regs))
 				return single_step_cont(regs, args);
 			break;
@@ -608,9 +610,9 @@ static struct notifier_block kgdb_notifier = {
 };
 
 /**
- *	kgdb_arch_init - Perform any architecture specific initalization.
+ *	kgdb_arch_init - Perform any architecture specific initialization.
  *
- *	This function will handle the initalization of any architecture
+ *	This function will handle the initialization of any architecture
  *	specific callbacks.
  */
 int kgdb_arch_init(void)
@@ -749,18 +751,15 @@ void kgdb_arch_set_pc(struct pt_regs *regs, unsigned long ip)
 int kgdb_arch_set_breakpoint(struct kgdb_bkpt *bpt)
 {
 	int err;
-#ifdef CONFIG_DEBUG_RODATA
 	char opc[BREAK_INSTR_SIZE];
-#endif /* CONFIG_DEBUG_RODATA */
 
 	bpt->type = BP_BREAKPOINT;
-	err = probe_kernel_read(bpt->saved_instr, ktla_ktva((char *)bpt->bpt_addr),
+	err = probe_kernel_read(bpt->saved_instr, (char *)bpt->bpt_addr,
 				BREAK_INSTR_SIZE);
 	if (err)
 		return err;
-	err = probe_kernel_write(ktla_ktva((char *)bpt->bpt_addr),
+	err = probe_kernel_write((char *)bpt->bpt_addr,
 				 arch_kgdb_ops.gdb_bpt_instr, BREAK_INSTR_SIZE);
-#ifdef CONFIG_DEBUG_RODATA
 	if (!err)
 		return err;
 	/*
@@ -771,19 +770,18 @@ int kgdb_arch_set_breakpoint(struct kgdb_bkpt *bpt)
 		return -EBUSY;
 	text_poke((void *)bpt->bpt_addr, arch_kgdb_ops.gdb_bpt_instr,
 		  BREAK_INSTR_SIZE);
-	err = probe_kernel_read(opc, ktla_ktva((char *)bpt->bpt_addr), BREAK_INSTR_SIZE);
+	err = probe_kernel_read(opc, (char *)bpt->bpt_addr, BREAK_INSTR_SIZE);
 	if (err)
 		return err;
 	if (memcmp(opc, arch_kgdb_ops.gdb_bpt_instr, BREAK_INSTR_SIZE))
 		return -EINVAL;
 	bpt->type = BP_POKE_BREAKPOINT;
-#endif /* CONFIG_DEBUG_RODATA */
+
 	return err;
 }
 
 int kgdb_arch_remove_breakpoint(struct kgdb_bkpt *bpt)
 {
-#ifdef CONFIG_DEBUG_RODATA
 	int err;
 	char opc[BREAK_INSTR_SIZE];
 
@@ -796,13 +794,13 @@ int kgdb_arch_remove_breakpoint(struct kgdb_bkpt *bpt)
 	if (mutex_is_locked(&text_mutex))
 		goto knl_write;
 	text_poke((void *)bpt->bpt_addr, bpt->saved_instr, BREAK_INSTR_SIZE);
-	err = probe_kernel_read(opc, ktla_ktva((char *)bpt->bpt_addr), BREAK_INSTR_SIZE);
+	err = probe_kernel_read(opc, (char *)bpt->bpt_addr, BREAK_INSTR_SIZE);
 	if (err || memcmp(opc, bpt->saved_instr, BREAK_INSTR_SIZE))
 		goto knl_write;
 	return err;
+
 knl_write:
-#endif /* CONFIG_DEBUG_RODATA */
-	return probe_kernel_write(ktla_ktva((char *)bpt->bpt_addr),
+	return probe_kernel_write((char *)bpt->bpt_addr,
 				  (char *)bpt->saved_instr, BREAK_INSTR_SIZE);
 }
 

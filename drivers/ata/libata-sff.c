@@ -678,9 +678,9 @@ unsigned int ata_sff_data_xfer_noirq(struct ata_device *dev, unsigned char *buf,
 	unsigned long flags;
 	unsigned int consumed;
 
-	local_irq_save_nort(flags);
+	local_irq_save(flags);
 	consumed = ata_sff_data_xfer32(dev, buf, buflen, rw);
-	local_irq_restore_nort(flags);
+	local_irq_restore(flags);
 
 	return consumed;
 }
@@ -719,7 +719,7 @@ static void ata_pio_sector(struct ata_queued_cmd *qc)
 		unsigned long flags;
 
 		/* FIXME: use a bounce buffer */
-		local_irq_save_nort(flags);
+		local_irq_save(flags);
 		buf = kmap_atomic(page);
 
 		/* do the actual data transfer */
@@ -727,7 +727,7 @@ static void ata_pio_sector(struct ata_queued_cmd *qc)
 				       do_write);
 
 		kunmap_atomic(buf);
-		local_irq_restore_nort(flags);
+		local_irq_restore(flags);
 	} else {
 		buf = page_address(page);
 		ap->ops->sff_data_xfer(qc->dev, buf + offset, qc->sect_size,
@@ -864,7 +864,7 @@ next_sg:
 		unsigned long flags;
 
 		/* FIXME: use bounce buffer */
-		local_irq_save_nort(flags);
+		local_irq_save(flags);
 		buf = kmap_atomic(page);
 
 		/* do the actual data transfer */
@@ -872,7 +872,7 @@ next_sg:
 								count, rw);
 
 		kunmap_atomic(buf);
-		local_irq_restore_nort(flags);
+		local_irq_restore(flags);
 	} else {
 		buf = page_address(page);
 		consumed = ap->ops->sff_data_xfer(dev,  buf + offset,
@@ -1279,7 +1279,8 @@ fsm_start:
 		break;
 	default:
 		poll_next = 0;
-		BUG();
+		WARN(true, "ata%d: SFF host state machine in invalid state %d",
+		     ap->print_id, ap->hsm_task_state);
 	}
 
 	return poll_next;
@@ -1480,7 +1481,6 @@ unsigned int ata_sff_qc_issue(struct ata_queued_cmd *qc)
 		break;
 
 	default:
-		WARN_ON_ONCE(1);
 		return AC_ERR_SYSTEM;
 	}
 
@@ -2433,15 +2433,6 @@ int ata_pci_sff_activate_host(struct ata_host *host,
 		mask = (1 << 2) | (1 << 0);
 		if ((tmp8 & mask) != mask)
 			legacy_mode = 1;
-#if defined(CONFIG_NO_ATA_LEGACY)
-		/* Some platforms with PCI limits cannot address compat
-		   port space. In that case we punt if their firmware has
-		   left a device in compatibility mode */
-		if (legacy_mode) {
-			printk(KERN_ERR "ata: Compatibility mode ATA is not supported on this platform, skipping.\n");
-			return -EOPNOTSUPP;
-		}
-#endif
 	}
 
 	if (!devres_open_group(dev, NULL, GFP_KERNEL))
@@ -3219,11 +3210,11 @@ void ata_pci_bmdma_init(struct ata_host *host)
 	 * ->sff_irq_clear method.  Try to initialize bmdma_addr
 	 * regardless of dma masks.
 	 */
-	rc = pci_set_dma_mask(pdev, ATA_DMA_MASK);
+	rc = dma_set_mask(&pdev->dev, ATA_DMA_MASK);
 	if (rc)
 		ata_bmdma_nodma(host, "failed to set dma mask");
 	if (!rc) {
-		rc = pci_set_consistent_dma_mask(pdev, ATA_DMA_MASK);
+		rc = dma_set_coherent_mask(&pdev->dev, ATA_DMA_MASK);
 		if (rc)
 			ata_bmdma_nodma(host,
 					"failed to set consistent dma mask");

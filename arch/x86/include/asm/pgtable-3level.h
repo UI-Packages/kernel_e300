@@ -92,16 +92,12 @@ static inline void native_set_pte_atomic(pte_t *ptep, pte_t pte)
 
 static inline void native_set_pmd(pmd_t *pmdp, pmd_t pmd)
 {
-	pax_open_kernel();
 	set_64bit((unsigned long long *)(pmdp), native_pmd_val(pmd));
-	pax_close_kernel();
 }
 
 static inline void native_set_pud(pud_t *pudp, pud_t pud)
 {
-	pax_open_kernel();
 	set_64bit((unsigned long long *)(pudp), native_pud_val(pud));
-	pax_close_kernel();
 }
 
 /*
@@ -179,15 +175,6 @@ static inline pmd_t native_pmdp_get_and_clear(pmd_t *pmdp)
 #else
 #define native_pmdp_get_and_clear(xp) native_local_pmdp_get_and_clear(xp)
 #endif
-
-/*
- * Bits 0, 6 and 7 are taken in the low part of the pte,
- * put the 32 bits of offset into the high part.
- */
-#define pte_to_pgoff(pte) ((pte).pte_high)
-#define pgoff_to_pte(off)						\
-	((pte_t) { { .pte_low = _PAGE_FILE, .pte_high = (off) } })
-#define PTE_FILE_MAX_BITS       32
 
 /* Encode and de-code a swap entry */
 #define MAX_SWAPFILES_CHECK() BUILD_BUG_ON(MAX_SWAPFILES_SHIFT > 5)

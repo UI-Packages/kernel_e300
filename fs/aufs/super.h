@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2005-2014 Junjiro R. Okajima
+ * Copyright (C) 2005-2017 Junjiro R. Okajima
  *
  * This program, aufs is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,13 +25,10 @@
 #ifdef __KERNEL__
 
 #include <linux/fs.h>
+#include <linux/kobject.h>
+#include "hbl.h"
 #include "rwsem.h"
-#include "spl.h"
 #include "wkq.h"
-
-typedef ssize_t (*au_readf_t)(struct file *, char __user *, size_t, loff_t *);
-typedef ssize_t (*au_writef_t)(struct file *, const char __user *, size_t,
-			       loff_t *);
 
 /* policies to select one among multiple writable branches */
 struct au_wbr_copyup_operations {
@@ -59,14 +56,6 @@ struct au_wbr_mfs {
 
 	unsigned long long	mfsrr_bytes;
 	unsigned long long	mfsrr_watermark;
-};
-
-struct pseudo_link {
-	union {
-		struct hlist_node hlist;
-		struct rcu_head rcu;
-	};
-	struct inode *inode;
 };
 
 #define AuPlink_NHASH 100
@@ -101,26 +90,19 @@ struct au_sbinfo {
 	 */
 	struct au_rwsem		si_rwsem;
 
-	/* prevent recursive locking in deleting inode */
-	struct {
-		unsigned long		*bitmap;
-		spinlock_t		tree_lock;
-		struct radix_tree_root	tree;
-	} au_si_pid;
-
 	/*
 	 * dirty approach to protect sb->sb_inodes and ->s_files (gone) from
 	 * remount.
 	 */
-	atomic_long_t		si_ninodes, si_nfiles;
+	struct percpu_counter	si_ninodes, si_nfiles;
 
 	/* branch management */
 	unsigned int		si_generation;
 
-	/* see above flags */
+	/* see AuSi_ flags */
 	unsigned char		au_si_status;
 
-	aufs_bindex_t		si_bend;
+	aufs_bindex_t		si_bbot;
 
 	/* dirty trick to keep br_id plus */
 	unsigned int		si_last_br_id :
@@ -147,8 +129,8 @@ struct au_sbinfo {
 	unsigned int		si_mntflags;
 
 	/* external inode number (bitmap and translation table) */
-	au_readf_t		si_xread;
-	au_writef_t		si_xwrite;
+	vfs_readf_t		si_xread;
+	vfs_writef_t		si_xwrite;
 	struct file		*si_xib;
 	struct mutex		si_xib_mtx; /* protect xib members */
 	unsigned long		*si_xib_buf;
@@ -166,6 +148,9 @@ struct au_sbinfo {
 	atomic_t		si_xigen_next;
 #endif
 
+	/* dirty trick to suppoer atomic_open */
+	struct hlist_bl_head	si_aopen;
+
 	/* vdir parameters */
 	unsigned long		si_rdcache;	/* max cache time in jiffies */
 	unsigned int		si_rdblk;	/* deblk size */
@@ -179,20 +164,17 @@ struct au_sbinfo {
 	 */
 	unsigned int		si_dirwh;
 
-	/*
-	 * rename(2) a directory with all children.
-	 */
-	/* reserved for future use */
-	/* int			si_rendir; */
-
 	/* pseudo_link list */
-	struct au_sphlhead	si_plink[AuPlink_NHASH];
+	struct hlist_bl_head	si_plink[AuPlink_NHASH];
 	wait_queue_head_t	si_plink_wq;
 	spinlock_t		si_plink_maint_lock;
 	pid_t			si_plink_maint_pid;
 
 	/* file list */
-	struct au_sphlhead	si_files;
+	struct hlist_bl_head	si_files;
+
+	/* with/without getattr, brother of sb->s_d_op */
+	struct inode_operations *si_iop_array;
 
 	/*
 	 * sysfs and lifetime management.
@@ -211,7 +193,7 @@ struct au_sbinfo {
 #endif
 
 #ifdef CONFIG_AUFS_SBILIST
-	struct list_head	si_list;
+	struct hlist_bl_node	si_list;
 #endif
 
 	/* dirty, necessary for unmounting, sysfs and sysrq */
@@ -225,8 +207,8 @@ struct au_sbinfo {
  * if it is false, refreshing dirs at access time is unnecesary
  */
 #define AuSi_FAILED_REFRESH_DIR	1
-
 #define AuSi_FHSM		(1 << 1)	/* fhsm is active now */
+#define AuSi_NO_DREVAL		(1 << 2)	/* disable all d_revalidate */
 
 #ifndef CONFIG_AUFS_FHSM
 #undef AuSi_FHSM
@@ -262,7 +244,8 @@ static inline unsigned char au_do_ftest_si(struct au_sbinfo *sbi,
 #define AuLock_IR		(1 << 1)	/* read-lock inode */
 #define AuLock_IW		(1 << 2)	/* write-lock inode */
 #define AuLock_FLUSH		(1 << 3)	/* wait for 'nowait' tasks */
-#define AuLock_DIR		(1 << 4)	/* target is a dir */
+#define AuLock_DIRS		(1 << 4)	/* target is a pair of dirs */
+						/* except RENAME_EXCHANGE */
 #define AuLock_NOPLM		(1 << 5)	/* return err in plm mode */
 #define AuLock_NOPLMW		(1 << 6)	/* wait for plm mode ends */
 #define AuLock_GEN		(1 << 7)	/* test digen/iigen */
@@ -277,17 +260,17 @@ static inline unsigned char au_do_ftest_si(struct au_sbinfo *sbi,
 /* super.c */
 extern struct file_system_type aufs_fs_type;
 struct inode *au_iget_locked(struct super_block *sb, ino_t ino);
-typedef unsigned long long (*au_arraycb_t)(void *array, unsigned long long max,
-					   void *arg);
-void au_array_free(void *array);
-void *au_array_alloc(unsigned long long *hint, au_arraycb_t cb, void *arg);
+typedef unsigned long long (*au_arraycb_t)(struct super_block *sb, void *array,
+					   unsigned long long max, void *arg);
+void *au_array_alloc(unsigned long long *hint, au_arraycb_t cb,
+		     struct super_block *sb, void *arg);
 struct inode **au_iarray_alloc(struct super_block *sb, unsigned long long *max);
 void au_iarray_free(struct inode **a, unsigned long long max);
 
 /* sbinfo.c */
 void au_si_free(struct kobject *kobj);
 int au_si_alloc(struct super_block *sb);
-int au_sbr_realloc(struct au_sbinfo *sbinfo, int nbr);
+int au_sbr_realloc(struct au_sbinfo *sbinfo, int nbr, int may_shrink);
 
 unsigned int au_sigen_inc(struct super_block *sb);
 aufs_bindex_t au_new_br_id(struct super_block *sb);
@@ -301,16 +284,12 @@ void aufs_write_unlock(struct dentry *dentry);
 int aufs_read_and_write_lock2(struct dentry *d1, struct dentry *d2, int flags);
 void aufs_read_and_write_unlock2(struct dentry *d1, struct dentry *d2);
 
-int si_pid_test_slow(struct super_block *sb);
-void si_pid_set_slow(struct super_block *sb);
-void si_pid_clr_slow(struct super_block *sb);
-
 /* wbr_policy.c */
 extern struct au_wbr_copyup_operations au_wbr_copyup_ops[];
 extern struct au_wbr_create_operations au_wbr_create_ops[];
 int au_cpdown_dirs(struct dentry *dentry, aufs_bindex_t bdst);
 int au_wbr_nonopq(struct dentry *dentry, aufs_bindex_t bindex);
-int au_wbr_do_copyup_bu(struct dentry *dentry, aufs_bindex_t bstart);
+int au_wbr_do_copyup_bu(struct dentry *dentry, aufs_bindex_t btop);
 
 /* mvdown.c */
 int au_mvdown(struct dentry *dentry, struct aufs_mvdown __user *arg);
@@ -389,32 +368,32 @@ AuStub(int, au_busy_or_stale, return -EBUSY, void)
 
 #ifdef CONFIG_AUFS_SBILIST
 /* module.c */
-extern struct au_splhead au_sbilist;
+extern struct hlist_bl_head au_sbilist;
 
 static inline void au_sbilist_init(void)
 {
-	au_spl_init(&au_sbilist);
+	INIT_HLIST_BL_HEAD(&au_sbilist);
 }
 
 static inline void au_sbilist_add(struct super_block *sb)
 {
-	au_spl_add(&au_sbi(sb)->si_list, &au_sbilist);
+	au_hbl_add(&au_sbi(sb)->si_list, &au_sbilist);
 }
 
 static inline void au_sbilist_del(struct super_block *sb)
 {
-	au_spl_del(&au_sbi(sb)->si_list, &au_sbilist);
+	au_hbl_del(&au_sbi(sb)->si_list, &au_sbilist);
 }
 
 #ifdef CONFIG_AUFS_MAGIC_SYSRQ
 static inline void au_sbilist_lock(void)
 {
-	spin_lock(&au_sbilist.spin);
+	hlist_bl_lock(&au_sbilist);
 }
 
 static inline void au_sbilist_unlock(void)
 {
-	spin_unlock(&au_sbilist.spin);
+	hlist_bl_unlock(&au_sbilist);
 }
 #define AuGFP_SBILIST	GFP_ATOMIC
 #else
@@ -452,46 +431,29 @@ static inline void dbgaufs_si_null(struct au_sbinfo *sbinfo)
 
 /* ---------------------------------------------------------------------- */
 
-static inline pid_t si_pid_bit(void)
-{
-	/* the origin of pid is 1, but the bitmap's is 0 */
-	return current->pid - 1;
-}
+/* current->atomic_flags */
+/* this value should never corrupt the ones defined in linux/sched.h */
+#define PFA_AUFS	7
+
+TASK_PFA_TEST(AUFS, test_aufs)	/* task_test_aufs */
+TASK_PFA_SET(AUFS, aufs)	/* task_set_aufs */
+TASK_PFA_CLEAR(AUFS, aufs)	/* task_clear_aufs */
 
 static inline int si_pid_test(struct super_block *sb)
 {
-	pid_t bit;
-
-	bit = si_pid_bit();
-	if (bit < PID_MAX_DEFAULT)
-		return test_bit(bit, au_sbi(sb)->au_si_pid.bitmap);
-	return si_pid_test_slow(sb);
-}
-
-static inline void si_pid_set(struct super_block *sb)
-{
-	pid_t bit;
-
-	bit = si_pid_bit();
-	if (bit < PID_MAX_DEFAULT) {
-		AuDebugOn(test_bit(bit, au_sbi(sb)->au_si_pid.bitmap));
-		set_bit(bit, au_sbi(sb)->au_si_pid.bitmap);
-		/* smp_mb(); */
-	} else
-		si_pid_set_slow(sb);
+	return !!task_test_aufs(current);
 }
 
 static inline void si_pid_clr(struct super_block *sb)
 {
-	pid_t bit;
+	AuDebugOn(!task_test_aufs(current));
+	task_clear_aufs(current);
+}
 
-	bit = si_pid_bit();
-	if (bit < PID_MAX_DEFAULT) {
-		AuDebugOn(!test_bit(bit, au_sbi(sb)->au_si_pid.bitmap));
-		clear_bit(bit, au_sbi(sb)->au_si_pid.bitmap);
-		/* smp_mb(); */
-	} else
-		si_pid_clr_slow(sb);
+static inline void si_pid_set(struct super_block *sb)
+{
+	AuDebugOn(task_test_aufs(current));
+	task_set_aufs(current);
 }
 
 /* ---------------------------------------------------------------------- */
@@ -539,7 +501,7 @@ static inline int si_noflush_write_trylock(struct super_block *sb)
 	return locked;
 }
 
-#if 0 /* unused */
+#if 0 /* reserved */
 static inline int si_read_trylock(struct super_block *sb, int flags)
 {
 	if (au_ftest_lock(flags, FLUSH))
@@ -554,7 +516,7 @@ static inline void si_read_unlock(struct super_block *sb)
 	__si_read_unlock(sb);
 }
 
-#if 0 /* unused */
+#if 0 /* reserved */
 static inline int si_write_trylock(struct super_block *sb, int flags)
 {
 	if (au_ftest_lock(flags, FLUSH))
@@ -569,7 +531,7 @@ static inline void si_write_unlock(struct super_block *sb)
 	__si_write_unlock(sb);
 }
 
-#if 0 /* unused */
+#if 0 /* reserved */
 static inline void si_downgrade_lock(struct super_block *sb)
 {
 	__si_downgrade_lock(sb);
@@ -578,10 +540,10 @@ static inline void si_downgrade_lock(struct super_block *sb)
 
 /* ---------------------------------------------------------------------- */
 
-static inline aufs_bindex_t au_sbend(struct super_block *sb)
+static inline aufs_bindex_t au_sbbot(struct super_block *sb)
 {
 	SiMustAnyLock(sb);
-	return au_sbi(sb)->si_bend;
+	return au_sbi(sb)->si_bbot;
 }
 
 static inline unsigned int au_mntflags(struct super_block *sb)
@@ -596,26 +558,40 @@ static inline unsigned int au_sigen(struct super_block *sb)
 	return au_sbi(sb)->si_generation;
 }
 
+static inline unsigned long long au_ninodes(struct super_block *sb)
+{
+	s64 n = percpu_counter_sum(&au_sbi(sb)->si_ninodes);
+
+	BUG_ON(n < 0);
+	return n;
+}
+
 static inline void au_ninodes_inc(struct super_block *sb)
 {
-	atomic_long_inc(&au_sbi(sb)->si_ninodes);
+	percpu_counter_inc(&au_sbi(sb)->si_ninodes);
 }
 
 static inline void au_ninodes_dec(struct super_block *sb)
 {
-	AuDebugOn(!atomic_long_read(&au_sbi(sb)->si_ninodes));
-	atomic_long_dec(&au_sbi(sb)->si_ninodes);
+	percpu_counter_dec(&au_sbi(sb)->si_ninodes);
+}
+
+static inline unsigned long long au_nfiles(struct super_block *sb)
+{
+	s64 n = percpu_counter_sum(&au_sbi(sb)->si_nfiles);
+
+	BUG_ON(n < 0);
+	return n;
 }
 
 static inline void au_nfiles_inc(struct super_block *sb)
 {
-	atomic_long_inc(&au_sbi(sb)->si_nfiles);
+	percpu_counter_inc(&au_sbi(sb)->si_nfiles);
 }
 
 static inline void au_nfiles_dec(struct super_block *sb)
 {
-	AuDebugOn(!atomic_long_read(&au_sbi(sb)->si_nfiles));
-	atomic_long_dec(&au_sbi(sb)->si_nfiles);
+	percpu_counter_dec(&au_sbi(sb)->si_nfiles);
 }
 
 static inline struct au_branch *au_sbr(struct super_block *sb,

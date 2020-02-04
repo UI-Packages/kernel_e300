@@ -22,6 +22,7 @@
 #include <linux/srcu.h>
 #include <linux/rculist.h>
 #include <linux/wait.h>
+#include <linux/module.h>
 
 #include <linux/fsnotify_backend.h>
 #include "fsnotify.h"
@@ -31,12 +32,23 @@
 /*
  * Final freeing of a group
  */
-void fsnotify_final_destroy_group(struct fsnotify_group *group)
+static void fsnotify_final_destroy_group(struct fsnotify_group *group)
 {
 	if (group->ops->free_group_priv)
 		group->ops->free_group_priv(group);
 
 	kfree(group);
+}
+
+/*
+ * Stop queueing new events for this group. Once this function returns
+ * fsnotify_add_event() will not add any new events to the group's queue.
+ */
+void fsnotify_group_stop_queueing(struct fsnotify_group *group)
+{
+	spin_lock(&group->notification_lock);
+	group->shutdown = true;
+	spin_unlock(&group->notification_lock);
 }
 
 /*
@@ -47,13 +59,37 @@ void fsnotify_final_destroy_group(struct fsnotify_group *group)
  */
 void fsnotify_destroy_group(struct fsnotify_group *group)
 {
-	/* clear all inode marks for this group */
-	fsnotify_clear_marks_by_group(group);
+	/*
+	 * Stop queueing new events. The code below is careful enough to not
+	 * require this but fanotify needs to stop queuing events even before
+	 * fsnotify_destroy_group() is called and this makes the other callers
+	 * of fsnotify_destroy_group() to see the same behavior.
+	 */
+	fsnotify_group_stop_queueing(group);
 
-	synchronize_srcu(&fsnotify_mark_srcu);
+	/* clear all inode marks for this group, attach them to destroy_list */
+	fsnotify_detach_group_marks(group);
 
-	/* clear the notification queue of all events */
+	/*
+	 * Wait for fsnotify_mark_srcu period to end and free all marks in
+	 * destroy_list
+	 */
+	fsnotify_mark_destroy_list();
+
+	/*
+	 * Since we have waited for fsnotify_mark_srcu in
+	 * fsnotify_mark_destroy_list() there can be no outstanding event
+	 * notification against this group. So clearing the notification queue
+	 * of all events is reliable now.
+	 */
 	fsnotify_flush_notify(group);
+
+	/*
+	 * Destroy overflow event (we cannot use fsnotify_destroy_event() as
+	 * that deliberately ignores overflow events.
+	 */
+	if (group->overflow_event)
+		group->ops->free_event(group->overflow_event);
 
 	fsnotify_put_group(group);
 }
@@ -65,6 +101,7 @@ void fsnotify_get_group(struct fsnotify_group *group)
 {
 	atomic_inc(&group->refcnt);
 }
+EXPORT_SYMBOL_GPL(fsnotify_get_group);
 
 /*
  * Drop a reference to a group.  Free it if it's through.
@@ -74,6 +111,7 @@ void fsnotify_put_group(struct fsnotify_group *group)
 	if (atomic_dec_and_test(&group->refcnt))
 		fsnotify_final_destroy_group(group);
 }
+EXPORT_SYMBOL_GPL(fsnotify_put_group);
 
 /*
  * Create a new fsnotify_group and hold a reference for the group returned.
@@ -90,7 +128,7 @@ struct fsnotify_group *fsnotify_alloc_group(const struct fsnotify_ops *ops)
 	atomic_set(&group->refcnt, 1);
 	atomic_set(&group->num_marks, 0);
 
-	mutex_init(&group->notification_mutex);
+	spin_lock_init(&group->notification_lock);
 	INIT_LIST_HEAD(&group->notification_list);
 	init_waitqueue_head(&group->notification_waitq);
 	group->max_events = UINT_MAX;
@@ -102,6 +140,7 @@ struct fsnotify_group *fsnotify_alloc_group(const struct fsnotify_ops *ops)
 
 	return group;
 }
+EXPORT_SYMBOL_GPL(fsnotify_alloc_group);
 
 int fsnotify_fasync(int fd, struct file *file, int on)
 {

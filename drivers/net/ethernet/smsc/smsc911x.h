@@ -14,8 +14,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
  ***************************************************************************/
 #ifndef __SMSC911X_H__
@@ -32,13 +31,6 @@
 /* implements a PHY loopback test at initialisation time, to ensure a packet
  * can be successfully looped back */
 #define USE_PHY_WORK_AROUND
-
-/* The Thunder Simulator from Cavium implements the DMA capability for this
- * device. The simulator has a custom Chip Revision.
- */
-#ifdef CONFIG_ARCH_THUNDER_EMULATOR
-#define ID_CAVIUM_DMA		(1u << 15)
-#endif
 
 #if USE_DEBUG >= 1
 #define SMSC_WARN(pdata, nlevel, fmt, args...)			\
@@ -59,7 +51,7 @@
 
 #ifdef CONFIG_DEBUG_SPINLOCK
 #define SMSC_ASSERT_MAC_LOCK(pdata) \
-		WARN_ON(!spin_is_locked(&pdata->mac_lock))
+		WARN_ON_SMP(!spin_is_locked(&pdata->mac_lock))
 #else
 #define SMSC_ASSERT_MAC_LOCK(pdata) do {} while (0)
 #endif				/* CONFIG_DEBUG_SPINLOCK */

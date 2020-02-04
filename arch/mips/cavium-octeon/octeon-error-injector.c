@@ -18,11 +18,11 @@
 #include <asm/octeon/cvmx-fpa.h>
 
 int test_number;
-module_param(test_number, int, S_IRUGO);
+module_param(test_number, int, 0444);
 MODULE_PARM_DESC(test_number, "Which test case to run.");
 
 int test_param;
-module_param(test_param, int, S_IRUGO);
+module_param(test_param, int, 0444);
 MODULE_PARM_DESC(test_param, "Parameter used in the test case.");
 
 volatile int octeon_error_injector_foo;
@@ -90,10 +90,8 @@ static void octeon_error_injector_fpa1(void)
 	cvmx_fpa1_enable();
 
 	mem = kmalloc(1024, GFP_KERNEL);
-	if (!mem) {
-		pr_err("No memory\n");
+	if (!mem)
 		return;
-	}
 
 	/* Add two blocks. */
 	cvmx_fpa_free(mem + 128, 7, 0);

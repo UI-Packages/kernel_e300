@@ -29,8 +29,8 @@
  * - a list of "index" objects representing the cpu's local cache hierarchy
  */
 struct cache_dir {
-	struct kobject *kobj; /* bare (not embedded) kobject for cache
-			       * directory */
+	/* bare (not embedded) kobject for cache directory */
+	struct kobject *kobj;
 	struct cache_index_dir *index; /* list of index objects */
 };
 
@@ -77,7 +77,8 @@ static const struct cache_type_info cache_type_info[] = {
 		/*
 		 * PowerPC Processor binding says the [di]-cache-*
 		 * must be equal on unified caches, so just use
-		 * d-cache properties. */
+		 * d-cache properties.
+		 */
 		.name            = "Unified",
 		.size_prop       = "d-cache-size",
 		.line_size_props = { "d-cache-line-size",
@@ -147,8 +148,8 @@ static const char *cache_type_string(const struct cache *cache)
  */
 static struct cache_desc *get_cache_desc(const struct cache *cache)
 {
-	if (cache->cpu_id >= num_possible_cpus())
-		BUG();
+	if (WARN_ON(cache->cpu_id >= num_possible_cpus()))
+		return NULL;
 
 	if (cache->level == 2)
 		return &cpu_data[cache->cpu_id].scache;
@@ -163,7 +164,7 @@ static struct cache_desc *get_cache_desc(const struct cache *cache)
 	return NULL;
 }
 
-static void __cpuinit cache_init(struct cache *cache, unsigned int cpu_id,
+static void cache_init(struct cache *cache, unsigned int cpu_id,
 				 int level, int type)
 {
 	cache->type = type;
@@ -176,8 +177,8 @@ static void __cpuinit cache_init(struct cache *cache, unsigned int cpu_id,
 }
 
 /* Allocates and initializes a new cache structure */
-static struct cache *__cpuinit new_cache(int type, int level,
-					 unsigned int cpu_id)
+static struct cache *new_cache(int type, int level,
+			       unsigned int cpu_id)
 {
 	struct cache *cache;
 
@@ -326,7 +327,7 @@ static struct cache *cache_lookup_by_cpuid(unsigned int cpu_id)
 	return cache;
 }
 
-static void __cpuinit link_cache_lists(struct cache *smaller,
+static void link_cache_lists(struct cache *smaller,
 				       struct cache *bigger)
 {
 	while (smaller->next_local) {
@@ -338,7 +339,7 @@ static void __cpuinit link_cache_lists(struct cache *smaller,
 	smaller->next_local = bigger;
 }
 
-static struct cache *__cpuinit cache_chain_instantiate(unsigned int cpu_id)
+static struct cache *cache_chain_instantiate(unsigned int cpu_id)
 {
 	struct cache *l2_cache = NULL, *l1i_cache = NULL, *l1d_cache = NULL;
 	unsigned int l1i_size = 0, l1d_size = 0;
@@ -368,12 +369,11 @@ static struct cache *__cpuinit cache_chain_instantiate(unsigned int cpu_id)
 		link_cache_lists(l1i_cache, l2_cache);
 		cache_cpu_set(l1d_cache, cpu_id);
 		return l1d_cache;
-	} else {
-		link_cache_lists(l1i_cache, l1d_cache);
-		link_cache_lists(l1d_cache, l2_cache);
-		cache_cpu_set(l1i_cache, cpu_id);
-		return l1i_cache;
 	}
+	link_cache_lists(l1i_cache, l1d_cache);
+	link_cache_lists(l1d_cache, l2_cache);
+	cache_cpu_set(l1i_cache, cpu_id);
+	return l1i_cache;
 err:
 	if (l2_cache)
 		release_cache(l2_cache);
@@ -385,7 +385,7 @@ err:
 	return NULL;
 }
 
-static struct cache_dir *__cpuinit cacheinfo_create_cache_dir(unsigned int cpu_id)
+static struct cache_dir *cacheinfo_create_cache_dir(unsigned int cpu_id)
 {
 	struct cache_dir *cache_dir;
 	struct device *dev;
@@ -556,7 +556,8 @@ static ssize_t shared_cpu_map_show(struct kobject *k,
 	len = PAGE_SIZE - 2;
 
 	if (len > 1) {
-		n = cpumask_scnprintf(buf, len, &cache->shared_cpu_map);
+		n = scnprintf(buf, len, "%*pb\n",
+			      cpumask_pr_args(&cache->shared_cpu_map));
 		buf[n++] = '\n';
 		buf[n] = '\0';
 	}
@@ -589,7 +590,7 @@ static struct kobj_attribute *cache_index_opt_attrs[] = {
 	&cache_assoc_attr,
 };
 
-static struct sysfs_ops cache_index_ops = {
+static const struct sysfs_ops cache_index_ops = {
 	.show = cache_index_show,
 };
 
@@ -599,7 +600,7 @@ static struct kobj_type cache_index_type = {
 	.default_attrs = cache_index_default_attrs,
 };
 
-static void __cpuinit cacheinfo_create_index_opt_attrs(struct cache_index_dir *dir)
+static void cacheinfo_create_index_opt_attrs(struct cache_index_dir *dir)
 {
 	const char *cache_type;
 	struct cache *cache;
@@ -639,7 +640,7 @@ static void __cpuinit cacheinfo_create_index_opt_attrs(struct cache_index_dir *d
 	kfree(buf);
 }
 
-static void __cpuinit cacheinfo_create_index_dir(struct cache *cache, int index,
+static void cacheinfo_create_index_dir(struct cache *cache, int index,
 						 struct cache_dir *cache_dir)
 {
 	struct cache_index_dir *index_dir;
@@ -666,8 +667,8 @@ err:
 	kfree(index_dir);
 }
 
-static void __cpuinit cacheinfo_sysfs_populate(unsigned int cpu_id,
-					       struct cache *cache_list)
+static void cacheinfo_sysfs_populate(unsigned int cpu_id,
+				     struct cache *cache_list)
 {
 	struct cache_dir *cache_dir;
 	struct cache *cache;
@@ -685,7 +686,7 @@ static void __cpuinit cacheinfo_sysfs_populate(unsigned int cpu_id,
 	}
 }
 
-void __cpuinit cacheinfo_cpu_online(unsigned int cpu_id)
+void cacheinfo_cpu_online(unsigned int cpu_id)
 {
 	struct cache *cache;
 	struct cache *iter;
@@ -786,18 +787,18 @@ void cacheinfo_cpu_offline(unsigned int cpu_id)
 
 
 
-static void __cpuinit register_cpu_online(unsigned int cpu_id)
+static void register_cpu_online(unsigned int cpu_id)
 {
 	cacheinfo_cpu_online(cpu_id);
 }
 
-static void __cpuinit unregister_cpu_online(unsigned int cpu_id)
+static void unregister_cpu_online(unsigned int cpu_id)
 {
 	cacheinfo_cpu_offline(cpu_id);
 }
 
-static int __cpuinit sysfs_cpu_notify(struct notifier_block *self,
-				      unsigned long action, void *hcpu)
+static int sysfs_cpu_notify(struct notifier_block *self,
+			    unsigned long action, void *hcpu)
 {
 	unsigned int cpu = (unsigned int)(long)hcpu;
 
@@ -815,7 +816,7 @@ static int __cpuinit sysfs_cpu_notify(struct notifier_block *self,
 	return NOTIFY_OK;
 }
 
-static struct notifier_block __cpuinitdata sysfs_cpu_nb = {
+static struct notifier_block sysfs_cpu_nb = {
 	.notifier_call = sysfs_cpu_notify,
 };
 

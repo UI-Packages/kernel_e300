@@ -25,14 +25,13 @@ int (*cavium_ipsec_process)(void *, struct sk_buff *, int, int) = NULL;
 
 void set_cavium_ipsec_process(void *func)
 {
-     cavium_ipsec_process = func;
-     return;
+	cavium_ipsec_process = func;
+	return;
 }
 EXPORT_SYMBOL(set_cavium_ipsec_process);
 #endif
 
-
-static int xfrm_output2(struct sk_buff *skb);
+static int xfrm_output2(struct net *net, struct sock *sk, struct sk_buff *skb);
 
 static int xfrm_skb_check_space(struct sk_buff *skb)
 {
@@ -49,6 +48,18 @@ static int xfrm_skb_check_space(struct sk_buff *skb)
 		ntail = 0;
 
 	return pskb_expand_head(skb, nhead, ntail, GFP_ATOMIC);
+}
+
+/* Children define the path of the packet through the
+ * Linux networking.  Thus, destinations are stackable.
+ */
+
+static struct dst_entry *skb_dst_pop(struct sk_buff *skb)
+{
+	struct dst_entry *child = dst_clone(skb_dst(skb)->child);
+
+	skb_dst_drop(skb);
+	return child;
 }
 
 static int xfrm_output_one(struct sk_buff *skb, int err)
@@ -100,43 +111,41 @@ static int xfrm_output_one(struct sk_buff *skb, int err)
 
 		skb_dst_force(skb);
 
+		/* Inner headers are invalid now. */
+		skb->encapsulation = 0;
+
 #if defined(CONFIG_CAVIUM_OCTEON_IPSEC) && defined(CONFIG_NET_KEY)
- /*
- *         * If Octeon IPSEC Acceleration module has been loaded
- *         * call it, otherwise, follow the software path
- *       */
-        if(cavium_ipsec_process)
-        {
-            if (skb_is_nonlinear(skb) &&
-                skb_linearize(skb) != 0) {
-                err = -ENOMEM;
-                goto error;
-            }
-            // If Octeon IPSec Acceleration module is not able to handle the Ciher at any instance,
-            // Use the Software Path to hadnle it
-            if (x->sa_handle != NULL)
-            {
-                err = cavium_ipsec_process(x, skb, 0, 1 /*ENCRYPT*/);
-                if (err != 0)
-                {
-                    err = x->type->output(x, skb);   
-                }
-            }
-            else
-            {
-                err = x->type->output(x, skb);
-            }
-        }
-        else
-        {
-            err = x->type->output(x, skb);
-        }
+ 		/*
+ 		 * If Octeon IPSEC Acceleration module has been loaded
+ 		 * call it, otherwise, follow the software path
+ 		*/
+		if(cavium_ipsec_process)
+		{
+			if (skb_is_nonlinear(skb) && skb_linearize(skb) != 0) {
+				err = -ENOMEM;
+				goto error;
+			}
+			/*
+			 * If Octeon IPSec Acceleration module is not able to handle the 
+			 * Cipher at any instance, Use the Software Path to hadnle it
+			 */
+			if (x->sa_handle != NULL) {
+				err = cavium_ipsec_process(x, skb, 0, 1 /*ENCRYPT*/);
+				if (err != 0) {
+					err = x->type->output(x, skb);
+				}
+			} else {
+				err = x->type->output(x, skb);
+			}
+		} else {
+			err = x->type->output(x, skb);
+		}
 #else
-        err = x->type->output(x, skb);
+		err = x->type->output(x, skb);
 #endif
 
 		if (err == -EINPROGRESS)
-			goto out_exit;
+			goto out;
 
 resume:
 		if (err) {
@@ -154,31 +163,32 @@ resume:
 		x = dst->xfrm;
 	} while (x && !(x->outer_mode->flags & XFRM_MODE_FLAG_TUNNEL));
 
-	err = 0;
+	return 0;
 
-out_exit:
-	return err;
 error:
 	spin_unlock_bh(&x->lock);
 error_nolock:
 	kfree_skb(skb);
-	goto out_exit;
+out:
+	return err;
 }
 
 int xfrm_output_resume(struct sk_buff *skb, int err)
 {
+	struct net *net = xs_net(skb_dst(skb)->xfrm);
+
 	while (likely((err = xfrm_output_one(skb, err)) == 0)) {
 		nf_reset(skb);
 
-		err = skb_dst(skb)->ops->local_out(skb);
+		err = skb_dst(skb)->ops->local_out(net, skb->sk, skb);
 		if (unlikely(err != 1))
 			goto out;
 
 		if (!skb_dst(skb)->xfrm)
-			return dst_output(skb);
+			return dst_output(net, skb->sk, skb);
 
 		err = nf_hook(skb_dst(skb)->ops->family,
-			      NF_INET_POST_ROUTING, skb,
+			      NF_INET_POST_ROUTING, net, skb->sk, skb,
 			      NULL, skb_dst(skb)->dev, xfrm_output2);
 		if (unlikely(err != 1))
 			goto out;
@@ -192,33 +202,33 @@ out:
 }
 EXPORT_SYMBOL_GPL(xfrm_output_resume);
 
-static int xfrm_output2(struct sk_buff *skb)
+static int xfrm_output2(struct net *net, struct sock *sk, struct sk_buff *skb)
 {
 	return xfrm_output_resume(skb, 1);
 }
 
-static int xfrm_output_gso(struct sk_buff *skb)
+static int xfrm_output_gso(struct net *net, struct sock *sk, struct sk_buff *skb)
 {
 	struct sk_buff *segs;
 
+	BUILD_BUG_ON(sizeof(*IPCB(skb)) > SKB_SGO_CB_OFFSET);
+	BUILD_BUG_ON(sizeof(*IP6CB(skb)) > SKB_SGO_CB_OFFSET);
 	segs = skb_gso_segment(skb, 0);
 	kfree_skb(skb);
 	if (IS_ERR(segs))
 		return PTR_ERR(segs);
+	if (segs == NULL)
+		return -EINVAL;
 
 	do {
 		struct sk_buff *nskb = segs->next;
 		int err;
 
 		segs->next = NULL;
-		err = xfrm_output2(segs);
+		err = xfrm_output2(net, sk, segs);
 
 		if (unlikely(err)) {
-			while ((segs = nskb)) {
-				nskb = segs->next;
-				segs->next = NULL;
-				kfree_skb(segs);
-			}
+			kfree_skb_list(nskb);
 			return err;
 		}
 
@@ -228,13 +238,13 @@ static int xfrm_output_gso(struct sk_buff *skb)
 	return 0;
 }
 
-int xfrm_output(struct sk_buff *skb)
+int xfrm_output(struct sock *sk, struct sk_buff *skb)
 {
 	struct net *net = dev_net(skb_dst(skb)->dev);
 	int err;
 
 	if (skb_is_gso(skb))
-		return xfrm_output_gso(skb);
+		return xfrm_output_gso(net, sk, skb);
 
 	if (skb->ip_summed == CHECKSUM_PARTIAL) {
 		err = skb_checksum_help(skb);
@@ -245,8 +255,9 @@ int xfrm_output(struct sk_buff *skb)
 		}
 	}
 
-	return xfrm_output2(skb);
+	return xfrm_output2(net, sk, skb);
 }
+EXPORT_SYMBOL_GPL(xfrm_output);
 
 int xfrm_inner_extract_output(struct xfrm_state *x, struct sk_buff *skb)
 {
@@ -261,6 +272,25 @@ int xfrm_inner_extract_output(struct xfrm_state *x, struct sk_buff *skb)
 		return -EAFNOSUPPORT;
 	return inner_mode->afinfo->extract_output(x, skb);
 }
-
-EXPORT_SYMBOL_GPL(xfrm_output);
 EXPORT_SYMBOL_GPL(xfrm_inner_extract_output);
+
+void xfrm_local_error(struct sk_buff *skb, int mtu)
+{
+	unsigned int proto;
+	struct xfrm_state_afinfo *afinfo;
+
+	if (skb->protocol == htons(ETH_P_IP))
+		proto = AF_INET;
+	else if (skb->protocol == htons(ETH_P_IPV6))
+		proto = AF_INET6;
+	else
+		return;
+
+	afinfo = xfrm_state_get_afinfo(proto);
+	if (!afinfo)
+		return;
+
+	afinfo->local_error(skb, mtu);
+	xfrm_state_put_afinfo(afinfo);
+}
+EXPORT_SYMBOL_GPL(xfrm_local_error);

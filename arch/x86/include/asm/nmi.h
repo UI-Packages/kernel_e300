@@ -1,6 +1,7 @@
 #ifndef _ASM_X86_NMI_H
 #define _ASM_X86_NMI_H
 
+#include <linux/irq_work.h>
 #include <linux/pm.h>
 #include <asm/irq.h>
 #include <asm/io.h>
@@ -38,13 +39,15 @@ typedef int (*nmi_handler_t)(unsigned int, struct pt_regs *);
 struct nmiaction {
 	struct list_head	list;
 	nmi_handler_t		handler;
+	u64			max_duration;
+	struct irq_work		irq_work;
 	unsigned long		flags;
 	const char		*name;
-} __do_const;
+};
 
 #define register_nmi_handler(t, fn, fg, n, init...)	\
 ({							\
-	static const struct nmiaction init fn##_na = {	\
+	static struct nmiaction init fn##_na = {	\
 		.handler = (fn),			\
 		.name = (n),				\
 		.flags = (fg),				\
@@ -52,7 +55,7 @@ struct nmiaction {
 	__register_nmi_handler((t), &fn##_na);		\
 })
 
-int __register_nmi_handler(unsigned int, const struct nmiaction *);
+int __register_nmi_handler(unsigned int, struct nmiaction *);
 
 void unregister_nmi_handler(unsigned int, const char *);
 

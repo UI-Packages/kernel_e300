@@ -118,7 +118,7 @@ static int octeon_flash_probe(struct platform_device *pdev)
 	return 0;
 }
 
-static struct of_device_id of_flash_match[] = {
+static const struct of_device_id of_flash_match[] = {
 	{
 		.compatible	= "cfi-flash",
 	},
@@ -129,7 +129,6 @@ MODULE_DEVICE_TABLE(of, of_flash_match);
 static struct platform_driver of_flash_driver = {
 	.driver = {
 		.name = "octeon-of-flash",
-		.owner = THIS_MODULE,
 		.of_match_table = of_flash_match,
 	},
 	.probe		= octeon_flash_probe,

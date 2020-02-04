@@ -9,7 +9,6 @@
 #include <linux/mm.h>
 #include <linux/kexec.h>
 #include <linux/delay.h>
-#include <linux/init.h>
 #include <linux/numa.h>
 #include <linux/ftrace.h>
 #include <linux/suspend.h>
@@ -21,12 +20,13 @@
 #include <asm/tlbflush.h>
 #include <asm/mmu_context.h>
 #include <asm/apic.h>
+#include <asm/io_apic.h>
 #include <asm/cpufeature.h>
 #include <asm/desc.h>
 #include <asm/cacheflush.h>
 #include <asm/debugreg.h>
 
-static void set_idt(struct desc_struct *newidt, __u16 limit)
+static void set_idt(void *newidt, __u16 limit)
 {
 	struct desc_ptr curidt;
 
@@ -38,7 +38,7 @@ static void set_idt(struct desc_struct *newidt, __u16 limit)
 }
 
 
-static void set_gdt(struct desc_struct *newgdt, __u16 limit)
+static void set_gdt(void *newgdt, __u16 limit)
 {
 	struct desc_ptr curgdt;
 
@@ -216,7 +216,7 @@ void machine_kexec(struct kimage *image)
 	}
 
 	control_page = page_address(image->control_code_page);
-	memcpy(control_page, (void *)ktla_ktva((unsigned long)relocate_kernel), KEXEC_CONTROL_CODE_MAX_SIZE);
+	memcpy(control_page, relocate_kernel, KEXEC_CONTROL_CODE_MAX_SIZE);
 
 	relocate_kernel_ptr = control_page;
 	page_list[PA_CONTROL_PAGE] = __pa(control_page);
@@ -248,7 +248,8 @@ void machine_kexec(struct kimage *image)
 	/* now call it */
 	image->start = relocate_kernel_ptr((unsigned long)image->head,
 					   (unsigned long)page_list,
-					   image->start, cpu_has_pae,
+					   image->start,
+					   boot_cpu_has(X86_FEATURE_PAE),
 					   image->preserve_context);
 
 #ifdef CONFIG_KEXEC_JUMP

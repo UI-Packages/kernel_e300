@@ -16,7 +16,7 @@
 struct dmi_device_attribute{
 	struct device_attribute dev_attr;
 	int field;
-} __do_const;
+};
 #define to_dmi_dev_attr(_dev_attr) \
 	container_of(_dev_attr, struct dmi_device_attribute, dev_attr)
 
@@ -229,14 +229,14 @@ static int __init dmi_id_init(void)
 
 	ret = device_register(dmi_dev);
 	if (ret)
-		goto fail_free_dmi_dev;
+		goto fail_put_dmi_dev;
 
 	return 0;
 
-fail_free_dmi_dev:
-	kfree(dmi_dev);
-fail_class_unregister:
+fail_put_dmi_dev:
+	put_device(dmi_dev);
 
+fail_class_unregister:
 	class_unregister(&dmi_class);
 
 	return ret;

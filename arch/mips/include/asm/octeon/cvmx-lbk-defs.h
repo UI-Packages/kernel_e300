@@ -1,5 +1,5 @@
 /***********************license start***************
- * Copyright (c) 2003-2015  Cavium Inc. (support@cavium.com). All rights
+ * Copyright (c) 2003-2017  Cavium Inc. (support@cavium.com). All rights
  * reserved.
  *
  *
@@ -68,8 +68,8 @@ static inline uint64_t CVMX_LBK_CHX_PKIND(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 63))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 63))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 63))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 63)))))
 		cvmx_warn("CVMX_LBK_CHX_PKIND(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180012000200ull) + ((offset) & 63) * 8;
@@ -152,7 +152,7 @@ union cvmx_lbk_bist_result {
 	} s;
 	struct cvmx_lbk_bist_result_s         cn73xx;
 	struct cvmx_lbk_bist_result_s         cn78xx;
-	struct cvmx_lbk_bist_result_s         cn78xxp2;
+	struct cvmx_lbk_bist_result_s         cn78xxp1;
 	struct cvmx_lbk_bist_result_s         cnf75xx;
 };
 typedef union cvmx_lbk_bist_result cvmx_lbk_bist_result_t;
@@ -173,7 +173,7 @@ union cvmx_lbk_chx_pkind {
 	} s;
 	struct cvmx_lbk_chx_pkind_s           cn73xx;
 	struct cvmx_lbk_chx_pkind_s           cn78xx;
-	struct cvmx_lbk_chx_pkind_s           cn78xxp2;
+	struct cvmx_lbk_chx_pkind_s           cn78xxp1;
 	struct cvmx_lbk_chx_pkind_s           cnf75xx;
 };
 typedef union cvmx_lbk_chx_pkind cvmx_lbk_chx_pkind_t;
@@ -197,7 +197,7 @@ union cvmx_lbk_clk_gate_ctl {
 	} s;
 	struct cvmx_lbk_clk_gate_ctl_s        cn73xx;
 	struct cvmx_lbk_clk_gate_ctl_s        cn78xx;
-	struct cvmx_lbk_clk_gate_ctl_s        cn78xxp2;
+	struct cvmx_lbk_clk_gate_ctl_s        cn78xxp1;
 	struct cvmx_lbk_clk_gate_ctl_s        cnf75xx;
 };
 typedef union cvmx_lbk_clk_gate_ctl cvmx_lbk_clk_gate_ctl_t;
@@ -236,7 +236,7 @@ union cvmx_lbk_dat_err_info {
 	} s;
 	struct cvmx_lbk_dat_err_info_s        cn73xx;
 	struct cvmx_lbk_dat_err_info_s        cn78xx;
-	struct cvmx_lbk_dat_err_info_s        cn78xxp2;
+	struct cvmx_lbk_dat_err_info_s        cn78xxp1;
 	struct cvmx_lbk_dat_err_info_s        cnf75xx;
 };
 typedef union cvmx_lbk_dat_err_info cvmx_lbk_dat_err_info_t;
@@ -260,7 +260,7 @@ union cvmx_lbk_ecc_cfg {
 	} s;
 	struct cvmx_lbk_ecc_cfg_s             cn73xx;
 	struct cvmx_lbk_ecc_cfg_s             cn78xx;
-	struct cvmx_lbk_ecc_cfg_s             cn78xxp2;
+	struct cvmx_lbk_ecc_cfg_s             cn78xxp1;
 	struct cvmx_lbk_ecc_cfg_s             cnf75xx;
 };
 typedef union cvmx_lbk_ecc_cfg cvmx_lbk_ecc_cfg_t;
@@ -295,7 +295,7 @@ union cvmx_lbk_int {
 	} s;
 	struct cvmx_lbk_int_s                 cn73xx;
 	struct cvmx_lbk_int_s                 cn78xx;
-	struct cvmx_lbk_int_s                 cn78xxp2;
+	struct cvmx_lbk_int_s                 cn78xxp1;
 	struct cvmx_lbk_int_s                 cnf75xx;
 };
 typedef union cvmx_lbk_int cvmx_lbk_int_t;
@@ -316,7 +316,7 @@ union cvmx_lbk_sft_rst {
 	} s;
 	struct cvmx_lbk_sft_rst_s             cn73xx;
 	struct cvmx_lbk_sft_rst_s             cn78xx;
-	struct cvmx_lbk_sft_rst_s             cn78xxp2;
+	struct cvmx_lbk_sft_rst_s             cn78xxp1;
 	struct cvmx_lbk_sft_rst_s             cnf75xx;
 };
 typedef union cvmx_lbk_sft_rst cvmx_lbk_sft_rst_t;

@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2015 Anton Ivanov (aivanov@{brocade.com,kot-begemot.co.uk})
+ * Copyright (C) 2015 Thomas Meyer (thomas@m3y3r.de)
  * Copyright (C) 2000 - 2007 Jeff Dike (jdike@{addtoit,linux.intel}.com)
  * Copyright 2003 PathScale, Inc.
  * Licensed under the GPL
@@ -27,6 +29,7 @@
 #include <kern_util.h>
 #include <os.h>
 #include <skas.h>
+#include <timer-internal.h>
 
 /*
  * This is a per-cpu array.  A processor only modifies its entry and it only
@@ -82,35 +85,22 @@ void *__switch_to(struct task_struct *from, struct task_struct *to)
 	to->thread.prev_sched = from;
 	set_current(to);
 
-	do {
-		current->thread.saved_task = NULL;
-
-		switch_threads(&from->thread.switch_buf,
-			       &to->thread.switch_buf);
-
-		arch_switch_to(current);
-
-		if (current->thread.saved_task)
-			show_regs(&(current->thread.regs));
-		to = current->thread.saved_task;
-		from = current;
-	} while (current->thread.saved_task);
+	switch_threads(&from->thread.switch_buf, &to->thread.switch_buf);
+	arch_switch_to(current);
 
 	return current->thread.prev_sched;
 }
 
 void interrupt_end(void)
 {
+	struct pt_regs *regs = &current->thread.regs;
+
 	if (need_resched())
 		schedule();
 	if (test_thread_flag(TIF_SIGPENDING))
-		do_signal();
+		do_signal(regs);
 	if (test_and_clear_thread_flag(TIF_NOTIFY_RESUME))
-		tracehook_notify_resume(&current->thread.regs);
-}
-
-void exit_thread(void)
-{
+		tracehook_notify_resume(regs);
 }
 
 int get_current_pid(void)
@@ -212,11 +202,8 @@ void initial_thread_cb(void (*proc)(void *), void *arg)
 
 void arch_cpu_idle(void)
 {
-	unsigned long long nsecs;
-
 	cpu_tasks[current_thread_info()->cpu].pid = os_getpid();
-	nsecs = disable_timer();
-	idle_sleep(nsecs);
+	os_idle_sleep(UM_NSEC_PER_SEC);
 	local_irq_enable();
 }
 
@@ -268,17 +255,6 @@ int clear_user_proc(void __user *buf, int size)
 int strlen_user_proc(char __user *str)
 {
 	return strlen_user(str);
-}
-
-int smp_sigio_handler(void)
-{
-#ifdef CONFIG_SMP
-	int cpu = current_thread_info()->cpu;
-	IPI_handler(cpu);
-	if (cpu != 0)
-		return 1;
-#endif
-	return 0;
 }
 
 int cpu(void)
@@ -367,6 +343,22 @@ int singlestepping(void * t)
 	return 2;
 }
 
+/*
+ * Only x86 and x86_64 have an arch_align_stack().
+ * All other arches have "#define arch_align_stack(x) (x)"
+ * in their asm/exec.h
+ * As this is included in UML from asm-um/system-generic.h,
+ * we can use it to behave as the subarch does.
+ */
+#ifndef arch_align_stack
+unsigned long arch_align_stack(unsigned long sp)
+{
+	if (!(current->personality & ADDR_NO_RANDOMIZE) && randomize_va_space)
+		sp -= get_random_int() % 8192;
+	return sp & ~0xf;
+}
+#endif
+
 unsigned long get_wchan(struct task_struct *p)
 {
 	unsigned long stack_page, sp, ip;
@@ -406,6 +398,6 @@ int elf_core_copy_fpregs(struct task_struct *t, elf_fpregset_t *fpu)
 {
 	int cpu = current_thread_info()->cpu;
 
-	return save_fp_registers(userspace_pid[cpu], (unsigned long *) fpu);
+	return save_i387_registers(userspace_pid[cpu], (unsigned long *) fpu);
 }
 

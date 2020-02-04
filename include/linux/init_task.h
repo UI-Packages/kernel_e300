@@ -11,8 +11,11 @@
 #include <linux/user_namespace.h>
 #include <linux/securebits.h>
 #include <linux/seqlock.h>
+#include <linux/rbtree.h>
 #include <net/net_namespace.h>
 #include <linux/sched/rt.h>
+
+#include <asm/thread_info.h>
 
 #ifdef CONFIG_SMP
 # define INIT_PUSHABLE_TASKS(tsk)					\
@@ -24,18 +27,19 @@
 extern struct files_struct init_files;
 extern struct fs_struct init_fs;
 
-#ifdef CONFIG_CGROUPS
-#define INIT_GROUP_RWSEM(sig)						\
-	.group_rwsem = __RWSEM_INITIALIZER(sig.group_rwsem),
+#ifdef CONFIG_CPUSETS
+#define INIT_CPUSET_SEQ(tsk)							\
+	.mems_allowed_seq = SEQCNT_ZERO(tsk.mems_allowed_seq),
 #else
-#define INIT_GROUP_RWSEM(sig)
+#define INIT_CPUSET_SEQ(tsk)
 #endif
 
-#ifdef CONFIG_CPUSETS
-#define INIT_CPUSET_SEQ							\
-	.mems_allowed_seq = SEQCNT_ZERO,
+#ifndef CONFIG_VIRT_CPU_ACCOUNTING_NATIVE
+#define INIT_PREV_CPUTIME(x)	.prev_cputime = {			\
+	.lock = __RAW_SPIN_LOCK_UNLOCKED(x.prev_cputime.lock),		\
+},
 #else
-#define INIT_CPUSET_SEQ
+#define INIT_PREV_CPUTIME(x)
 #endif
 
 #define INIT_SIGNALS(sig) {						\
@@ -49,13 +53,13 @@ extern struct fs_struct init_fs;
 	.cpu_timers	= INIT_CPU_TIMERS(sig.cpu_timers),		\
 	.rlim		= INIT_RLIMITS,					\
 	.cputimer	= { 						\
-		.cputime = INIT_CPUTIME,				\
-		.running = 0,						\
-		.lock = __RAW_SPIN_LOCK_UNLOCKED(sig.cputimer.lock),	\
+		.cputime_atomic	= INIT_CPUTIME_ATOMIC,			\
+		.running	= false,				\
+		.checking_timer = false,				\
 	},								\
+	INIT_PREV_CPUTIME(sig)						\
 	.cred_guard_mutex =						\
 		 __MUTEX_INITIALIZER(sig.cred_guard_mutex),		\
-	INIT_GROUP_RWSEM(sig)						\
 }
 
 extern struct nsproxy init_nsproxy;
@@ -96,18 +100,12 @@ extern struct group_info init_groups;
 #ifdef CONFIG_AUDITSYSCALL
 #define INIT_IDS \
 	.loginuid = INVALID_UID, \
-	.sessionid = -1,
+	.sessionid = (unsigned int)-1,
 #else
 #define INIT_IDS
 #endif
 
-#ifdef CONFIG_RCU_BOOST
-#define INIT_TASK_RCU_BOOST()						\
-	.rcu_boost_mutex = NULL,
-#else
-#define INIT_TASK_RCU_BOOST()
-#endif
-#ifdef CONFIG_TREE_PREEMPT_RCU
+#ifdef CONFIG_PREEMPT_RCU
 #define INIT_TASK_RCU_TREE_PREEMPT()					\
 	.rcu_blocked_node = NULL,
 #else
@@ -116,12 +114,20 @@ extern struct group_info init_groups;
 #ifdef CONFIG_PREEMPT_RCU
 #define INIT_TASK_RCU_PREEMPT(tsk)					\
 	.rcu_read_lock_nesting = 0,					\
-	.rcu_read_unlock_special = 0,					\
+	.rcu_read_unlock_special.s = 0,					\
 	.rcu_node_entry = LIST_HEAD_INIT(tsk.rcu_node_entry),		\
-	INIT_TASK_RCU_TREE_PREEMPT()					\
-	INIT_TASK_RCU_BOOST()
+	INIT_TASK_RCU_TREE_PREEMPT()
 #else
 #define INIT_TASK_RCU_PREEMPT(tsk)
+#endif
+#ifdef CONFIG_TASKS_RCU
+#define INIT_TASK_RCU_TASKS(tsk)					\
+	.rcu_tasks_holdout = false,					\
+	.rcu_tasks_holdout_list =					\
+		LIST_HEAD_INIT(tsk.rcu_tasks_holdout_list),		\
+	.rcu_tasks_idle_cpu = -1,
+#else
+#define INIT_TASK_RCU_TASKS(tsk)
 #endif
 
 extern struct cred init_cred;
@@ -144,16 +150,9 @@ extern struct task_group root_task_group;
 # define INIT_PERF_EVENTS(tsk)
 #endif
 
-#ifdef CONFIG_PREEMPT_RT_BASE
-# define INIT_TIMER_LIST		.posix_timer_list = NULL,
-#else
-# define INIT_TIMER_LIST
-#endif
-
 #ifdef CONFIG_VIRT_CPU_ACCOUNTING_GEN
 # define INIT_VTIME(tsk)						\
-	.vtime_lock = __RAW_SPIN_LOCK_UNLOCKED(tsk.vtime_lock),	\
-	.vtime_seq = SEQCNT_ZERO,			\
+	.vtime_seqcount = SEQCNT_ZERO(tsk.vtime_seqcount),	\
 	.vtime_snap = 0,				\
 	.vtime_snap_whence = VTIME_SYS,
 #else
@@ -162,10 +161,36 @@ extern struct task_group root_task_group;
 
 #define INIT_TASK_COMM "swapper"
 
-#ifdef CONFIG_X86
-#define INIT_TASK_THREAD_INFO .tinfo = INIT_THREAD_INFO,
+#ifdef CONFIG_RT_MUTEXES
+# define INIT_RT_MUTEXES(tsk)						\
+	.pi_waiters = RB_ROOT,						\
+	.pi_waiters_leftmost = NULL,
 #else
-#define INIT_TASK_THREAD_INFO
+# define INIT_RT_MUTEXES(tsk)
+#endif
+
+#ifdef CONFIG_NUMA_BALANCING
+# define INIT_NUMA_BALANCING(tsk)					\
+	.numa_preferred_nid = -1,					\
+	.numa_group = NULL,						\
+	.numa_faults = NULL,
+#else
+# define INIT_NUMA_BALANCING(tsk)
+#endif
+
+#ifdef CONFIG_KASAN
+# define INIT_KASAN(tsk)						\
+	.kasan_depth = 1,
+#else
+# define INIT_KASAN(tsk)
+#endif
+
+#ifdef CONFIG_THREAD_INFO_IN_TASK
+# define INIT_TASK_TI(tsk)			\
+	.thread_info = INIT_THREAD_INFO(tsk),	\
+	.stack_refcount = ATOMIC_INIT(1),
+#else
+# define INIT_TASK_TI(tsk)
 #endif
 
 /*
@@ -174,8 +199,9 @@ extern struct task_group root_task_group;
  */
 #define INIT_TASK(tsk)	\
 {									\
+	INIT_TASK_TI(tsk)						\
 	.state		= 0,						\
-	.stack		= &init_thread_info,				\
+	.stack		= init_stack,					\
 	.usage		= ATOMIC_INIT(2),				\
 	.flags		= PF_KTHREAD,					\
 	.prio		= MAX_PRIO-20,					\
@@ -186,6 +212,9 @@ extern struct task_group root_task_group;
 	.nr_cpus_allowed= NR_CPUS,					\
 	.mm		= NULL,						\
 	.active_mm	= &init_mm,					\
+	.restart_block = {						\
+		.fn = do_no_restart_syscall,				\
+	},								\
 	.se		= {						\
 		.group_node 	= LIST_HEAD_INIT(tsk.se.group_node),	\
 	},								\
@@ -207,7 +236,6 @@ extern struct task_group root_task_group;
 	RCU_POINTER_INITIALIZER(cred, &init_cred),			\
 	.comm		= INIT_TASK_COMM,				\
 	.thread		= INIT_THREAD,					\
-	INIT_TASK_THREAD_INFO						\
 	.fs		= &init_fs,					\
 	.files		= &init_files,					\
 	.signal		= &init_signals,				\
@@ -222,7 +250,6 @@ extern struct task_group root_task_group;
 	.cpu_timers	= INIT_CPU_TIMERS(tsk.cpu_timers),		\
 	.pi_lock	= __RAW_SPIN_LOCK_UNLOCKED(tsk.pi_lock),	\
 	.timer_slack_ns = 50000, /* 50 usec default slack */		\
-	INIT_TIMER_LIST							\
 	.pids = {							\
 		[PIDTYPE_PID]  = INIT_PID_LINK(PIDTYPE_PID),		\
 		[PIDTYPE_PGID] = INIT_PID_LINK(PIDTYPE_PGID),		\
@@ -237,8 +264,13 @@ extern struct task_group root_task_group;
 	INIT_FTRACE_GRAPH						\
 	INIT_TRACE_RECURSION						\
 	INIT_TASK_RCU_PREEMPT(tsk)					\
-	INIT_CPUSET_SEQ							\
+	INIT_TASK_RCU_TASKS(tsk)					\
+	INIT_CPUSET_SEQ(tsk)						\
+	INIT_RT_MUTEXES(tsk)						\
+	INIT_PREV_CPUTIME(tsk)						\
 	INIT_VTIME(tsk)							\
+	INIT_NUMA_BALANCING(tsk)					\
+	INIT_KASAN(tsk)							\
 }
 
 

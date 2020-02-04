@@ -20,16 +20,9 @@
  */
 
 #include <linux/linkage.h>
-#include <linux/init.h>
 #include <asm/segment.h>
 #include <asm/page_types.h>
 #include "realmode.h"
-
-#ifdef CONFIG_PAX_KERNEXEC
-#define ta(X) (X)
-#else
-#define ta(X) (pa_ ## X)
-#endif
 
 	.text
 	.code16
@@ -44,6 +37,8 @@ ENTRY(trampoline_start)
 	mov	%ax, %ds
 
 	cli			# We should be safe anyway
+
+	movl	tr_start, %eax	# where we need to go
 
 	movl	$0xA5A5A5A5, trampoline_status
 				# write marker for master knows we're running
@@ -60,7 +55,7 @@ ENTRY(trampoline_start)
 	movw	$1, %dx			# protected mode (PE) bit
 	lmsw	%dx			# into protected mode
 
-	ljmpl *(trampoline_header)
+	ljmpl	$__BOOT_CS, $pa_startup_32
 
 	.section ".text32","ax"
 	.code32
@@ -71,7 +66,7 @@ ENTRY(startup_32)			# note: also used from wakeup_asm.S
 	.balign 8
 GLOBAL(trampoline_header)
 	tr_start:		.space	4
-	tr_boot_cs:		.space	2
+	tr_gdt_pad:		.space	2
 	tr_gdt:			.space	6
 END(trampoline_header)
 	

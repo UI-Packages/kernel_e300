@@ -78,7 +78,7 @@
  * finds that the saved generation number is smaller than the global generation
  * number, it wakes up the process.
  */
-static atomic_unchecked_t		rds_cong_generation = ATOMIC_INIT(0);
+static atomic_t		rds_cong_generation = ATOMIC_INIT(0);
 
 /*
  * Congestion monitoring
@@ -221,7 +221,22 @@ void rds_cong_queue_updates(struct rds_cong_map *map)
 	list_for_each_entry(conn, &map->m_conn_list, c_map_item) {
 		if (!test_and_set_bit(0, &conn->c_map_queued)) {
 			rds_stats_inc(s_cong_update_queued);
-			rds_send_xmit(conn);
+			/* We cannot inline the call to rds_send_xmit() here
+			 * for two reasons (both pertaining to a TCP transport):
+			 * 1. When we get here from the receive path, we
+			 *    are already holding the sock_lock (held by
+			 *    tcp_v4_rcv()). So inlining calls to
+			 *    tcp_setsockopt and/or tcp_sendmsg will deadlock
+			 *    when it tries to get the sock_lock())
+			 * 2. Interrupts are masked so that we can mark the
+			 *    the port congested from both send and recv paths.
+			 *    (See comment around declaration of rdc_cong_lock).
+			 *    An attempt to get the sock_lock() here will
+			 *    therefore trigger warnings.
+			 * Defer the xmit to rds_send_worker() instead.
+			 */
+			queue_delayed_work(rds_wq,
+					   &conn->c_path[0].cp_send_w, 0);
 		}
 	}
 
@@ -233,7 +248,7 @@ void rds_cong_map_updated(struct rds_cong_map *map, uint64_t portmask)
 	rdsdebug("waking map %p for %pI4\n",
 	  map, &map->m_addr);
 	rds_stats_inc(s_cong_update_received);
-	atomic_inc_unchecked(&rds_cong_generation);
+	atomic_inc(&rds_cong_generation);
 	if (waitqueue_active(&map->m_waitq))
 		wake_up(&map->m_waitq);
 	if (waitqueue_active(&rds_poll_waitq))
@@ -259,7 +274,7 @@ EXPORT_SYMBOL_GPL(rds_cong_map_updated);
 
 int rds_cong_updated_since(unsigned long *recent)
 {
-	unsigned long gen = atomic_read_unchecked(&rds_cong_generation);
+	unsigned long gen = atomic_read(&rds_cong_generation);
 
 	if (likely(*recent == gen))
 		return 0;

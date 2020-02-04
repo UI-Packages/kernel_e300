@@ -3,7 +3,6 @@
 
 /*
  * Fault status register encodings.  We steal bit 31 for our own purposes.
- * Set when the FSR value is from an instruction fault.
  */
 #define FSR_LNX_PF		(1 << 31)
 #define FSR_WRITE		(1 << 11)
@@ -12,29 +11,22 @@
 #define FSR_FS5_0		(0x3f)
 
 #ifdef CONFIG_ARM_LPAE
+#define FSR_FS_AEA		17
+
 static inline int fsr_fs(unsigned int fsr)
 {
 	return fsr & FSR_FS5_0;
 }
 #else
+#define FSR_FS_AEA		22
+
 static inline int fsr_fs(unsigned int fsr)
 {
 	return (fsr & FSR_FS3_0) | (fsr & FSR_FS4) >> 6;
 }
 #endif
 
-/* valid for LPAE and !LPAE */
-static inline int is_xn_fault(unsigned int fsr)
-{
-	return ((fsr_fs(fsr) & 0x3c) == 0xc);
-}
-
-static inline int is_domain_fault(unsigned int fsr)
-{
-	return ((fsr_fs(fsr) & 0xD) == 0x9);
-}
-
 void do_bad_area(unsigned long addr, unsigned int fsr, struct pt_regs *regs);
-unsigned long search_exception_table(unsigned long addr);
+void early_abt_enable(void);
 
 #endif	/* __ARCH_ARM_FAULT_H */

@@ -31,7 +31,7 @@ __mutex_fastpath_lock(atomic_t *count, void (*fail_fn)(atomic_t *))
 		 * to ensure that any waiting tasks are woken up by the
 		 * unlock slow path.
 		 */
-		if (likely(atomic_xchg(count, -1) != 1))
+		if (likely(atomic_xchg_acquire(count, -1) != 1))
 			fail_fn(count);
 }
 
@@ -39,18 +39,16 @@ __mutex_fastpath_lock(atomic_t *count, void (*fail_fn)(atomic_t *))
  *  __mutex_fastpath_lock_retval - try to take the lock by moving the count
  *                                 from 1 to a 0 value
  *  @count: pointer of type atomic_t
- *  @fail_fn: function to call if the original value was not 1
  *
- * Change the count from 1 to a value lower than 1, and call <fail_fn> if it
- * wasn't 1 originally. This function returns 0 if the fastpath succeeds,
- * or anything the slow path function returns
+ * Change the count from 1 to a value lower than 1. This function returns 0
+ * if the fastpath succeeds, or -1 otherwise.
  */
 static inline int
-__mutex_fastpath_lock_retval(atomic_t *count, int (*fail_fn)(atomic_t *))
+__mutex_fastpath_lock_retval(atomic_t *count)
 {
-	if (unlikely(atomic_xchg(count, 0) != 1))
+	if (unlikely(atomic_xchg_acquire(count, 0) != 1))
 		if (likely(atomic_xchg(count, -1) != 1))
-			return fail_fn(count);
+			return -1;
 	return 0;
 }
 
@@ -69,7 +67,7 @@ __mutex_fastpath_lock_retval(atomic_t *count, int (*fail_fn)(atomic_t *))
 static inline void
 __mutex_fastpath_unlock(atomic_t *count, void (*fail_fn)(atomic_t *))
 {
-	if (unlikely(atomic_xchg(count, 1) != 0))
+	if (unlikely(atomic_xchg_release(count, 1) != 0))
 		fail_fn(count);
 }
 
@@ -93,8 +91,12 @@ __mutex_fastpath_unlock(atomic_t *count, void (*fail_fn)(atomic_t *))
 static inline int
 __mutex_fastpath_trylock(atomic_t *count, int (*fail_fn)(atomic_t *))
 {
-	int prev = atomic_xchg(count, 0);
+	int prev;
 
+	if (atomic_read(count) != 1)
+		return 0;
+
+	prev = atomic_xchg_acquire(count, 0);
 	if (unlikely(prev < 0)) {
 		/*
 		 * The lock was marked contended so we must restore that
@@ -107,7 +109,7 @@ __mutex_fastpath_trylock(atomic_t *count, int (*fail_fn)(atomic_t *))
 		 *   owner's unlock path needlessly, but that's not a problem
 		 *   in practice. ]
 		 */
-		prev = atomic_xchg(count, prev);
+		prev = atomic_xchg_acquire(count, prev);
 		if (prev < 0)
 			prev = 0;
 	}

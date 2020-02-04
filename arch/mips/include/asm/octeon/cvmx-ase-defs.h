@@ -1,5 +1,5 @@
 /***********************license start***************
- * Copyright (c) 2003-2015  Cavium Inc. (support@cavium.com). All rights
+ * Copyright (c) 2003-2017  Cavium Inc. (support@cavium.com). All rights
  * reserved.
  *
  *
@@ -67,8 +67,8 @@ static inline uint64_t CVMX_ASE_BACKDOOR_REQ_CTL_FUNC(void)
 static inline uint64_t CVMX_ASE_BACKDOOR_REQ_DATAX(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 15))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 15)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 15))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 15)))))
 		cvmx_warn("CVMX_ASE_BACKDOOR_REQ_DATAX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800DD000880ull) + ((offset) & 15) * 8;
 }
@@ -90,8 +90,8 @@ static inline uint64_t CVMX_ASE_BACKDOOR_RSP_CTL_FUNC(void)
 static inline uint64_t CVMX_ASE_BACKDOOR_RSP_DATAX(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 7))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 7)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 7))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 7)))))
 		cvmx_warn("CVMX_ASE_BACKDOOR_RSP_DATAX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800DD000980ull) + ((offset) & 7) * 8;
 }
@@ -289,8 +289,8 @@ static inline uint64_t CVMX_ASE_LUE_PERFORMANCE_CONTROL1_FUNC(void)
 static inline uint64_t CVMX_ASE_LUE_PERFORMANCE_CONTROLX(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset >= 2) && (offset <= 3)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset >= 2) && (offset <= 3))))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && (((offset >= 2) && (offset <= 3)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && (((offset >= 2) && (offset <= 3))))))
 		cvmx_warn("CVMX_ASE_LUE_PERFORMANCE_CONTROLX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800DDC00070ull) + ((offset) & 3) * 8 - 8*2;
 }
@@ -301,8 +301,8 @@ static inline uint64_t CVMX_ASE_LUE_PERFORMANCE_CONTROLX(unsigned long offset)
 static inline uint64_t CVMX_ASE_LUE_PERFORMANCE_COUNTERX(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 3)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 3))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3)))))
 		cvmx_warn("CVMX_ASE_LUE_PERFORMANCE_COUNTERX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800DDC00080ull) + ((offset) & 3) * 8;
 }
@@ -402,7 +402,7 @@ union cvmx_ase_backdoor_req_ctl {
 #endif
 	} s;
 	struct cvmx_ase_backdoor_req_ctl_s    cn78xx;
-	struct cvmx_ase_backdoor_req_ctl_s    cn78xxp2;
+	struct cvmx_ase_backdoor_req_ctl_s    cn78xxp1;
 };
 typedef union cvmx_ase_backdoor_req_ctl cvmx_ase_backdoor_req_ctl_t;
 
@@ -423,7 +423,7 @@ union cvmx_ase_backdoor_req_datax {
 #endif
 	} s;
 	struct cvmx_ase_backdoor_req_datax_s  cn78xx;
-	struct cvmx_ase_backdoor_req_datax_s  cn78xxp2;
+	struct cvmx_ase_backdoor_req_datax_s  cn78xxp1;
 };
 typedef union cvmx_ase_backdoor_req_datax cvmx_ase_backdoor_req_datax_t;
 
@@ -451,7 +451,7 @@ union cvmx_ase_backdoor_rsp_ctl {
 #endif
 	} s;
 	struct cvmx_ase_backdoor_rsp_ctl_s    cn78xx;
-	struct cvmx_ase_backdoor_rsp_ctl_s    cn78xxp2;
+	struct cvmx_ase_backdoor_rsp_ctl_s    cn78xxp1;
 };
 typedef union cvmx_ase_backdoor_rsp_ctl cvmx_ase_backdoor_rsp_ctl_t;
 
@@ -472,7 +472,7 @@ union cvmx_ase_backdoor_rsp_datax {
 #endif
 	} s;
 	struct cvmx_ase_backdoor_rsp_datax_s  cn78xx;
-	struct cvmx_ase_backdoor_rsp_datax_s  cn78xxp2;
+	struct cvmx_ase_backdoor_rsp_datax_s  cn78xxp1;
 };
 typedef union cvmx_ase_backdoor_rsp_datax cvmx_ase_backdoor_rsp_datax_t;
 
@@ -538,7 +538,7 @@ union cvmx_ase_bist_status0 {
 #endif
 	} s;
 	struct cvmx_ase_bist_status0_s        cn78xx;
-	struct cvmx_ase_bist_status0_s        cn78xxp2;
+	struct cvmx_ase_bist_status0_s        cn78xxp1;
 };
 typedef union cvmx_ase_bist_status0 cvmx_ase_bist_status0_t;
 
@@ -590,7 +590,7 @@ union cvmx_ase_bist_status1 {
 #endif
 	} s;
 	struct cvmx_ase_bist_status1_s        cn78xx;
-	struct cvmx_ase_bist_status1_s        cn78xxp2;
+	struct cvmx_ase_bist_status1_s        cn78xxp1;
 };
 typedef union cvmx_ase_bist_status1 cvmx_ase_bist_status1_t;
 
@@ -621,7 +621,7 @@ union cvmx_ase_config {
 #endif
 	} s;
 	struct cvmx_ase_config_s              cn78xx;
-	struct cvmx_ase_config_s              cn78xxp2;
+	struct cvmx_ase_config_s              cn78xxp1;
 };
 typedef union cvmx_ase_config cvmx_ase_config_t;
 
@@ -699,7 +699,7 @@ union cvmx_ase_ecc_ctl {
 #endif
 	} s;
 	struct cvmx_ase_ecc_ctl_s             cn78xx;
-	struct cvmx_ase_ecc_ctl_s             cn78xxp2;
+	struct cvmx_ase_ecc_ctl_s             cn78xxp1;
 };
 typedef union cvmx_ase_ecc_ctl cvmx_ase_ecc_ctl_t;
 
@@ -781,7 +781,7 @@ union cvmx_ase_ecc_int {
 #endif
 	} s;
 	struct cvmx_ase_ecc_int_s             cn78xx;
-	struct cvmx_ase_ecc_int_s             cn78xxp2;
+	struct cvmx_ase_ecc_int_s             cn78xxp1;
 };
 typedef union cvmx_ase_ecc_int cvmx_ase_ecc_int_t;
 
@@ -856,7 +856,7 @@ union cvmx_ase_gen_int {
 #endif
 	} s;
 	struct cvmx_ase_gen_int_s             cn78xx;
-	struct cvmx_ase_gen_int_s             cn78xxp2;
+	struct cvmx_ase_gen_int_s             cn78xxp1;
 };
 typedef union cvmx_ase_gen_int cvmx_ase_gen_int_t;
 
@@ -887,7 +887,7 @@ union cvmx_ase_lip_config {
 #endif
 	} s;
 	struct cvmx_ase_lip_config_s          cn78xx;
-	struct cvmx_ase_lip_config_s          cn78xxp2;
+	struct cvmx_ase_lip_config_s          cn78xxp1;
 };
 typedef union cvmx_ase_lip_config cvmx_ase_lip_config_t;
 
@@ -907,7 +907,7 @@ union cvmx_ase_lip_spare {
 #endif
 	} s;
 	struct cvmx_ase_lip_spare_s           cn78xx;
-	struct cvmx_ase_lip_spare_s           cn78xxp2;
+	struct cvmx_ase_lip_spare_s           cn78xxp1;
 };
 typedef union cvmx_ase_lip_spare cvmx_ase_lip_spare_t;
 
@@ -944,7 +944,7 @@ union cvmx_ase_lop_config {
 #endif
 	} s;
 	struct cvmx_ase_lop_config_s          cn78xx;
-	struct cvmx_ase_lop_config_s          cn78xxp2;
+	struct cvmx_ase_lop_config_s          cn78xxp1;
 };
 typedef union cvmx_ase_lop_config cvmx_ase_lop_config_t;
 
@@ -964,7 +964,7 @@ union cvmx_ase_lop_spare {
 #endif
 	} s;
 	struct cvmx_ase_lop_spare_s           cn78xx;
-	struct cvmx_ase_lop_spare_s           cn78xxp2;
+	struct cvmx_ase_lop_spare_s           cn78xxp1;
 };
 typedef union cvmx_ase_lop_spare cvmx_ase_lop_spare_t;
 
@@ -1015,7 +1015,7 @@ union cvmx_ase_lue_config {
 #endif
 	} s;
 	struct cvmx_ase_lue_config_s          cn78xx;
-	struct cvmx_ase_lue_config_s          cn78xxp2;
+	struct cvmx_ase_lue_config_s          cn78xxp1;
 };
 typedef union cvmx_ase_lue_config cvmx_ase_lue_config_t;
 
@@ -1075,7 +1075,7 @@ union cvmx_ase_lue_dbg_ctl0 {
 #endif
 	} s;
 	struct cvmx_ase_lue_dbg_ctl0_s        cn78xx;
-	struct cvmx_ase_lue_dbg_ctl0_s        cn78xxp2;
+	struct cvmx_ase_lue_dbg_ctl0_s        cn78xxp1;
 };
 typedef union cvmx_ase_lue_dbg_ctl0 cvmx_ase_lue_dbg_ctl0_t;
 
@@ -1139,7 +1139,7 @@ union cvmx_ase_lue_dbg_ctl1 {
 #endif
 	} s;
 	struct cvmx_ase_lue_dbg_ctl1_s        cn78xx;
-	struct cvmx_ase_lue_dbg_ctl1_s        cn78xxp2;
+	struct cvmx_ase_lue_dbg_ctl1_s        cn78xxp1;
 };
 typedef union cvmx_ase_lue_dbg_ctl1 cvmx_ase_lue_dbg_ctl1_t;
 
@@ -1192,7 +1192,7 @@ union cvmx_ase_lue_error_log {
 #endif
 	} s;
 	struct cvmx_ase_lue_error_log_s       cn78xx;
-	struct cvmx_ase_lue_error_log_s       cn78xxp2;
+	struct cvmx_ase_lue_error_log_s       cn78xxp1;
 };
 typedef union cvmx_ase_lue_error_log cvmx_ase_lue_error_log_t;
 
@@ -1252,7 +1252,7 @@ union cvmx_ase_lue_error_log_enable {
 #endif
 	} s;
 	struct cvmx_ase_lue_error_log_enable_s cn78xx;
-	struct cvmx_ase_lue_error_log_enable_s cn78xxp2;
+	struct cvmx_ase_lue_error_log_enable_s cn78xxp1;
 };
 typedef union cvmx_ase_lue_error_log_enable cvmx_ase_lue_error_log_enable_t;
 
@@ -1307,7 +1307,7 @@ union cvmx_ase_lue_perf_filt {
 #endif
 	} s;
 	struct cvmx_ase_lue_perf_filt_s       cn78xx;
-	struct cvmx_ase_lue_perf_filt_s       cn78xxp2;
+	struct cvmx_ase_lue_perf_filt_s       cn78xxp1;
 };
 typedef union cvmx_ase_lue_perf_filt cvmx_ase_lue_perf_filt_t;
 
@@ -1353,7 +1353,7 @@ union cvmx_ase_lue_performance_controlx {
 #endif
 	} s;
 	struct cvmx_ase_lue_performance_controlx_s cn78xx;
-	struct cvmx_ase_lue_performance_controlx_s cn78xxp2;
+	struct cvmx_ase_lue_performance_controlx_s cn78xxp1;
 };
 typedef union cvmx_ase_lue_performance_controlx cvmx_ase_lue_performance_controlx_t;
 
@@ -1402,7 +1402,7 @@ union cvmx_ase_lue_performance_control0 {
 #endif
 	} s;
 	struct cvmx_ase_lue_performance_control0_s cn78xx;
-	struct cvmx_ase_lue_performance_control0_s cn78xxp2;
+	struct cvmx_ase_lue_performance_control0_s cn78xxp1;
 };
 typedef union cvmx_ase_lue_performance_control0 cvmx_ase_lue_performance_control0_t;
 
@@ -1453,7 +1453,7 @@ union cvmx_ase_lue_performance_control1 {
 #endif
 	} s;
 	struct cvmx_ase_lue_performance_control1_s cn78xx;
-	struct cvmx_ase_lue_performance_control1_s cn78xxp2;
+	struct cvmx_ase_lue_performance_control1_s cn78xxp1;
 };
 typedef union cvmx_ase_lue_performance_control1 cvmx_ase_lue_performance_control1_t;
 
@@ -1472,7 +1472,7 @@ union cvmx_ase_lue_performance_counterx {
 #endif
 	} s;
 	struct cvmx_ase_lue_performance_counterx_s cn78xx;
-	struct cvmx_ase_lue_performance_counterx_s cn78xxp2;
+	struct cvmx_ase_lue_performance_counterx_s cn78xxp1;
 };
 typedef union cvmx_ase_lue_performance_counterx cvmx_ase_lue_performance_counterx_t;
 
@@ -1492,7 +1492,7 @@ union cvmx_ase_lue_spare {
 #endif
 	} s;
 	struct cvmx_ase_lue_spare_s           cn78xx;
-	struct cvmx_ase_lue_spare_s           cn78xxp2;
+	struct cvmx_ase_lue_spare_s           cn78xxp1;
 };
 typedef union cvmx_ase_lue_spare cvmx_ase_lue_spare_t;
 
@@ -1520,7 +1520,7 @@ union cvmx_ase_lue_twe_bwe_enable {
 #endif
 	} s;
 	struct cvmx_ase_lue_twe_bwe_enable_s  cn78xx;
-	struct cvmx_ase_lue_twe_bwe_enable_s  cn78xxp2;
+	struct cvmx_ase_lue_twe_bwe_enable_s  cn78xxp1;
 };
 typedef union cvmx_ase_lue_twe_bwe_enable cvmx_ase_lue_twe_bwe_enable_t;
 
@@ -1553,7 +1553,7 @@ union cvmx_ase_luf_error_log {
 #endif
 	} s;
 	struct cvmx_ase_luf_error_log_s       cn78xx;
-	struct cvmx_ase_luf_error_log_s       cn78xxp2;
+	struct cvmx_ase_luf_error_log_s       cn78xxp1;
 };
 typedef union cvmx_ase_luf_error_log cvmx_ase_luf_error_log_t;
 
@@ -1580,7 +1580,7 @@ union cvmx_ase_sft_rst {
 #endif
 	} s;
 	struct cvmx_ase_sft_rst_s             cn78xx;
-	struct cvmx_ase_sft_rst_s             cn78xxp2;
+	struct cvmx_ase_sft_rst_s             cn78xxp1;
 };
 typedef union cvmx_ase_sft_rst cvmx_ase_sft_rst_t;
 
@@ -1600,7 +1600,7 @@ union cvmx_ase_spare {
 #endif
 	} s;
 	struct cvmx_ase_spare_s               cn78xx;
-	struct cvmx_ase_spare_s               cn78xxp2;
+	struct cvmx_ase_spare_s               cn78xxp1;
 };
 typedef union cvmx_ase_spare cvmx_ase_spare_t;
 

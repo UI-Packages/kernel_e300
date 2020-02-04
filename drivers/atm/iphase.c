@@ -112,7 +112,8 @@ static void ia_enque_head_rtn_q (IARTN_Q *que, IARTN_Q * data)
 
 static int ia_enque_rtn_q (IARTN_Q *que, struct desc_tbl_t data) {
    IARTN_Q *entry = kmalloc(sizeof(*entry), GFP_ATOMIC);
-   if (!entry) return -1;
+   if (!entry)
+      return -ENOMEM;
    entry->data = data;
    entry->next = NULL;
    if (que->next == NULL) 
@@ -1127,7 +1128,7 @@ static int rx_pkt(struct atm_dev *dev)
 	/* make the ptr point to the corresponding buffer desc entry */  
 	buf_desc_ptr += desc;	  
         if (!desc || (desc > iadev->num_rx_desc) || 
-                      ((buf_desc_ptr->vc_index & 0xffff) > iadev->num_vc)) { 
+                      ((buf_desc_ptr->vc_index & 0xffff) >= iadev->num_vc)) {
             free_desc(dev, desc);
             IF_ERR(printk("IA: bad descriptor desc = %d \n", desc);)
             return -1;
@@ -1145,7 +1146,7 @@ static int rx_pkt(struct atm_dev *dev)
 	status = (u_short) (buf_desc_ptr->desc_mode);  
 	if (status & (RX_CER | RX_PTE | RX_OFL))  
 	{  
-                atomic_inc_unchecked(&vcc->stats->rx_err);
+                atomic_inc(&vcc->stats->rx_err);
 		IF_ERR(printk("IA: bad packet, dropping it");)  
                 if (status & RX_CER) { 
                     IF_ERR(printk(" cause: packet CRC error\n");)
@@ -1168,14 +1169,14 @@ static int rx_pkt(struct atm_dev *dev)
 	len = dma_addr - buf_addr;  
         if (len > iadev->rx_buf_sz) {
            printk("Over %d bytes sdu received, dropped!!!\n", iadev->rx_buf_sz);
-           atomic_inc_unchecked(&vcc->stats->rx_err);
+           atomic_inc(&vcc->stats->rx_err);
 	   goto out_free_desc;
         }
 		  
         if (!(skb = atm_alloc_charge(vcc, len, GFP_ATOMIC))) {
            if (vcc->vci < 32)
               printk("Drop control packets\n");
-	      goto out_free_desc;
+	   goto out_free_desc;
         }
 	skb_put(skb,len);  
         // pwang_test
@@ -1185,8 +1186,8 @@ static int rx_pkt(struct atm_dev *dev)
 
 	/* Build the DLE structure */  
 	wr_ptr = iadev->rx_dle_q.write;  
-	wr_ptr->sys_pkt_addr = pci_map_single(iadev->pci, skb->data,
-		len, PCI_DMA_FROMDEVICE);
+	wr_ptr->sys_pkt_addr = dma_map_single(&iadev->pci->dev, skb->data,
+					      len, DMA_FROM_DEVICE);
 	wr_ptr->local_pkt_addr = buf_addr;  
 	wr_ptr->bytes = len;	/* We don't know this do we ?? */  
 	wr_ptr->mode = DMA_INT_ENABLE;  
@@ -1306,8 +1307,8 @@ static void rx_dle_intr(struct atm_dev *dev)
           u_short length;
           struct ia_vcc *ia_vcc;
 
-	  pci_unmap_single(iadev->pci, iadev->rx_dle_q.write->sys_pkt_addr,
-	  	len, PCI_DMA_FROMDEVICE);
+	  dma_unmap_single(&iadev->pci->dev, iadev->rx_dle_q.write->sys_pkt_addr,
+			   len, DMA_FROM_DEVICE);
           /* no VCC related housekeeping done as yet. lets see */  
           vcc = ATM_SKB(skb)->vcc;
 	  if (!vcc) {
@@ -1318,7 +1319,7 @@ static void rx_dle_intr(struct atm_dev *dev)
           ia_vcc = INPH_IA_VCC(vcc);
           if (ia_vcc == NULL)
           {
-             atomic_inc_unchecked(&vcc->stats->rx_err);
+             atomic_inc(&vcc->stats->rx_err);
              atm_return(vcc, skb->truesize);
              dev_kfree_skb_any(skb);
              goto INCR_DLE;
@@ -1330,7 +1331,7 @@ static void rx_dle_intr(struct atm_dev *dev)
           if ((length > iadev->rx_buf_sz) || (length > 
                               (skb->len - sizeof(struct cpcs_trailer))))
           {
-             atomic_inc_unchecked(&vcc->stats->rx_err);
+             atomic_inc(&vcc->stats->rx_err);
              IF_ERR(printk("rx_dle_intr: Bad  AAL5 trailer %d (skb len %d)", 
                                                             length, skb->len);)
              atm_return(vcc, skb->truesize);
@@ -1346,7 +1347,7 @@ static void rx_dle_intr(struct atm_dev *dev)
 
 	  IF_RX(printk("rx_dle_intr: skb push");)  
 	  vcc->push(vcc,skb);  
-	  atomic_inc_unchecked(&vcc->stats->rx);
+	  atomic_inc(&vcc->stats->rx);
           iadev->rx_pkt_cnt++;
       }  
 INCR_DLE:
@@ -1430,8 +1431,8 @@ static int rx_init(struct atm_dev *dev)
   //    spin_lock_init(&iadev->rx_lock); 
   
 	/* Allocate 4k bytes - more aligned than needed (4k boundary) */
-	dle_addr = pci_alloc_consistent(iadev->pci, DLE_TOTAL_SIZE,
-					&iadev->rx_dle_dma);  
+	dle_addr = dma_alloc_coherent(&iadev->pci->dev, DLE_TOTAL_SIZE,
+				      &iadev->rx_dle_dma, GFP_KERNEL);
 	if (!dle_addr)  {  
 		printk(KERN_ERR DEV_LABEL "can't allocate DLEs\n");
 		goto err_out;
@@ -1631,8 +1632,8 @@ static int rx_init(struct atm_dev *dev)
 	return 0;  
 
 err_free_dle:
-	pci_free_consistent(iadev->pci, DLE_TOTAL_SIZE, iadev->rx_dle_q.start,
-			    iadev->rx_dle_dma);  
+	dma_free_coherent(&iadev->pci->dev, DLE_TOTAL_SIZE, iadev->rx_dle_q.start,
+			  iadev->rx_dle_dma);
 err_out:
 	return -ENOMEM;
 }  
@@ -1702,8 +1703,8 @@ static void tx_dle_intr(struct atm_dev *dev)
 
 	    /* Revenge of the 2 dle (skb + trailer) used in ia_pkt_tx() */
 	    if (!((dle - iadev->tx_dle_q.start)%(2*sizeof(struct dle)))) {
-		pci_unmap_single(iadev->pci, dle->sys_pkt_addr, skb->len,
-				 PCI_DMA_TODEVICE);
+		dma_unmap_single(&iadev->pci->dev, dle->sys_pkt_addr, skb->len,
+				 DMA_TO_DEVICE);
 	    }
             vcc = ATM_SKB(skb)->vcc;
             if (!vcc) {
@@ -1884,9 +1885,9 @@ static int open_tx(struct atm_vcc *vcc)
                 if ((ret = ia_cbr_setup (iadev, vcc)) < 0) {     
                     return ret;
                 }
-       } 
-	else  
-           printk("iadev:  Non UBR, ABR and CBR traffic not supportedn"); 
+	} else {
+		printk("iadev:  Non UBR, ABR and CBR traffic not supported\n");
+	}
         
         iadev->testTable[vcc->vci]->vc_status |= VC_ACTIVE;
 	IF_EVENT(printk("ia open_tx returning \n");)  
@@ -1917,8 +1918,8 @@ static int tx_init(struct atm_dev *dev)
                                 readw(iadev->seg_reg+SEG_MASK_REG));)  
 
 	/* Allocate 4k (boundary aligned) bytes */
-	dle_addr = pci_alloc_consistent(iadev->pci, DLE_TOTAL_SIZE,
-					&iadev->tx_dle_dma);  
+	dle_addr = dma_alloc_coherent(&iadev->pci->dev, DLE_TOTAL_SIZE,
+				      &iadev->tx_dle_dma, GFP_KERNEL);
 	if (!dle_addr)  {
 		printk(KERN_ERR DEV_LABEL "can't allocate DLEs\n");
 		goto err_out;
@@ -1974,7 +1975,9 @@ static int tx_init(struct atm_dev *dev)
 		buf_desc_ptr++;		  
 		tx_pkt_start += iadev->tx_buf_sz;  
 	}  
-        iadev->tx_buf = kmalloc(iadev->num_tx_desc*sizeof(struct cpcs_trailer_desc), GFP_KERNEL);
+	iadev->tx_buf = kmalloc_array(iadev->num_tx_desc,
+				      sizeof(*iadev->tx_buf),
+				      GFP_KERNEL);
         if (!iadev->tx_buf) {
             printk(KERN_ERR DEV_LABEL " couldn't get mem\n");
 	    goto err_free_dle;
@@ -1989,11 +1992,14 @@ static int tx_init(struct atm_dev *dev)
 		goto err_free_tx_bufs;
             }
 	    iadev->tx_buf[i].cpcs = cpcs;
-	    iadev->tx_buf[i].dma_addr = pci_map_single(iadev->pci,
-		cpcs, sizeof(*cpcs), PCI_DMA_TODEVICE);
+	    iadev->tx_buf[i].dma_addr = dma_map_single(&iadev->pci->dev,
+						       cpcs,
+						       sizeof(*cpcs),
+						       DMA_TO_DEVICE);
         }
-        iadev->desc_tbl = kmalloc(iadev->num_tx_desc *
-                                   sizeof(struct desc_tbl_t), GFP_KERNEL);
+	iadev->desc_tbl = kmalloc_array(iadev->num_tx_desc,
+					sizeof(*iadev->desc_tbl),
+					GFP_KERNEL);
 	if (!iadev->desc_tbl) {
 		printk(KERN_ERR DEV_LABEL " couldn't get mem\n");
 		goto err_free_all_tx_bufs;
@@ -2121,7 +2127,9 @@ static int tx_init(struct atm_dev *dev)
 	memset((caddr_t)(iadev->seg_ram+i),  0, iadev->num_vc*4);
 	vc = (struct main_vc *)iadev->MAIN_VC_TABLE_ADDR;  
 	evc = (struct ext_vc *)iadev->EXT_VC_TABLE_ADDR;  
-        iadev->testTable = kmalloc(sizeof(long)*iadev->num_vc, GFP_KERNEL); 
+	iadev->testTable = kmalloc_array(iadev->num_vc,
+					 sizeof(*iadev->testTable),
+					 GFP_KERNEL);
         if (!iadev->testTable) {
            printk("Get freepage  failed\n");
 	   goto err_free_desc_tbl;
@@ -2198,14 +2206,14 @@ err_free_tx_bufs:
 	while (--i >= 0) {
 		struct cpcs_trailer_desc *desc = iadev->tx_buf + i;
 
-		pci_unmap_single(iadev->pci, desc->dma_addr,
-			sizeof(*desc->cpcs), PCI_DMA_TODEVICE);
+		dma_unmap_single(&iadev->pci->dev, desc->dma_addr,
+				 sizeof(*desc->cpcs), DMA_TO_DEVICE);
 		kfree(desc->cpcs);
 	}
 	kfree(iadev->tx_buf);
 err_free_dle:
-	pci_free_consistent(iadev->pci, DLE_TOTAL_SIZE, iadev->tx_dle_q.start,
-			    iadev->tx_dle_dma);  
+	dma_free_coherent(&iadev->pci->dev, DLE_TOTAL_SIZE, iadev->tx_dle_q.start,
+			  iadev->tx_dle_dma);
 err_out:
 	return -ENOMEM;
 }   
@@ -2476,20 +2484,20 @@ static void ia_free_tx(IADEV *iadev)
 	for (i = 0; i < iadev->num_tx_desc; i++) {
 		struct cpcs_trailer_desc *desc = iadev->tx_buf + i;
 
-		pci_unmap_single(iadev->pci, desc->dma_addr,
-			sizeof(*desc->cpcs), PCI_DMA_TODEVICE);
+		dma_unmap_single(&iadev->pci->dev, desc->dma_addr,
+				 sizeof(*desc->cpcs), DMA_TO_DEVICE);
 		kfree(desc->cpcs);
 	}
 	kfree(iadev->tx_buf);
-	pci_free_consistent(iadev->pci, DLE_TOTAL_SIZE, iadev->tx_dle_q.start,
-			    iadev->tx_dle_dma);  
+	dma_free_coherent(&iadev->pci->dev, DLE_TOTAL_SIZE, iadev->tx_dle_q.start,
+			  iadev->tx_dle_dma);
 }
 
 static void ia_free_rx(IADEV *iadev)
 {
 	kfree(iadev->rx_open);
-	pci_free_consistent(iadev->pci, DLE_TOTAL_SIZE, iadev->rx_dle_q.start,
-			  iadev->rx_dle_dma);  
+	dma_free_coherent(&iadev->pci->dev, DLE_TOTAL_SIZE, iadev->rx_dle_q.start,
+			  iadev->rx_dle_dma);
 }
 
 static int ia_start(struct atm_dev *dev)
@@ -2616,7 +2624,7 @@ static void ia_close(struct atm_vcc *vcc)
         if (vcc->qos.txtp.traffic_class != ATM_NONE) {
            iadev->close_pending++;
 	   prepare_to_wait(&iadev->timeout_wait, &wait, TASK_UNINTERRUPTIBLE);
-	   schedule_timeout(50);
+	   schedule_timeout(msecs_to_jiffies(500));
 	   finish_wait(&iadev->timeout_wait, &wait);
            spin_lock_irqsave(&iadev->tx_lock, flags); 
            while((skb = skb_dequeue(&iadev->tx_backlog))) {
@@ -2826,15 +2834,15 @@ static int ia_ioctl(struct atm_dev *dev, unsigned int cmd, void __user *arg)
          {
              struct k_sonet_stats *stats;
              stats = &PRIV(_ia_dev[board])->sonet_stats;
-             printk("section_bip: %d\n", atomic_read_unchecked(&stats->section_bip));
-             printk("line_bip   : %d\n", atomic_read_unchecked(&stats->line_bip));
-             printk("path_bip   : %d\n", atomic_read_unchecked(&stats->path_bip));
-             printk("line_febe  : %d\n", atomic_read_unchecked(&stats->line_febe));
-             printk("path_febe  : %d\n", atomic_read_unchecked(&stats->path_febe));
-             printk("corr_hcs   : %d\n", atomic_read_unchecked(&stats->corr_hcs));
-             printk("uncorr_hcs : %d\n", atomic_read_unchecked(&stats->uncorr_hcs));
-             printk("tx_cells   : %d\n", atomic_read_unchecked(&stats->tx_cells));
-             printk("rx_cells   : %d\n", atomic_read_unchecked(&stats->rx_cells));
+             printk("section_bip: %d\n", atomic_read(&stats->section_bip));
+             printk("line_bip   : %d\n", atomic_read(&stats->line_bip));
+             printk("path_bip   : %d\n", atomic_read(&stats->path_bip));
+             printk("line_febe  : %d\n", atomic_read(&stats->line_febe));
+             printk("path_febe  : %d\n", atomic_read(&stats->path_febe));
+             printk("corr_hcs   : %d\n", atomic_read(&stats->corr_hcs));
+             printk("uncorr_hcs : %d\n", atomic_read(&stats->uncorr_hcs));
+             printk("tx_cells   : %d\n", atomic_read(&stats->tx_cells));
+             printk("rx_cells   : %d\n", atomic_read(&stats->rx_cells));
          }
             ia_cmds.status = 0;
             break;
@@ -2939,7 +2947,7 @@ static int ia_pkt_tx (struct atm_vcc *vcc, struct sk_buff *skb) {
 	if ((desc == 0) || (desc > iadev->num_tx_desc))  
 	{  
 		IF_ERR(printk(DEV_LABEL "invalid desc for send: %d\n", desc);) 
-                atomic_inc_unchecked(&vcc->stats->tx);
+                atomic_inc(&vcc->stats->tx);
 		if (vcc->pop)   
 		    vcc->pop(vcc, skb);   
 		else  
@@ -3009,8 +3017,8 @@ static int ia_pkt_tx (struct atm_vcc *vcc, struct sk_buff *skb) {
 	/* Build the DLE structure */  
 	wr_ptr = iadev->tx_dle_q.write;  
 	memset((caddr_t)wr_ptr, 0, sizeof(*wr_ptr));  
-	wr_ptr->sys_pkt_addr = pci_map_single(iadev->pci, skb->data,
-		skb->len, PCI_DMA_TODEVICE);
+	wr_ptr->sys_pkt_addr = dma_map_single(&iadev->pci->dev, skb->data,
+					      skb->len, DMA_TO_DEVICE);
 	wr_ptr->local_pkt_addr = (buf_desc_ptr->buf_start_hi << 16) | 
                                                   buf_desc_ptr->buf_start_lo;  
 	/* wr_ptr->bytes = swap_byte_order(total_len); didn't seem to affect?? */
@@ -3044,14 +3052,14 @@ static int ia_pkt_tx (struct atm_vcc *vcc, struct sk_buff *skb) {
         ATM_DESC(skb) = vcc->vci;
         skb_queue_tail(&iadev->tx_dma_q, skb);
 
-        atomic_inc_unchecked(&vcc->stats->tx);
+        atomic_inc(&vcc->stats->tx);
         iadev->tx_pkt_cnt++;
 	/* Increment transaction counter */  
 	writel(2, iadev->dma+IPHASE5575_TX_COUNTER);  
         
 #if 0        
         /* add flow control logic */ 
-        if (atomic_read_unchecked(&vcc->stats->tx) % 20 == 0) {
+        if (atomic_read(&vcc->stats->tx) % 20 == 0) {
           if (iavcc->vc_desc_cnt > 10) {
              vcc->tx_quota =  vcc->tx_quota * 3 / 4;
             printk("Tx1:  vcc->tx_quota = %d \n", (u32)vcc->tx_quota );

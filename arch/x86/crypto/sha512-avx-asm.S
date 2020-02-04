@@ -49,15 +49,14 @@
 
 #ifdef CONFIG_AS_AVX
 #include <linux/linkage.h>
-#include <asm/alternative-asm.h>
 
 .text
 
 # Virtual Registers
 # ARG1
-msg	= %rdi
+digest	= %rdi
 # ARG2
-digest	= %rsi
+msg	= %rsi
 # ARG3
 msglen	= %rdx
 T1	= %rcx
@@ -272,7 +271,7 @@ frame_size = frame_GPRSAVE + GPRSAVE_SIZE
 .endm
 
 ########################################################################
-# void sha512_transform_avx(const void* M, void* D, u64 L)
+# void sha512_transform_avx(void* D, const void* M, u64 L)
 # Purpose: Updates the SHA512 digest stored at D with the message stored in M.
 # The size of the message pointed to by M must be an integer multiple of SHA512
 # message blocks.
@@ -365,7 +364,6 @@ updateblock:
 	mov	frame_RSPSAVE(%rsp), %rsp
 
 nowork:
-	pax_force_retaddr 0, 1
 	ret
 ENDPROC(sha512_transform_avx)
 

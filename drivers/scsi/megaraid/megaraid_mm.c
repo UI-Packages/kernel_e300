@@ -179,8 +179,12 @@ mraid_mm_ioctl(struct file *filep, unsigned int cmd, unsigned long arg)
 
 	/*
 	 * The following call will block till a kioc is available
+	 * or return NULL if the list head is empty for the pointer
+	 * of type mraid_mmapt passed to mraid_mm_alloc_kioc
 	 */
 	kioc = mraid_mm_alloc_kioc(adp);
+	if (!kioc)
+		return -ENXIO;
 
 	/*
 	 * User sent the old mimd_t ioctl packet. Convert it to uioc_t.
@@ -898,7 +902,7 @@ hinfo_to_cinfo(mraid_hba_info_t *hinfo, mcontroller_t *cinfo)
 
 /**
  * mraid_mm_register_adp - Registration routine for low level drivers
- * @lld_adp	: Adapter objejct
+ * @lld_adp	: Adapter object
  */
 int
 mraid_mm_register_adp(mraid_mmadp_t *lld_adp)

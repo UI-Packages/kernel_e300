@@ -37,17 +37,6 @@ typedef __s64	Elf64_Sxword;
 #define PT_GNU_EH_FRAME		0x6474e550
 
 #define PT_GNU_STACK	(PT_LOOS + 0x474e551)
-#define PT_GNU_RELRO	(PT_LOOS + 0x474e552)
-
-#define PT_PAX_FLAGS	(PT_LOOS + 0x5041580)
-
-/* Constants for the e_flags field */
-#define EF_PAX_PAGEEXEC		1	/* Paging based non-executable pages */
-#define EF_PAX_EMUTRAMP		2	/* Emulate trampolines */
-#define EF_PAX_MPROTECT		4	/* Restrict mprotect() */
-#define EF_PAX_RANDMMAP		8	/* Randomize mmap() base */
-/*#define EF_PAX_RANDEXEC		16*/	/* Randomize ET_EXEC base */
-#define EF_PAX_SEGMEXEC		32	/* Segmentation based non-executable pages */
 
 /*
  * Extended Numbering
@@ -105,8 +94,6 @@ typedef __s64	Elf64_Sxword;
 #define DT_DEBUG	21
 #define DT_TEXTREL	22
 #define DT_JMPREL	23
-#define DT_FLAGS	30
-  #define DF_TEXTREL  0x00000004
 #define DT_ENCODING	32
 #define OLD_DT_LOOS	0x60000000
 #define DT_LOOS		0x6000000d
@@ -253,19 +240,6 @@ typedef struct elf64_hdr {
 #define PF_W		0x2
 #define PF_X		0x1
 
-#define PF_PAGEEXEC	(1U << 4)	/* Enable  PAGEEXEC */
-#define PF_NOPAGEEXEC	(1U << 5)	/* Disable PAGEEXEC */
-#define PF_SEGMEXEC	(1U << 6)	/* Enable  SEGMEXEC */
-#define PF_NOSEGMEXEC	(1U << 7)	/* Disable SEGMEXEC */
-#define PF_MPROTECT	(1U << 8)	/* Enable  MPROTECT */
-#define PF_NOMPROTECT	(1U << 9)	/* Disable MPROTECT */
-/*#define PF_RANDEXEC	(1U << 10)*/	/* Enable  RANDEXEC */
-/*#define PF_NORANDEXEC	(1U << 11)*/	/* Disable RANDEXEC */
-#define PF_EMUTRAMP	(1U << 12)	/* Enable  EMUTRAMP */
-#define PF_NOEMUTRAMP	(1U << 13)	/* Disable EMUTRAMP */
-#define PF_RANDMMAP	(1U << 14)	/* Enable  RANDMMAP */
-#define PF_NORANDMMAP	(1U << 15)	/* Disable RANDMMAP */
-
 typedef struct elf32_phdr{
   Elf32_Word	p_type;
   Elf32_Off	p_offset;
@@ -308,16 +282,19 @@ typedef struct elf64_phdr {
 #define SHT_HIUSER	0xffffffff
 
 /* sh_flags */
-#define SHF_WRITE	0x1
-#define SHF_ALLOC	0x2
-#define SHF_EXECINSTR	0x4
-#define SHF_MASKPROC	0xf0000000
+#define SHF_WRITE		0x1
+#define SHF_ALLOC		0x2
+#define SHF_EXECINSTR		0x4
+#define SHF_RELA_LIVEPATCH	0x00100000
+#define SHF_RO_AFTER_INIT	0x00200000
+#define SHF_MASKPROC		0xf0000000
 
 /* special section indexes */
 #define SHN_UNDEF	0
 #define SHN_LORESERVE	0xff00
 #define SHN_LOPROC	0xff00
 #define SHN_HIPROC	0xff1f
+#define SHN_LIVEPATCH	0xff20
 #define SHN_ABS		0xfff1
 #define SHN_COMMON	0xfff2
 #define SHN_HIRESERVE	0xffff
@@ -357,8 +334,6 @@ typedef struct elf64_shdr {
 #define	EI_VERSION	6
 #define	EI_OSABI	7
 #define	EI_PAD		8
-
-#define	EI_PAX		14
 
 #define	ELFMAG0		0x7f		/* EI_MAG */
 #define	ELFMAG1		'E'
@@ -407,6 +382,19 @@ typedef struct elf64_shdr {
 #define NT_PPC_VMX	0x100		/* PowerPC Altivec/VMX registers */
 #define NT_PPC_SPE	0x101		/* PowerPC SPE/EVR registers */
 #define NT_PPC_VSX	0x102		/* PowerPC VSX registers */
+#define NT_PPC_TAR	0x103		/* Target Address Register */
+#define NT_PPC_PPR	0x104		/* Program Priority Register */
+#define NT_PPC_DSCR	0x105		/* Data Stream Control Register */
+#define NT_PPC_EBB	0x106		/* Event Based Branch Registers */
+#define NT_PPC_PMU	0x107		/* Performance Monitor Registers */
+#define NT_PPC_TM_CGPR	0x108		/* TM checkpointed GPR Registers */
+#define NT_PPC_TM_CFPR	0x109		/* TM checkpointed FPR Registers */
+#define NT_PPC_TM_CVMX	0x10a		/* TM checkpointed VMX Registers */
+#define NT_PPC_TM_CVSX	0x10b		/* TM checkpointed VSX Registers */
+#define NT_PPC_TM_SPR	0x10c		/* TM Special Purpose Registers */
+#define NT_PPC_TM_CTAR	0x10d		/* TM checkpointed Target Address Register */
+#define NT_PPC_TM_CPPR	0x10e		/* TM checkpointed Program Priority Register */
+#define NT_PPC_TM_CDSCR	0x10f		/* TM checkpointed Data Stream Control Register */
 #define NT_386_TLS	0x200		/* i386 TLS slots (struct user_desc) */
 #define NT_386_IOPERM	0x201		/* x86 io permission bitmap (1=deny) */
 #define NT_X86_XSTATE	0x202		/* x86 extended state using xsave */
@@ -419,10 +407,13 @@ typedef struct elf64_shdr {
 #define NT_S390_LAST_BREAK	0x306	/* s390 breaking event address */
 #define NT_S390_SYSTEM_CALL	0x307	/* s390 system call restart data */
 #define NT_S390_TDB	0x308		/* s390 transaction diagnostic block */
+#define NT_S390_VXRS_LOW	0x309	/* s390 vector registers 0-15 upper half */
+#define NT_S390_VXRS_HIGH	0x30a	/* s390 vector registers 16-31 */
 #define NT_ARM_VFP	0x400		/* ARM VFP/NEON registers */
 #define NT_ARM_TLS	0x401		/* ARM TLS register */
 #define NT_ARM_HW_BREAK	0x402		/* ARM hardware breakpoint registers */
 #define NT_ARM_HW_WATCH	0x403		/* ARM hardware watchpoint registers */
+#define NT_ARM_SYSTEM_CALL	0x404	/* ARM system call number */
 #define NT_METAG_CBUF	0x500		/* Metag catch buffer registers */
 #define NT_METAG_RPIPE	0x501		/* Metag read pipeline state */
 #define NT_METAG_TLS	0x502		/* Metag TLS pointer */

@@ -772,7 +772,7 @@ static void mthca_setup_cmd_doorbells(struct mthca_dev *dev, u64 base)
 	mthca_dbg(dev, "Mapped doorbell page for posting FW commands\n");
 }
 
-int __intentional_overflow(-1) mthca_QUERY_FW(struct mthca_dev *dev)
+int mthca_QUERY_FW(struct mthca_dev *dev)
 {
 	struct mthca_mailbox *mailbox;
 	u32 *outbox;
@@ -1858,8 +1858,8 @@ int mthca_CONF_SPECIAL_QP(struct mthca_dev *dev, int type, u32 qpn)
 }
 
 int mthca_MAD_IFC(struct mthca_dev *dev, int ignore_mkey, int ignore_bkey,
-		  int port, struct ib_wc *in_wc, struct ib_grh *in_grh,
-		  void *in_mad, void *response_mad)
+		  int port, const struct ib_wc *in_wc, const struct ib_grh *in_grh,
+		  const void *in_mad, void *response_mad)
 {
 	struct mthca_mailbox *inmailbox, *outmailbox;
 	void *inbox;

@@ -21,32 +21,35 @@
 #include <linux/mman.h>
 #include <linux/personality.h>
 #include <linux/sys.h>
-#include <linux/user.h>
 #include <linux/init.h>
 #include <linux/completion.h>
 #include <linux/kallsyms.h>
 #include <linux/random.h>
+#include <linux/prctl.h>
 
 #include <asm/asm.h>
 #include <asm/bootinfo.h>
 #include <asm/cpu.h>
+#include <asm/dsemul.h>
 #include <asm/dsp.h>
 #include <asm/fpu.h>
+#include <asm/irq.h>
+#include <asm/msa.h>
 #include <asm/pgtable.h>
 #include <asm/mipsregs.h>
 #include <asm/processor.h>
+#include <asm/reg.h>
 #include <asm/uaccess.h>
 #include <asm/io.h>
 #include <asm/elf.h>
 #include <asm/isadep.h>
 #include <asm/inst.h>
 #include <asm/stacktrace.h>
+#include <asm/irq_regs.h>
 
 #ifdef CONFIG_HOTPLUG_CPU
 void arch_cpu_idle_dead(void)
 {
-	/* What the heck is this check doing ? */
-	if (!cpu_isset(smp_processor_id(), cpu_callin_map))
 		play_dead();
 }
 #endif
@@ -60,29 +63,56 @@ void start_thread(struct pt_regs * regs, unsigned long pc, unsigned long sp)
 
 	/* New thread loses kernel privileges. */
 	status = regs->cp0_status & ~(ST0_CU0|ST0_CU1|ST0_FR|KU_MASK);
-#ifdef CONFIG_64BIT
-	status |= test_thread_flag(TIF_32BIT_REGS) ? 0 : ST0_FR;
-#endif
 	status |= KU_USER;
 	regs->cp0_status = status;
+	lose_fpu(0);
+	clear_thread_flag(TIF_MSA_CTX_LIVE);
 	clear_used_math();
-	clear_fpu_owner();
-	if (cpu_has_dsp)
-		__init_dsp();
+	atomic_set(&current->thread.bd_emu_frame, BD_EMUFRAME_NONE);
+	init_dsp();
 	regs->cp0_epc = pc;
 	regs->regs[29] = sp;
 }
 
-void exit_thread(void)
+void exit_thread(struct task_struct *tsk)
 {
+	/*
+	 * User threads may have allocated a delay slot emulation frame.
+	 * If so, clean up that allocation.
+	 */
+	if (!(current->flags & PF_KTHREAD))
+		dsemul_thread_cleanup(tsk);
 }
 
-void flush_thread(void)
+int arch_dup_task_struct(struct task_struct *dst, struct task_struct *src)
 {
+	/*
+	 * Save any process state which is live in hardware registers to the
+	 * parent context prior to duplication. This prevents the new child
+	 * state becoming stale if the parent is preempted before copy_thread()
+	 * gets a chance to save the parent's live hardware registers to the
+	 * child context.
+	 */
+	preempt_disable();
+
+	if (is_msa_enabled())
+		save_msa(current);
+	else if (is_fpu_owner())
+		_save_fp(current);
+
+	save_dsp(current);
+
+	preempt_enable();
+
+	*dst = *src;
+	return 0;
 }
 
+/*
+ * Copy architecture-specific thread state
+ */
 int copy_thread(unsigned long clone_flags, unsigned long usp,
-	unsigned long arg, struct task_struct *p)
+	unsigned long kthread_arg, struct task_struct *p)
 {
 	struct thread_info *ti = task_thread_info(p);
 	struct pt_regs *childregs, *regs = current_pt_regs();
@@ -91,27 +121,18 @@ int copy_thread(unsigned long clone_flags, unsigned long usp,
 
 	childksp = (unsigned long)task_stack_page(p) + THREAD_SIZE - 32;
 
-	preempt_disable();
-
-	if (is_fpu_owner())
-		save_fp(p);
-
-	if (cpu_has_dsp)
-		save_dsp(p);
-
-	preempt_enable();
-
 	/* set up new TSS. */
 	childregs = (struct pt_regs *) childksp - 1;
 	/*  Put the stack after the struct pt_regs.  */
 	childksp = (unsigned long) childregs;
 	p->thread.cp0_status = read_c0_status() & ~(ST0_CU2|ST0_CU1);
 	if (unlikely(p->flags & PF_KTHREAD)) {
+		/* kernel thread */
 		unsigned long status = p->thread.cp0_status;
 		memset(childregs, 0, sizeof(struct pt_regs));
 		ti->addr_limit = KERNEL_DS;
 		p->thread.reg16 = usp; /* fn */
-		p->thread.reg17 = arg;
+		p->thread.reg17 = kthread_arg;
 		p->thread.reg29 = childksp;
 		p->thread.reg31 = (unsigned long) ret_from_kernel_thread;
 #if defined(CONFIG_CPU_R3000) || defined(CONFIG_CPU_TX39XX)
@@ -123,6 +144,8 @@ int copy_thread(unsigned long clone_flags, unsigned long usp,
 		childregs->cp0_status = status;
 		return 0;
 	}
+
+	/* user thread */
 	*childregs = *regs;
 	childregs->regs[7] = 0; /* Clear error flag */
 	childregs->regs[2] = 0; /* Child gets zero as return value */
@@ -139,18 +162,15 @@ int copy_thread(unsigned long clone_flags, unsigned long usp,
 	 */
 	childregs->cp0_status &= ~(ST0_CU2|ST0_CU1);
 
-#ifdef CONFIG_MIPS_MT_SMTC
-	/*
-	 * SMTC restores TCStatus after Status, and the CU bits
-	 * are aliased there.
-	 */
-	childregs->cp0_tcstatus &= ~(ST0_CU2|ST0_CU1);
-#endif
 	clear_tsk_thread_flag(p, TIF_USEDFPU);
+	clear_tsk_thread_flag(p, TIF_USEDMSA);
+	clear_tsk_thread_flag(p, TIF_MSA_CTX_LIVE);
 
 #ifdef CONFIG_MIPS_MT_FPAFF
 	clear_tsk_thread_flag(p, TIF_FPUBOUND);
 #endif /* CONFIG_MIPS_MT_FPAFF */
+
+	atomic_set(&p->thread.bd_emu_frame, BD_EMUFRAME_NONE);
 
 	if (clone_flags & CLONE_SETTLS)
 		ti->tp_value = regs->regs[7];
@@ -158,52 +178,12 @@ int copy_thread(unsigned long clone_flags, unsigned long usp,
 	return 0;
 }
 
-/* Fill in the fpu structure for a core dump.. */
-int dump_fpu(struct pt_regs *regs, elf_fpregset_t *r)
-{
-	memcpy(r, &current->thread.fpu, sizeof(current->thread.fpu));
-
-	return 1;
-}
-
-void elf_dump_regs(elf_greg_t *gp, struct pt_regs *regs)
-{
-	int i;
-
-	for (i = 0; i < EF_R0; i++)
-		gp[i] = 0;
-	gp[EF_R0] = 0;
-	for (i = 1; i <= 31; i++)
-		gp[EF_R0 + i] = regs->regs[i];
-	gp[EF_R26] = 0;
-	gp[EF_R27] = 0;
-	gp[EF_LO] = regs->lo;
-	gp[EF_HI] = regs->hi;
-	gp[EF_CP0_EPC] = regs->cp0_epc;
-	gp[EF_CP0_BADVADDR] = regs->cp0_badvaddr;
-	gp[EF_CP0_STATUS] = regs->cp0_status;
-	gp[EF_CP0_CAUSE] = regs->cp0_cause;
-#ifdef EF_UNUSED0
-	gp[EF_UNUSED0] = 0;
+#ifdef CONFIG_CC_STACKPROTECTOR
+#include <linux/stackprotector.h>
+unsigned long __stack_chk_guard __read_mostly;
+EXPORT_SYMBOL(__stack_chk_guard);
 #endif
-}
 
-int dump_task_regs(struct task_struct *tsk, elf_gregset_t *regs)
-{
-	elf_dump_regs(*regs, task_pt_regs(tsk));
-	return 1;
-}
-
-int dump_task_fpu(struct task_struct *t, elf_fpregset_t *fpr)
-{
-	memcpy(fpr, &t->thread.fpu, sizeof(current->thread.fpu));
-
-	return 1;
-}
-
-/*
- *
- */
 struct mips_frame_info {
 	void		*func;
 	unsigned long	func_size;
@@ -319,7 +299,7 @@ static inline int is_jump_ins(union mips_instruction *ip)
 	if (ip->r_format.opcode != mm_pool32a_op ||
 			ip->r_format.func != mm_pool32axf_op)
 		return 0;
-	return (((ip->u_format.uimmediate >> 6) & mm_jalr_op) == mm_jalr_op);
+	return ((ip->u_format.uimmediate >> 6) & mm_jalr_op) == mm_jalr_op;
 #else
 	if (ip->j_format.opcode == j_op)
 		return 1;
@@ -349,8 +329,8 @@ static inline int is_sp_move_ins(union mips_instruction *ip)
 			ip->mm16_r5_format.rt == 29);
 	}
 
-	return (ip->mm_i_format.opcode == mm_addiu32_op &&
-		 ip->mm_i_format.rt == 29 && ip->mm_i_format.rs == 29);
+	return ip->mm_i_format.opcode == mm_addiu32_op &&
+	       ip->mm_i_format.rt == 29 && ip->mm_i_format.rs == 29;
 #else
 	/* addiu/daddiu sp,sp,-imm */
 	if (ip->i_format.rs != 29 || ip->i_format.rt != 29)
@@ -423,7 +403,7 @@ static int get_frame_info(struct mips_frame_info *info)
 		return 0;
 	if (info->pc_offset < 0) /* leaf */
 		return 1;
-	/* prologue seems boggus... */
+	/* prologue seems bogus... */
 err:
 	return -1;
 }
@@ -505,31 +485,52 @@ unsigned long notrace unwind_stack_by_address(unsigned long stack_page,
 					      unsigned long pc,
 					      unsigned long *ra)
 {
+	unsigned long low, high, irq_stack_high;
 	struct mips_frame_info info;
 	unsigned long size, ofs;
+	struct pt_regs *regs;
 	int leaf;
-	extern void ret_from_irq(void);
-	extern void ret_from_exception(void);
 
 	if (!stack_page)
 		return 0;
 
 	/*
-	 * If we reached the bottom of interrupt context,
-	 * return saved pc in pt_regs.
+	 * IRQ stacks start at IRQ_STACK_START
+	 * task stacks at THREAD_SIZE - 32
 	 */
-	if (pc == (unsigned long)ret_from_irq ||
-	    pc == (unsigned long)ret_from_exception) {
-		struct pt_regs *regs;
-		if (*sp >= stack_page &&
-		    *sp + sizeof(*regs) <= stack_page + THREAD_SIZE - 32) {
-			regs = (struct pt_regs *)*sp;
-			pc = regs->cp0_epc;
-			if (__kernel_text_address(pc)) {
-				*sp = regs->regs[29];
-				*ra = regs->regs[31];
-				return pc;
-			}
+	low = stack_page;
+	if (!preemptible() && on_irq_stack(raw_smp_processor_id(), *sp)) {
+		high = stack_page + IRQ_STACK_START;
+		irq_stack_high = high;
+	} else {
+		high = stack_page + THREAD_SIZE - 32;
+		irq_stack_high = 0;
+	}
+
+	/*
+	 * If we reached the top of the interrupt stack, start unwinding
+	 * the interrupted task stack.
+	 */
+	if (unlikely(*sp == irq_stack_high)) {
+		unsigned long task_sp = *(unsigned long *)*sp;
+
+		/*
+		 * Check that the pointer saved in the IRQ stack head points to
+		 * something within the stack of the current task
+		 */
+		if (!object_is_on_stack((void *)task_sp))
+			return 0;
+
+		/*
+		 * Follow pointer to tasks kernel stack frame where interrupted
+		 * state was saved.
+		 */
+		regs = (struct pt_regs *)task_sp;
+		pc = regs->cp0_epc;
+		if (!user_mode(regs) && __kernel_text_address(pc)) {
+			*sp = regs->regs[29];
+			*ra = regs->regs[31];
+			return pc;
 		}
 		return 0;
 	}
@@ -550,8 +551,7 @@ unsigned long notrace unwind_stack_by_address(unsigned long stack_page,
 	if (leaf < 0)
 		return 0;
 
-	if (*sp < stack_page ||
-	    *sp + info.frame_size > stack_page + THREAD_SIZE - 32)
+	if (*sp < low || *sp + info.frame_size > high)
 		return 0;
 
 	if (leaf)
@@ -575,7 +575,19 @@ EXPORT_SYMBOL(unwind_stack_by_address);
 unsigned long unwind_stack(struct task_struct *task, unsigned long *sp,
 			   unsigned long pc, unsigned long *ra)
 {
-	unsigned long stack_page = (unsigned long)task_stack_page(task);
+	unsigned long stack_page = 0;
+	int cpu;
+
+	for_each_possible_cpu(cpu) {
+		if (on_irq_stack(cpu, *sp)) {
+			stack_page = (unsigned long)irq_stack[cpu];
+			break;
+		}
+	}
+
+	if (!stack_page)
+		stack_page = (unsigned long)task_stack_page(task);
+
 	return unwind_stack_by_address(stack_page, sp, pc, ra);
 }
 #endif
@@ -607,4 +619,190 @@ unsigned long get_wchan(struct task_struct *task)
 
 out:
 	return pc;
+}
+
+/*
+ * Don't forget that the stack pointer must be aligned on a 8 bytes
+ * boundary for 32-bits ABI and 16 bytes for 64-bits ABI.
+ */
+unsigned long arch_align_stack(unsigned long sp)
+{
+	if (!(current->personality & ADDR_NO_RANDOMIZE) && randomize_va_space)
+		sp -= get_random_int() & ~PAGE_MASK;
+
+	return sp & ALMASK;
+}
+
+static void arch_dump_stack(void *info)
+{
+	struct pt_regs *regs;
+
+	regs = get_irq_regs();
+
+	if (regs)
+		show_regs(regs);
+
+	dump_stack();
+}
+
+void arch_trigger_cpumask_backtrace(const cpumask_t *mask, bool exclude_self)
+{
+	long this_cpu = get_cpu();
+
+	if (cpumask_test_cpu(this_cpu, mask) && !exclude_self)
+		dump_stack();
+
+	smp_call_function_many(mask, arch_dump_stack, NULL, 1);
+
+	put_cpu();
+}
+
+int mips_get_process_fp_mode(struct task_struct *task)
+{
+	int value = 0;
+
+	if (!test_tsk_thread_flag(task, TIF_32BIT_FPREGS))
+		value |= PR_FP_MODE_FR;
+	if (test_tsk_thread_flag(task, TIF_HYBRID_FPREGS))
+		value |= PR_FP_MODE_FRE;
+
+	return value;
+}
+
+static void prepare_for_fp_mode_switch(void *info)
+{
+	struct mm_struct *mm = info;
+
+	if (current->mm == mm)
+		lose_fpu(1);
+}
+
+int mips_set_process_fp_mode(struct task_struct *task, unsigned int value)
+{
+	const unsigned int known_bits = PR_FP_MODE_FR | PR_FP_MODE_FRE;
+	struct task_struct *t;
+	int max_users;
+
+	/* If nothing to change, return right away, successfully.  */
+	if (value == mips_get_process_fp_mode(task))
+		return 0;
+
+	/* Only accept a mode change if 64-bit FP enabled for o32.  */
+	if (!IS_ENABLED(CONFIG_MIPS_O32_FP64_SUPPORT))
+		return -EOPNOTSUPP;
+
+	/* And only for o32 tasks.  */
+	if (IS_ENABLED(CONFIG_64BIT) && !test_thread_flag(TIF_32BIT_REGS))
+		return -EOPNOTSUPP;
+
+	/* Check the value is valid */
+	if (value & ~known_bits)
+		return -EOPNOTSUPP;
+
+	/* Avoid inadvertently triggering emulation */
+	if ((value & PR_FP_MODE_FR) && raw_cpu_has_fpu &&
+	    !(raw_current_cpu_data.fpu_id & MIPS_FPIR_F64))
+		return -EOPNOTSUPP;
+	if ((value & PR_FP_MODE_FRE) && raw_cpu_has_fpu && !cpu_has_fre)
+		return -EOPNOTSUPP;
+
+	/* FR = 0 not supported in MIPS R6 */
+	if (!(value & PR_FP_MODE_FR) && raw_cpu_has_fpu && cpu_has_mips_r6)
+		return -EOPNOTSUPP;
+
+	/* Proceed with the mode switch */
+	preempt_disable();
+
+	/* Save FP & vector context, then disable FPU & MSA */
+	if (task->signal == current->signal)
+		lose_fpu(1);
+
+	/* Prevent any threads from obtaining live FP context */
+	atomic_set(&task->mm->context.fp_mode_switching, 1);
+	smp_mb__after_atomic();
+
+	/*
+	 * If there are multiple online CPUs then force any which are running
+	 * threads in this process to lose their FPU context, which they can't
+	 * regain until fp_mode_switching is cleared later.
+	 */
+	if (num_online_cpus() > 1) {
+		/* No need to send an IPI for the local CPU */
+		max_users = (task->mm == current->mm) ? 1 : 0;
+
+		if (atomic_read(&current->mm->mm_users) > max_users)
+			smp_call_function(prepare_for_fp_mode_switch,
+					  (void *)current->mm, 1);
+	}
+
+	/*
+	 * There are now no threads of the process with live FP context, so it
+	 * is safe to proceed with the FP mode switch.
+	 */
+	for_each_thread(task, t) {
+		/* Update desired FP register width */
+		if (value & PR_FP_MODE_FR) {
+			clear_tsk_thread_flag(t, TIF_32BIT_FPREGS);
+		} else {
+			set_tsk_thread_flag(t, TIF_32BIT_FPREGS);
+			clear_tsk_thread_flag(t, TIF_MSA_CTX_LIVE);
+		}
+
+		/* Update desired FP single layout */
+		if (value & PR_FP_MODE_FRE)
+			set_tsk_thread_flag(t, TIF_HYBRID_FPREGS);
+		else
+			clear_tsk_thread_flag(t, TIF_HYBRID_FPREGS);
+	}
+
+	/* Allow threads to use FP again */
+	atomic_set(&task->mm->context.fp_mode_switching, 0);
+	preempt_enable();
+
+	return 0;
+}
+
+/* Kdump helper */
+void elf_dump_regs(elf_greg_t *gp, struct pt_regs *regs)
+{
+	memset(gp, 0, sizeof(*gp));
+
+	/* Skip zero ($0) */
+	gp[EF_R1] = regs->regs[1];
+	gp[EF_R2] = regs->regs[2];
+	gp[EF_R3] = regs->regs[3];
+	gp[EF_R4] = regs->regs[4];
+	gp[EF_R5] = regs->regs[5];
+	gp[EF_R6] = regs->regs[6];
+	gp[EF_R7] = regs->regs[7];
+	gp[EF_R8] = regs->regs[8];
+	gp[EF_R9] = regs->regs[9];
+	gp[EF_R10] = regs->regs[10];
+	gp[EF_R11] = regs->regs[11];
+	gp[EF_R12] = regs->regs[12];
+	gp[EF_R13] = regs->regs[13];
+	gp[EF_R14] = regs->regs[14];
+	gp[EF_R15] = regs->regs[15];
+	gp[EF_R16] = regs->regs[16];
+	gp[EF_R17] = regs->regs[17];
+	gp[EF_R18] = regs->regs[18];
+	gp[EF_R19] = regs->regs[19];
+	gp[EF_R20] = regs->regs[20];
+	gp[EF_R21] = regs->regs[21];
+	gp[EF_R22] = regs->regs[22];
+	gp[EF_R23] = regs->regs[23];
+	gp[EF_R24] = regs->regs[24];
+	gp[EF_R25] = regs->regs[25];
+	/* Skip k0 and k1 ($26, $27) */
+	gp[EF_R28] = regs->regs[28];
+	gp[EF_R29] = regs->regs[29];
+	gp[EF_R30] = regs->regs[30];
+	gp[EF_R31] = regs->regs[31];
+
+	gp[EF_LO] = regs->lo;
+	gp[EF_HI] = regs->hi;
+	gp[EF_CP0_EPC] = regs->cp0_epc;
+	gp[EF_CP0_BADVADDR] = regs->cp0_badvaddr;
+	gp[EF_CP0_STATUS] = regs->cp0_status;
+	gp[EF_CP0_CAUSE] = regs->cp0_cause;
 }

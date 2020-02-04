@@ -56,9 +56,9 @@ static __inline__ int scm_check_creds(struct ucred *creds)
 	if ((creds->pid == task_tgid_vnr(current) ||
 	     ns_capable(task_active_pid_ns(current)->user_ns, CAP_SYS_ADMIN)) &&
 	    ((uid_eq(uid, cred->uid)   || uid_eq(uid, cred->euid) ||
-	      uid_eq(uid, cred->suid)) || nsown_capable(CAP_SETUID)) &&
+	      uid_eq(uid, cred->suid)) || ns_capable(cred->user_ns, CAP_SETUID)) &&
 	    ((gid_eq(gid, cred->gid)   || gid_eq(gid, cred->egid) ||
-	      gid_eq(gid, cred->sgid)) || nsown_capable(CAP_SETGID))) {
+	      gid_eq(gid, cred->sgid)) || ns_capable(cred->user_ns, CAP_SETGID))) {
 	       return 0;
 	}
 	return -EPERM;
@@ -135,8 +135,7 @@ int __scm_send(struct socket *sock, struct msghdr *msg, struct scm_cookie *p)
 	struct cmsghdr *cmsg;
 	int err;
 
-	for (cmsg = CMSG_FIRSTHDR(msg); cmsg; cmsg = CMSG_NXTHDR(msg, cmsg))
-	{
+	for_each_cmsghdr(cmsg, msg) {
 		err = -EINVAL;
 
 		/* Verify that cmsg_len is at least sizeof(struct cmsghdr) */
@@ -216,7 +215,7 @@ EXPORT_SYMBOL(__scm_send);
 int put_cmsg(struct msghdr * msg, int level, int type, int len, void *data)
 {
 	struct cmsghdr __user *cm
-		= (struct cmsghdr __force_user *)msg->msg_control;
+		= (__force struct cmsghdr __user *)msg->msg_control;
 	struct cmsghdr cmhdr;
 	int cmlen = CMSG_LEN(len);
 	int err;
@@ -239,7 +238,7 @@ int put_cmsg(struct msghdr * msg, int level, int type, int len, void *data)
 	err = -EFAULT;
 	if (copy_to_user(cm, &cmhdr, sizeof cmhdr))
 		goto out;
-	if (copy_to_user((void __force_user *)CMSG_DATA((void __force_kernel *)cm), data, cmlen - sizeof(struct cmsghdr)))
+	if (copy_to_user(CMSG_DATA(cm), data, cmlen - sizeof(struct cmsghdr)))
 		goto out;
 	cmlen = CMSG_SPACE(len);
 	if (msg->msg_controllen < cmlen)
@@ -255,7 +254,7 @@ EXPORT_SYMBOL(put_cmsg);
 void scm_detach_fds(struct msghdr *msg, struct scm_cookie *scm)
 {
 	struct cmsghdr __user *cm
-		= (struct cmsghdr __force_user *)msg->msg_control;
+		= (__force struct cmsghdr __user*)msg->msg_control;
 
 	int fdmax = 0;
 	int fdnum = scm->fp->count;
@@ -275,7 +274,7 @@ void scm_detach_fds(struct msghdr *msg, struct scm_cookie *scm)
 	if (fdnum < fdmax)
 		fdmax = fdnum;
 
-	for (i=0, cmfptr=(int __force_user *)CMSG_DATA((void __force_kernel *)cm); i<fdmax;
+	for (i=0, cmfptr=(__force int __user *)CMSG_DATA(cm); i<fdmax;
 	     i++, cmfptr++)
 	{
 		struct socket *sock;
@@ -296,8 +295,8 @@ void scm_detach_fds(struct msghdr *msg, struct scm_cookie *scm)
 		/* Bump the usage count and install the file. */
 		sock = sock_from_file(fp[i], &err);
 		if (sock) {
-			sock_update_netprioidx(sock->sk);
-			sock_update_classid(sock->sk);
+			sock_update_netprioidx(&sock->sk->sk_cgrp_data);
+			sock_update_classid(&sock->sk->sk_cgrp_data);
 		}
 		fd_install(new_fd, get_file(fp[i]));
 	}

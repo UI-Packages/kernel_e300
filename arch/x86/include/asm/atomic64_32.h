@@ -3,7 +3,6 @@
 
 #include <linux/compiler.h>
 #include <linux/types.h>
-#include <asm/processor.h>
 //#include <asm/cmpxchg.h>
 
 /* An 64bit atomic type */
@@ -11,14 +10,6 @@
 typedef struct {
 	u64 __aligned(8) counter;
 } atomic64_t;
-
-#ifdef CONFIG_PAX_REFCOUNT
-typedef struct {
-	u64 __aligned(8) counter;
-} atomic64_unchecked_t;
-#else
-typedef atomic64_t atomic64_unchecked_t;
-#endif
 
 #define ATOMIC64_INIT(val)	{ (val) }
 
@@ -45,31 +36,21 @@ typedef atomic64_t atomic64_unchecked_t;
 	ATOMIC64_DECL_ONE(sym##_386)
 
 ATOMIC64_DECL_ONE(add_386);
-ATOMIC64_DECL_ONE(add_unchecked_386);
 ATOMIC64_DECL_ONE(sub_386);
-ATOMIC64_DECL_ONE(sub_unchecked_386);
 ATOMIC64_DECL_ONE(inc_386);
-ATOMIC64_DECL_ONE(inc_unchecked_386);
 ATOMIC64_DECL_ONE(dec_386);
-ATOMIC64_DECL_ONE(dec_unchecked_386);
 #endif
 
 #define alternative_atomic64(f, out, in...) \
 	__alternative_atomic64(f, f, ASM_OUTPUT2(out), ## in)
 
 ATOMIC64_DECL(read);
-ATOMIC64_DECL(read_unchecked);
 ATOMIC64_DECL(set);
-ATOMIC64_DECL(set_unchecked);
 ATOMIC64_DECL(xchg);
 ATOMIC64_DECL(add_return);
-ATOMIC64_DECL(add_return_unchecked);
 ATOMIC64_DECL(sub_return);
-ATOMIC64_DECL(sub_return_unchecked);
 ATOMIC64_DECL(inc_return);
-ATOMIC64_DECL(inc_return_unchecked);
 ATOMIC64_DECL(dec_return);
-ATOMIC64_DECL(dec_return_unchecked);
 ATOMIC64_DECL(dec_if_positive);
 ATOMIC64_DECL(inc_not_zero);
 ATOMIC64_DECL(add_unless);
@@ -90,21 +71,6 @@ ATOMIC64_DECL(add_unless);
  */
 
 static inline long long atomic64_cmpxchg(atomic64_t *v, long long o, long long n)
-{
-	return cmpxchg64(&v->counter, o, n);
-}
-
-/**
- * atomic64_cmpxchg_unchecked - cmpxchg atomic64 variable
- * @p: pointer to type atomic64_unchecked_t
- * @o: expected value
- * @n: new value
- *
- * Atomically sets @v to @n if it was equal to @o and returns
- * the old value.
- */
-
-static inline long long atomic64_cmpxchg_unchecked(atomic64_unchecked_t *v, long long o, long long n)
 {
 	return cmpxchg64(&v->counter, o, n);
 }
@@ -145,41 +111,12 @@ static inline void atomic64_set(atomic64_t *v, long long i)
 }
 
 /**
- * atomic64_set_unchecked - set atomic64 variable
- * @v: pointer to type atomic64_unchecked_t
- * @n: value to assign
- *
- * Atomically sets the value of @v to @n.
- */
-static inline void atomic64_set_unchecked(atomic64_unchecked_t *v, long long i)
-{
-	unsigned high = (unsigned)(i >> 32);
-	unsigned low = (unsigned)i;
-	alternative_atomic64(set, /* no output */,
-			     "S" (v), "b" (low), "c" (high)
-			     : "eax", "edx", "memory");
-}
-
-/**
  * atomic64_read - read atomic64 variable
  * @v: pointer to type atomic64_t
  *
  * Atomically reads the value of @v and returns it.
  */
 static inline long long atomic64_read(const atomic64_t *v)
-{
-	long long r;
-	alternative_atomic64(read, "=&A" (r), "c" (v) : "memory");
-	return r;
- }
-
-/**
- * atomic64_read_unchecked - read atomic64 variable
- * @v: pointer to type atomic64_unchecked_t
- *
- * Atomically reads the value of @v and returns it.
- */
-static inline long long atomic64_read_unchecked(atomic64_unchecked_t *v)
 {
 	long long r;
 	alternative_atomic64(read, "=&A" (r), "c" (v) : "memory");
@@ -196,21 +133,6 @@ static inline long long atomic64_read_unchecked(atomic64_unchecked_t *v)
 static inline long long atomic64_add_return(long long i, atomic64_t *v)
 {
 	alternative_atomic64(add_return,
-			     ASM_OUTPUT2("+A" (i), "+c" (v)),
-			     ASM_NO_INPUT_CLOBBER("memory"));
-	return i;
-}
-
-/**
- * atomic64_add_return_unchecked - add and return
- * @i: integer value to add
- * @v: pointer to type atomic64_unchecked_t
- *
- * Atomically adds @i to @v and returns @i + *@v
- */
-static inline long long atomic64_add_return_unchecked(long long i, atomic64_unchecked_t *v)
-{
-	alternative_atomic64(add_return_unchecked,
 			     ASM_OUTPUT2("+A" (i), "+c" (v)),
 			     ASM_NO_INPUT_CLOBBER("memory"));
 	return i;
@@ -235,14 +157,6 @@ static inline long long atomic64_inc_return(atomic64_t *v)
 	return a;
 }
 
-static inline long long atomic64_inc_return_unchecked(atomic64_unchecked_t *v)
-{
-	long long a;
-	alternative_atomic64(inc_return_unchecked, "=&A" (a),
-			     "S" (v) : "memory", "ecx");
-	return a;
-}
-
 static inline long long atomic64_dec_return(atomic64_t *v)
 {
 	long long a;
@@ -261,21 +175,6 @@ static inline long long atomic64_dec_return(atomic64_t *v)
 static inline long long atomic64_add(long long i, atomic64_t *v)
 {
 	__alternative_atomic64(add, add_return,
-			       ASM_OUTPUT2("+A" (i), "+c" (v)),
-			       ASM_NO_INPUT_CLOBBER("memory"));
-	return i;
-}
-
-/**
- * atomic64_add_unchecked - add integer to atomic64 variable
- * @i: integer value to add
- * @v: pointer to type atomic64_unchecked_t
- *
- * Atomically adds @i to @v.
- */
-static inline long long atomic64_add_unchecked(long long i, atomic64_unchecked_t *v)
-{
-	__alternative_atomic64(add_unchecked, add_return_unchecked,
 			       ASM_OUTPUT2("+A" (i), "+c" (v)),
 			       ASM_NO_INPUT_CLOBBER("memory"));
 	return i;
@@ -412,5 +311,38 @@ static inline long long atomic64_dec_if_positive(atomic64_t *v)
 
 #undef alternative_atomic64
 #undef __alternative_atomic64
+
+#define ATOMIC64_OP(op, c_op)						\
+static inline void atomic64_##op(long long i, atomic64_t *v)		\
+{									\
+	long long old, c = 0;						\
+	while ((old = atomic64_cmpxchg(v, c, c c_op i)) != c)		\
+		c = old;						\
+}
+
+#define ATOMIC64_FETCH_OP(op, c_op)					\
+static inline long long atomic64_fetch_##op(long long i, atomic64_t *v)	\
+{									\
+	long long old, c = 0;						\
+	while ((old = atomic64_cmpxchg(v, c, c c_op i)) != c)		\
+		c = old;						\
+	return old;							\
+}
+
+ATOMIC64_FETCH_OP(add, +)
+
+#define atomic64_fetch_sub(i, v)	atomic64_fetch_add(-(i), (v))
+
+#define ATOMIC64_OPS(op, c_op)						\
+	ATOMIC64_OP(op, c_op)						\
+	ATOMIC64_FETCH_OP(op, c_op)
+
+ATOMIC64_OPS(and, &)
+ATOMIC64_OPS(or, |)
+ATOMIC64_OPS(xor, ^)
+
+#undef ATOMIC64_OPS
+#undef ATOMIC64_FETCH_OP
+#undef ATOMIC64_OP
 
 #endif /* _ASM_X86_ATOMIC64_32_H */

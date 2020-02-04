@@ -1,5 +1,5 @@
 /***********************license start***************
- * Copyright (c) 2003-2015  Cavium Inc. (support@cavium.com). All rights
+ * Copyright (c) 2003-2017  Cavium Inc. (support@cavium.com). All rights
  * reserved.
  *
  *
@@ -84,8 +84,8 @@ static inline uint64_t CVMX_DPI_DMAX_COUNTS(unsigned long offset)
 	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 7))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset <= 7))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 7))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 7))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 7))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 7))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && ((offset <= 7))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 7)))))
 		cvmx_warn("CVMX_DPI_DMAX_COUNTS(%lu) is invalid on this chip\n", offset);
@@ -104,8 +104,8 @@ static inline uint64_t CVMX_DPI_DMAX_DBELL(unsigned long offset)
 	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 7))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset <= 7))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 7))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 7))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 7))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 7))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && ((offset <= 7))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 7)))))
 		cvmx_warn("CVMX_DPI_DMAX_DBELL(%lu) is invalid on this chip\n", offset);
@@ -123,8 +123,8 @@ static inline uint64_t CVMX_DPI_DMAX_ERR_RSP_STATUS(unsigned long offset)
 	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 7))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset <= 7))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 7))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 7))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 7))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 7))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && ((offset <= 7))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 7)))))
 		cvmx_warn("CVMX_DPI_DMAX_ERR_RSP_STATUS(%lu) is invalid on this chip\n", offset);
@@ -143,8 +143,8 @@ static inline uint64_t CVMX_DPI_DMAX_IBUFF_SADDR(unsigned long offset)
 	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 7))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset <= 7))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 7))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 7))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 7))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 7))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && ((offset <= 7))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 7)))))
 		cvmx_warn("CVMX_DPI_DMAX_IBUFF_SADDR(%lu) is invalid on this chip\n", offset);
@@ -162,8 +162,8 @@ static inline uint64_t CVMX_DPI_DMAX_IFLIGHT(unsigned long offset)
 	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 7))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset <= 7))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 7))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 7))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 7))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 7))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && ((offset <= 7))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 7)))))
 		cvmx_warn("CVMX_DPI_DMAX_IFLIGHT(%lu) is invalid on this chip\n", offset);
@@ -182,8 +182,8 @@ static inline uint64_t CVMX_DPI_DMAX_NADDR(unsigned long offset)
 	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 7))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset <= 7))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 7))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 7))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 7))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 7))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && ((offset <= 7))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 7)))))
 		cvmx_warn("CVMX_DPI_DMAX_NADDR(%lu) is invalid on this chip\n", offset);
@@ -202,8 +202,8 @@ static inline uint64_t CVMX_DPI_DMAX_REQBNK0(unsigned long offset)
 	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 7))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset <= 7))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 7))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 7))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 7))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 7))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && ((offset <= 7))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 7)))))
 		cvmx_warn("CVMX_DPI_DMAX_REQBNK0(%lu) is invalid on this chip\n", offset);
@@ -222,8 +222,8 @@ static inline uint64_t CVMX_DPI_DMAX_REQBNK1(unsigned long offset)
 	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 7))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset <= 7))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 7))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 7))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 7))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 7))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && ((offset <= 7))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 7)))))
 		cvmx_warn("CVMX_DPI_DMAX_REQBNK1(%lu) is invalid on this chip\n", offset);
@@ -237,8 +237,8 @@ static inline uint64_t CVMX_DPI_DMAX_REQQ_CTL(unsigned long offset)
 {
 	if (!(
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 7))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 7))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 7))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 7))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 7)))))
 		cvmx_warn("CVMX_DPI_DMAX_REQQ_CTL(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001DF0000000180ull) + ((offset) & 7) * 8;
@@ -267,8 +267,8 @@ static inline uint64_t CVMX_DPI_DMA_ENGX_EN(unsigned long offset)
 	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 5))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset <= 5))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 5))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 5))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 5))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 5))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && ((offset <= 5))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 5)))))
 		cvmx_warn("CVMX_DPI_DMA_ENGX_EN(%lu) is invalid on this chip\n", offset);
@@ -375,8 +375,8 @@ static inline uint64_t CVMX_DPI_ENGX_BUF(unsigned long offset)
 	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 5))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset <= 5))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 5))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 5))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 5))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 5))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && ((offset <= 5))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 5)))))
 		cvmx_warn("CVMX_DPI_ENGX_BUF(%lu) is invalid on this chip\n", offset);
@@ -427,8 +427,8 @@ static inline uint64_t CVMX_DPI_NCBX_CFG(unsigned long offset)
 	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset == 0))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && ((offset == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset == 0)))))
 		cvmx_warn("CVMX_DPI_NCBX_CFG(%lu) is invalid on this chip\n", offset);
@@ -546,8 +546,8 @@ static inline uint64_t CVMX_DPI_SLI_PRTX_CFG(unsigned long offset)
 	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset <= 2))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 3))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 3))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 3)))))
 		cvmx_warn("CVMX_DPI_SLI_PRTX_CFG(%lu) is invalid on this chip\n", offset);
@@ -640,8 +640,8 @@ static inline uint64_t CVMX_DPI_SLI_PRTX_ERR_INFO(unsigned long offset)
 	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN70XX) && ((offset <= 2))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && ((offset <= 3))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN78XX) && ((offset <= 3))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X) && ((offset <= 3))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && ((offset <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CNF75XX) && ((offset <= 3)))))
 		cvmx_warn("CVMX_DPI_SLI_PRTX_ERR_INFO(%lu) is invalid on this chip\n", offset);
@@ -740,7 +740,8 @@ union cvmx_dpi_bist_status {
 	struct cvmx_dpi_bist_status_cn61xx    cn70xx;
 	struct cvmx_dpi_bist_status_cn61xx    cn70xxp1;
 	struct cvmx_dpi_bist_status_s         cn73xx;
-	struct cvmx_dpi_bist_status_cn78xx {
+	struct cvmx_dpi_bist_status_s         cn78xx;
+	struct cvmx_dpi_bist_status_cn78xxp1 {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_51_63               : 13;
 	uint64_t bist                         : 51; /**< BIST results. Hardware sets a bit in BIST for memory that fails. */
@@ -748,8 +749,7 @@ union cvmx_dpi_bist_status {
 	uint64_t bist                         : 51;
 	uint64_t reserved_51_63               : 13;
 #endif
-	} cn78xx;
-	struct cvmx_dpi_bist_status_s         cn78xxp2;
+	} cn78xxp1;
 	struct cvmx_dpi_bist_status_cn61xx    cnf71xx;
 	struct cvmx_dpi_bist_status_s         cnf75xx;
 };
@@ -792,7 +792,7 @@ union cvmx_dpi_ctl {
 	struct cvmx_dpi_ctl_cn61xx            cn70xxp1;
 	struct cvmx_dpi_ctl_cn61xx            cn73xx;
 	struct cvmx_dpi_ctl_cn61xx            cn78xx;
-	struct cvmx_dpi_ctl_cn61xx            cn78xxp2;
+	struct cvmx_dpi_ctl_cn61xx            cn78xxp1;
 	struct cvmx_dpi_ctl_cn61xx            cnf71xx;
 	struct cvmx_dpi_ctl_cn61xx            cnf75xx;
 };
@@ -827,7 +827,7 @@ union cvmx_dpi_dmax_counts {
 	struct cvmx_dpi_dmax_counts_s         cn70xxp1;
 	struct cvmx_dpi_dmax_counts_s         cn73xx;
 	struct cvmx_dpi_dmax_counts_s         cn78xx;
-	struct cvmx_dpi_dmax_counts_s         cn78xxp2;
+	struct cvmx_dpi_dmax_counts_s         cn78xxp1;
 	struct cvmx_dpi_dmax_counts_s         cnf71xx;
 	struct cvmx_dpi_dmax_counts_s         cnf75xx;
 };
@@ -861,7 +861,7 @@ union cvmx_dpi_dmax_dbell {
 	struct cvmx_dpi_dmax_dbell_s          cn70xxp1;
 	struct cvmx_dpi_dmax_dbell_s          cn73xx;
 	struct cvmx_dpi_dmax_dbell_s          cn78xx;
-	struct cvmx_dpi_dmax_dbell_s          cn78xxp2;
+	struct cvmx_dpi_dmax_dbell_s          cn78xxp1;
 	struct cvmx_dpi_dmax_dbell_s          cnf71xx;
 	struct cvmx_dpi_dmax_dbell_s          cnf75xx;
 };
@@ -893,7 +893,7 @@ union cvmx_dpi_dmax_err_rsp_status {
 	struct cvmx_dpi_dmax_err_rsp_status_s cn70xxp1;
 	struct cvmx_dpi_dmax_err_rsp_status_s cn73xx;
 	struct cvmx_dpi_dmax_err_rsp_status_s cn78xx;
-	struct cvmx_dpi_dmax_err_rsp_status_s cn78xxp2;
+	struct cvmx_dpi_dmax_err_rsp_status_s cn78xxp1;
 	struct cvmx_dpi_dmax_err_rsp_status_s cnf71xx;
 	struct cvmx_dpi_dmax_err_rsp_status_s cnf75xx;
 };
@@ -1006,7 +1006,7 @@ union cvmx_dpi_dmax_ibuff_saddr {
 #endif
 	} cn73xx;
 	struct cvmx_dpi_dmax_ibuff_saddr_cn73xx cn78xx;
-	struct cvmx_dpi_dmax_ibuff_saddr_cn73xx cn78xxp2;
+	struct cvmx_dpi_dmax_ibuff_saddr_cn73xx cn78xxp1;
 	struct cvmx_dpi_dmax_ibuff_saddr_cn61xx cnf71xx;
 	struct cvmx_dpi_dmax_ibuff_saddr_cn73xx cnf75xx;
 };
@@ -1035,7 +1035,7 @@ union cvmx_dpi_dmax_iflight {
 	struct cvmx_dpi_dmax_iflight_s        cn70xxp1;
 	struct cvmx_dpi_dmax_iflight_s        cn73xx;
 	struct cvmx_dpi_dmax_iflight_s        cn78xx;
-	struct cvmx_dpi_dmax_iflight_s        cn78xxp2;
+	struct cvmx_dpi_dmax_iflight_s        cn78xxp1;
 	struct cvmx_dpi_dmax_iflight_s        cnf71xx;
 	struct cvmx_dpi_dmax_iflight_s        cnf75xx;
 };
@@ -1086,7 +1086,7 @@ union cvmx_dpi_dmax_naddr {
 	struct cvmx_dpi_dmax_naddr_cn61xx     cn70xxp1;
 	struct cvmx_dpi_dmax_naddr_s          cn73xx;
 	struct cvmx_dpi_dmax_naddr_s          cn78xx;
-	struct cvmx_dpi_dmax_naddr_s          cn78xxp2;
+	struct cvmx_dpi_dmax_naddr_s          cn78xxp1;
 	struct cvmx_dpi_dmax_naddr_cn61xx     cnf71xx;
 	struct cvmx_dpi_dmax_naddr_s          cnf75xx;
 };
@@ -1117,7 +1117,7 @@ union cvmx_dpi_dmax_reqbnk0 {
 	struct cvmx_dpi_dmax_reqbnk0_s        cn70xxp1;
 	struct cvmx_dpi_dmax_reqbnk0_s        cn73xx;
 	struct cvmx_dpi_dmax_reqbnk0_s        cn78xx;
-	struct cvmx_dpi_dmax_reqbnk0_s        cn78xxp2;
+	struct cvmx_dpi_dmax_reqbnk0_s        cn78xxp1;
 	struct cvmx_dpi_dmax_reqbnk0_s        cnf71xx;
 	struct cvmx_dpi_dmax_reqbnk0_s        cnf75xx;
 };
@@ -1148,7 +1148,7 @@ union cvmx_dpi_dmax_reqbnk1 {
 	struct cvmx_dpi_dmax_reqbnk1_s        cn70xxp1;
 	struct cvmx_dpi_dmax_reqbnk1_s        cn73xx;
 	struct cvmx_dpi_dmax_reqbnk1_s        cn78xx;
-	struct cvmx_dpi_dmax_reqbnk1_s        cn78xxp2;
+	struct cvmx_dpi_dmax_reqbnk1_s        cn78xxp1;
 	struct cvmx_dpi_dmax_reqbnk1_s        cnf71xx;
 	struct cvmx_dpi_dmax_reqbnk1_s        cnf75xx;
 };
@@ -1185,7 +1185,7 @@ union cvmx_dpi_dmax_reqq_ctl {
 	} s;
 	struct cvmx_dpi_dmax_reqq_ctl_s       cn73xx;
 	struct cvmx_dpi_dmax_reqq_ctl_s       cn78xx;
-	struct cvmx_dpi_dmax_reqq_ctl_s       cn78xxp2;
+	struct cvmx_dpi_dmax_reqq_ctl_s       cn78xxp1;
 	struct cvmx_dpi_dmax_reqq_ctl_s       cnf75xx;
 };
 typedef union cvmx_dpi_dmax_reqq_ctl cvmx_dpi_dmax_reqq_ctl_t;
@@ -1213,14 +1213,7 @@ union cvmx_dpi_dma_control {
 	uint64_t ffp_dis                      : 1;  /**< Force forward progress disable. The DMA engines will compete for shared resources. If the
                                                          hardware detects that particular engines are not able to make requests to an interface,
                                                          the hardware will periodically trade-off throughput for fairness. */
-	uint64_t commit_mode                  : 1;  /**< DMA engine commit mode.
-                                                         When COMMIT_MODE=1, DPI considers an instruction complete when the hardware internally
-                                                         generates the final write for the current instruction.
-                                                         When COMMIT_MODE=0, DPI additionally waits for the final write to reach the interface
-                                                         coherency point to declare the instructions complete.
-                                                         When COMMIT_MODE=1, DPI may not follow the HRM ordering rules. DPI
-                                                         hardware performance may be better with COMMIT_MODE=1 than with COMMIT_MODE=0 due to
-                                                         the relaxed ordering rules. If the HRM ordering rules are required, set COMMIT_MODE=0. */
+	uint64_t commit_mode                  : 1;  /**< DMA engine commit mode. For diagnostic use only. */
 	uint64_t pkt_hp                       : 1;  /**< High-Priority Mode for Packet Interface.
                                                          This mode has been deprecated. */
 	uint64_t pkt_en                       : 1;  /**< Enables the packet interface. When the packet interface is enabled, engines 4 and 5 are
@@ -1596,14 +1589,7 @@ union cvmx_dpi_dma_control {
 	uint64_t ffp_dis                      : 1;  /**< Force forward progress disable. The DMA engines will compete for shared resources. If the
                                                          hardware detects that particular engines are not able to make requests to an interface,
                                                          the hardware will periodically trade-off throughput for fairness. */
-	uint64_t commit_mode                  : 1;  /**< DMA engine commit mode.
-                                                         When COMMIT_MODE=1, DPI considers an instruction complete when the hardware internally
-                                                         generates the final write for the current instruction.
-                                                         When COMMIT_MODE=0, DPI additionally waits for the final write to reach the interface
-                                                         coherency point to declare the instructions complete.
-                                                         When COMMIT_MODE=1, DPI may not follow the HRM ordering rules. DPI
-                                                         hardware performance may be better with COMMIT_MODE=1 than with COMMIT_MODE=0 due to
-                                                         the relaxed ordering rules. If the HRM ordering rules are required, set COMMIT_MODE=0. */
+	uint64_t commit_mode                  : 1;  /**< DMA engine commit mode. For diagnostic use only. */
 	uint64_t reserved_57_57               : 1;
 	uint64_t pkt_en                       : 1;  /**< Enables the packet interface. When the packet interface is enabled, engines 4 and 5 are
                                                          used for packets and are not available for DMA. When PKT_EN=1, then DMA_ENB<5>=0 and
@@ -1692,7 +1678,7 @@ union cvmx_dpi_dma_control {
 #endif
 	} cn73xx;
 	struct cvmx_dpi_dma_control_cn73xx    cn78xx;
-	struct cvmx_dpi_dma_control_cn73xx    cn78xxp2;
+	struct cvmx_dpi_dma_control_cn73xx    cn78xxp1;
 	struct cvmx_dpi_dma_control_cn61xx    cnf71xx;
 	struct cvmx_dpi_dma_control_cn73xx    cnf75xx;
 };
@@ -1749,7 +1735,7 @@ union cvmx_dpi_dma_engx_en {
 	struct cvmx_dpi_dma_engx_en_cn61xx    cn70xxp1;
 	struct cvmx_dpi_dma_engx_en_s         cn73xx;
 	struct cvmx_dpi_dma_engx_en_s         cn78xx;
-	struct cvmx_dpi_dma_engx_en_s         cn78xxp2;
+	struct cvmx_dpi_dma_engx_en_s         cn78xxp1;
 	struct cvmx_dpi_dma_engx_en_cn61xx    cnf71xx;
 	struct cvmx_dpi_dma_engx_en_s         cnf75xx;
 };
@@ -1789,7 +1775,7 @@ union cvmx_dpi_dma_ppx_cnt {
 	struct cvmx_dpi_dma_ppx_cnt_s         cn70xxp1;
 	struct cvmx_dpi_dma_ppx_cnt_s         cn73xx;
 	struct cvmx_dpi_dma_ppx_cnt_s         cn78xx;
-	struct cvmx_dpi_dma_ppx_cnt_s         cn78xxp2;
+	struct cvmx_dpi_dma_ppx_cnt_s         cn78xxp1;
 	struct cvmx_dpi_dma_ppx_cnt_s         cnf71xx;
 	struct cvmx_dpi_dma_ppx_cnt_s         cnf75xx;
 };
@@ -1821,7 +1807,7 @@ union cvmx_dpi_dma_pp_int {
 #endif
 	} cn73xx;
 	struct cvmx_dpi_dma_pp_int_s          cn78xx;
-	struct cvmx_dpi_dma_pp_int_s          cn78xxp2;
+	struct cvmx_dpi_dma_pp_int_s          cn78xxp1;
 	struct cvmx_dpi_dma_pp_int_cn73xx     cnf75xx;
 };
 typedef union cvmx_dpi_dma_pp_int cvmx_dpi_dma_pp_int_t;
@@ -1855,7 +1841,7 @@ union cvmx_dpi_ecc_ctl {
 	} s;
 	struct cvmx_dpi_ecc_ctl_s             cn73xx;
 	struct cvmx_dpi_ecc_ctl_s             cn78xx;
-	struct cvmx_dpi_ecc_ctl_s             cn78xxp2;
+	struct cvmx_dpi_ecc_ctl_s             cn78xxp1;
 	struct cvmx_dpi_ecc_ctl_s             cnf75xx;
 };
 typedef union cvmx_dpi_ecc_ctl cvmx_dpi_ecc_ctl_t;
@@ -1885,7 +1871,7 @@ union cvmx_dpi_ecc_int {
 	} s;
 	struct cvmx_dpi_ecc_int_s             cn73xx;
 	struct cvmx_dpi_ecc_int_s             cn78xx;
-	struct cvmx_dpi_ecc_int_s             cn78xxp2;
+	struct cvmx_dpi_ecc_int_s             cn78xxp1;
 	struct cvmx_dpi_ecc_int_s             cnf75xx;
 };
 typedef union cvmx_dpi_ecc_int cvmx_dpi_ecc_int_t;
@@ -1984,7 +1970,7 @@ union cvmx_dpi_engx_buf {
 	struct cvmx_dpi_engx_buf_cn61xx       cn70xxp1;
 	struct cvmx_dpi_engx_buf_s            cn73xx;
 	struct cvmx_dpi_engx_buf_s            cn78xx;
-	struct cvmx_dpi_engx_buf_s            cn78xxp2;
+	struct cvmx_dpi_engx_buf_s            cn78xxp1;
 	struct cvmx_dpi_engx_buf_cn61xx       cnf71xx;
 	struct cvmx_dpi_engx_buf_s            cnf75xx;
 };
@@ -2038,7 +2024,7 @@ union cvmx_dpi_info_reg {
 	struct cvmx_dpi_info_reg_s            cn70xxp1;
 	struct cvmx_dpi_info_reg_s            cn73xx;
 	struct cvmx_dpi_info_reg_s            cn78xx;
-	struct cvmx_dpi_info_reg_s            cn78xxp2;
+	struct cvmx_dpi_info_reg_s            cn78xxp1;
 	struct cvmx_dpi_info_reg_s            cnf71xx;
 	struct cvmx_dpi_info_reg_s            cnf75xx;
 };
@@ -2363,8 +2349,8 @@ union cvmx_dpi_int_reg {
 	uint64_t reserved_23_63               : 41;
 #endif
 	} cn73xx;
-	struct cvmx_dpi_int_reg_s             cn78xx;
-	struct cvmx_dpi_int_reg_cn73xx        cn78xxp2;
+	struct cvmx_dpi_int_reg_cn73xx        cn78xx;
+	struct cvmx_dpi_int_reg_s             cn78xxp1;
 	struct cvmx_dpi_int_reg_s             cnf71xx;
 	struct cvmx_dpi_int_reg_cn73xx        cnf75xx;
 };
@@ -2394,7 +2380,7 @@ union cvmx_dpi_ncbx_cfg {
 	struct cvmx_dpi_ncbx_cfg_s            cn70xxp1;
 	struct cvmx_dpi_ncbx_cfg_s            cn73xx;
 	struct cvmx_dpi_ncbx_cfg_s            cn78xx;
-	struct cvmx_dpi_ncbx_cfg_s            cn78xxp2;
+	struct cvmx_dpi_ncbx_cfg_s            cn78xxp1;
 	struct cvmx_dpi_ncbx_cfg_s            cnf71xx;
 	struct cvmx_dpi_ncbx_cfg_s            cnf75xx;
 };
@@ -2457,7 +2443,7 @@ union cvmx_dpi_ncb_ctl {
                                                          The DPI_SLI_PRT()_CFG[NCBSEL] selected by DPI_DMA_INSTR_HDR_S[LPORT] is
                                                          the equivalent of [NCBSEL_SRC] for DPI_HDR_XTYPE_E::OUTBOUND DPI DMA instructions. */
 	uint64_t reserved_1_7                 : 7;
-	uint64_t prt                          : 1;  /**< Reserved. */
+	uint64_t prt                          : 1;  /**< Directs traffic to the specified NCB unit. (Pass 1 only) */
 #else
 	uint64_t prt                          : 1;
 	uint64_t reserved_1_7                 : 7;
@@ -2537,7 +2523,7 @@ union cvmx_dpi_ncb_ctl {
 #endif
 	} cn73xx;
 	struct cvmx_dpi_ncb_ctl_s             cn78xx;
-	struct cvmx_dpi_ncb_ctl_s             cn78xxp2;
+	struct cvmx_dpi_ncb_ctl_s             cn78xxp1;
 	struct cvmx_dpi_ncb_ctl_cn73xx        cnf75xx;
 };
 typedef union cvmx_dpi_ncb_ctl cvmx_dpi_ncb_ctl_t;
@@ -2573,7 +2559,7 @@ union cvmx_dpi_pint_info {
 	struct cvmx_dpi_pint_info_s           cn70xxp1;
 	struct cvmx_dpi_pint_info_s           cn73xx;
 	struct cvmx_dpi_pint_info_s           cn78xx;
-	struct cvmx_dpi_pint_info_s           cn78xxp2;
+	struct cvmx_dpi_pint_info_s           cn78xxp1;
 	struct cvmx_dpi_pint_info_s           cnf71xx;
 	struct cvmx_dpi_pint_info_s           cnf75xx;
 };
@@ -2603,7 +2589,7 @@ union cvmx_dpi_pkt_err_rsp {
 	struct cvmx_dpi_pkt_err_rsp_s         cn70xxp1;
 	struct cvmx_dpi_pkt_err_rsp_s         cn73xx;
 	struct cvmx_dpi_pkt_err_rsp_s         cn78xx;
-	struct cvmx_dpi_pkt_err_rsp_s         cn78xxp2;
+	struct cvmx_dpi_pkt_err_rsp_s         cn78xxp1;
 	struct cvmx_dpi_pkt_err_rsp_s         cnf71xx;
 	struct cvmx_dpi_pkt_err_rsp_s         cnf75xx;
 };
@@ -2635,7 +2621,7 @@ union cvmx_dpi_req_err_rsp {
 	struct cvmx_dpi_req_err_rsp_s         cn70xxp1;
 	struct cvmx_dpi_req_err_rsp_s         cn73xx;
 	struct cvmx_dpi_req_err_rsp_s         cn78xx;
-	struct cvmx_dpi_req_err_rsp_s         cn78xxp2;
+	struct cvmx_dpi_req_err_rsp_s         cn78xxp1;
 	struct cvmx_dpi_req_err_rsp_s         cnf71xx;
 	struct cvmx_dpi_req_err_rsp_s         cnf75xx;
 };
@@ -2666,7 +2652,7 @@ union cvmx_dpi_req_err_rsp_en {
 	struct cvmx_dpi_req_err_rsp_en_s      cn70xxp1;
 	struct cvmx_dpi_req_err_rsp_en_s      cn73xx;
 	struct cvmx_dpi_req_err_rsp_en_s      cn78xx;
-	struct cvmx_dpi_req_err_rsp_en_s      cn78xxp2;
+	struct cvmx_dpi_req_err_rsp_en_s      cn78xxp1;
 	struct cvmx_dpi_req_err_rsp_en_s      cnf71xx;
 	struct cvmx_dpi_req_err_rsp_en_s      cnf75xx;
 };
@@ -2696,7 +2682,7 @@ union cvmx_dpi_req_err_rst {
 	struct cvmx_dpi_req_err_rst_s         cn70xxp1;
 	struct cvmx_dpi_req_err_rst_s         cn73xx;
 	struct cvmx_dpi_req_err_rst_s         cn78xx;
-	struct cvmx_dpi_req_err_rst_s         cn78xxp2;
+	struct cvmx_dpi_req_err_rst_s         cn78xxp1;
 	struct cvmx_dpi_req_err_rst_s         cnf71xx;
 	struct cvmx_dpi_req_err_rst_s         cnf75xx;
 };
@@ -2726,7 +2712,7 @@ union cvmx_dpi_req_err_rst_en {
 	struct cvmx_dpi_req_err_rst_en_s      cn70xxp1;
 	struct cvmx_dpi_req_err_rst_en_s      cn73xx;
 	struct cvmx_dpi_req_err_rst_en_s      cn78xx;
-	struct cvmx_dpi_req_err_rst_en_s      cn78xxp2;
+	struct cvmx_dpi_req_err_rst_en_s      cn78xxp1;
 	struct cvmx_dpi_req_err_rst_en_s      cnf71xx;
 	struct cvmx_dpi_req_err_rst_en_s      cnf75xx;
 };
@@ -2758,7 +2744,7 @@ union cvmx_dpi_req_err_skip_comp {
 	struct cvmx_dpi_req_err_skip_comp_s   cn70xxp1;
 	struct cvmx_dpi_req_err_skip_comp_s   cn73xx;
 	struct cvmx_dpi_req_err_skip_comp_s   cn78xx;
-	struct cvmx_dpi_req_err_skip_comp_s   cn78xxp2;
+	struct cvmx_dpi_req_err_skip_comp_s   cn78xxp1;
 	struct cvmx_dpi_req_err_skip_comp_s   cnf71xx;
 	struct cvmx_dpi_req_err_skip_comp_s   cnf75xx;
 };
@@ -2789,7 +2775,7 @@ union cvmx_dpi_req_gbl_en {
 	struct cvmx_dpi_req_gbl_en_s          cn70xxp1;
 	struct cvmx_dpi_req_gbl_en_s          cn73xx;
 	struct cvmx_dpi_req_gbl_en_s          cn78xx;
-	struct cvmx_dpi_req_gbl_en_s          cn78xxp2;
+	struct cvmx_dpi_req_gbl_en_s          cn78xxp1;
 	struct cvmx_dpi_req_gbl_en_s          cnf71xx;
 	struct cvmx_dpi_req_gbl_en_s          cnf75xx;
 };
@@ -2861,8 +2847,8 @@ union cvmx_dpi_sli_prtx_cfg {
                                                          1 = 256B.
                                                          The MPS size must not exceed the size selected by PCIE*_CFG030[MPS] when DPI is
                                                          operating in PCIe mode (QLM_CFG=PCIe).
-                                                         The MPS size must not exceed 256B when DPI is operating in SRIO mode
-                                                         (QLM_CFG=SRIO). */
+                                                         For CNF75XX, when DPI is operating in SRIO mode (QLM_CFG=SRIO), the MPS size
+                                                         must not exceed 256B. */
 	uint64_t mrrs_lim                     : 1;  /**< MAC memory space read requests cannot cross the (naturally-aligned) MRRS boundary.
                                                          When clear, DPI is allowed to issue a MAC memory-space read that crosses the naturally-
                                                          aligned boundary of size defined by MRRS. (DPI will still only cross the boundary when it
@@ -2878,8 +2864,8 @@ union cvmx_dpi_sli_prtx_cfg {
                                                          0x3 = 1024B.
                                                          The MRRS size must not exceed the size selected by PCIE*_CFG030[MRRS] when DPI
                                                          is operating in PCIe mode (QLM_CFG=PCIe).
-                                                         The MRRS size must not exceed 256B when DPI is operating in SRIO mode
-                                                         (QLM_CFG=SRIO). */
+                                                         For CNF75XX, when DPI is operating in SRIO mode (QLM_CFG=SRIO), the MRRS size
+                                                         must not exceed 256B. */
 #else
 	uint64_t mrrs                         : 2;
 	uint64_t reserved_2_2                 : 1;
@@ -3268,7 +3254,7 @@ union cvmx_dpi_sli_prtx_cfg {
 #endif
 	} cn73xx;
 	struct cvmx_dpi_sli_prtx_cfg_cn73xx   cn78xx;
-	struct cvmx_dpi_sli_prtx_cfg_cn73xx   cn78xxp2;
+	struct cvmx_dpi_sli_prtx_cfg_cn73xx   cn78xxp1;
 	struct cvmx_dpi_sli_prtx_cfg_cn61xx   cnf71xx;
 	struct cvmx_dpi_sli_prtx_cfg_cn73xx   cnf75xx;
 };
@@ -3303,7 +3289,7 @@ union cvmx_dpi_sli_prtx_err {
 	struct cvmx_dpi_sli_prtx_err_s        cn70xxp1;
 	struct cvmx_dpi_sli_prtx_err_s        cn73xx;
 	struct cvmx_dpi_sli_prtx_err_s        cn78xx;
-	struct cvmx_dpi_sli_prtx_err_s        cn78xxp2;
+	struct cvmx_dpi_sli_prtx_err_s        cn78xxp1;
 	struct cvmx_dpi_sli_prtx_err_s        cnf71xx;
 	struct cvmx_dpi_sli_prtx_err_s        cnf75xx;
 };
@@ -3385,7 +3371,8 @@ union cvmx_dpi_sli_prtx_err_info {
 	uint64_t reserved_32_63               : 32;
 #endif
 	} cn73xx;
-	struct cvmx_dpi_sli_prtx_err_info_cn78xx {
+	struct cvmx_dpi_sli_prtx_err_info_cn73xx cn78xx;
+	struct cvmx_dpi_sli_prtx_err_info_cn78xxp1 {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_23_63               : 41;
 	uint64_t vf                           : 7;  /**< Virtual function that caused the ErrorResponse. */
@@ -3416,8 +3403,7 @@ union cvmx_dpi_sli_prtx_err_info {
 	uint64_t vf                           : 7;
 	uint64_t reserved_23_63               : 41;
 #endif
-	} cn78xx;
-	struct cvmx_dpi_sli_prtx_err_info_cn73xx cn78xxp2;
+	} cn78xxp1;
 	struct cvmx_dpi_sli_prtx_err_info_s   cnf71xx;
 	struct cvmx_dpi_sli_prtx_err_info_cn73xx cnf75xx;
 };
@@ -3519,7 +3505,7 @@ union cvmx_dpi_swa_q_vmid {
 	} s;
 	struct cvmx_dpi_swa_q_vmid_s          cn73xx;
 	struct cvmx_dpi_swa_q_vmid_s          cn78xx;
-	struct cvmx_dpi_swa_q_vmid_s          cn78xxp2;
+	struct cvmx_dpi_swa_q_vmid_s          cn78xxp1;
 	struct cvmx_dpi_swa_q_vmid_s          cnf75xx;
 };
 typedef union cvmx_dpi_swa_q_vmid cvmx_dpi_swa_q_vmid_t;

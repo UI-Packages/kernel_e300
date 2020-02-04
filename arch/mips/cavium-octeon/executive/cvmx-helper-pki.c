@@ -45,7 +45,6 @@
 #ifdef CVMX_BUILD_FOR_LINUX_KERNEL
 #include <linux/module.h>
 #include <asm/octeon/cvmx.h>
-#include <asm/octeon/octeon.h>
 #include <asm/octeon/cvmx-pki-defs.h>
 #include <asm/octeon/cvmx-pki.h>
 #include <asm/octeon/cvmx-pow.h>
@@ -267,7 +266,9 @@ static int __cvmx_helper_setup_pki_cluster_groups(int node)
 	int cl_group;
 
 	cl_group = cvmx_pki_cluster_grp_alloc(node, pki_dflt_clgrp[node].grp_num);
-	if (cl_group == -1) {
+	if (cl_group == CVMX_RESOURCE_ALLOC_FAILED)
+		return -1;
+	else if (cl_group == CVMX_RESOURCE_ALREADY_RESERVED) {
 		if (pki_dflt_clgrp[node].grp_num == -1)
 			return -1;
 		else
@@ -576,21 +577,21 @@ void cvmx_helper_pki_shutdown(int node)
 	/* Setup some configuration registers to the reset state.*/
 	for (i = 0; i < CVMX_PKI_NUM_PKIND; i++) {
 		for (k = 0; k < (int)CVMX_PKI_NUM_CLUSTER; k++) {
-			cvmx_write_csr_node(node, CVMX_PKI_CLX_PKINDX_CFG(i, k), 0);			
-			cvmx_write_csr_node(node, CVMX_PKI_CLX_PKINDX_STYLE(i, k), 0);			
-			cvmx_write_csr_node(node, CVMX_PKI_CLX_PKINDX_SKIP(i, k), 0);			
-			cvmx_write_csr_node(node, CVMX_PKI_CLX_PKINDX_L2_CUSTOM(i, k), 0);			
-			cvmx_write_csr_node(node, CVMX_PKI_CLX_PKINDX_LG_CUSTOM(i, k), 0);			
+			cvmx_write_csr_node(node, CVMX_PKI_CLX_PKINDX_CFG(i, k), 0);
+			cvmx_write_csr_node(node, CVMX_PKI_CLX_PKINDX_STYLE(i, k), 0);
+			cvmx_write_csr_node(node, CVMX_PKI_CLX_PKINDX_SKIP(i, k), 0);
+			cvmx_write_csr_node(node, CVMX_PKI_CLX_PKINDX_L2_CUSTOM(i, k), 0);
+			cvmx_write_csr_node(node, CVMX_PKI_CLX_PKINDX_LG_CUSTOM(i, k), 0);
 		}
-		cvmx_write_csr_node(node, CVMX_PKI_PKINDX_ICGSEL(k), 0);			
+		cvmx_write_csr_node(node, CVMX_PKI_PKINDX_ICGSEL(k), 0);
 	}
 	for (i = 0; i < CVMX_PKI_NUM_FINAL_STYLE; i++) {
 		for (k = 0; k < (int)CVMX_PKI_NUM_CLUSTER; k++) {
-			cvmx_write_csr_node(node, CVMX_PKI_CLX_STYLEX_CFG(i, k), 0);			
-			cvmx_write_csr_node(node, CVMX_PKI_CLX_STYLEX_CFG2(i, k), 0);			
-			cvmx_write_csr_node(node, CVMX_PKI_CLX_STYLEX_ALG(i, k), 0);			
+			cvmx_write_csr_node(node, CVMX_PKI_CLX_STYLEX_CFG(i, k), 0);
+			cvmx_write_csr_node(node, CVMX_PKI_CLX_STYLEX_CFG2(i, k), 0);
+			cvmx_write_csr_node(node, CVMX_PKI_CLX_STYLEX_ALG(i, k), 0);
 		}
-		cvmx_write_csr_node(node, CVMX_PKI_STYLEX_BUF(k), (0x5 << 22) | 0x20);			
+		cvmx_write_csr_node(node, CVMX_PKI_STYLEX_BUF(k), (0x5 << 22) | 0x20);
 	}
 }
 EXPORT_SYMBOL(cvmx_helper_pki_shutdown);
@@ -807,7 +808,7 @@ int __cvmx_helper_pki_port_rsrcs(int node, struct cvmx_pki_prt_schd *prtsch)
 	int rs;
 
 	/* Erratum 22557: Disable per-port allocation for CN78XX pass 1.X */
-	if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X)) { 
+	if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X)) {
 		static bool warned = false;
 		prtsch->pool_per_prt = 0;
 		if (!warned)
@@ -1127,40 +1128,41 @@ int cvmx_helper_pki_init_port(int ipd_port, struct cvmx_pki_prt_schd *prtsch)
 
 	/* LR: The rest of code is common for qos and non-qos ports */
 
-		/* Allocate style here and map it to the port */
-		rs = cvmx_pki_style_alloc(xp.node, prtsch->style);
-		if (rs == CVMX_RESOURCE_ALREADY_RESERVED) {
+	/* Allocate style here and map it to the port */
+	rs = cvmx_pki_style_alloc(xp.node, prtsch->style);
+	if (rs == CVMX_RESOURCE_ALREADY_RESERVED) {
 		cvmx_dprintf("%s INFO: style will be shared\n",
 			__func__);
-		} else if (rs == CVMX_RESOURCE_ALLOC_FAILED) {
+	} else if (rs == CVMX_RESOURCE_ALLOC_FAILED) {
 		cvmx_dprintf("%s ERROR: style not available\n",
 			__func__);
-			return CVMX_RESOURCE_ALLOC_FAILED;
-	}
+		return CVMX_RESOURCE_ALLOC_FAILED;
+	} else
+	prtsch->style = rs;
 
-			prtsch->style = rs;
-			if (pki_helper_debug)
+	if (pki_helper_debug)
 		cvmx_dprintf("%s: port %d has style %d\n",
 		__func__, ipd_port, prtsch->style);
 
 	/* Config STYLE to above QPG table base entry */
-			style_cfg = pki_dflt_style[xp.node];
-			style_cfg.parm_cfg.qpg_qos = prtsch->qpg_qos;
-			style_cfg.parm_cfg.qpg_base = prtsch->qpg_base;
-			style_cfg.parm_cfg.qpg_port_msb = 0;
-			style_cfg.parm_cfg.qpg_port_sh = 0;
-			style_cfg.parm_cfg.mbuff_size = mbuff_size;
-			cvmx_pki_write_style_config(xp.node, prtsch->style,
-				CVMX_PKI_CLUSTER_ALL, &style_cfg);
+	style_cfg = pki_dflt_style[xp.node];
+	style_cfg.parm_cfg.qpg_qos = prtsch->qpg_qos;
+	style_cfg.parm_cfg.qpg_base = prtsch->qpg_base;
+	style_cfg.parm_cfg.qpg_port_msb = 0;
+	style_cfg.parm_cfg.qpg_port_sh = 0;
+	style_cfg.parm_cfg.mbuff_size = mbuff_size;
+	cvmx_pki_write_style_config(xp.node, prtsch->style,
+		CVMX_PKI_CLUSTER_ALL, &style_cfg);
 
 	/* Update PKND with initial STYLE */
 	pknd = cvmx_helper_get_pknd(xiface,
 		cvmx_helper_get_interface_index_num(ipd_port));
-		cvmx_pki_read_pkind_config(xp.node, pknd, &pknd_cfg);
-		pknd_cfg.initial_style = prtsch->style;
-		pknd_cfg.fcs_pres = __cvmx_helper_get_has_fcs(xiface);
-		cvmx_pki_write_pkind_config(xp.node, pknd, &pknd_cfg);
-		return 0;
+	cvmx_pki_read_pkind_config(xp.node, pknd, &pknd_cfg);
+	pknd_cfg.initial_style = prtsch->style;
+	pknd_cfg.fcs_pres = __cvmx_helper_get_has_fcs(xiface);
+	cvmx_pki_write_pkind_config(xp.node, pknd, &pknd_cfg);
+
+	return 0;
 }
 EXPORT_SYMBOL(cvmx_helper_pki_init_port);
 

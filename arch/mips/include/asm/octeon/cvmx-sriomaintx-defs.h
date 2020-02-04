@@ -1,5 +1,5 @@
 /***********************license start***************
- * Copyright (c) 2003-2015  Cavium Inc. (support@cavium.com). All rights
+ * Copyright (c) 2003-2017  Cavium Inc. (support@cavium.com). All rights
  * reserved.
  *
  *
@@ -4651,8 +4651,8 @@ typedef union cvmx_sriomaintx_m2s_bar1_start1 cvmx_sriomaintx_m2s_bar1_start1_t;
  * 34-bit address transactions require ADDR66, ADDR64 and ADDR48 fields set to zero
  * and supply zeros for unused local addresses 41:34.  50-bit address transactions a
  * match of SRIO address 49:42 and require all the other bits of ADDR64 and ADDR66 to
- * be zero.  66-bit address transactions require matches of all valid address field
- * bits.  The ADDR32/48/64/66 fields of this register are writeable over SRIO if
+ * be zero. 66-bit address transactions require matches of all valid address field
+ * bits. The ADDR32/48/64/66 fields of this register are writeable over SRIO if
  * SRIO()_ACC_CTRL[DENY_ADR2] is zero.  The remaining fields are writeable over SRIO
  * if SRIO()_ACC_CTRL[DENY_BAR2] is zero.
  */

@@ -32,9 +32,9 @@
 
 #define printstat(s, f)		printstat_val(s, &gru_stats.f, #f)
 
-static void printstat_val(struct seq_file *s, atomic_long_unchecked_t *v, char *id)
+static void printstat_val(struct seq_file *s, atomic_long_t *v, char *id)
 {
-	unsigned long val = atomic_long_read_unchecked(v);
+	unsigned long val = atomic_long_read(v);
 
 	seq_printf(s, "%16lu %s\n", val, id);
 }
@@ -134,8 +134,8 @@ static int mcs_statistics_show(struct seq_file *s, void *p)
 
 	seq_printf(s, "%-20s%12s%12s%12s\n", "#id", "count", "aver-clks", "max-clks");
 	for (op = 0; op < mcsop_last; op++) {
-		count = atomic_long_read_unchecked(&mcs_op_statistics[op].count);
-		total = atomic_long_read_unchecked(&mcs_op_statistics[op].total);
+		count = atomic_long_read(&mcs_op_statistics[op].count);
+		total = atomic_long_read(&mcs_op_statistics[op].total);
 		max = mcs_op_statistics[op].max;
 		seq_printf(s, "%-20s%12ld%12ld%12ld\n", id[op], count,
 			   count ? total / count : 0, max);
@@ -160,15 +160,11 @@ static int options_show(struct seq_file *s, void *p)
 static ssize_t options_write(struct file *file, const char __user *userbuf,
 			     size_t count, loff_t *data)
 {
-	char buf[20];
+	int ret;
 
-	if (count >= sizeof(buf))
-		return -EINVAL;
-	if (copy_from_user(buf, userbuf, count))
-		return -EFAULT;
-	buf[count] = '\0';
-	if (strict_strtoul(buf, 0, &gru_options))
-		return -EINVAL;
+	ret = kstrtoul_from_user(userbuf, count, 0, &gru_options);
+	if (ret)
+		return ret;
 
 	return count;
 }

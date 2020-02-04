@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2005-2014 Junjiro R. Okajima
+ * Copyright (C) 2005-2017 Junjiro R. Okajima
  *
  * This program, aufs is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,6 +25,7 @@
 #ifdef __KERNEL__
 
 #include <linux/mount.h>
+#include "dirren.h"
 #include "dynop.h"
 #include "rwsem.h"
 #include "super.h"
@@ -34,7 +35,14 @@
 /* a xino file */
 struct au_xino_file {
 	struct file		*xi_file;
-	struct mutex		xi_nondir_mtx;
+	struct {
+		spinlock_t		spin;
+		ino_t			*array;
+		int			total;
+		/* reserved for future use */
+		/* unsigned long	*bitmap; */
+		wait_queue_head_t	wqh;
+	} xi_nondir;
 
 	/* todo: make xino files an array to support huge inode number */
 
@@ -96,11 +104,10 @@ struct au_branch {
 	aufs_bindex_t		br_id;
 
 	int			br_perm;
-	unsigned int		br_dflags;
 	struct path		br_path;
 	spinlock_t		br_dykey_lock;
 	struct au_dykey		*br_dykey[AuBrDynOp];
-	atomic_t		br_count;
+	struct percpu_counter	br_count;
 
 	struct au_wbr		*br_wbr;
 	struct au_br_fhsm	*br_fhsm;
@@ -116,6 +123,8 @@ struct au_branch {
 	/* entries under sysfs per mount-point */
 	struct au_brsysfs	br_sysfs[AuBrSysfs_Last];
 #endif
+
+	struct au_dr_br		br_dirren;
 };
 
 /* ---------------------------------------------------------------------- */
@@ -135,6 +144,31 @@ static inline struct super_block *au_br_sb(struct au_branch *br)
 	return au_br_mnt(br)->mnt_sb;
 }
 
+static inline void au_br_get(struct au_branch *br)
+{
+	percpu_counter_inc(&br->br_count);
+}
+
+static inline void au_br_put(struct au_branch *br)
+{
+	percpu_counter_dec(&br->br_count);
+}
+
+static inline s64 au_br_count(struct au_branch *br)
+{
+	return percpu_counter_sum(&br->br_count);
+}
+
+static inline void au_br_count_init(struct au_branch *br)
+{
+	percpu_counter_init(&br->br_count, 0, GFP_NOFS);
+}
+
+static inline void au_br_count_fin(struct au_branch *br)
+{
+	percpu_counter_destroy(&br->br_count);
+}
+
 static inline int au_br_rdonly(struct au_branch *br)
 {
 	return ((au_br_sb(br)->s_flags & MS_RDONLY)
@@ -149,6 +183,18 @@ static inline int au_br_hnotifyable(int brperm __maybe_unused)
 #else
 	return 0;
 #endif
+}
+
+static inline int au_br_test_oflag(int oflag, struct au_branch *br)
+{
+	int err, exec_flag;
+
+	err = 0;
+	exec_flag = oflag & __FMODE_EXEC;
+	if (unlikely(exec_flag && path_noexec(&br->br_path)))
+		err = -EACCES;
+
+	return err;
 }
 
 /* ---------------------------------------------------------------------- */
@@ -175,10 +221,10 @@ int au_br_stfs(struct au_branch *br, struct aufs_stfs *stfs);
 static const loff_t au_loff_max = LLONG_MAX;
 
 int au_xib_trunc(struct super_block *sb);
-ssize_t xino_fread(au_readf_t func, struct file *file, void *buf, size_t size,
+ssize_t xino_fread(vfs_readf_t func, struct file *file, void *buf, size_t size,
 		   loff_t *pos);
-ssize_t xino_fwrite(au_writef_t func, struct file *file, void *buf, size_t size,
-		    loff_t *pos);
+ssize_t xino_fwrite(vfs_writef_t func, struct file *file, void *buf,
+		    size_t size, loff_t *pos);
 struct file *au_xino_create2(struct file *base_file, struct file *copy_src);
 struct file *au_xino_create(struct super_block *sb, char *fname, int silent);
 ino_t au_xino_new_ino(struct super_block *sb);
@@ -196,6 +242,11 @@ int au_xino_set(struct super_block *sb, struct au_opt_xino *xino, int remount);
 void au_xino_clr(struct super_block *sb);
 struct file *au_xino_def(struct super_block *sb);
 int au_xino_path(struct seq_file *seq, struct file *file);
+
+void au_xinondir_leave(struct super_block *sb, aufs_bindex_t bindex,
+		       ino_t h_ino, int idx);
+int au_xinondir_enter(struct super_block *sb, aufs_bindex_t bindex, ino_t h_ino,
+		      int *idx);
 
 /* ---------------------------------------------------------------------- */
 
@@ -218,9 +269,14 @@ struct super_block *au_sbr_sb(struct super_block *sb, aufs_bindex_t bindex)
 	return au_br_sb(au_sbr(sb, bindex));
 }
 
+static inline void au_sbr_get(struct super_block *sb, aufs_bindex_t bindex)
+{
+	au_br_get(au_sbr(sb, bindex));
+}
+
 static inline void au_sbr_put(struct super_block *sb, aufs_bindex_t bindex)
 {
-	atomic_dec(&au_sbr(sb, bindex)->br_count);
+	au_br_put(au_sbr(sb, bindex));
 }
 
 static inline int au_sbr_perm(struct super_block *sb, aufs_bindex_t bindex)

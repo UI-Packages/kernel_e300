@@ -7,6 +7,8 @@
  * Copyright (C) 2008, 2009 Wind River Systems
  *   written by Ralf Baechle <ralf@linux-mips.org>
  */
+#include <linux/compiler.h>
+#include <linux/vmalloc.h>
 #include <linux/init.h>
 #include <linux/kernel.h>
 #include <linux/console.h>
@@ -45,15 +47,40 @@
 
 #include <asm/octeon/octeon.h>
 #include <asm/octeon/pci-octeon.h>
-#include <asm/octeon/cvmx-mio-defs.h>
 #include <asm/octeon/cvmx-rst-defs.h>
 #include <asm/octeon/cvmx-sso-defs.h>
 #include <asm/octeon/cvmx-qlm.h>
 #include <asm/octeon/cvmx-debug.h>
 
-#define SDK_VERSION "3.1.2"
+#define SDK_VERSION "5.1.0"
 
-static u64 max_memory = 512ull << 20;
+/*
+ * TRUE for devices having registers with little-endian byte
+ * order, FALSE for registers with native-endian byte order.
+ * PCI mandates little-endian, USB and SATA are configuraable,
+ * but we chose little-endian for these.
+ */
+const bool octeon_should_swizzle_table[256] = {
+	[0x00] = true,	/* bootbus/CF */
+	[0x1b] = true,	/* PCI mmio window */
+	[0x1c] = true,	/* PCI mmio window */
+	[0x1d] = true,	/* PCI mmio window */
+	[0x1e] = true,	/* PCI mmio window */
+	[0x68] = true,	/* OCTEON III USB */
+	[0x69] = true,	/* OCTEON III USB */
+	[0x6c] = true,	/* OCTEON III SATA */
+	[0x6f] = true,	/* OCTEON II USB */
+};
+EXPORT_SYMBOL(octeon_should_swizzle_table);
+
+static unsigned long long max_memory = 512ull << 20;
+static unsigned long long reserve_low_mem;
+
+/*
+ * modified in hernel-entry-init.h, must have an initial value to keep
+ * it from being clobbered when bss is zeroed.
+ */
+u32 octeon_cvmseg_lines = 2;
 
 DEFINE_SEMAPHORE(octeon_bootbus_sem);
 EXPORT_SYMBOL(octeon_bootbus_sem);
@@ -62,8 +89,6 @@ struct octeon_boot_descriptor *octeon_boot_desc_ptr;
 
 struct cvmx_bootinfo *octeon_bootinfo;
 EXPORT_SYMBOL(octeon_bootinfo);
-
-static unsigned long long RESERVE_LOW_MEM = 0ull;
 
 const char octeon_not_compatible[] =
 	"ERROR: CONFIG_CAVIUM_OCTEON2 not compatible with this processor\r\n"
@@ -165,6 +190,17 @@ static void octeon_crash_shutdown(struct pt_regs *regs)
 	default_machine_crash_shutdown(regs);
 }
 
+#ifdef CONFIG_SMP
+void octeon_crash_smp_send_stop(void)
+{
+	int cpu;
+
+	/* disable watchdogs */
+	for_each_online_cpu(cpu)
+		cvmx_write_csr(CVMX_CIU_WDOGX(cpu_logical_map(cpu)), 0);
+}
+#endif
+
 #endif /* CONFIG_KEXEC */
 
 #ifndef CONFIG_CAVIUM_RESERVE32
@@ -177,10 +213,9 @@ EXPORT_SYMBOL(octeon_reserve32_memory);
 static int octeon_uart;
 
 extern asmlinkage void handle_int(void);
-extern asmlinkage void plat_irq_dispatch(void);
 
 /* If an initrd named block is specified, its name goes here. */
-static char __initdata rd_name[64];
+static char rd_name[64] __initdata;
 
 /* Up to four blocks may be specified. */
 static char __initdata named_memory_blocks[4][CVMX_BOOTMEM_NAME_LEN];
@@ -264,10 +299,8 @@ void octeon_write_lcd(const char *s)
  */
 int octeon_get_boot_uart(void)
 {
-	int uart;
-	uart = (octeon_boot_desc_ptr->flags & OCTEON_BL_FLAG_CONSOLE_UART1) ?
+	return (octeon_boot_desc_ptr->flags & OCTEON_BL_FLAG_CONSOLE_UART1) ?
 		1 : 0;
-	return uart;
 }
 
 /**
@@ -379,14 +412,25 @@ static void octeon_halt(void)
 
 static char __read_mostly octeon_system_type[80];
 
-static int __init init_octeon_system_type(void)
+static void __init init_octeon_system_type(void)
 {
-	snprintf(octeon_system_type, sizeof(octeon_system_type), "%s",
-		cvmx_board_type_to_string(octeon_bootinfo->board_type));
+	char const *board_type;
 
-	return 0;
+	board_type = cvmx_board_type_to_string(octeon_bootinfo->board_type);
+	if (board_type == NULL) {
+		struct device_node *root;
+		int ret;
+
+		root = of_find_node_by_path("/");
+		ret = of_property_read_string(root, "model", &board_type);
+		of_node_put(root);
+		if (ret)
+			board_type = "Unsupported Board";
+	}
+
+	snprintf(octeon_system_type, sizeof(octeon_system_type), "%s",
+		 board_type);
 }
-early_initcall(init_octeon_system_type);
 
 /**
  * Return a string representing the system type
@@ -402,6 +446,7 @@ int octeon_board_major_rev(void)
 {
 	return octeon_bootinfo->board_rev_major;
 }
+EXPORT_SYMBOL(octeon_board_major_rev);
 
 const char *get_system_type(void)
 	__attribute__ ((alias("octeon_board_type_string")));
@@ -577,6 +622,7 @@ void octeon_user_io_init(void)
 	if (current_cpu_type() != CPU_CAVIUM_OCTEON3 ||
 	    OCTEON_IS_MODEL(OCTEON_CN70XX)) {
 		union cvmx_iob_fau_timeout fau_timeout;
+
 		/* Set a default for the hardware timeouts */
 		fau_timeout.u64 = 0;
 		fau_timeout.s.tout_val = 0xfff;
@@ -587,17 +633,20 @@ void octeon_user_io_init(void)
 
 	if (OCTEON_IS_MODEL(OCTEON_CN68XX) || octeon_has_feature(OCTEON_FEATURE_CIU3)) {
 		union cvmx_sso_nw_tim nm_tim;
+
 		nm_tim.u64 = 0;
 		/* 4096 cycles */
 		nm_tim.s.nw_tim = 3;
 		cvmx_write_csr(CVMX_SSO_NW_TIM, nm_tim.u64);
 	} else {
 		union cvmx_pow_nw_tim nm_tim;
+
 		nm_tim.u64 = 0;
 		/* 4096 cycles */
 		nm_tim.s.nw_tim = 3;
 		cvmx_write_csr(CVMX_POW_NW_TIM, nm_tim.u64);
 	}
+
 	write_octeon_c0_icacheerr(0);
 	write_c0_derraddr1(0);
 }
@@ -646,7 +695,6 @@ void __init prom_init(void)
 	sysinfo = cvmx_sysinfo_get();
 	memset(sysinfo, 0, sizeof(*sysinfo));
 	sysinfo->system_dram_size = octeon_bootinfo->dram_size << 20;
-
 	sysinfo->phy_mem_desc_addr = (u64)phys_to_virt(octeon_bootinfo->phy_mem_desc_addr);
 
 	if ((octeon_bootinfo->major_version > 1) ||
@@ -808,7 +856,7 @@ void __init prom_init(void)
 		if (max_memory == 0)
 			max_memory = 2ull << 49;
 		if (*p == '@')
-			RESERVE_LOW_MEM = memparse(p + 1, &p);
+			reserve_low_mem = memparse(p + 1, &p);
 	}
 
 	arcs_cmdline[0] = 0;
@@ -840,16 +888,10 @@ void __init prom_init(void)
 			if (max_memory == 0)
 				max_memory = 2ull << 49;
 			if (*p == '@')
-				RESERVE_LOW_MEM = memparse(p + 1, &p);
+				reserve_low_mem = memparse(p + 1, &p);
 		} else if (strncmp(arg, "rd_name=", 8) == 0) {
 			strncpy(rd_name, arg + 8, sizeof(rd_name));
 			rd_name[sizeof(rd_name) - 1] = 0;
-			goto append_arg;
-		} else if (strcmp(arg, "ecc_verbose") == 0) {
-#ifdef CONFIG_CAVIUM_REPORT_SINGLE_BIT_ECC
-			__cvmx_interrupt_ecc_report_single_bit_errors = 1;
-			pr_notice("Reporting of single bit ECC errors is turned on\n");
-#endif
 			goto append_arg;
 		} else {
 append_arg:
@@ -881,6 +923,9 @@ append_arg:
 	_machine_kexec_shutdown = octeon_shutdown;
 	_machine_crash_shutdown = octeon_crash_shutdown;
 	_machine_kexec_prepare = octeon_kexec_prepare;
+#ifdef CONFIG_SMP
+	_crash_smp_send_stop = octeon_crash_smp_send_stop;
+#endif
 #endif
 
 	octeon_user_io_init();
@@ -1047,8 +1092,8 @@ void __init plat_mem_setup(void)
 #endif
 
 	if (named_memory_blocks[0][0]) {
-		phys_t kernel_begin, kernel_end;
-		phys_t block_begin, block_size;
+		phys_addr_t kernel_begin, kernel_end;
+		phys_addr_t block_begin, block_size;
 		/* Memory from named blocks only */
 		int i;
 
@@ -1214,7 +1259,6 @@ void __init mach_bootmem_init(void)
 		if (is_usable && (nd->startmempfn == 0 || start < nd->startmempfn))
 			nd->startmempfn = start;
 	}
-	num_physpages = 0;
 
 	for_each_online_node(node) {
 		unsigned long bootmap_size;
@@ -1246,7 +1290,6 @@ void __init mach_bootmem_init(void)
 				       PFN_DOWN(boot_mem_map.map[i].addr),
 				       PFN_UP(boot_mem_map.map[i].addr + boot_mem_map.map[i].size));
 			if (!is_init) {
-				num_physpages += PFN_DOWN(boot_mem_map.map[i].size);
 				memblock_add_node(boot_mem_map.map[i].addr, boot_mem_map.map[i].size, node);
 				free_bootmem_node(NODE_DATA(node), boot_mem_map.map[i].addr, boot_mem_map.map[i].size);
 			}
@@ -1274,7 +1317,7 @@ int prom_putchar(char c)
 }
 EXPORT_SYMBOL(prom_putchar);
 
-void prom_free_prom_memory(void)
+void __init prom_free_prom_memory(void)
 {
 	if (CAVIUM_OCTEON_DCACHE_PREFETCH_WAR) {
 		/* Check for presence of Core-14449 fix.  */
@@ -1304,46 +1347,75 @@ void prom_free_prom_memory(void)
 	}
 }
 
+void __init octeon_fill_mac_addresses(void);
 int octeon_prune_device_tree(void);
+int ubnt_prune_device_tree(void);
 
+extern const char __appended_dtb;
 extern const char __dtb_octeon_3xxx_begin;
-extern const char __dtb_octeon_3xxx_end;
 extern const char __dtb_octeon_68xx_begin;
-extern const char __dtb_octeon_68xx_end;
+extern const char __dtb_ubnt_e100_begin;
+extern const char __dtb_ubnt_e101_begin;
 void __init device_tree_init(void)
 {
-	int dt_size;
-	struct boot_param_header *fdt;
+	const void *fdt;
 	bool do_prune;
+	bool fill_mac;
 
+#ifdef CONFIG_MIPS_ELF_APPENDED_DTB
+	if (!fdt_check_header(&__appended_dtb)) {
+		fdt = &__appended_dtb;
+		do_prune = false;
+		fill_mac = true;
+		pr_info("Using appended Device Tree.\n");
+	} else
+#endif
 	if (octeon_bootinfo->minor_version >= 3 && octeon_bootinfo->fdt_addr) {
 		fdt = phys_to_virt(octeon_bootinfo->fdt_addr);
 		pr_info("Using passed Device Tree <%p>.\n", fdt);
 		if (fdt_check_header(fdt))
 			panic("Corrupt Device Tree passed to kernel.");
-		dt_size = be32_to_cpu(fdt->totalsize);
 		do_prune = false;
+		fill_mac = false;
+		pr_info("Using passed Device Tree.\n");
 	} else if (OCTEON_IS_MODEL(OCTEON_CN68XX)) {
-		fdt = (struct boot_param_header *)&__dtb_octeon_68xx_begin;
-		dt_size = &__dtb_octeon_68xx_end - &__dtb_octeon_68xx_begin;
+		fdt = &__dtb_octeon_68xx_begin;
 		do_prune = true;
+		fill_mac = true;
+	} else if (octeon_bootinfo->board_type == CVMX_BOARD_TYPE_UBNT_E100) {
+		switch (octeon_bootinfo->board_rev_major) {
+		case 1:
+			fdt = &__dtb_ubnt_e101_begin;
+			break;
+		default:
+			fdt = &__dtb_ubnt_e100_begin;
+			break;
+		}
+		do_prune = false;
+		fill_mac = true;
+	} else if (octeon_bootinfo->board_type == CVMX_BOARD_TYPE_UBNT_E120) {
+		fdt = &__dtb_ubnt_e100_begin;
+		do_prune = false;
+		fill_mac = true;
 	} else {
-		fdt = (struct boot_param_header *)&__dtb_octeon_3xxx_begin;
-		dt_size = &__dtb_octeon_3xxx_end - &__dtb_octeon_3xxx_begin;
+		fdt = &__dtb_octeon_3xxx_begin;
 		do_prune = true;
+		fill_mac = true;
 	}
 
-	/* Copy the default tree from init memory. */
-	initial_boot_params = early_init_dt_alloc_memory_arch(dt_size, 8);
-	if (initial_boot_params == NULL)
-		panic("Could not allocate initial_boot_params\n");
-	memcpy(initial_boot_params, fdt, dt_size);
+	initial_boot_params = (void *)fdt;
 
 	if (do_prune) {
 		octeon_prune_device_tree();
 		pr_info("Using internal Device Tree.\n");
 	}
-	unflatten_device_tree();
+
+	ubnt_prune_device_tree();
+
+	if (fill_mac)
+		octeon_fill_mac_addresses();
+	unflatten_and_copy_device_tree();
+	init_octeon_system_type();
 }
 
 static int __initdata disable_octeon_edac_p;
@@ -1376,7 +1448,7 @@ static int __init edac_devinit(void)
 		name = edac_device_names[i];
 		dev = platform_device_register_simple(name, -1, NULL, 0);
 		if (IS_ERR(dev)) {
-			pr_err("Registation of %s failed!\n", name);
+			pr_err("Registration of %s failed!\n", name);
 			err = PTR_ERR(dev);
 		}
 	}
@@ -1402,11 +1474,11 @@ static int __init edac_devinit(void)
 							    node * num_lmc + i,
 							    &lmc_data,
 							    sizeof(lmc_data));
-		if (IS_ERR(dev)) {
-			pr_err("Registation of octeon_lmc_edac %d failed!\n", i);
-			err = PTR_ERR(dev);
+			if (IS_ERR(dev)) {
+				pr_err("Registation of octeon_lmc_edac %d failed!\n", i);
+				err = PTR_ERR(dev);
+			}
 		}
-	}
 		for (i = 0; i < num_tad; i++) {
 			struct octeon_edac_l2c_data l2c_data;
 
@@ -1417,13 +1489,41 @@ static int __init edac_devinit(void)
 							    node * num_tad + i,
 							    &l2c_data,
 							    sizeof(l2c_data));
-			if (IS_ERR(dev)) {
+		if (IS_ERR(dev)) {
 				pr_err("Registration of octeon_l2c_edac %d:%d failed!\n",
 				       node, i);
-				err = PTR_ERR(dev);
-			}
+			err = PTR_ERR(dev);
 		}
 	}
+	}
+
 	return err;
 }
 device_initcall(edac_devinit);
+
+static void __initdata *octeon_dummy_iospace;
+
+static int __init octeon_no_pci_init(void)
+{
+	/*
+	 * Initially assume there is no PCI. The PCI/PCIe platform code will
+	 * later re-initialize these to correct values if they are present.
+	 */
+	octeon_dummy_iospace = vzalloc(IO_SPACE_LIMIT);
+	set_io_port_base((unsigned long)octeon_dummy_iospace);
+	ioport_resource.start = MAX_RESOURCE;
+	ioport_resource.end = 0;
+	return 0;
+}
+core_initcall(octeon_no_pci_init);
+
+static int __init octeon_no_pci_release(void)
+{
+	/*
+	 * Release the allocated memory if a real IO space is there.
+	 */
+	if ((unsigned long)octeon_dummy_iospace != mips_io_port_base)
+		vfree(octeon_dummy_iospace);
+	return 0;
+}
+late_initcall(octeon_no_pci_release);

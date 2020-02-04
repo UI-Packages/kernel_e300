@@ -64,8 +64,7 @@ union octeon_pci_address {
 	} s;
 };
 
-int __initconst (*octeon_pcibios_map_irq)(const struct pci_dev *dev,
-					 u8 slot, u8 pin);
+int (*octeon_pcibios_map_irq)(const struct pci_dev *dev, u8 slot, u8 pin);
 enum octeon_dma_bar_type octeon_dma_bar_type = OCTEON_DMA_BAR_TYPE_INVALID;
 
 /**
@@ -79,7 +78,7 @@ enum octeon_dma_bar_type octeon_dma_bar_type = OCTEON_DMA_BAR_TYPE_INVALID;
  *		 as it goes through each bridge.
  * Returns Interrupt number for the device
  */
-int __init pcibios_map_irq(const struct pci_dev *dev, u8 slot, u8 pin)
+int pcibios_map_irq(const struct pci_dev *dev, u8 slot, u8 pin)
 {
 	if (octeon_pcibios_map_irq)
 		return octeon_pcibios_map_irq(dev, slot, pin);
@@ -209,6 +208,8 @@ const char *octeon_get_pci_interrupts(void)
 	 * Interrupt Number (INTA# = 0, INTB# = 1, INTC# = 2, and
 	 * INTD# = 3)
 	 */
+	if (of_machine_is_compatible("dlink,dsr-500n"))
+		return "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC";
 	switch (octeon_bootinfo->board_type) {
 	case CVMX_BOARD_TYPE_NAC38:
 		return "AAAAADABAAAAAAAAAAAAAAAAAAAAAAAA";
@@ -218,6 +219,8 @@ const char *octeon_get_pci_interrupts(void)
 		return "AAABAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 	case CVMX_BOARD_TYPE_BBGW_REF:
 		return "AABCD";
+	case CVMX_BOARD_TYPE_CUST_DSR1000N:
+		return "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC";
 	case CVMX_BOARD_TYPE_THUNDER:
 	case CVMX_BOARD_TYPE_EBH3000:
 	default:
@@ -236,8 +239,7 @@ const char *octeon_get_pci_interrupts(void)
  *		 as it goes through each bridge.
  * Returns Interrupt number for the device
  */
-int __init octeon_pci_pcibios_map_irq(const struct pci_dev *dev,
-				      u8 slot, u8 pin)
+int octeon_pci_pcibios_map_irq(const struct pci_dev *dev, u8 slot, u8 pin)
 {
 	int irq_num;
 	const char *interrupts;
@@ -275,9 +277,6 @@ static int octeon_read_config(struct pci_bus *bus, unsigned int devfn,
 	pci_addr.s.func = devfn & 0x7;
 	pci_addr.s.reg = reg;
 
-#if PCI_CONFIG_SPACE_DELAY
-	udelay(PCI_CONFIG_SPACE_DELAY);
-#endif
 	switch (size) {
 	case 4:
 		*val = le32_to_cpu(cvmx_read64_uint32(pci_addr.u64));
@@ -312,9 +311,6 @@ static int octeon_write_config(struct pci_bus *bus, unsigned int devfn,
 	pci_addr.s.func = devfn & 0x7;
 	pci_addr.s.reg = reg;
 
-#if PCI_CONFIG_SPACE_DELAY
-	udelay(PCI_CONFIG_SPACE_DELAY);
-#endif
 	switch (size) {
 	case 4:
 		cvmx_write64_uint32(pci_addr.u64, cpu_to_le32(val));
@@ -331,8 +327,8 @@ static int octeon_write_config(struct pci_bus *bus, unsigned int devfn,
 
 
 static struct pci_ops octeon_pci_ops = {
-	octeon_read_config,
-	octeon_write_config,
+	.read	= octeon_read_config,
+	.write	= octeon_write_config,
 };
 
 static struct resource octeon_pci_mem_resource = {
@@ -586,14 +582,15 @@ static int __init octeon_pci_setup(void)
 	/* Point pcibios_map_irq() to the PCI version of it */
 	octeon_pcibios_map_irq = octeon_pci_pcibios_map_irq;
 
-	/* PCI I/O and PCI MEM values */
-	set_io_port_base(OCTEON_PCI_IOSPACE_BASE);
-	ioport_resource.start = 0;
-	ioport_resource.end = OCTEON_PCI_IOSPACE_SIZE - 1;
 	if (!octeon_is_pci_host()) {
 		pr_notice("Not in host mode, PCI Controller not initialized\n");
 		return 0;
 	}
+
+	/* PCI I/O and PCI MEM values */
+	set_io_port_base(OCTEON_PCI_IOSPACE_BASE);
+	ioport_resource.start = 0;
+	ioport_resource.end = OCTEON_PCI_IOSPACE_SIZE - 1;
 
 	pr_notice("%s Octeon big bar support\n",
 		  (octeon_dma_bar_type ==
@@ -707,7 +704,7 @@ static int __init octeon_pci_setup(void)
 
 	if (IS_ERR(platform_device_register_simple("octeon_pci_edac",
 						   -1, NULL, 0)))
-		pr_err("Registation of co_pci_edac failed!\n");
+		pr_err("Registration of co_pci_edac failed!\n");
 
 	octeon_pci_dma_init();
 

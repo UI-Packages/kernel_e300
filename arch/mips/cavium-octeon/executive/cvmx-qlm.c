@@ -42,7 +42,7 @@
  *
  * Helper utilities for qlm.
  *
- * <hr>$Revision: 165972 $<hr>
+ * <hr>$Revision: 169703 $<hr>
  */
 #ifdef CVMX_BUILD_FOR_LINUX_KERNEL
 #include <asm/octeon/cvmx.h>
@@ -1580,9 +1580,9 @@ enum cvmx_qlm_mode cvmx_qlm_get_mode_cn78xx(int node, int qlm)
 				qlm_mode[node][qlm] = CVMX_QLM_MODE_XFI;
 #ifndef CVMX_BUILD_FOR_UBOOT
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X)) {
-			pmd_control.s.train_en = 0;
-			cvmx_write_csr_node(node,
-				CVMX_BGXX_SPUX_BR_PMD_CONTROL(0, bgx), pmd_control.u64);
+				pmd_control.s.train_en = 0;
+				cvmx_write_csr_node(node,
+					CVMX_BGXX_SPUX_BR_PMD_CONTROL(0, bgx), pmd_control.u64);
 			}
 #endif
 			break;
@@ -1594,9 +1594,9 @@ enum cvmx_qlm_mode cvmx_qlm_get_mode_cn78xx(int node, int qlm)
 				qlm_mode[node][qlm] = CVMX_QLM_MODE_XLAUI;
 #ifndef CVMX_BUILD_FOR_UBOOT
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X)) {
-			pmd_control.s.train_en = 0;
-			cvmx_write_csr_node(node,
-				CVMX_BGXX_SPUX_BR_PMD_CONTROL(0, bgx), pmd_control.u64);
+				pmd_control.s.train_en = 0;
+				cvmx_write_csr_node(node,
+					CVMX_BGXX_SPUX_BR_PMD_CONTROL(0, bgx), pmd_control.u64);
 			}
 #endif
 			break;
@@ -1860,7 +1860,7 @@ enum cvmx_qlm_mode __cvmx_qlm_get_mode_cnf75xx(int qlm)
 		return -1;
 	}
 
-	if (qlm == 2 || qlm == 3) {
+	if (((qlm == 2) || (qlm == 3)) && (OCTEON_IS_MODEL(OCTEON_CNF75XX))) {
 		cvmx_sriox_status_reg_t status_reg;
 		int port = (qlm == 2) ? 0 : 1;
 		status_reg.u64 = cvmx_read_csr(CVMX_SRIOX_STATUS_REG(port));
@@ -1896,6 +1896,7 @@ enum cvmx_qlm_mode __cvmx_qlm_get_mode_cnf75xx(int qlm)
 		cvmx_gserx_cfg_t gser1, gser2;
 		gser1.u64 = cvmx_read_csr(CVMX_GSERX_CFG(4));
 		gser2.u64 = cvmx_read_csr(CVMX_GSERX_CFG(5));
+//printf("gser1.u64 = 0x%llx, gser2.u64 = 0x%llx\n", (long unsigned int)gser1.u64, (long unsigned int)gser2.u64);
 		if (gser1.s.bgx && gser2.s.bgx) {
 			start = 0;
 			end = 4;
@@ -1921,7 +1922,7 @@ enum cvmx_qlm_mode __cvmx_qlm_get_mode_cnf75xx(int qlm)
 
 		switch(lane_mask) {
 		case 0:
-			if (mux == 1 || mux == 2)
+			if ((mux == 1) || (mux == 2))
 				qlm_mode[qlm] = CVMX_QLM_MODE_SGMII_2X1;
 			else
 				qlm_mode[qlm] = CVMX_QLM_MODE_SGMII;
@@ -1933,7 +1934,7 @@ enum cvmx_qlm_mode __cvmx_qlm_get_mode_cnf75xx(int qlm)
 				if (train_mask)
 					qlm_mode[qlm] = CVMX_QLM_MODE_10G_KR_1X2;
 				else
-				qlm_mode[qlm] = CVMX_QLM_MODE_XFI_1X2;
+					qlm_mode[qlm] = CVMX_QLM_MODE_XFI_1X2;
 			else
 				qlm_mode[qlm] = CVMX_QLM_MODE_DISABLED;
 			break;
@@ -2190,7 +2191,7 @@ int __cvmx_qlm_rx_equalization(int node, int qlm, int lane)
 	} else {
 		gbaud = cvmx_qlm_get_gbaud_mhz(qlm);
 		mode = cvmx_qlm_get_mode(qlm);
-	} 
+	}
 
 	/* Apply RX Equalization for speed >= 8G */
 	if (qlm < 8) {
@@ -2282,8 +2283,8 @@ int __cvmx_qlm_rx_equalization(int node, int qlm, int lane)
 
 	lane_mask = 0;
 	while (pending) {
-	/* Wait for RX equalization to complete */
-	for (l = 0; l < max_lanes; l++) {
+		/* Wait for RX equalization to complete */
+		for (l = 0; l < max_lanes; l++) {
 			lane_mask = 1 << l;
 			/* Only check lanes that are pending */
 			if (!(pending & lane_mask))
@@ -2347,22 +2348,21 @@ int __cvmx_qlm_rx_equalization(int node, int qlm, int lane)
 				rxx_eer.s.rxt_esm >> 6);
 
 # ifdef DEBUG_QLM_RX
-
 			rx_aeq_out_0.u64 = cvmx_read_csr_node(node, CVMX_GSERX_LANEX_RX_AEQ_OUT_0(l, qlm));
 			rx_aeq_out_1.u64 = cvmx_read_csr_node(node, CVMX_GSERX_LANEX_RX_AEQ_OUT_1(l, qlm));
 			rx_aeq_out_2.u64 = cvmx_read_csr_node(node, CVMX_GSERX_LANEX_RX_AEQ_OUT_2(l, qlm));
-			rx_vma_status_0.u64 = cvmx_read_csr_node(node, CVMX_GSERX_LANEX_RX_VMA_STATUS_0(l, qlm));                                     
+			rx_vma_status_0.u64 = cvmx_read_csr_node(node, CVMX_GSERX_LANEX_RX_VMA_STATUS_0(l, qlm));
 			cvmx_dprintf("    DFE Tap1:%lu, Tap2:%ld, Tap3:%ld, Tap4:%ld, Tap5:%ld\n",
-					cvmx_bit_extract(rx_aeq_out_1.u64, 0, 5),
-					cvmx_bit_extract_smag(rx_aeq_out_1.u64, 5, 9),
-					cvmx_bit_extract_smag(rx_aeq_out_1.u64, 10, 14),
-					cvmx_bit_extract_smag(rx_aeq_out_0.u64, 0, 4),
-					cvmx_bit_extract_smag(rx_aeq_out_0.u64, 5, 9));
+					(unsigned int long)cvmx_bit_extract(rx_aeq_out_1.u64, 0, 5),
+					(unsigned int long)cvmx_bit_extract_smag(rx_aeq_out_1.u64, 5, 9),
+					(unsigned int long)cvmx_bit_extract_smag(rx_aeq_out_1.u64, 10, 14),
+					(unsigned int long)cvmx_bit_extract_smag(rx_aeq_out_0.u64, 0, 4),
+					(unsigned int long)cvmx_bit_extract_smag(rx_aeq_out_0.u64, 5, 9));
 			cvmx_dprintf("    Pre-CTLE Gain:%lu, Post-CTLE Gain:%lu, CTLE Peak:%lu, CTLE Pole:%lu\n",
-					cvmx_bit_extract(rx_aeq_out_2.u64, 4, 4),
-					cvmx_bit_extract(rx_aeq_out_2.u64, 0, 4),
-					cvmx_bit_extract(rx_vma_status_0.u64, 2, 4),
-					cvmx_bit_extract(rx_vma_status_0.u64, 0, 2));
+					(unsigned int long)cvmx_bit_extract(rx_aeq_out_2.u64, 4, 4),
+					(unsigned int long)cvmx_bit_extract(rx_aeq_out_2.u64, 0, 4),
+					(unsigned int long)cvmx_bit_extract(rx_vma_status_0.u64, 2, 4),
+					(unsigned int long)cvmx_bit_extract(rx_vma_status_0.u64, 0, 2));
 # endif
 #endif
 		}

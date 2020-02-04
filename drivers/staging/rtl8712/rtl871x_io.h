@@ -108,7 +108,7 @@ struct	_io_ops {
 			  u8 *pmem);
 	u32 (*_write_port)(struct intf_hdl *pintfhdl, u32 addr, u32 cnt,
 			   u8 *pmem);
-} __no_const;
+};
 
 struct io_req {
 	struct list_head list;
@@ -166,7 +166,7 @@ struct reg_protocol_rd {
 	u32 Byte4Access:1;
 	u32 Byte2Access:1;
 	u32 Byte1Access:1;
-	u32 BurstMode:1 ;
+	u32 BurstMode:1;
 	u32 FixOrContinuous:1;
 	u32 Reserved4:16;
 	/*DW3*/
@@ -231,13 +231,6 @@ struct io_queue {
 	u8 *pallocated_free_ioreqs_buf;
 	struct	intf_hdl intf;
 };
-
-static inline u32 _RND4(u32 sz)
-{
-	u32	val;
-	val = ((sz >> 2) + ((sz & 3) ? 1 : 0)) << 2;
-	return val;
-}
 
 u8 r8712_read8(struct _adapter *adapter, u32 addr);
 u16 r8712_read16(struct _adapter *adapter, u32 addr);

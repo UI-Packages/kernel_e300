@@ -1,6 +1,7 @@
 #include <linux/highmem.h>
-#include <linux/module.h>
+#include <linux/export.h>
 #include <linux/swap.h> /* for totalram_pages */
+#include <linux/bootmem.h>
 
 void *kmap(struct page *page)
 {
@@ -31,11 +32,10 @@ EXPORT_SYMBOL(kunmap);
  */
 void *kmap_atomic_prot(struct page *page, pgprot_t prot)
 {
-	pte_t pte = mk_pte(page, prot);
 	unsigned long vaddr;
 	int idx, type;
 
-	/* even !CONFIG_PREEMPT needs this, for in_atomic in do_page_fault */
+	preempt_disable();
 	pagefault_disable();
 
 	if (!PageHighMem(page))
@@ -45,14 +45,7 @@ void *kmap_atomic_prot(struct page *page, pgprot_t prot)
 	idx = type + KM_TYPE_NR*smp_processor_id();
 	vaddr = __fix_to_virt(FIX_KMAP_BEGIN + idx);
 	BUG_ON(!pte_none(*(kmap_pte-idx)));
-#ifdef CONFIG_PREEMPT_RT_FULL
-	current->kmap_pte[type] = pte;
-#endif
-
-	pax_open_kernel();
-	set_pte(kmap_pte-idx, pte);
-	pax_close_kernel();
-
+	set_pte(kmap_pte-idx, mk_pte(page, prot));
 	arch_flush_lazy_mmu_mode();
 
 	return (void *)vaddr;
@@ -95,9 +88,6 @@ void __kunmap_atomic(void *kvaddr)
 		 * is a bad idea also, in case the page changes cacheability
 		 * attributes or becomes a protected page in a hypervisor.
 		 */
-#ifdef CONFIG_PREEMPT_RT_FULL
-		current->kmap_pte[type] = __pte(0);
-#endif
 		kpte_clear_flush(kmap_pte-idx, vaddr);
 		kmap_atomic_idx_pop();
 		arch_flush_lazy_mmu_mode();
@@ -110,28 +100,20 @@ void __kunmap_atomic(void *kvaddr)
 #endif
 
 	pagefault_enable();
+	preempt_enable();
 }
 EXPORT_SYMBOL(__kunmap_atomic);
-
-struct page *kmap_atomic_to_page(void *ptr)
-{
-	unsigned long idx, vaddr = (unsigned long)ptr;
-	pte_t *pte;
-
-	if (vaddr < FIXADDR_START)
-		return virt_to_page(ptr);
-
-	idx = virt_to_fix(vaddr);
-	pte = kmap_pte - (idx - FIX_KMAP_BEGIN);
-	return pte_page(*pte);
-}
-EXPORT_SYMBOL(kmap_atomic_to_page);
 
 void __init set_highmem_pages_init(void)
 {
 	struct zone *zone;
 	int nid;
 
+	/*
+	 * Explicitly reset zone->managed_pages because set_highmem_pages_init()
+	 * is invoked before free_all_bootmem()
+	 */
+	reset_all_zones_managed_pages();
 	for_each_zone(zone) {
 		unsigned long zone_start_pfn, zone_end_pfn;
 

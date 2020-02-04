@@ -31,7 +31,7 @@
 #include <linux/sched.h>
 #include <asm/elf.h>
 
-struct __read_mostly va_alignment va_align = {
+struct va_alignment __read_mostly va_align = {
 	.flags = -1,
 };
 
@@ -52,7 +52,7 @@ static unsigned long stack_maxrandom_size(void)
  * Leave an at least ~128 MB hole with possible stack randomization.
  */
 #define MIN_GAP (128*1024*1024UL + stack_maxrandom_size())
-#define MAX_GAP (pax_task_size/6*5)
+#define MAX_GAP (TASK_SIZE/6*5)
 
 static int mmap_is_legacy(void)
 {
@@ -65,58 +65,32 @@ static int mmap_is_legacy(void)
 	return sysctl_legacy_va_layout;
 }
 
-static unsigned long mmap_rnd(void)
+unsigned long arch_mmap_rnd(void)
 {
-	unsigned long rnd = 0;
+	unsigned long rnd;
 
-	/*
-	*  8 bits of randomness in 32bit mmaps, 20 address space bits
-	* 28 bits of randomness in 64bit mmaps, 40 address space bits
-	*/
-	if (current->flags & PF_RANDOMIZE) {
-		if (mmap_is_ia32())
-			rnd = get_random_int() % (1<<8);
-		else
-			rnd = get_random_int() % (1<<28);
-	}
+	if (mmap_is_ia32())
+#ifdef CONFIG_COMPAT
+		rnd = get_random_long() & ((1UL << mmap_rnd_compat_bits) - 1);
+#else
+		rnd = get_random_long() & ((1UL << mmap_rnd_bits) - 1);
+#endif
+	else
+		rnd = get_random_long() & ((1UL << mmap_rnd_bits) - 1);
+
 	return rnd << PAGE_SHIFT;
 }
 
-static unsigned long mmap_base(struct mm_struct *mm)
+static unsigned long mmap_base(unsigned long rnd)
 {
 	unsigned long gap = rlimit(RLIMIT_STACK);
-	unsigned long pax_task_size = TASK_SIZE;
-
-#ifdef CONFIG_PAX_SEGMEXEC
-	if (mm->pax_flags & MF_PAX_SEGMEXEC)
-		pax_task_size = SEGMEXEC_TASK_SIZE;
-#endif
 
 	if (gap < MIN_GAP)
 		gap = MIN_GAP;
 	else if (gap > MAX_GAP)
 		gap = MAX_GAP;
 
-	return PAGE_ALIGN(pax_task_size - gap - mmap_rnd());
-}
-
-/*
- * Bottom-up (legacy) layout on X86_32 did not support randomization, X86_64
- * does, but not when emulating X86_32
- */
-static unsigned long mmap_legacy_base(struct mm_struct *mm)
-{
-	if (mmap_is_ia32()) {
-
-#ifdef CONFIG_PAX_SEGMEXEC
-		if (mm->pax_flags & MF_PAX_SEGMEXEC)
-			return SEGMEXEC_TASK_UNMAPPED_BASE;
-		else
-#endif
-
-		return TASK_UNMAPPED_BASE;
-	} else
-		return TASK_UNMAPPED_BASE + mmap_rnd();
+	return PAGE_ALIGN(TASK_SIZE - gap - rnd);
 }
 
 /*
@@ -125,22 +99,25 @@ static unsigned long mmap_legacy_base(struct mm_struct *mm)
  */
 void arch_pick_mmap_layout(struct mm_struct *mm)
 {
-	mm->mmap_legacy_base = mmap_legacy_base(mm);
-	mm->mmap_base = mmap_base(mm);
+	unsigned long random_factor = 0UL;
 
-#ifdef CONFIG_PAX_RANDMMAP
-	if (mm->pax_flags & MF_PAX_RANDMMAP) {
-		mm->mmap_legacy_base += mm->delta_mmap;
-		mm->mmap_base -= mm->delta_mmap + mm->delta_stack;
-	}
-#endif
+	if (current->flags & PF_RANDOMIZE)
+		random_factor = arch_mmap_rnd();
+
+	mm->mmap_legacy_base = TASK_UNMAPPED_BASE + random_factor;
 
 	if (mmap_is_legacy()) {
 		mm->mmap_base = mm->mmap_legacy_base;
 		mm->get_unmapped_area = arch_get_unmapped_area;
-		mm->unmap_area = arch_unmap_area;
 	} else {
+		mm->mmap_base = mmap_base(random_factor);
 		mm->get_unmapped_area = arch_get_unmapped_area_topdown;
-		mm->unmap_area = arch_unmap_area_topdown;
 	}
+}
+
+const char *arch_vma_name(struct vm_area_struct *vma)
+{
+	if (vma->vm_flags & VM_MPX)
+		return "[mpx]";
+	return NULL;
 }

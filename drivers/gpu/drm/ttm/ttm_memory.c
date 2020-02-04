@@ -264,7 +264,7 @@ static int ttm_mem_init_kernel_zone(struct ttm_mem_global *glob,
 	zone->glob = glob;
 	glob->zone_kernel = zone;
 	ret = kobject_init_and_add(
-		&zone->kobj, &ttm_mem_zone_kobj_type, &glob->kobj, "%s", zone->name);
+		&zone->kobj, &ttm_mem_zone_kobj_type, &glob->kobj, zone->name);
 	if (unlikely(ret != 0)) {
 		kobject_put(&zone->kobj);
 		return ret;
@@ -300,7 +300,8 @@ static int ttm_mem_init_highmem_zone(struct ttm_mem_global *glob,
 	zone->glob = glob;
 	glob->zone_highmem = zone;
 	ret = kobject_init_and_add(
-		&zone->kobj, &ttm_mem_zone_kobj_type, &glob->kobj, zone->name);
+		&zone->kobj, &ttm_mem_zone_kobj_type, &glob->kobj, "%s",
+		zone->name);
 	if (unlikely(ret != 0)) {
 		kobject_put(&zone->kobj);
 		return ret;
@@ -347,7 +348,7 @@ static int ttm_mem_init_dma32_zone(struct ttm_mem_global *glob,
 	zone->glob = glob;
 	glob->zone_dma32 = zone;
 	ret = kobject_init_and_add(
-		&zone->kobj, &ttm_mem_zone_kobj_type, &glob->kobj, "%s", zone->name);
+		&zone->kobj, &ttm_mem_zone_kobj_type, &glob->kobj, zone->name);
 	if (unlikely(ret != 0)) {
 		kobject_put(&zone->kobj);
 		return ret;
@@ -599,3 +600,9 @@ size_t ttm_round_pot(size_t size)
 	return 0;
 }
 EXPORT_SYMBOL(ttm_round_pot);
+
+uint64_t ttm_get_kernel_zone_memory_size(struct ttm_mem_global *glob)
+{
+	return glob->zone_kernel->max_mem;
+}
+EXPORT_SYMBOL(ttm_get_kernel_zone_memory_size);

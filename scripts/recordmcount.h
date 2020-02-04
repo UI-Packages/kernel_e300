@@ -119,14 +119,6 @@
 # define _size			4
 #endif
 
-#ifndef EM_AARCH64
-#define EM_AARCH64      183             /* ARM64 */
-#endif
-
-#ifndef R_AARCH64_ABS64
-#define R_AARCH64_ABS64                 257
-#endif
-
 /* Functions and pointers that do_file() may override for specific e_machine. */
 static int fn_is_fake_mcount(Elf_Rel const *rp)
 {

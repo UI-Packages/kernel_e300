@@ -6,7 +6,7 @@
 #include <linux/seqlock.h>
 
 struct fs_struct {
-	atomic_t users;
+	int users;
 	spinlock_t lock;
 	seqcount_t seq;
 	int umask;
@@ -34,17 +34,6 @@ static inline void get_fs_root(struct fs_struct *fs, struct path *root)
 static inline void get_fs_pwd(struct fs_struct *fs, struct path *pwd)
 {
 	spin_lock(&fs->lock);
-	*pwd = fs->pwd;
-	path_get(pwd);
-	spin_unlock(&fs->lock);
-}
-
-static inline void get_fs_root_and_pwd(struct fs_struct *fs, struct path *root,
-				       struct path *pwd)
-{
-	spin_lock(&fs->lock);
-	*root = fs->root;
-	path_get(root);
 	*pwd = fs->pwd;
 	path_get(pwd);
 	spin_unlock(&fs->lock);

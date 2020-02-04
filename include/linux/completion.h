@@ -5,10 +5,10 @@
  * (C) Copyright 2001 Linus Torvalds
  *
  * Atomic wait-for-completion handler data structures.
- * See kernel/sched.c for details.
+ * See kernel/sched/completion.c for details.
  */
 
-#include <linux/wait-simple.h>
+#include <linux/wait.h>
 
 /*
  * struct completion - structure used to maintain state for a "completion"
@@ -19,16 +19,16 @@
  *
  * See also:  complete(), wait_for_completion() (and friends _timeout,
  * _interruptible, _interruptible_timeout, and _killable), init_completion(),
- * and macros DECLARE_COMPLETION(), DECLARE_COMPLETION_ONSTACK(), and
- * INIT_COMPLETION().
+ * reinit_completion(), and macros DECLARE_COMPLETION(),
+ * DECLARE_COMPLETION_ONSTACK().
  */
 struct completion {
 	unsigned int done;
-	struct swait_head wait;
+	wait_queue_head_t wait;
 };
 
 #define COMPLETION_INITIALIZER(work) \
-	{ 0, SWAIT_HEAD_INITIALIZER((work).wait) }
+	{ 0, __WAIT_QUEUE_HEAD_INITIALIZER((work).wait) }
 
 #define COMPLETION_INITIALIZER_ONSTACK(work) \
 	({ init_completion(&work); work; })
@@ -65,7 +65,7 @@ struct completion {
 
 /**
  * init_completion - Initialize a dynamically allocated completion
- * @x:  completion structure that is to be initialized
+ * @x:  pointer to completion structure that is to be initialized
  *
  * This inline function will initialize a dynamically created completion
  * structure.
@@ -73,35 +73,37 @@ struct completion {
 static inline void init_completion(struct completion *x)
 {
 	x->done = 0;
-	init_swait_head(&x->wait);
+	init_waitqueue_head(&x->wait);
+}
+
+/**
+ * reinit_completion - reinitialize a completion structure
+ * @x:  pointer to completion structure that is to be reinitialized
+ *
+ * This inline function should be used to reinitialize a completion structure so it can
+ * be reused. This is especially important after complete_all() is used.
+ */
+static inline void reinit_completion(struct completion *x)
+{
+	x->done = 0;
 }
 
 extern void wait_for_completion(struct completion *);
 extern void wait_for_completion_io(struct completion *);
 extern int wait_for_completion_interruptible(struct completion *x);
-extern int wait_for_completion_killable(struct completion *x) __intentional_overflow(-1);
+extern int wait_for_completion_killable(struct completion *x);
 extern unsigned long wait_for_completion_timeout(struct completion *x,
 						   unsigned long timeout);
 extern unsigned long wait_for_completion_io_timeout(struct completion *x,
 						    unsigned long timeout);
 extern long wait_for_completion_interruptible_timeout(
-	struct completion *x, unsigned long timeout) __intentional_overflow(-1);
+	struct completion *x, unsigned long timeout);
 extern long wait_for_completion_killable_timeout(
-	struct completion *x, unsigned long timeout) __intentional_overflow(-1);
+	struct completion *x, unsigned long timeout);
 extern bool try_wait_for_completion(struct completion *x);
 extern bool completion_done(struct completion *x);
 
 extern void complete(struct completion *);
 extern void complete_all(struct completion *);
-
-/**
- * INIT_COMPLETION - reinitialize a completion structure
- * @x:  completion structure to be reinitialized
- *
- * This macro should be used to reinitialize a completion structure so it can
- * be reused. This is especially important after complete_all() is used.
- */
-#define INIT_COMPLETION(x)	((x).done = 0)
-
 
 #endif

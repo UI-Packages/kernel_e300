@@ -38,7 +38,6 @@
  ***********************license end**************************************/
 
 #ifdef CVMX_BUILD_FOR_LINUX_KERNEL
-#include <asm/octeon/octeon.h>
 #include <linux/export.h>
 #include <asm/octeon/cvmx-range.h>
 #include <asm/octeon/cvmx-global-resources.h>

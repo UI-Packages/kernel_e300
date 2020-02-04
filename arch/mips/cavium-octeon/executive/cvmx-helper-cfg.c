@@ -48,7 +48,6 @@
 #ifdef CVMX_BUILD_FOR_LINUX_KERNEL
 # include <linux/export.h>
 # include <asm/octeon/cvmx.h>
-# include <asm/octeon/octeon.h>
 # include <asm/octeon/cvmx-helper.h>
 # include <asm/octeon/cvmx-helper-board.h>
 # include <asm/octeon/cvmx-helper-util.h>
@@ -162,6 +161,13 @@ int __cvmx_helper_cfg_pknd(int xiface, int index)
 	if (!port_cfg_data_initialized)
 		cvmx_init_port_cfg();
 
+	/* Only 8 PKNDs are assigned to ILK channels. The channels are wrapped
+	   if more than 8 channels are configured, fix the index accordingly. */
+	if (OCTEON_IS_MODEL(OCTEON_CN78XX)) {
+		if (cvmx_helper_interface_get_mode(xiface) == CVMX_HELPER_INTERFACE_MODE_ILK)
+			index %= 8;
+	}
+
 	pkind = cvmx_cfg_port[xi.node][xi.interface][index].ccpp_pknd;
 	return pkind;
 }
@@ -172,6 +178,13 @@ int __cvmx_helper_cfg_bpid(int xiface, int index)
 
 	if (!port_cfg_data_initialized)
 		cvmx_init_port_cfg();
+
+	/* Only 8 BIDs are assigned to ILK channels. The channels are wrapped
+	   if more than 8 channels are configured, fix the index accordingly. */
+	if (OCTEON_IS_MODEL(OCTEON_CN78XX)) {
+		if (cvmx_helper_interface_get_mode(xiface) == CVMX_HELPER_INTERFACE_MODE_ILK)
+			index %= 8;
+	}
 
 	return cvmx_cfg_port[xi.node][xi.interface][index].ccpp_bpid;
 }
@@ -374,7 +387,7 @@ static int cvmx_pko_queue_alloc(uint64_t port, int count)
 	port, count, 1);
 
     if (debug)
-	    cvmx_dprintf("%s: pko_e_port=%i q_base=%i q_count=%i \n", 
+	    cvmx_dprintf("%s: pko_e_port=%i q_base=%i q_count=%i \n",
 		__func__, (int) port, ret_val, (int) count);
 
     if (ret_val == -1)
@@ -997,6 +1010,8 @@ int __cvmx_helper_init_port_valid(void)
 		rc = __cvmx_helper_parse_bgx_dt(fdt_addr);
 		if (!rc)
 			rc = __cvmx_fdt_parse_vsc7224(fdt_addr);
+		if (!rc)
+			rc = __cvmx_fdt_parse_avsp5410(fdt_addr);
 		if (!rc && octeon_has_feature(OCTEON_FEATURE_BGX_XCV))
 			rc = __cvmx_helper_parse_bgx_rgmii_dt(fdt_addr);
 
@@ -1009,22 +1024,22 @@ int __cvmx_helper_init_port_valid(void)
 		for (node = 0; node < CVMX_MAX_NODES; node++) {	
 			if (!cvmx_coremask_get64_node(pcm, node))
 				continue;
-		for (i = 0; i < CVMX_HELPER_MAX_GMX; i++) {
-			int j;
+			for (i = 0; i < CVMX_HELPER_MAX_GMX; i++) {
+				int j;
 				int xiface = cvmx_helper_node_interface_to_xiface(node, i
 );
-			for (j = 0; j < cvmx_helper_interface_enumerate(i); j++) {
-				cvmx_bgxx_cmrx_config_t cmr_config;
+				for (j = 0; j < cvmx_helper_interface_enumerate(i); j++) {
+					cvmx_bgxx_cmrx_config_t cmr_config;
 					cmr_config.u64 = cvmx_read_csr_node(node, CVMX_BGXX_CMRX_CONFIG(j, i));
 #if defined(CVMX_BUILD_FOR_STANDALONE) || defined(CVMX_BUILD_FOR_LINUX_USER)
-				if (cmr_config.s.mix_en)
+					if (cmr_config.s.mix_en)
 						cvmx_helper_set_port_valid(xiface, j, false);
-				else 
+					else
 #endif
-				if ((cmr_config.s.lane_to_sds == 0xe4 &&
-				     cmr_config.s.lmac_type != 4 &&
-				     cmr_config.s.lmac_type != 1 &&
-				     cmr_config.s.lmac_type != 5) ||
+					if ((cmr_config.s.lane_to_sds == 0xe4 &&
+					     cmr_config.s.lmac_type != 4 &&
+					     cmr_config.s.lmac_type != 1 &&
+					     cmr_config.s.lmac_type != 5) ||
 					     ((cvmx_sysinfo_get()->board_type != CVMX_BOARD_TYPE_SIM) &&
 						  (cvmx_helper_get_port_fdt_node_offset(xiface, j) ==
 						    CVMX_HELPER_CFG_INVALID_VALUE)))
@@ -1657,6 +1672,39 @@ void cvmx_helper_cfg_set_vsc7224_chan_info(int xiface, int index,
 		cvmx_init_port_cfg();
 	cvmx_cfg_port[xi.node][xi.interface][index].vsc7224_chan =
 							vsc7224_chan_info;
+}
+
+/**
+ * Get data structure defining the Avago AVSP5410 phy info
+ * or NULL if not present
+ *
+ * @param xiface	node and interface
+ * @param index		port index
+ *
+ * @return pointer to avsp5410 data structure or NULL if not present
+ */
+struct cvmx_avsp5410 *cvmx_helper_cfg_get_avsp5410_info(int xiface, int index)
+{
+	struct cvmx_xiface xi = cvmx_helper_xiface_to_node_interface(xiface);
+	if (!port_cfg_data_initialized)
+		cvmx_init_port_cfg();
+	return cvmx_cfg_port[xi.node][xi.interface][index].avsp5410;
+}
+
+/**
+ * Sets the Avago AVSP5410 phy info data structure
+ *
+ * @param	xiface	node and interface
+ * @param	index	port index
+ * @param[in]	avsp5410_info	Avago AVSP5410 data structure
+ */
+void cvmx_helper_cfg_set_avsp5410_info(int xiface, int index,
+				struct cvmx_avsp5410 *avsp5410_info)
+{
+	struct cvmx_xiface xi = cvmx_helper_xiface_to_node_interface(xiface);
+	if (!port_cfg_data_initialized)
+		cvmx_init_port_cfg();
+	cvmx_cfg_port[xi.node][xi.interface][index].avsp5410 = avsp5410_info;
 }
 
 /**

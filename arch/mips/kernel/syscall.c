@@ -28,6 +28,7 @@
 #include <linux/elf.h>
 
 #include <asm/asm.h>
+#include <asm/asm-eva.h>
 #include <asm/branch.h>
 #include <asm/cachectl.h>
 #include <asm/cacheflush.h>
@@ -39,12 +40,9 @@
 #include <asm/uaccess.h>
 #include <asm/switch_to.h>
 
-#ifdef CONFIG_CPU_CAVIUM_OCTEON
-extern int xkphys_usermem_read(long);
-extern int xkphys_usermem_write(long, int);
+int xkphys_usermem_read(long);
+int xkphys_usermem_write(long, int);
 extern int arm_timer(long, long);
-extern int disarm_timer(long, long);
-#endif
 
 /*
  * For historic reasons the pipe(2) syscall on MIPS has an unusual calling
@@ -120,13 +118,14 @@ static inline int mips_atomic_set(unsigned long addr, unsigned long new)
 
 	if (cpu_has_llsc && R10000_LLSC_WAR) {
 		__asm__ __volatile__ (
-		"	.set	mips3					\n"
+		"	.set	arch=r4000				\n"
 		"	li	%[err], 0				\n"
 		"1:	ll	%[old], (%[addr])			\n"
 		"	move	%[tmp], %[new]				\n"
 		"2:	sc	%[tmp], (%[addr])			\n"
 		"	beqzl	%[tmp], 1b				\n"
 		"3:							\n"
+		"	.insn						\n"
 		"	.section .fixup,\"ax\"				\n"
 		"4:	li	%[err], %[efault]			\n"
 		"	j	3b					\n"
@@ -145,13 +144,16 @@ static inline int mips_atomic_set(unsigned long addr, unsigned long new)
 		: "memory");
 	} else if (cpu_has_llsc) {
 		__asm__ __volatile__ (
-		"	.set	mips3					\n"
+		"	.set	"MIPS_ISA_ARCH_LEVEL"			\n"
 		"	li	%[err], 0				\n"
-		"1:	ll	%[old], (%[addr])			\n"
+		"1:							\n"
+		user_ll("%[old]", "(%[addr])")
 		"	move	%[tmp], %[new]				\n"
-		"2:	sc	%[tmp], (%[addr])			\n"
-		"	bnez	%[tmp], 4f				\n"
+		"2:							\n"
+		user_sc("%[tmp]", "(%[addr])")
+		"	beqz	%[tmp], 4f				\n"
 		"3:							\n"
+		"	.insn						\n"
 		"	.subsection 2					\n"
 		"4:	b	1b					\n"
 		"	.previous					\n"
@@ -207,6 +209,12 @@ static inline int mips_atomic_set(unsigned long addr, unsigned long new)
 	unreachable();
 }
 
+/*
+ * mips_atomic_set() normally returns directly via syscall_exit potentially
+ * clobbering static registers, so be sure to preserve them.
+ */
+save_static_function(sys_sysmips);
+
 SYSCALL_DEFINE3(sysmips, long, cmd, long, arg1, long, arg2)
 {
 	switch (cmd) {
@@ -242,9 +250,6 @@ SYSCALL_DEFINE3(sysmips, long, cmd, long, arg1, long, arg2)
 #ifdef CONFIG_CAVIUM_OCTEON_SOC
 	case MIPS_CAVIUM_ARM_TIMER:
 		return arm_timer(arg1, arg2);
-
-	case MIPS_CAVIUM_DISARM_TIMER:
-		return disarm_timer(arg1, arg2);
 #endif
 
 #endif

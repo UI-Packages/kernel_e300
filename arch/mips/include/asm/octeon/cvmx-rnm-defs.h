@@ -1,5 +1,5 @@
 /***********************license start***************
- * Copyright (c) 2003-2015  Cavium Inc. (support@cavium.com). All rights
+ * Copyright (c) 2003-2017  Cavium Inc. (support@cavium.com). All rights
  * reserved.
  *
  *
@@ -128,7 +128,7 @@ union cvmx_rnm_bist_status {
 	struct cvmx_rnm_bist_status_s         cn70xxp1;
 	struct cvmx_rnm_bist_status_s         cn73xx;
 	struct cvmx_rnm_bist_status_s         cn78xx;
-	struct cvmx_rnm_bist_status_s         cn78xxp2;
+	struct cvmx_rnm_bist_status_s         cn78xxp1;
 	struct cvmx_rnm_bist_status_s         cnf71xx;
 	struct cvmx_rnm_bist_status_s         cnf75xx;
 };
@@ -137,8 +137,9 @@ typedef union cvmx_rnm_bist_status cvmx_rnm_bist_status_t;
 /**
  * cvmx_rnm_ctl_status
  *
- * This register is the RNM interrupt-enable register.
+ * RNM_CTL_STATUS = RNM's Control/Status Register
  *
+ * The RNM's interrupt enable register.
  */
 union cvmx_rnm_ctl_status {
 	uint64_t u64;
@@ -272,7 +273,7 @@ union cvmx_rnm_ctl_status {
 	struct cvmx_rnm_ctl_status_s          cn70xxp1;
 	struct cvmx_rnm_ctl_status_s          cn73xx;
 	struct cvmx_rnm_ctl_status_s          cn78xx;
-	struct cvmx_rnm_ctl_status_s          cn78xxp2;
+	struct cvmx_rnm_ctl_status_s          cn78xxp1;
 	struct cvmx_rnm_ctl_status_s          cnf71xx;
 	struct cvmx_rnm_ctl_status_s          cnf75xx;
 };
@@ -303,7 +304,7 @@ union cvmx_rnm_eer_dbg {
 	struct cvmx_rnm_eer_dbg_s             cn70xxp1;
 	struct cvmx_rnm_eer_dbg_s             cn73xx;
 	struct cvmx_rnm_eer_dbg_s             cn78xx;
-	struct cvmx_rnm_eer_dbg_s             cn78xxp2;
+	struct cvmx_rnm_eer_dbg_s             cn78xxp1;
 	struct cvmx_rnm_eer_dbg_s             cnf71xx;
 	struct cvmx_rnm_eer_dbg_s             cnf75xx;
 };
@@ -335,7 +336,7 @@ union cvmx_rnm_eer_key {
 	struct cvmx_rnm_eer_key_s             cn70xxp1;
 	struct cvmx_rnm_eer_key_s             cn73xx;
 	struct cvmx_rnm_eer_key_s             cn78xx;
-	struct cvmx_rnm_eer_key_s             cn78xxp2;
+	struct cvmx_rnm_eer_key_s             cn78xxp1;
 	struct cvmx_rnm_eer_key_s             cnf71xx;
 	struct cvmx_rnm_eer_key_s             cnf75xx;
 };
@@ -370,7 +371,7 @@ union cvmx_rnm_serial_num {
 	struct cvmx_rnm_serial_num_s          cn70xxp1;
 	struct cvmx_rnm_serial_num_s          cn73xx;
 	struct cvmx_rnm_serial_num_s          cn78xx;
-	struct cvmx_rnm_serial_num_s          cn78xxp2;
+	struct cvmx_rnm_serial_num_s          cn78xxp1;
 	struct cvmx_rnm_serial_num_s          cnf71xx;
 	struct cvmx_rnm_serial_num_s          cnf75xx;
 };

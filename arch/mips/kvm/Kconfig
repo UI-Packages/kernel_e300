@@ -5,7 +5,6 @@ source "virt/kvm/Kconfig"
 
 menuconfig VIRTUALIZATION
 	bool "Virtualization"
-	depends on HAVE_KVM
 	---help---
 	  Say Y here to get to see options for using your Linux host to run
 	  other operating systems inside virtual machines (guests).
@@ -16,22 +15,20 @@ menuconfig VIRTUALIZATION
 if VIRTUALIZATION
 
 config KVM
-	tristate
+	tristate "Kernel-based Virtual Machine (KVM) support"
+	depends on HAVE_KVM
+	select EXPORT_UASM
 	select PREEMPT_NOTIFIERS
-
-config KVM_MIPS_TE
-	tristate "Kernel-based Virtual Machine (KVM) 32-bit trap-and-emulate"
-	depends on HAVE_KVM && 32BIT
-	select KVM
 	select ANON_INODES
 	select KVM_MMIO
+	select SRCU
 	---help---
-	  Support for hosting Guest kernels with modified address space layout.
+	  Support for hosting Guest kernels.
 	  Currently supported on MIPS32 processors.
 
 config KVM_MIPS_DYN_TRANS
 	bool "KVM/MIPS: Dynamic binary translation to reduce traps"
-	depends on KVM_MIPS_TE
+	depends on KVM
 	---help---
 	  When running in Trap & Emulate mode patch privileged
 	  instructions to reduce the number of traps.
@@ -40,27 +37,13 @@ config KVM_MIPS_DYN_TRANS
 
 config KVM_MIPS_DEBUG_COP0_COUNTERS
 	bool "Maintain counters for COP0 accesses"
-	depends on KVM_MIPS_TE
+	depends on KVM
 	---help---
 	  Maintain statistics for Guest COP0 accesses.
 	  A histogram of COP0 accesses is printed when the VM is
 	  shutdown.
 
 	  If unsure, say N.
-
-config KVM_MIPS_VZ
-	bool "Kernel-based Virtual Machine (KVM) using hardware MIPS-VZ support"
-	depends on HAVE_KVM
-	select KVM
-	select EXPORT_UASM
-	select HAVE_KVM_MSI
-	select HAVE_KVM_IRQ_ROUTING
-	select HAVE_KVM_IRQCHIP
-	select HAVE_KVM_EVENTFD
-	---help---
-	  Support for hosting Guest kernels on hardware with the
-	  MIPS-VZ hardware module.
-
 
 source drivers/vhost/Kconfig
 

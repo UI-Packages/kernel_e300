@@ -256,9 +256,9 @@ typedef struct linux_app_boot_info linux_app_boot_info_t;
 /* Increment size for exception base addresses (4k minimum) */
 #define EXCEPTION_BASE_BASE     0
 
-#define BOOTLOADER_PRIV_DATA_BASE        (EXCEPTION_BASE_BASE + 0x800)
+#define BOOTLOADER_PRIV_DATA_BASE	(EXCEPTION_BASE_BASE + 0x800)
 /* 0x800 */
-#define BOOTLOADER_BOOT_VECTOR           (BOOTLOADER_PRIV_DATA_BASE)
+#define BOOTLOADER_BOOT_VECTOR		(BOOTLOADER_PRIV_DATA_BASE)
 #define BOOT_VECTOR_NUM_WORDS		(8)
 #define BOOT_VECTOR_SIZE		((CVMX_MAX_CORES * 4) * BOOT_VECTOR_NUM_WORDS)
 /* 0xe00 */

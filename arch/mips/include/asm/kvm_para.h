@@ -83,34 +83,6 @@ static inline unsigned long kvm_hypercall3(unsigned long num,
 	return r;
 }
 
-/*
- * Use v0, v1 to reliably return an u64 value (also for 32-bit guests).
- */
-static inline u64 kvm_hypercall0_u64(unsigned long num)
-{
-	register unsigned long n asm("v0");
-	register unsigned long v1 asm("v1");
-	u32 v0_32, v1_32;
-	u64 ret;
-
-	n = num;
-	__asm__ __volatile__(
-		KVM_HYPERCALL
-		: "=r" (v1), "=r" (n) : "1" (n) : "memory"
-		);
-
-	v0_32 = n;
-	v1_32 = v1;
-
-#ifdef CONFIG_CPU_BIG_ENDIAN
-	ret = ((u64)v0_32) << 32 | (0x00000000ffffffffull & (u64)v1_32);
-#else
-	ret = ((u64)v1_32) << 32 | (0x00000000ffffffffull & (u64)v0_32);
-#endif
-
-	return ret;
-}
-
 static inline bool kvm_check_and_clear_guest_paused(void)
 {
 	return false;

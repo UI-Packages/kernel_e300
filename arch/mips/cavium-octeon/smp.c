@@ -6,7 +6,6 @@
  * Copyright (C) 2004 - 2014 Cavium, Inc.
  */
 #include <linux/cpu.h>
-#include <linux/init.h>
 #include <linux/delay.h>
 #include <linux/smp.h>
 #include <linux/interrupt.h>
@@ -21,8 +20,8 @@
 #include <asm/octeon/cvmx-boot-vector.h>
 
 unsigned long octeon_processor_boot = ~0ul;
-__cpuinitdata unsigned long octeon_processor_sp;
-__cpuinitdata unsigned long octeon_processor_gp;
+unsigned long octeon_processor_sp;
+unsigned long octeon_processor_gp;
 
 #ifdef CONFIG_HOTPLUG_CPU
 static struct cvmx_boot_vector_element *octeon_bootvector;
@@ -46,9 +45,9 @@ static void octeon_crash_dump(void)
 }
 #endif
 
-static octeon_message_fn_t  octeon_message_functions[8] = {
+static void (*octeon_message_functions[8])(void) = {
 	scheduler_ipi,
-	smp_call_function_interrupt,
+	generic_smp_call_function_interrupt,
 	octeon_icache_flush,
 #ifdef CONFIG_KEXEC
 	octeon_crash_dump,
@@ -62,6 +61,7 @@ int octeon_request_ipi_handler(octeon_message_fn_t fn)
 {
 	int i;
 	int message;
+
 	spin_lock(&octeon_message_functions_lock);
 
 	for (i = 0; i < ARRAY_SIZE(octeon_message_functions); i++) {
@@ -84,6 +84,7 @@ void octeon_release_ipi_handler(int action)
 {
 	int i;
 	int message;
+
 	spin_lock(&octeon_message_functions_lock);
 
 	for (i = 0; i < ARRAY_SIZE(octeon_message_functions); i++) {
@@ -130,7 +131,8 @@ static irqreturn_t mailbox_interrupt(int irq, void *dev_id)
 
 	for (i = 0; i < ARRAY_SIZE(octeon_message_functions) && action;) {
 		if (action & 1) {
-			octeon_message_fn_t fn = octeon_message_functions[i];
+			void (*fn)(void) = octeon_message_functions[i];
+
 			if (fn)
 				fn();
 		}
@@ -223,7 +225,7 @@ static void octeon_smp_setup(void)
  * Firmware CPU startup hook
  *
  */
-static void __cpuinit octeon_boot_secondary(int cpu, struct task_struct *idle)
+static void octeon_boot_secondary(int cpu, struct task_struct *idle)
 {
 	int count;
 
@@ -259,7 +261,7 @@ static void __cpuinit octeon_boot_secondary(int cpu, struct task_struct *idle)
  * After we've done initial boot, this function is called to allow the
  * board code to clean up state, if needed
  */
-static void __cpuinit octeon_init_secondary(void)
+static void octeon_init_secondary(void)
 {
 	unsigned int sr;
 
@@ -285,7 +287,7 @@ static irqreturn_t octeon_78xx_smp_dump_interrupt(int irq, void *dev_id)
  * Callout to firmware before smp_init
  *
  */
-void octeon_prepare_cpus(unsigned int max_cpus)
+static void __init octeon_prepare_cpus(unsigned int max_cpus)
 {
 	u64 mask;
 	u64 coreid;
@@ -328,22 +330,7 @@ static void octeon_smp_finish(void)
 	local_irq_enable();
 }
 
-/**
- * Hook for after all CPUs are online
- */
-static void octeon_cpus_done(void)
-{
-	struct cvmx_sysinfo *sysinfo = cvmx_sysinfo_get();
-	int cpus_in_coremask = cvmx_coremask_get_core_count(&sysinfo->core_mask);
-
-	WARN(cpus_in_coremask > setup_max_cpus,
-	     "Error: %d CPUs in coremask, but kernel configured for only %d\n",
-	     cpus_in_coremask, setup_max_cpus);
-}
-
 #ifdef CONFIG_HOTPLUG_CPU
-
-extern void fixup_irqs(void);
 
 static int octeon_cpu_disable(void)
 {
@@ -353,9 +340,11 @@ static int octeon_cpu_disable(void)
 		return -EBUSY;
 
 	set_cpu_online(cpu, false);
-	cpu_clear(cpu, cpu_callin_map);
-	fixup_irqs();
-	flush_cache_all();
+	calculate_cpu_foreign_map();
+	cpumask_clear_cpu(cpu, &cpu_callin_map);
+	octeon_fixup_irqs();
+
+	__flush_cache_all();
 	local_flush_tlb_all();
 
 	return 0;
@@ -399,7 +388,7 @@ static int octeon_up_prepare(unsigned int cpu)
 	return 0;
 }
 
-static int __cpuinit octeon_cpu_callback(struct notifier_block *nfb,
+static int octeon_cpu_callback(struct notifier_block *nfb,
 	unsigned long action, void *hcpu)
 {
 	unsigned int cpu = (unsigned long)hcpu;
@@ -428,11 +417,11 @@ static int __cpuinit octeon_cpu_callback(struct notifier_block *nfb,
 	return NOTIFY_OK;
 }
 
-static struct notifier_block __cpuinitdata octeon_cpu_notifer = {
+static struct notifier_block octeon_cpu_notifer = {
 	.notifier_call = octeon_cpu_callback,
 };
 
-static int __cpuinit register_cavium_notifier(void)
+static int register_cavium_notifier(void)
 {
 	return register_cpu_notifier(&octeon_cpu_notifer);
 }
@@ -446,7 +435,6 @@ static struct plat_smp_ops octeon_smp_ops = {
 	.send_ipi_mask		= octeon_send_ipi_mask,
 	.init_secondary		= octeon_init_secondary,
 	.smp_finish		= octeon_smp_finish,
-	.cpus_done		= octeon_cpus_done,
 	.boot_secondary		= octeon_boot_secondary,
 	.smp_setup		= octeon_smp_setup,
 	.prepare_cpus		= octeon_prepare_cpus,
@@ -464,7 +452,7 @@ static irqreturn_t octeon_78xx_reched_interrupt(int irq, void *dev_id)
 
 static irqreturn_t octeon_78xx_call_function_interrupt(int irq, void *dev_id)
 {
-	smp_call_function_interrupt();
+	generic_smp_call_function_interrupt();
 	return IRQ_HANDLED;
 }
 
@@ -479,17 +467,20 @@ static irqreturn_t octeon_78xx_icache_flush_interrupt(int irq, void *dev_id)
  */
 static void octeon_78xx_prepare_cpus(unsigned int max_cpus)
 {
-	if (request_irq(OCTEON_IRQ_MBOX0 + 0, octeon_78xx_reched_interrupt,
+	if (request_irq(OCTEON_IRQ_MBOX0 + 0,
+			octeon_78xx_reched_interrupt,
 			IRQF_PERCPU | IRQF_NO_THREAD, "Scheduler",
 			octeon_78xx_reched_interrupt)) {
 		panic("Cannot request_irq for SchedulerIPI");
 	}
-	if (request_irq(OCTEON_IRQ_MBOX0 + 1, octeon_78xx_call_function_interrupt,
+	if (request_irq(OCTEON_IRQ_MBOX0 + 1,
+			octeon_78xx_call_function_interrupt,
 			IRQF_PERCPU | IRQF_NO_THREAD, "SMP-Call",
 			octeon_78xx_call_function_interrupt)) {
 		panic("Cannot request_irq for SMP-Call");
 	}
-	if (request_irq(OCTEON_IRQ_MBOX0 + 2, octeon_78xx_icache_flush_interrupt,
+	if (request_irq(OCTEON_IRQ_MBOX0 + 2,
+			octeon_78xx_icache_flush_interrupt,
 			IRQF_PERCPU | IRQF_NO_THREAD, "ICache-Flush",
 			octeon_78xx_icache_flush_interrupt)) {
 		panic("Cannot request_irq for ICache-Flush");
@@ -526,7 +517,6 @@ static struct plat_smp_ops octeon_78xx_smp_ops = {
 	.send_ipi_mask		= octeon_78xx_send_ipi_mask,
 	.init_secondary		= octeon_init_secondary,
 	.smp_finish		= octeon_smp_finish,
-	.cpus_done		= octeon_cpus_done,
 	.boot_secondary		= octeon_boot_secondary,
 	.smp_setup		= octeon_smp_setup,
 	.prepare_cpus		= octeon_78xx_prepare_cpus,

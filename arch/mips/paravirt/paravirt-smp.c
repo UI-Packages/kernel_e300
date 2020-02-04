@@ -30,7 +30,7 @@ static int __init set_numcpus(char *str)
 	int newval;
 
 	if (get_option(&str, &newval)) {
-		if (newval < 1 || newval > NR_CPUS)
+		if (newval < 1 || newval >= NR_CPUS)
 			goto bad;
 		numcpus = newval;
 		return 0;
@@ -75,7 +75,7 @@ static void paravirt_send_ipi_mask(const struct cpumask *mask, unsigned int acti
 {
 	unsigned int cpu;
 
-	for_each_cpu_mask(cpu, *mask)
+	for_each_cpu(cpu, mask)
 		paravirt_send_ipi_single(cpu, action);
 }
 
@@ -99,10 +99,6 @@ static void paravirt_smp_finish(void)
 	local_irq_enable();
 }
 
-static void paravirt_cpus_done(void)
-{
-}
-
 static void paravirt_boot_secondary(int cpu, struct task_struct *idle)
 {
 	paravirt_smp_gp[cpu] = (unsigned long)task_thread_info(idle);
@@ -118,13 +114,7 @@ static irqreturn_t paravirt_reched_interrupt(int irq, void *dev_id)
 
 static irqreturn_t paravirt_function_interrupt(int irq, void *dev_id)
 {
-	smp_call_function_interrupt();
-	return IRQ_HANDLED;
-}
-
-static irqreturn_t paravirt_icache_interrupt(int irq, void *dev_id)
-{
-	asm("synci	0($0)");  /* Only used for OCTEON */
+	generic_smp_call_function_interrupt();
 	return IRQ_HANDLED;
 }
 
@@ -140,11 +130,6 @@ static void paravirt_prepare_cpus(unsigned int max_cpus)
 			paravirt_function_interrupt)) {
 		panic("Cannot request_irq for SMP-Call");
 	}
-	if (request_irq(MIPS_IRQ_MBOX2, paravirt_icache_interrupt,
-			IRQF_PERCPU | IRQF_NO_THREAD, "ICache Inv",
-			paravirt_icache_interrupt)) {
-		panic("Cannot request_irq for ICache Inv");
-	}
 }
 
 struct plat_smp_ops paravirt_smp_ops = {
@@ -152,7 +137,6 @@ struct plat_smp_ops paravirt_smp_ops = {
 	.send_ipi_mask		= paravirt_send_ipi_mask,
 	.init_secondary		= paravirt_init_secondary,
 	.smp_finish		= paravirt_smp_finish,
-	.cpus_done		= paravirt_cpus_done,
 	.boot_secondary		= paravirt_boot_secondary,
 	.smp_setup		= paravirt_smp_setup,
 	.prepare_cpus		= paravirt_prepare_cpus,

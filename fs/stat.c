@@ -31,26 +31,45 @@ void generic_fillattr(struct inode *inode, struct kstat *stat)
 	stat->atime = inode->i_atime;
 	stat->mtime = inode->i_mtime;
 	stat->ctime = inode->i_ctime;
-	stat->blksize = (1 << inode->i_blkbits);
+	stat->blksize = i_blocksize(inode);
 	stat->blocks = inode->i_blocks;
 }
 
 EXPORT_SYMBOL(generic_fillattr);
 
-int vfs_getattr(struct path *path, struct kstat *stat)
+/**
+ * vfs_getattr_nosec - getattr without security checks
+ * @path: file to get attributes from
+ * @stat: structure to return attributes in
+ *
+ * Get attributes without calling security_inode_getattr.
+ *
+ * Currently the only caller other than vfs_getattr is internal to the
+ * filehandle lookup code, which uses only the inode number and returns
+ * no attributes to any user.  Any other code probably wants
+ * vfs_getattr.
+ */
+int vfs_getattr_nosec(struct path *path, struct kstat *stat)
 {
-	struct inode *inode = path->dentry->d_inode;
-	int retval;
-
-	retval = security_inode_getattr(path->mnt, path->dentry);
-	if (retval)
-		return retval;
+	struct inode *inode = d_backing_inode(path->dentry);
 
 	if (inode->i_op->getattr)
 		return inode->i_op->getattr(path->mnt, path->dentry, stat);
 
 	generic_fillattr(inode, stat);
 	return 0;
+}
+
+EXPORT_SYMBOL(vfs_getattr_nosec);
+
+int vfs_getattr(struct path *path, struct kstat *stat)
+{
+	int retval;
+
+	retval = security_inode_getattr(path);
+	if (retval)
+		return retval;
+	return vfs_getattr_nosec(path, stat);
 }
 
 EXPORT_SYMBOL(vfs_getattr);
@@ -200,7 +219,7 @@ SYSCALL_DEFINE2(fstat, unsigned int, fd, struct __old_kernel_stat __user *, stat
 #  define choose_32_64(a,b) b
 #endif
 
-#define valid_dev(x)  choose_32_64(old_valid_dev,new_valid_dev)(x)
+#define valid_dev(x)  choose_32_64(old_valid_dev(x),true)
 #define encode_dev(x) choose_32_64(old_encode_dev,new_encode_dev)(x)
 
 #ifndef INIT_STRUCT_STAT_PADDING
@@ -307,7 +326,7 @@ SYSCALL_DEFINE4(readlinkat, int, dfd, const char __user *, pathname,
 retry:
 	error = user_path_at_empty(dfd, pathname, lookup_flags, &path, &empty);
 	if (!error) {
-		struct inode *inode = path.dentry->d_inode;
+		struct inode *inode = d_backing_inode(path.dentry);
 
 		error = empty ? -ENOENT : -EINVAL;
 		if (inode->i_op->readlink) {
@@ -348,8 +367,6 @@ static long cp_new_stat64(struct kstat *stat, struct stat64 __user *statbuf)
 	INIT_STRUCT_STAT64_PADDING(tmp);
 #ifdef CONFIG_MIPS
 	/* mips has weird padding, so we don't get 64 bits there */
-	if (!new_valid_dev(stat->dev) || !new_valid_dev(stat->rdev))
-		return -EOVERFLOW;
 	tmp.st_dev = new_encode_dev(stat->dev);
 	tmp.st_rdev = new_encode_dev(stat->rdev);
 #else
@@ -437,6 +454,7 @@ void __inode_add_bytes(struct inode *inode, loff_t bytes)
 		inode->i_bytes -= 512;
 	}
 }
+EXPORT_SYMBOL(__inode_add_bytes);
 
 void inode_add_bytes(struct inode *inode, loff_t bytes)
 {

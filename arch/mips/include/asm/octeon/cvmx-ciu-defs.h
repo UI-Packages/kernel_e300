@@ -1,5 +1,5 @@
 /***********************license start***************
- * Copyright (c) 2003-2015  Cavium Inc. (support@cavium.com). All rights
+ * Copyright (c) 2003-2017  Cavium Inc. (support@cavium.com). All rights
  * reserved.
  *
  *
@@ -216,13 +216,13 @@ static inline uint64_t CVMX_CIU_DINT_FUNC(void)
 		case OCTEON_CN68XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x0001070000000720ull);
 			break;
-		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 					return CVMX_ADD_IO_SEG(0x0001010000000180ull);
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 					return CVMX_ADD_IO_SEG(0x0001010000000180ull);
+		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x0001010000000180ull);
 			break;
 	}
@@ -248,13 +248,13 @@ static inline uint64_t CVMX_CIU_DINT_FUNC(void)
 		case OCTEON_CN63XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN68XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x0001070000000720ull);
-		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return CVMX_ADD_IO_SEG(0x0001010000000180ull);
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return CVMX_ADD_IO_SEG(0x0001010000000180ull);
+		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x0001010000000180ull);
 	}
 	return CVMX_ADD_IO_SEG(0x0001010000000180ull);
@@ -448,13 +448,13 @@ static inline uint64_t CVMX_CIU_FUSE_FUNC(void)
 		case OCTEON_CN68XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x0001070000000728ull);
 			break;
-		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 					return CVMX_ADD_IO_SEG(0x00010100000001A0ull);
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 					return CVMX_ADD_IO_SEG(0x00010100000001A0ull);
+		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x00010100000001A0ull);
 			break;
 	}
@@ -480,13 +480,13 @@ static inline uint64_t CVMX_CIU_FUSE_FUNC(void)
 		case OCTEON_CN63XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN68XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x0001070000000728ull);
-		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return CVMX_ADD_IO_SEG(0x00010100000001A0ull);
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return CVMX_ADD_IO_SEG(0x00010100000001A0ull);
+		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x00010100000001A0ull);
 	}
 	return CVMX_ADD_IO_SEG(0x00010100000001A0ull);
@@ -985,13 +985,13 @@ static inline uint64_t CVMX_CIU_PP_DBG_FUNC(void)
 		case OCTEON_CN68XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x0001070000000708ull);
 			break;
-		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 					return CVMX_ADD_IO_SEG(0x0001010000000120ull);
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 					return CVMX_ADD_IO_SEG(0x0001010000000120ull);
+		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x0001010000000120ull);
 			break;
 	}
@@ -1017,13 +1017,13 @@ static inline uint64_t CVMX_CIU_PP_DBG_FUNC(void)
 		case OCTEON_CN63XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN68XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x0001070000000708ull);
-		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return CVMX_ADD_IO_SEG(0x0001010000000120ull);
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return CVMX_ADD_IO_SEG(0x0001010000000120ull);
+		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x0001010000000120ull);
 	}
 	return CVMX_ADD_IO_SEG(0x0001010000000120ull);
@@ -1066,11 +1066,6 @@ static inline uint64_t CVMX_CIU_PP_POKEX(unsigned long offset)
 			if ((offset == 0))
 				return CVMX_ADD_IO_SEG(0x0001070000000580ull) + ((offset) & 0) * 8;
 			break;
-		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
-			if ((offset <= 15))
-				return CVMX_ADD_IO_SEG(0x0001010000030000ull) + ((offset) & 15) * 8;
-			break;
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				if ((offset <= 47))
@@ -1079,6 +1074,11 @@ static inline uint64_t CVMX_CIU_PP_POKEX(unsigned long offset)
 				if ((offset <= 47))
 					return CVMX_ADD_IO_SEG(0x0001010000030000ull) + ((offset) & 63) * 8;
 
+			break;
+		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
+			if ((offset <= 15))
+				return CVMX_ADD_IO_SEG(0x0001010000030000ull) + ((offset) & 15) * 8;
 			break;
 		case OCTEON_CN68XX & OCTEON_FAMILY_MASK:
 			if ((offset <= 31))
@@ -1111,15 +1111,15 @@ static inline uint64_t CVMX_CIU_PP_POKEX(unsigned long offset)
 			return CVMX_ADD_IO_SEG(0x0001070000000580ull) + (offset) * 8;
 		case OCTEON_CN30XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x0001070000000580ull) + (offset) * 8;
-		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
-			return CVMX_ADD_IO_SEG(0x0001010000030000ull) + (offset) * 8;
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return CVMX_ADD_IO_SEG(0x0001010000030000ull) + (offset) * 8;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return CVMX_ADD_IO_SEG(0x0001010000030000ull) + (offset) * 8;
 
+		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
+			return CVMX_ADD_IO_SEG(0x0001010000030000ull) + (offset) * 8;
 		case OCTEON_CN68XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x0001070100100200ull) + (offset) * 8;
 	}
@@ -1146,13 +1146,13 @@ static inline uint64_t CVMX_CIU_PP_RST_FUNC(void)
 		case OCTEON_CN68XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x0001070000000700ull);
 			break;
-		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 					return CVMX_ADD_IO_SEG(0x0001010000000100ull);
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 					return CVMX_ADD_IO_SEG(0x0001010000000100ull);
+		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x0001010000000100ull);
 			break;
 	}
@@ -1178,13 +1178,13 @@ static inline uint64_t CVMX_CIU_PP_RST_FUNC(void)
 		case OCTEON_CN63XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN68XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x0001070000000700ull);
-		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return CVMX_ADD_IO_SEG(0x0001010000000100ull);
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return CVMX_ADD_IO_SEG(0x0001010000000100ull);
+		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x0001010000000100ull);
 	}
 	return CVMX_ADD_IO_SEG(0x0001010000000100ull);
@@ -1196,12 +1196,12 @@ static inline uint64_t CVMX_CIU_PP_RST_PENDING_FUNC(void)
 {
 	switch(cvmx_get_octeon_family()) {
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 					return CVMX_ADD_IO_SEG(0x0001010000000110ull);
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 					return CVMX_ADD_IO_SEG(0x0001010000000110ull);
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x0001010000000110ull);
 			break;
 		case OCTEON_CN70XX & OCTEON_FAMILY_MASK:
@@ -1217,12 +1217,12 @@ static inline uint64_t CVMX_CIU_PP_RST_PENDING_FUNC(void)
 {
 	switch(cvmx_get_octeon_family()) {
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return CVMX_ADD_IO_SEG(0x0001010000000110ull);
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return CVMX_ADD_IO_SEG(0x0001010000000110ull);
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x0001010000000110ull);
 		case OCTEON_CN70XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x0001070000000740ull);
@@ -1558,11 +1558,6 @@ static inline uint64_t CVMX_CIU_WDOGX(unsigned long offset)
 			if ((offset == 0))
 				return CVMX_ADD_IO_SEG(0x0001070000000500ull) + ((offset) & 0) * 8;
 			break;
-		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
-			if ((offset <= 15))
-				return CVMX_ADD_IO_SEG(0x0001010000020000ull) + ((offset) & 15) * 8;
-			break;
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				if ((offset <= 47))
@@ -1571,6 +1566,11 @@ static inline uint64_t CVMX_CIU_WDOGX(unsigned long offset)
 				if ((offset <= 47))
 					return CVMX_ADD_IO_SEG(0x0001010000020000ull) + ((offset) & 63) * 8;
 
+			break;
+		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
+			if ((offset <= 15))
+				return CVMX_ADD_IO_SEG(0x0001010000020000ull) + ((offset) & 15) * 8;
 			break;
 		case OCTEON_CN68XX & OCTEON_FAMILY_MASK:
 			if ((offset <= 31))
@@ -1603,15 +1603,15 @@ static inline uint64_t CVMX_CIU_WDOGX(unsigned long offset)
 			return CVMX_ADD_IO_SEG(0x0001070000000500ull) + (offset) * 8;
 		case OCTEON_CN30XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x0001070000000500ull) + (offset) * 8;
-		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
-			return CVMX_ADD_IO_SEG(0x0001010000020000ull) + (offset) * 8;
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return CVMX_ADD_IO_SEG(0x0001010000020000ull) + (offset) * 8;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return CVMX_ADD_IO_SEG(0x0001010000020000ull) + (offset) * 8;
 
+		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
+			return CVMX_ADD_IO_SEG(0x0001010000020000ull) + (offset) * 8;
 		case OCTEON_CN68XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x0001070100100000ull) + (offset) * 8;
 	}
@@ -2855,7 +2855,7 @@ union cvmx_ciu_dint {
 	struct cvmx_ciu_dint_cn52xx           cn70xxp1;
 	struct cvmx_ciu_dint_cn38xx           cn73xx;
 	struct cvmx_ciu_dint_s                cn78xx;
-	struct cvmx_ciu_dint_s                cn78xxp2;
+	struct cvmx_ciu_dint_s                cn78xxp1;
 	struct cvmx_ciu_dint_cn52xx           cnf71xx;
 	struct cvmx_ciu_dint_cn38xx           cnf75xx;
 };
@@ -4036,7 +4036,7 @@ union cvmx_ciu_fuse {
 	struct cvmx_ciu_fuse_cn52xx           cn70xxp1;
 	struct cvmx_ciu_fuse_cn38xx           cn73xx;
 	struct cvmx_ciu_fuse_s                cn78xx;
-	struct cvmx_ciu_fuse_s                cn78xxp2;
+	struct cvmx_ciu_fuse_s                cn78xxp1;
 	struct cvmx_ciu_fuse_cn52xx           cnf71xx;
 	struct cvmx_ciu_fuse_cn38xx           cnf75xx;
 };
@@ -13022,7 +13022,7 @@ union cvmx_ciu_pp_dbg {
 	struct cvmx_ciu_pp_dbg_cn52xx         cn70xxp1;
 	struct cvmx_ciu_pp_dbg_cn38xx         cn73xx;
 	struct cvmx_ciu_pp_dbg_s              cn78xx;
-	struct cvmx_ciu_pp_dbg_s              cn78xxp2;
+	struct cvmx_ciu_pp_dbg_s              cn78xxp1;
 	struct cvmx_ciu_pp_dbg_cn52xx         cnf71xx;
 	struct cvmx_ciu_pp_dbg_cn38xx         cnf75xx;
 };
@@ -13080,7 +13080,7 @@ union cvmx_ciu_pp_pokex {
 #endif
 	} cn73xx;
 	struct cvmx_ciu_pp_pokex_cn73xx       cn78xx;
-	struct cvmx_ciu_pp_pokex_cn73xx       cn78xxp2;
+	struct cvmx_ciu_pp_pokex_cn73xx       cn78xxp1;
 	struct cvmx_ciu_pp_pokex_s            cnf71xx;
 	struct cvmx_ciu_pp_pokex_cn73xx       cnf75xx;
 };
@@ -13100,7 +13100,9 @@ union cvmx_ciu_pp_rst {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_48_63               : 16;
 	uint64_t rst                          : 47; /**< Core reset for cores 1 and above. Writing a 1 holds the corresponding core in reset,
-                                                         writing a 0 releases from reset. */
+                                                         writing a 0 releases from reset.
+                                                         The upper bits of this field remain accessible but will have no effect if the cores
+                                                         are disabled. The number of bits cleared in CIU_FUSE[FUSE] indicate the number of cores. */
 	uint64_t rst0                         : 1;  /**< Core reset for core 0, depends on standalone mode. */
 #else
 	uint64_t rst0                         : 1;
@@ -13215,7 +13217,7 @@ union cvmx_ciu_pp_rst {
 	struct cvmx_ciu_pp_rst_cn52xx         cn70xxp1;
 	struct cvmx_ciu_pp_rst_cn38xx         cn73xx;
 	struct cvmx_ciu_pp_rst_s              cn78xx;
-	struct cvmx_ciu_pp_rst_s              cn78xxp2;
+	struct cvmx_ciu_pp_rst_s              cn78xxp1;
 	struct cvmx_ciu_pp_rst_cn52xx         cnf71xx;
 	struct cvmx_ciu_pp_rst_cn38xx         cnf75xx;
 };
@@ -13235,7 +13237,9 @@ union cvmx_ciu_pp_rst_pending {
 	uint64_t pend                         : 48; /**< Set if corresponding core is waiting to change its reset state. Normally a reset change
                                                          occurs immediately but if RST_PP_POWER[GATE] bit is set and the core is released from
                                                          reset a delay of 64K core clocks between each core reset will apply to satisfy power
-                                                         management. */
+                                                         management.
+                                                         The upper bits of this field remain accessible but will have no effect if the cores
+                                                         are disabled. The number of bits cleared in CIU_FUSE[FUSE] indicate the number of cores. */
 #else
 	uint64_t pend                         : 48;
 	uint64_t reserved_48_63               : 16;
@@ -13249,14 +13253,16 @@ union cvmx_ciu_pp_rst_pending {
 	uint64_t pend                         : 16; /**< Set if corresponding core is waiting to change its reset state. Normally a reset change
                                                          occurs immediately but if RST_PP_POWER[GATE] bit is set and the core is released from
                                                          reset a delay of 64K core clocks between each core reset will apply to satisfy power
-                                                         management. */
+                                                         management.
+                                                         The upper bits of this field remain accessible but will have no effect if the cores
+                                                         are disabled. The number of bits cleared in CIU_FUSE[FUSE] indicate the number of cores. */
 #else
 	uint64_t pend                         : 16;
 	uint64_t reserved_16_63               : 48;
 #endif
 	} cn73xx;
 	struct cvmx_ciu_pp_rst_pending_s      cn78xx;
-	struct cvmx_ciu_pp_rst_pending_s      cn78xxp2;
+	struct cvmx_ciu_pp_rst_pending_s      cn78xxp1;
 	struct cvmx_ciu_pp_rst_pending_cn73xx cnf75xx;
 };
 typedef union cvmx_ciu_pp_rst_pending cvmx_ciu_pp_rst_pending_t;
@@ -16841,10 +16847,10 @@ union cvmx_ciu_wdogx {
 	uint64_t reserved_46_63               : 18;
 	uint64_t gstopen                      : 1;  /**< Global-stop enable. */
 	uint64_t dstop                        : 1;  /**< Debug-stop enable. */
-	uint64_t cnt                          : 24; /**< Number of 1024-cycle intervals until next watchdog expiration. Cleared on write to
-                                                         associated CIU_PP_POKE() register. */
+	uint64_t cnt                          : 24; /**< Number of 256-cycle coprocessor clock intervals until next watchdog expiration.
+                                                         Cleared on write to associated CIU_PP_POKE() register. */
 	uint64_t len                          : 16; /**< Watchdog time-expiration length. The most-significant 16 bits of a 24-bit decrementer that
-                                                         decrements every 1024 cycles. Must be set > 0. */
+                                                         decrements every 256-cycle coprocessor clock interval. Must be set > 0. */
 	uint64_t state                        : 2;  /**< Watchdog state. The number of watchdog time expirations since last core poke. Cleared on
                                                          write to associated CIU_PP_POKE() register. */
 	uint64_t mode                         : 2;  /**< Watchdog mode:
@@ -16883,7 +16889,7 @@ union cvmx_ciu_wdogx {
 	struct cvmx_ciu_wdogx_s               cn70xxp1;
 	struct cvmx_ciu_wdogx_s               cn73xx;
 	struct cvmx_ciu_wdogx_s               cn78xx;
-	struct cvmx_ciu_wdogx_s               cn78xxp2;
+	struct cvmx_ciu_wdogx_s               cn78xxp1;
 	struct cvmx_ciu_wdogx_s               cnf71xx;
 	struct cvmx_ciu_wdogx_s               cnf75xx;
 };

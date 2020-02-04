@@ -33,6 +33,7 @@
 #include <linux/regulator/consumer.h>
 #include <linux/slab.h>
 #include <linux/atomic.h>
+#include <linux/bitrev.h>
 
 /* Commands */
 #define SHT15_MEASURE_TEMP		0x03
@@ -169,21 +170,8 @@ struct sht15_data {
 	int				supply_uv;
 	bool				supply_uv_valid;
 	struct work_struct		update_supply_work;
-	atomic_unchecked_t		interrupt_handled;
+	atomic_t			interrupt_handled;
 };
-
-/**
- * sht15_reverse() - reverse a byte
- * @byte:    byte to reverse.
- */
-static u8 sht15_reverse(u8 byte)
-{
-	u8 i, c;
-
-	for (c = 0, i = 0; i < 8; i++)
-		c |= (!!(byte & (1 << i))) << (7 - i);
-	return c;
-}
 
 /**
  * sht15_crc8() - compute crc8
@@ -196,7 +184,7 @@ static u8 sht15_crc8(struct sht15_data *data,
 		const u8 *value,
 		int len)
 {
-	u8 crc = sht15_reverse(data->val_status & 0x0F);
+	u8 crc = bitrev8(data->val_status & 0x0F);
 
 	while (len--) {
 		crc = sht15_crc8_table[*value ^ crc];
@@ -477,7 +465,7 @@ static int sht15_update_status(struct sht15_data *data)
 
 		if (data->checksumming) {
 			sht15_ack(data);
-			dev_checksum = sht15_reverse(sht15_read_byte(data));
+			dev_checksum = bitrev8(sht15_read_byte(data));
 			checksum_vals[0] = SHT15_READ_STATUS;
 			checksum_vals[1] = status;
 			data->checksum_ok = (sht15_crc8(data, checksum_vals, 2)
@@ -542,13 +530,13 @@ static int sht15_measurement(struct sht15_data *data,
 	ret = gpio_direction_input(data->pdata->gpio_data);
 	if (ret)
 		return ret;
-	atomic_set_unchecked(&data->interrupt_handled, 0);
+	atomic_set(&data->interrupt_handled, 0);
 
 	enable_irq(gpio_to_irq(data->pdata->gpio_data));
 	if (gpio_get_value(data->pdata->gpio_data) == 0) {
 		disable_irq_nosync(gpio_to_irq(data->pdata->gpio_data));
 		/* Only relevant if the interrupt hasn't occurred. */
-		if (!atomic_read_unchecked(&data->interrupt_handled))
+		if (!atomic_read(&data->interrupt_handled))
 			schedule_work(&data->read_work);
 	}
 	ret = wait_event_timeout(data->wait_queue,
@@ -820,7 +808,7 @@ static irqreturn_t sht15_interrupt_fired(int irq, void *d)
 
 	/* First disable the interrupt */
 	disable_irq_nosync(irq);
-	atomic_inc_unchecked(&data->interrupt_handled);
+	atomic_inc(&data->interrupt_handled);
 	/* Then schedule a reading work struct */
 	if (data->state != SHT15_READING_NOTHING)
 		schedule_work(&data->read_work);
@@ -842,11 +830,11 @@ static void sht15_bh_read_data(struct work_struct *work_s)
 		 * If not, then start the interrupt again - care here as could
 		 * have gone low in meantime so verify it hasn't!
 		 */
-		atomic_set_unchecked(&data->interrupt_handled, 0);
+		atomic_set(&data->interrupt_handled, 0);
 		enable_irq(gpio_to_irq(data->pdata->gpio_data));
 		/* If still not occurred or another handler was scheduled */
 		if (gpio_get_value(data->pdata->gpio_data)
-		    || atomic_read_unchecked(&data->interrupt_handled))
+		    || atomic_read(&data->interrupt_handled))
 			return;
 	}
 
@@ -864,7 +852,7 @@ static void sht15_bh_read_data(struct work_struct *work_s)
 		 */
 		if (sht15_ack(data))
 			goto wakeup;
-		dev_checksum = sht15_reverse(sht15_read_byte(data));
+		dev_checksum = bitrev8(sht15_read_byte(data));
 		checksum_vals[0] = (data->state == SHT15_READING_TEMP) ?
 			SHT15_MEASURE_TEMP : SHT15_MEASURE_RH;
 		checksum_vals[1] = (u8) (val >> 8);
@@ -940,11 +928,11 @@ static int sht15_probe(struct platform_device *pdev)
 	data->dev = &pdev->dev;
 	init_waitqueue_head(&data->wait_queue);
 
-	if (pdev->dev.platform_data == NULL) {
+	if (dev_get_platdata(&pdev->dev) == NULL) {
 		dev_err(&pdev->dev, "no platform data supplied\n");
 		return -EINVAL;
 	}
-	data->pdata = pdev->dev.platform_data;
+	data->pdata = dev_get_platdata(&pdev->dev);
 	data->supply_uv = data->pdata->supply_mv * 1000;
 	if (data->pdata->checksum)
 		data->checksumming = true;
@@ -957,7 +945,7 @@ static int sht15_probe(struct platform_device *pdev)
 	 * If a regulator is available,
 	 * query what the supply voltage actually is!
 	 */
-	data->reg = devm_regulator_get(data->dev, "vcc");
+	data->reg = devm_regulator_get_optional(data->dev, "vcc");
 	if (!IS_ERR(data->reg)) {
 		int voltage;
 
@@ -1074,7 +1062,7 @@ static int sht15_remove(struct platform_device *pdev)
 	return 0;
 }
 
-static struct platform_device_id sht15_device_ids[] = {
+static const struct platform_device_id sht15_device_ids[] = {
 	{ "sht10", sht10 },
 	{ "sht11", sht11 },
 	{ "sht15", sht15 },
@@ -1087,7 +1075,6 @@ MODULE_DEVICE_TABLE(platform, sht15_device_ids);
 static struct platform_driver sht15_driver = {
 	.driver = {
 		.name = "sht15",
-		.owner = THIS_MODULE,
 	},
 	.probe = sht15_probe,
 	.remove = sht15_remove,

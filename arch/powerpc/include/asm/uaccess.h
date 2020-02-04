@@ -178,7 +178,7 @@ do {								\
 	long __pu_err;						\
 	__typeof__(*(ptr)) __user *__pu_addr = (ptr);		\
 	if (!is_kernel_addr((unsigned long)__pu_addr))		\
-		might_sleep();					\
+		might_fault();					\
 	__chk_user_ptr(ptr);					\
 	__put_user_size((x), __pu_addr, (size), __pu_err);	\
 	__pu_err;						\
@@ -188,7 +188,7 @@ do {								\
 ({									\
 	long __pu_err = -EFAULT;					\
 	__typeof__(*(ptr)) __user *__pu_addr = (ptr);			\
-	might_sleep();							\
+	might_fault();							\
 	if (access_ok(VERIFY_WRITE, __pu_addr, size))			\
 		__put_user_size((x), __pu_addr, (size), __pu_err);	\
 	__pu_err;							\
@@ -265,39 +265,24 @@ do {								\
 ({								\
 	long __gu_err;						\
 	unsigned long __gu_val;					\
-	const __typeof__(*(ptr)) __user *__gu_addr = (ptr);	\
+	__typeof__(*(ptr)) __user *__gu_addr = (ptr);	\
 	__chk_user_ptr(ptr);					\
 	if (!is_kernel_addr((unsigned long)__gu_addr))		\
-		might_sleep();					\
+		might_fault();					\
 	__get_user_size(__gu_val, __gu_addr, (size), __gu_err);	\
 	(x) = (__typeof__(*(ptr)))__gu_val;			\
 	__gu_err;						\
 })
-
-#ifndef __powerpc64__
-#define __get_user64_nocheck(x, ptr, size)			\
-({								\
-	long __gu_err;						\
-	long long __gu_val;					\
-	const __typeof__(*(ptr)) __user *__gu_addr = (ptr);	\
-	__chk_user_ptr(ptr);					\
-	if (!is_kernel_addr((unsigned long)__gu_addr))		\
-		might_sleep();					\
-	__get_user_size(__gu_val, __gu_addr, (size), __gu_err);	\
-	(x) = (__typeof__(*(ptr)))__gu_val;			\
-	__gu_err;						\
-})
-#endif /* __powerpc64__ */
 
 #define __get_user_check(x, ptr, size)					\
 ({									\
 	long __gu_err = -EFAULT;					\
 	unsigned long  __gu_val = 0;					\
-	const __typeof__(*(ptr)) __user *__gu_addr = (ptr);		\
-	might_sleep();							\
+	__typeof__(*(ptr)) __user *__gu_addr = (ptr);		\
+	might_fault();							\
 	if (access_ok(VERIFY_READ, __gu_addr, (size)))			\
 		__get_user_size(__gu_val, __gu_addr, (size), __gu_err);	\
-	(x) = (__typeof__(*(ptr)))__gu_val;				\
+	(x) = (__force __typeof__(*(ptr)))__gu_val;				\
 	__gu_err;							\
 })
 
@@ -305,10 +290,10 @@ do {								\
 ({								\
 	long __gu_err;						\
 	unsigned long __gu_val;					\
-	const __typeof__(*(ptr)) __user *__gu_addr = (ptr);	\
+	__typeof__(*(ptr)) __user *__gu_addr = (ptr);	\
 	__chk_user_ptr(ptr);					\
 	__get_user_size(__gu_val, __gu_addr, (size), __gu_err);	\
-	(x) = (__typeof__(*(ptr)))__gu_val;			\
+	(x) = (__force __typeof__(*(ptr)))__gu_val;			\
 	__gu_err;						\
 })
 
@@ -317,6 +302,43 @@ do {								\
 
 extern unsigned long __copy_tofrom_user(void __user *to,
 		const void __user *from, unsigned long size);
+
+#ifndef __powerpc64__
+
+static inline unsigned long copy_from_user(void *to,
+		const void __user *from, unsigned long n)
+{
+	if (likely(access_ok(VERIFY_READ, from, n))) {
+		check_object_size(to, n, false);
+		return __copy_tofrom_user((__force void __user *)to, from, n);
+	}
+	memset(to, 0, n);
+	return n;
+}
+
+static inline unsigned long copy_to_user(void __user *to,
+		const void *from, unsigned long n)
+{
+	if (access_ok(VERIFY_WRITE, to, n)) {
+		check_object_size(from, n, true);
+		return __copy_tofrom_user(to, (__force void __user *)from, n);
+	}
+	return n;
+}
+
+#else /* __powerpc64__ */
+
+#define __copy_in_user(to, from, size) \
+	__copy_tofrom_user((to), (from), (size))
+
+extern unsigned long copy_from_user(void *to, const void __user *from,
+				    unsigned long n);
+extern unsigned long copy_to_user(void __user *to, const void *from,
+				  unsigned long n);
+extern unsigned long copy_in_user(void __user *to, const void __user *from,
+				  unsigned long n);
+
+#endif /* __powerpc64__ */
 
 static inline unsigned long __copy_from_user_inatomic(void *to,
 		const void __user *from, unsigned long n)
@@ -342,8 +364,7 @@ static inline unsigned long __copy_from_user_inatomic(void *to,
 			return 0;
 	}
 
-	if (!__builtin_constant_p(n))
-		check_object_size(to, n, false);
+	check_object_size(to, n, false);
 
 	return __copy_tofrom_user((__force void __user *)to, from, n);
 }
@@ -372,8 +393,7 @@ static inline unsigned long __copy_to_user_inatomic(void __user *to,
 			return 0;
 	}
 
-	if (!__builtin_constant_p(n))
-		check_object_size(from, n, true);
+	check_object_size(from, n, true);
 
 	return __copy_tofrom_user(to, (__force const void __user *)from, n);
 }
@@ -381,114 +401,24 @@ static inline unsigned long __copy_to_user_inatomic(void __user *to,
 static inline unsigned long __copy_from_user(void *to,
 		const void __user *from, unsigned long size)
 {
-	might_sleep();
+	might_fault();
 	return __copy_from_user_inatomic(to, from, size);
 }
 
 static inline unsigned long __copy_to_user(void __user *to,
 		const void *from, unsigned long size)
 {
-	might_sleep();
+	might_fault();
 	return __copy_to_user_inatomic(to, from, size);
 }
-
-#ifndef __powerpc64__
-
-static inline unsigned long __must_check copy_from_user(void *to,
-		const void __user *from, unsigned long n)
-{
-	unsigned long over;
-
-	if ((long)n < 0)
-		return n;
-
-	if (access_ok(VERIFY_READ, from, n)) {
-		if (!__builtin_constant_p(n))
-			check_object_size(to, n, false);
-		return __copy_tofrom_user((__force void __user *)to, from, n);
-	}
-	if ((unsigned long)from < TASK_SIZE) {
-		over = (unsigned long)from + n - TASK_SIZE;
-		if (!__builtin_constant_p(n - over))
-			check_object_size(to, n - over, false);
-		return __copy_tofrom_user((__force void __user *)to, from,
-				n - over) + over;
-	}
-	return n;
-}
-
-static inline unsigned long __must_check copy_to_user(void __user *to,
-		const void *from, unsigned long n)
-{
-	unsigned long over;
-
-	if ((long)n < 0)
-		return n;
-
-	if (access_ok(VERIFY_WRITE, to, n)) {
-		if (!__builtin_constant_p(n))
-			check_object_size(from, n, true);
-		return __copy_tofrom_user(to, (__force void __user *)from, n);
-	}
-	if ((unsigned long)to < TASK_SIZE) {
-		over = (unsigned long)to + n - TASK_SIZE;
-		if (!__builtin_constant_p(n))
-			check_object_size(from, n - over, true);
-		return __copy_tofrom_user(to, (__force void __user *)from,
-				n - over) + over;
-	}
-	return n;
-}
-
-#else /* __powerpc64__ */
-
-#define __copy_in_user(to, from, size) \
-	__copy_tofrom_user((to), (from), (size))
-
-static inline unsigned long __must_check copy_from_user(void *to, const void __user *from, unsigned long n)
-{
-	if ((long)n < 0 || n > INT_MAX)
-		return n;
-
-	if (!__builtin_constant_p(n))
-		check_object_size(to, n, false);
-
-	if (likely(access_ok(VERIFY_READ, from, n)))
-		n = __copy_from_user(to, from, n);
-	else
-		memset(to, 0, n);
-	return n;
-}
-
-static inline unsigned long __must_check copy_to_user(void __user *to, const void *from, unsigned long n)
-{
-	if ((long)n < 0 || n > INT_MAX)
-		return n;
-
-	if (likely(access_ok(VERIFY_WRITE, to, n))) {
-		if (!__builtin_constant_p(n))
-			check_object_size(from, n, true);
-		n = __copy_to_user(to, from, n);
-	}
-	return n;
-}
-
-extern unsigned long copy_in_user(void __user *to, const void __user *from,
-				  unsigned long n);
-
-#endif /* __powerpc64__ */
 
 extern unsigned long __clear_user(void __user *addr, unsigned long size);
 
 static inline unsigned long clear_user(void __user *addr, unsigned long size)
 {
-	might_sleep();
+	might_fault();
 	if (likely(access_ok(VERIFY_WRITE, addr, size)))
 		return __clear_user(addr, size);
-	if ((unsigned long)addr < TASK_SIZE) {
-		unsigned long over = (unsigned long)addr + size - TASK_SIZE;
-		return __clear_user(addr, size - over) + over;
-	}
 	return size;
 }
 

@@ -29,7 +29,6 @@
  */
 
 #include <linux/linkage.h>
-#include <asm/alternative-asm.h>
 
 #define CTX	%rdi	// arg1
 #define BUF	%rsi	// arg2
@@ -105,7 +104,6 @@
 	pop	%r12
 	pop	%rbp
 	pop	%rbx
-	pax_force_retaddr 0, 1
 	ret
 
 	ENDPROC(\name)

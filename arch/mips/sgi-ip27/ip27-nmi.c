@@ -23,7 +23,7 @@ typedef unsigned long machreg_t;
 static arch_spinlock_t nmi_lock = __ARCH_SPIN_LOCK_UNLOCKED;
 
 /*
- * Lets see what else we need to do here. Set up sp, gp?
+ * Let's see what else we need to do here. Set up sp, gp?
  */
 void nmi_dump(void)
 {
@@ -187,9 +187,9 @@ void
 cont_nmi_dump(void)
 {
 #ifndef REAL_NMI_SIGNAL
-	static atomic_unchecked_t nmied_cpus = ATOMIC_INIT(0);
+	static atomic_t nmied_cpus = ATOMIC_INIT(0);
 
-	atomic_inc_unchecked(&nmied_cpus);
+	atomic_inc(&nmied_cpus);
 #endif
 	/*
 	 * Only allow 1 cpu to proceed
@@ -233,7 +233,7 @@ cont_nmi_dump(void)
 		udelay(10000);
 	}
 #else
-	while (atomic_read_unchecked(&nmied_cpus) != num_online_cpus());
+	while (atomic_read(&nmied_cpus) != num_online_cpus());
 #endif
 
 	/*

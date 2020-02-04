@@ -22,447 +22,225 @@
 
 typedef atomic64_t atomic_long_t;
 
-#ifdef CONFIG_PAX_REFCOUNT
-typedef atomic64_unchecked_t atomic_long_unchecked_t;
-#else
-typedef atomic64_t atomic_long_unchecked_t;
-#endif
-
 #define ATOMIC_LONG_INIT(i)	ATOMIC64_INIT(i)
+#define ATOMIC_LONG_PFX(x)	atomic64 ## x
 
-static inline long atomic_long_read(atomic_long_t *l)
-{
-	atomic64_t *v = (atomic64_t *)l;
-
-	return (long)atomic64_read(v);
-}
-
-#ifdef CONFIG_PAX_REFCOUNT
-static inline long atomic_long_read_unchecked(atomic_long_unchecked_t *l)
-{
-	atomic64_unchecked_t *v = (atomic64_unchecked_t *)l;
-
-	return (long)atomic64_read_unchecked(v);
-}
-#endif
-
-static inline void atomic_long_set(atomic_long_t *l, long i)
-{
-	atomic64_t *v = (atomic64_t *)l;
-
-	atomic64_set(v, i);
-}
-
-#ifdef CONFIG_PAX_REFCOUNT
-static inline void atomic_long_set_unchecked(atomic_long_unchecked_t *l, long i)
-{
-	atomic64_unchecked_t *v = (atomic64_unchecked_t *)l;
-
-	atomic64_set_unchecked(v, i);
-}
-#endif
-
-static inline void atomic_long_inc(atomic_long_t *l)
-{
-	atomic64_t *v = (atomic64_t *)l;
-
-	atomic64_inc(v);
-}
-
-#ifdef CONFIG_PAX_REFCOUNT
-static inline void atomic_long_inc_unchecked(atomic_long_unchecked_t *l)
-{
-	atomic64_unchecked_t *v = (atomic64_unchecked_t *)l;
-
-	atomic64_inc_unchecked(v);
-}
-#endif
-
-static inline void atomic_long_dec(atomic_long_t *l)
-{
-	atomic64_t *v = (atomic64_t *)l;
-
-	atomic64_dec(v);
-}
-
-#ifdef CONFIG_PAX_REFCOUNT
-static inline void atomic_long_dec_unchecked(atomic_long_unchecked_t *l)
-{
-	atomic64_unchecked_t *v = (atomic64_unchecked_t *)l;
-
-	atomic64_dec_unchecked(v);
-}
-#endif
-
-static inline void atomic_long_add(long i, atomic_long_t *l)
-{
-	atomic64_t *v = (atomic64_t *)l;
-
-	atomic64_add(i, v);
-}
-
-#ifdef CONFIG_PAX_REFCOUNT
-static inline void atomic_long_add_unchecked(long i, atomic_long_unchecked_t *l)
-{
-	atomic64_unchecked_t *v = (atomic64_unchecked_t *)l;
-
-	atomic64_add_unchecked(i, v);
-}
-#endif
-
-static inline void atomic_long_sub(long i, atomic_long_t *l)
-{
-	atomic64_t *v = (atomic64_t *)l;
-
-	atomic64_sub(i, v);
-}
-
-#ifdef CONFIG_PAX_REFCOUNT
-static inline void atomic_long_sub_unchecked(long i, atomic_long_unchecked_t *l)
-{
-	atomic64_unchecked_t *v = (atomic64_unchecked_t *)l;
-
-	atomic64_sub_unchecked(i, v);
-}
-#endif
-
-static inline int atomic_long_sub_and_test(long i, atomic_long_t *l)
-{
-	atomic64_t *v = (atomic64_t *)l;
-
-	return atomic64_sub_and_test(i, v);
-}
-
-static inline int atomic_long_dec_and_test(atomic_long_t *l)
-{
-	atomic64_t *v = (atomic64_t *)l;
-
-	return atomic64_dec_and_test(v);
-}
-
-static inline int atomic_long_inc_and_test(atomic_long_t *l)
-{
-	atomic64_t *v = (atomic64_t *)l;
-
-	return atomic64_inc_and_test(v);
-}
-
-static inline int atomic_long_add_negative(long i, atomic_long_t *l)
-{
-	atomic64_t *v = (atomic64_t *)l;
-
-	return atomic64_add_negative(i, v);
-}
-
-static inline long atomic_long_add_return(long i, atomic_long_t *l)
-{
-	atomic64_t *v = (atomic64_t *)l;
-
-	return (long)atomic64_add_return(i, v);
-}
-
-#ifdef CONFIG_PAX_REFCOUNT
-static inline long atomic_long_add_return_unchecked(long i, atomic_long_unchecked_t *l)
-{
-	atomic64_unchecked_t *v = (atomic64_unchecked_t *)l;
-
-	return (long)atomic64_add_return_unchecked(i, v);
-}
-#endif
-
-static inline long atomic_long_sub_return(long i, atomic_long_t *l)
-{
-	atomic64_t *v = (atomic64_t *)l;
-
-	return (long)atomic64_sub_return(i, v);
-}
-
-static inline long atomic_long_inc_return(atomic_long_t *l)
-{
-	atomic64_t *v = (atomic64_t *)l;
-
-	return (long)atomic64_inc_return(v);
-}
-
-#ifdef CONFIG_PAX_REFCOUNT
-static inline long atomic_long_inc_return_unchecked(atomic_long_unchecked_t *l)
-{
-	atomic64_unchecked_t *v = (atomic64_unchecked_t *)l;
-
-	return (long)atomic64_inc_return_unchecked(v);
-}
-#endif
-
-static inline long atomic_long_dec_return(atomic_long_t *l)
-{
-	atomic64_t *v = (atomic64_t *)l;
-
-	return (long)atomic64_dec_return(v);
-}
-
-static inline long atomic_long_add_unless(atomic_long_t *l, long a, long u)
-{
-	atomic64_t *v = (atomic64_t *)l;
-
-	return (long)atomic64_add_unless(v, a, u);
-}
-
-#define atomic_long_inc_not_zero(l) atomic64_inc_not_zero((atomic64_t *)(l))
-
-#define atomic_long_cmpxchg(l, old, new) \
-	(atomic64_cmpxchg((atomic64_t *)(l), (old), (new)))
-#define atomic_long_xchg(v, new) \
-	(atomic64_xchg((atomic64_t *)(v), (new)))
-
-#else  /*  BITS_PER_LONG == 64  */
+#else
 
 typedef atomic_t atomic_long_t;
 
-#ifdef CONFIG_PAX_REFCOUNT
-typedef atomic_unchecked_t atomic_long_unchecked_t;
-#else
-typedef atomic_t atomic_long_unchecked_t;
-#endif
-
 #define ATOMIC_LONG_INIT(i)	ATOMIC_INIT(i)
-static inline long atomic_long_read(atomic_long_t *l)
-{
-	atomic_t *v = (atomic_t *)l;
+#define ATOMIC_LONG_PFX(x)	atomic ## x
 
-	return (long)atomic_read(v);
-}
-
-#ifdef CONFIG_PAX_REFCOUNT
-static inline long atomic_long_read_unchecked(atomic_long_unchecked_t *l)
-{
-	atomic_unchecked_t *v = (atomic_unchecked_t *)l;
-
-	return (long)atomic_read_unchecked(v);
-}
 #endif
 
-static inline void atomic_long_set(atomic_long_t *l, long i)
-{
-	atomic_t *v = (atomic_t *)l;
+#define ATOMIC_LONG_READ_OP(mo)						\
+static inline long atomic_long_read##mo(const atomic_long_t *l)		\
+{									\
+	ATOMIC_LONG_PFX(_t) *v = (ATOMIC_LONG_PFX(_t) *)l;		\
+									\
+	return (long)ATOMIC_LONG_PFX(_read##mo)(v);			\
+}
+ATOMIC_LONG_READ_OP()
+ATOMIC_LONG_READ_OP(_acquire)
 
-	atomic_set(v, i);
+#undef ATOMIC_LONG_READ_OP
+
+#define ATOMIC_LONG_SET_OP(mo)						\
+static inline void atomic_long_set##mo(atomic_long_t *l, long i)	\
+{									\
+	ATOMIC_LONG_PFX(_t) *v = (ATOMIC_LONG_PFX(_t) *)l;		\
+									\
+	ATOMIC_LONG_PFX(_set##mo)(v, i);				\
+}
+ATOMIC_LONG_SET_OP()
+ATOMIC_LONG_SET_OP(_release)
+
+#undef ATOMIC_LONG_SET_OP
+
+#define ATOMIC_LONG_ADD_SUB_OP(op, mo)					\
+static inline long							\
+atomic_long_##op##_return##mo(long i, atomic_long_t *l)			\
+{									\
+	ATOMIC_LONG_PFX(_t) *v = (ATOMIC_LONG_PFX(_t) *)l;		\
+									\
+	return (long)ATOMIC_LONG_PFX(_##op##_return##mo)(i, v);		\
+}
+ATOMIC_LONG_ADD_SUB_OP(add,)
+ATOMIC_LONG_ADD_SUB_OP(add, _relaxed)
+ATOMIC_LONG_ADD_SUB_OP(add, _acquire)
+ATOMIC_LONG_ADD_SUB_OP(add, _release)
+ATOMIC_LONG_ADD_SUB_OP(sub,)
+ATOMIC_LONG_ADD_SUB_OP(sub, _relaxed)
+ATOMIC_LONG_ADD_SUB_OP(sub, _acquire)
+ATOMIC_LONG_ADD_SUB_OP(sub, _release)
+
+#undef ATOMIC_LONG_ADD_SUB_OP
+
+#define atomic_long_cmpxchg_relaxed(l, old, new) \
+	(ATOMIC_LONG_PFX(_cmpxchg_relaxed)((ATOMIC_LONG_PFX(_t) *)(l), \
+					   (old), (new)))
+#define atomic_long_cmpxchg_acquire(l, old, new) \
+	(ATOMIC_LONG_PFX(_cmpxchg_acquire)((ATOMIC_LONG_PFX(_t) *)(l), \
+					   (old), (new)))
+#define atomic_long_cmpxchg_release(l, old, new) \
+	(ATOMIC_LONG_PFX(_cmpxchg_release)((ATOMIC_LONG_PFX(_t) *)(l), \
+					   (old), (new)))
+#define atomic_long_cmpxchg(l, old, new) \
+	(ATOMIC_LONG_PFX(_cmpxchg)((ATOMIC_LONG_PFX(_t) *)(l), (old), (new)))
+
+#define atomic_long_xchg_relaxed(v, new) \
+	(ATOMIC_LONG_PFX(_xchg_relaxed)((ATOMIC_LONG_PFX(_t) *)(v), (new)))
+#define atomic_long_xchg_acquire(v, new) \
+	(ATOMIC_LONG_PFX(_xchg_acquire)((ATOMIC_LONG_PFX(_t) *)(v), (new)))
+#define atomic_long_xchg_release(v, new) \
+	(ATOMIC_LONG_PFX(_xchg_release)((ATOMIC_LONG_PFX(_t) *)(v), (new)))
+#define atomic_long_xchg(v, new) \
+	(ATOMIC_LONG_PFX(_xchg)((ATOMIC_LONG_PFX(_t) *)(v), (new)))
+
+static __always_inline void atomic_long_inc(atomic_long_t *l)
+{
+	ATOMIC_LONG_PFX(_t) *v = (ATOMIC_LONG_PFX(_t) *)l;
+
+	ATOMIC_LONG_PFX(_inc)(v);
 }
 
-#ifdef CONFIG_PAX_REFCOUNT
-static inline void atomic_long_set_unchecked(atomic_long_unchecked_t *l, long i)
+static __always_inline void atomic_long_dec(atomic_long_t *l)
 {
-	atomic_unchecked_t *v = (atomic_unchecked_t *)l;
+	ATOMIC_LONG_PFX(_t) *v = (ATOMIC_LONG_PFX(_t) *)l;
 
-	atomic_set_unchecked(v, i);
-}
-#endif
-
-static inline void atomic_long_inc(atomic_long_t *l)
-{
-	atomic_t *v = (atomic_t *)l;
-
-	atomic_inc(v);
+	ATOMIC_LONG_PFX(_dec)(v);
 }
 
-#ifdef CONFIG_PAX_REFCOUNT
-static inline void atomic_long_inc_unchecked(atomic_long_unchecked_t *l)
-{
-	atomic_unchecked_t *v = (atomic_unchecked_t *)l;
-
-	atomic_inc_unchecked(v);
-}
-#endif
-
-static inline void atomic_long_dec(atomic_long_t *l)
-{
-	atomic_t *v = (atomic_t *)l;
-
-	atomic_dec(v);
+#define ATOMIC_LONG_FETCH_OP(op, mo)					\
+static inline long							\
+atomic_long_fetch_##op##mo(long i, atomic_long_t *l)			\
+{									\
+	ATOMIC_LONG_PFX(_t) *v = (ATOMIC_LONG_PFX(_t) *)l;		\
+									\
+	return (long)ATOMIC_LONG_PFX(_fetch_##op##mo)(i, v);		\
 }
 
-#ifdef CONFIG_PAX_REFCOUNT
-static inline void atomic_long_dec_unchecked(atomic_long_unchecked_t *l)
-{
-	atomic_unchecked_t *v = (atomic_unchecked_t *)l;
+ATOMIC_LONG_FETCH_OP(add, )
+ATOMIC_LONG_FETCH_OP(add, _relaxed)
+ATOMIC_LONG_FETCH_OP(add, _acquire)
+ATOMIC_LONG_FETCH_OP(add, _release)
+ATOMIC_LONG_FETCH_OP(sub, )
+ATOMIC_LONG_FETCH_OP(sub, _relaxed)
+ATOMIC_LONG_FETCH_OP(sub, _acquire)
+ATOMIC_LONG_FETCH_OP(sub, _release)
+ATOMIC_LONG_FETCH_OP(and, )
+ATOMIC_LONG_FETCH_OP(and, _relaxed)
+ATOMIC_LONG_FETCH_OP(and, _acquire)
+ATOMIC_LONG_FETCH_OP(and, _release)
+ATOMIC_LONG_FETCH_OP(andnot, )
+ATOMIC_LONG_FETCH_OP(andnot, _relaxed)
+ATOMIC_LONG_FETCH_OP(andnot, _acquire)
+ATOMIC_LONG_FETCH_OP(andnot, _release)
+ATOMIC_LONG_FETCH_OP(or, )
+ATOMIC_LONG_FETCH_OP(or, _relaxed)
+ATOMIC_LONG_FETCH_OP(or, _acquire)
+ATOMIC_LONG_FETCH_OP(or, _release)
+ATOMIC_LONG_FETCH_OP(xor, )
+ATOMIC_LONG_FETCH_OP(xor, _relaxed)
+ATOMIC_LONG_FETCH_OP(xor, _acquire)
+ATOMIC_LONG_FETCH_OP(xor, _release)
 
-	atomic_dec_unchecked(v);
+#undef ATOMIC_LONG_FETCH_OP
+
+#define ATOMIC_LONG_FETCH_INC_DEC_OP(op, mo)					\
+static inline long							\
+atomic_long_fetch_##op##mo(atomic_long_t *l)				\
+{									\
+	ATOMIC_LONG_PFX(_t) *v = (ATOMIC_LONG_PFX(_t) *)l;		\
+									\
+	return (long)ATOMIC_LONG_PFX(_fetch_##op##mo)(v);		\
 }
-#endif
 
-static inline void atomic_long_add(long i, atomic_long_t *l)
-{
-	atomic_t *v = (atomic_t *)l;
+ATOMIC_LONG_FETCH_INC_DEC_OP(inc,)
+ATOMIC_LONG_FETCH_INC_DEC_OP(inc, _relaxed)
+ATOMIC_LONG_FETCH_INC_DEC_OP(inc, _acquire)
+ATOMIC_LONG_FETCH_INC_DEC_OP(inc, _release)
+ATOMIC_LONG_FETCH_INC_DEC_OP(dec,)
+ATOMIC_LONG_FETCH_INC_DEC_OP(dec, _relaxed)
+ATOMIC_LONG_FETCH_INC_DEC_OP(dec, _acquire)
+ATOMIC_LONG_FETCH_INC_DEC_OP(dec, _release)
 
-	atomic_add(i, v);
+#undef ATOMIC_LONG_FETCH_INC_DEC_OP
+
+#define ATOMIC_LONG_OP(op)						\
+static __always_inline void						\
+atomic_long_##op(long i, atomic_long_t *l)				\
+{									\
+	ATOMIC_LONG_PFX(_t) *v = (ATOMIC_LONG_PFX(_t) *)l;		\
+									\
+	ATOMIC_LONG_PFX(_##op)(i, v);					\
 }
 
-#ifdef CONFIG_PAX_REFCOUNT
-static inline void atomic_long_add_unchecked(long i, atomic_long_unchecked_t *l)
-{
-	atomic_unchecked_t *v = (atomic_unchecked_t *)l;
+ATOMIC_LONG_OP(add)
+ATOMIC_LONG_OP(sub)
+ATOMIC_LONG_OP(and)
+ATOMIC_LONG_OP(andnot)
+ATOMIC_LONG_OP(or)
+ATOMIC_LONG_OP(xor)
 
-	atomic_add_unchecked(i, v);
-}
-#endif
-
-static inline void atomic_long_sub(long i, atomic_long_t *l)
-{
-	atomic_t *v = (atomic_t *)l;
-
-	atomic_sub(i, v);
-}
-
-#ifdef CONFIG_PAX_REFCOUNT
-static inline void atomic_long_sub_unchecked(long i, atomic_long_unchecked_t *l)
-{
-	atomic_unchecked_t *v = (atomic_unchecked_t *)l;
-
-	atomic_sub_unchecked(i, v);
-}
-#endif
+#undef ATOMIC_LONG_OP
 
 static inline int atomic_long_sub_and_test(long i, atomic_long_t *l)
 {
-	atomic_t *v = (atomic_t *)l;
+	ATOMIC_LONG_PFX(_t) *v = (ATOMIC_LONG_PFX(_t) *)l;
 
-	return atomic_sub_and_test(i, v);
+	return ATOMIC_LONG_PFX(_sub_and_test)(i, v);
 }
 
 static inline int atomic_long_dec_and_test(atomic_long_t *l)
 {
-	atomic_t *v = (atomic_t *)l;
+	ATOMIC_LONG_PFX(_t) *v = (ATOMIC_LONG_PFX(_t) *)l;
 
-	return atomic_dec_and_test(v);
+	return ATOMIC_LONG_PFX(_dec_and_test)(v);
 }
 
 static inline int atomic_long_inc_and_test(atomic_long_t *l)
 {
-	atomic_t *v = (atomic_t *)l;
+	ATOMIC_LONG_PFX(_t) *v = (ATOMIC_LONG_PFX(_t) *)l;
 
-	return atomic_inc_and_test(v);
+	return ATOMIC_LONG_PFX(_inc_and_test)(v);
 }
 
 static inline int atomic_long_add_negative(long i, atomic_long_t *l)
 {
-	atomic_t *v = (atomic_t *)l;
+	ATOMIC_LONG_PFX(_t) *v = (ATOMIC_LONG_PFX(_t) *)l;
 
-	return atomic_add_negative(i, v);
+	return ATOMIC_LONG_PFX(_add_negative)(i, v);
 }
 
-static inline long atomic_long_add_return(long i, atomic_long_t *l)
-{
-	atomic_t *v = (atomic_t *)l;
-
-	return (long)atomic_add_return(i, v);
+#define ATOMIC_LONG_INC_DEC_OP(op, mo)					\
+static inline long							\
+atomic_long_##op##_return##mo(atomic_long_t *l)				\
+{									\
+	ATOMIC_LONG_PFX(_t) *v = (ATOMIC_LONG_PFX(_t) *)l;		\
+									\
+	return (long)ATOMIC_LONG_PFX(_##op##_return##mo)(v);		\
 }
+ATOMIC_LONG_INC_DEC_OP(inc,)
+ATOMIC_LONG_INC_DEC_OP(inc, _relaxed)
+ATOMIC_LONG_INC_DEC_OP(inc, _acquire)
+ATOMIC_LONG_INC_DEC_OP(inc, _release)
+ATOMIC_LONG_INC_DEC_OP(dec,)
+ATOMIC_LONG_INC_DEC_OP(dec, _relaxed)
+ATOMIC_LONG_INC_DEC_OP(dec, _acquire)
+ATOMIC_LONG_INC_DEC_OP(dec, _release)
 
-#ifdef CONFIG_PAX_REFCOUNT
-static inline long atomic_long_add_return_unchecked(long i, atomic_long_unchecked_t *l)
-{
-	atomic_unchecked_t *v = (atomic_unchecked_t *)l;
-
-	return (long)atomic_add_return_unchecked(i, v);
-}
-
-#endif
-
-static inline long atomic_long_sub_return(long i, atomic_long_t *l)
-{
-	atomic_t *v = (atomic_t *)l;
-
-	return (long)atomic_sub_return(i, v);
-}
-
-static inline long atomic_long_inc_return(atomic_long_t *l)
-{
-	atomic_t *v = (atomic_t *)l;
-
-	return (long)atomic_inc_return(v);
-}
-
-#ifdef CONFIG_PAX_REFCOUNT
-static inline long atomic_long_inc_return_unchecked(atomic_long_unchecked_t *l)
-{
-	atomic_unchecked_t *v = (atomic_unchecked_t *)l;
-
-	return (long)atomic_inc_return_unchecked(v);
-}
-#endif
-
-static inline long atomic_long_dec_return(atomic_long_t *l)
-{
-	atomic_t *v = (atomic_t *)l;
-
-	return (long)atomic_dec_return(v);
-}
+#undef ATOMIC_LONG_INC_DEC_OP
 
 static inline long atomic_long_add_unless(atomic_long_t *l, long a, long u)
 {
-	atomic_t *v = (atomic_t *)l;
+	ATOMIC_LONG_PFX(_t) *v = (ATOMIC_LONG_PFX(_t) *)l;
 
-	return (long)atomic_add_unless(v, a, u);
+	return (long)ATOMIC_LONG_PFX(_add_unless)(v, a, u);
 }
 
-#define atomic_long_inc_not_zero(l) atomic_inc_not_zero((atomic_t *)(l))
-
-#define atomic_long_cmpxchg(l, old, new) \
-	(atomic_cmpxchg((atomic_t *)(l), (old), (new)))
-#define atomic_long_xchg(v, new) \
-	(atomic_xchg((atomic_t *)(v), (new)))
-
-#endif  /*  BITS_PER_LONG == 64  */
-
-#ifdef CONFIG_PAX_REFCOUNT
-static inline void pax_refcount_needs_these_functions(void)
-{
-	atomic_read_unchecked((atomic_unchecked_t *)NULL);
-	atomic_set_unchecked((atomic_unchecked_t *)NULL, 0);
-	atomic_add_unchecked(0, (atomic_unchecked_t *)NULL);
-	atomic_sub_unchecked(0, (atomic_unchecked_t *)NULL);
-	atomic_inc_unchecked((atomic_unchecked_t *)NULL);
-	(void)atomic_inc_and_test_unchecked((atomic_unchecked_t *)NULL);
-	atomic_inc_return_unchecked((atomic_unchecked_t *)NULL);
-	atomic_add_return_unchecked(0, (atomic_unchecked_t *)NULL);
-	atomic_dec_unchecked((atomic_unchecked_t *)NULL);
-	atomic_cmpxchg_unchecked((atomic_unchecked_t *)NULL, 0, 0);
-	(void)atomic_xchg_unchecked((atomic_unchecked_t *)NULL, 0);
-#ifdef CONFIG_X86
-	atomic_clear_mask_unchecked(0, NULL);
-	atomic_set_mask_unchecked(0, NULL);
-#endif
-
-	atomic_long_read_unchecked((atomic_long_unchecked_t *)NULL);
-	atomic_long_set_unchecked((atomic_long_unchecked_t *)NULL, 0);
-	atomic_long_add_unchecked(0, (atomic_long_unchecked_t *)NULL);
-	atomic_long_sub_unchecked(0, (atomic_long_unchecked_t *)NULL);
-	atomic_long_inc_unchecked((atomic_long_unchecked_t *)NULL);
-	atomic_long_add_return_unchecked(0, (atomic_long_unchecked_t *)NULL);
-	atomic_long_inc_return_unchecked((atomic_long_unchecked_t *)NULL);
-	atomic_long_dec_unchecked((atomic_long_unchecked_t *)NULL);
-}
-#else
-#define atomic_read_unchecked(v) atomic_read(v)
-#define atomic_set_unchecked(v, i) atomic_set((v), (i))
-#define atomic_add_unchecked(i, v) atomic_add((i), (v))
-#define atomic_sub_unchecked(i, v) atomic_sub((i), (v))
-#define atomic_inc_unchecked(v) atomic_inc(v)
-#define atomic_inc_and_test_unchecked(v) atomic_inc_and_test(v)
-#define atomic_inc_return_unchecked(v) atomic_inc_return(v)
-#define atomic_add_return_unchecked(i, v) atomic_add_return((i), (v))
-#define atomic_dec_unchecked(v) atomic_dec(v)
-#define atomic_cmpxchg_unchecked(v, o, n) atomic_cmpxchg((v), (o), (n))
-#define atomic_xchg_unchecked(v, i) atomic_xchg((v), (i))
-#define atomic_clear_mask_unchecked(mask, v) atomic_clear_mask((mask), (v))
-#define atomic_set_mask_unchecked(mask, v) atomic_set_mask((mask), (v))
-
-#define atomic_long_read_unchecked(v) atomic_long_read(v)
-#define atomic_long_set_unchecked(v, i) atomic_long_set((v), (i))
-#define atomic_long_add_unchecked(i, v) atomic_long_add((i), (v))
-#define atomic_long_sub_unchecked(i, v) atomic_long_sub((i), (v))
-#define atomic_long_inc_unchecked(v) atomic_long_inc(v)
-#define atomic_long_add_return_unchecked(i, v) atomic_long_add_return((i), (v))
-#define atomic_long_inc_return_unchecked(v) atomic_long_inc_return(v)
-#define atomic_long_dec_unchecked(v) atomic_long_dec(v)
-#endif
+#define atomic_long_inc_not_zero(l) \
+	ATOMIC_LONG_PFX(_inc_not_zero)((ATOMIC_LONG_PFX(_t) *)(l))
 
 #endif  /*  _ASM_GENERIC_ATOMIC_LONG_H  */

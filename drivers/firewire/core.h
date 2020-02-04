@@ -111,7 +111,6 @@ struct fw_card_driver {
 
 	int (*stop_iso)(struct fw_iso_context *ctx);
 };
-typedef struct fw_card_driver __no_const fw_card_driver_no_const;
 
 void fw_card_initialize(struct fw_card *card,
 		const struct fw_card_driver *driver, struct device *device);
@@ -119,7 +118,6 @@ int fw_card_add(struct fw_card *card,
 		u32 max_receive, u32 link_speed, u64 guid);
 void fw_core_remove_card(struct fw_card *card);
 int fw_compute_block_crc(__be32 *block);
-void fw_schedule_bus_reset(struct fw_card *card, bool delayed, bool short_reset);
 void fw_schedule_bm_work(struct fw_card *card, unsigned long delay);
 
 /* -cdev */
@@ -237,6 +235,9 @@ static inline bool is_next_generation(int new_generation, int old_generation)
 #define TCODE_HAS_RESPONSE_DATA(tcode)	(((tcode) & 12) != 0)
 
 #define LOCAL_BUS 0xffc0
+
+/* OHCI-1394's default upper bound for physical DMA: 4 GB */
+#define FW_MAX_PHYSICAL_RANGE		(1ULL << 32)
 
 void fw_core_handle_request(struct fw_card *card, struct fw_packet *request);
 void fw_core_handle_response(struct fw_card *card, struct fw_packet *packet);

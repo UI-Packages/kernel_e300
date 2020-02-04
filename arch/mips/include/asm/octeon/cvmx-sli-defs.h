@@ -1,5 +1,5 @@
 /***********************license start***************
- * Copyright (c) 2003-2015  Cavium Inc. (support@cavium.com). All rights
+ * Copyright (c) 2003-2017  Cavium Inc. (support@cavium.com). All rights
  * reserved.
  *
  *
@@ -66,12 +66,12 @@ static inline uint64_t CVMX_SLI_BIST_STATUS_FUNC(void)
 			return 0x0000000000000580ull;
 			break;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 					return 0x0000000000000580ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 					return 0x0000000000028580ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000028580ull;
 			break;
 	}
@@ -91,12 +91,12 @@ static inline uint64_t CVMX_SLI_BIST_STATUS_FUNC(void)
 		case OCTEON_CN68XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000000580ull;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return 0x0000000000000580ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return 0x0000000000028580ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000028580ull;
 	}
 	return 0x0000000000028580ull;
@@ -143,8 +143,9 @@ static inline uint64_t CVMX_SLI_CTL_PORTX(unsigned long offset)
 			if ((offset <= 3))
 				return 0x0000000000000050ull + ((offset) & 3) * 16;
 			break;
+
+			break;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				if ((offset <= 3))
@@ -152,10 +153,9 @@ static inline uint64_t CVMX_SLI_CTL_PORTX(unsigned long offset)
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				if ((offset <= 3))
 					return 0x00000000000286E0ull + ((offset) & 3) * 16;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			if ((offset <= 3))
 				return 0x00000000000286E0ull + ((offset) & 3) * 16;
-			break;
-
 			break;
 	}
 	cvmx_warn("CVMX_SLI_CTL_PORTX (offset = %lu) not supported on this chip\n", offset);
@@ -174,15 +174,15 @@ static inline uint64_t CVMX_SLI_CTL_PORTX(unsigned long offset)
 			return 0x0000000000010050ull + (offset) * 16;
 		case OCTEON_CN66XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000000050ull + (offset) * 16;
+
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return 0x00000000000006E0ull + (offset) * 16;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return 0x00000000000286E0ull + (offset) * 16;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x00000000000286E0ull + (offset) * 16;
-
 	}
 	return 0x00000000000286E0ull + (offset) * 16;
 }
@@ -201,12 +201,12 @@ static inline uint64_t CVMX_SLI_CTL_STATUS_FUNC(void)
 			return 0x0000000000000570ull;
 			break;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 					return 0x0000000000000570ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 					return 0x0000000000028570ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000028570ull;
 			break;
 	}
@@ -226,12 +226,12 @@ static inline uint64_t CVMX_SLI_CTL_STATUS_FUNC(void)
 		case OCTEON_CN68XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000000570ull;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return 0x0000000000000570ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return 0x0000000000028570ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000028570ull;
 	}
 	return 0x0000000000028570ull;
@@ -251,12 +251,12 @@ static inline uint64_t CVMX_SLI_DATA_OUT_CNT_FUNC(void)
 			return 0x00000000000005F0ull;
 			break;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 					return 0x00000000000005F0ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 					return 0x00000000000285F0ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x00000000000285F0ull;
 			break;
 	}
@@ -276,12 +276,12 @@ static inline uint64_t CVMX_SLI_DATA_OUT_CNT_FUNC(void)
 		case OCTEON_CN68XX & OCTEON_FAMILY_MASK:
 			return 0x00000000000005F0ull;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return 0x00000000000005F0ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return 0x00000000000285F0ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x00000000000285F0ull;
 	}
 	return 0x00000000000285F0ull;
@@ -323,7 +323,6 @@ static inline uint64_t CVMX_SLI_DMAX_CNT(unsigned long offset)
 				return 0x0000000000000400ull + ((offset) & 1) * 16;
 			break;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				if ((offset <= 1))
@@ -331,6 +330,7 @@ static inline uint64_t CVMX_SLI_DMAX_CNT(unsigned long offset)
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				if ((offset <= 1))
 					return 0x0000000000028400ull + ((offset) & 1) * 16;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			if ((offset <= 1))
 				return 0x0000000000028400ull + ((offset) & 1) * 16;
 			break;
@@ -350,12 +350,12 @@ static inline uint64_t CVMX_SLI_DMAX_CNT(unsigned long offset)
 		case OCTEON_CN68XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000000400ull + (offset) * 16;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return 0x0000000000000400ull + (offset) * 16;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return 0x0000000000028400ull + (offset) * 16;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000028400ull + (offset) * 16;
 	}
 	return 0x0000000000028400ull + (offset) * 16;
@@ -375,7 +375,6 @@ static inline uint64_t CVMX_SLI_DMAX_INT_LEVEL(unsigned long offset)
 				return 0x00000000000003E0ull + ((offset) & 1) * 16;
 			break;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				if ((offset <= 1))
@@ -383,6 +382,7 @@ static inline uint64_t CVMX_SLI_DMAX_INT_LEVEL(unsigned long offset)
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				if ((offset <= 1))
 					return 0x00000000000283E0ull + ((offset) & 1) * 16;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			if ((offset <= 1))
 				return 0x00000000000283E0ull + ((offset) & 1) * 16;
 			break;
@@ -402,12 +402,12 @@ static inline uint64_t CVMX_SLI_DMAX_INT_LEVEL(unsigned long offset)
 		case OCTEON_CN68XX & OCTEON_FAMILY_MASK:
 			return 0x00000000000003E0ull + (offset) * 16;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return 0x00000000000003E0ull + (offset) * 16;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return 0x00000000000283E0ull + (offset) * 16;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x00000000000283E0ull + (offset) * 16;
 	}
 	return 0x00000000000283E0ull + (offset) * 16;
@@ -427,7 +427,6 @@ static inline uint64_t CVMX_SLI_DMAX_TIM(unsigned long offset)
 				return 0x0000000000000420ull + ((offset) & 1) * 16;
 			break;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				if ((offset <= 1))
@@ -435,6 +434,7 @@ static inline uint64_t CVMX_SLI_DMAX_TIM(unsigned long offset)
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				if ((offset <= 1))
 					return 0x0000000000028420ull + ((offset) & 1) * 16;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			if ((offset <= 1))
 				return 0x0000000000028420ull + ((offset) & 1) * 16;
 			break;
@@ -454,12 +454,12 @@ static inline uint64_t CVMX_SLI_DMAX_TIM(unsigned long offset)
 		case OCTEON_CN68XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000000420ull + (offset) * 16;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return 0x0000000000000420ull + (offset) * 16;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return 0x0000000000028420ull + (offset) * 16;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000028420ull + (offset) * 16;
 	}
 	return 0x0000000000028420ull + (offset) * 16;
@@ -692,12 +692,12 @@ static inline uint64_t CVMX_SLI_MAC_CREDIT_CNT_FUNC(void)
 			return 0x0000000000003D70ull;
 			break;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 					return 0x0000000000003D70ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 					return 0x0000000000023D70ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000023D70ull;
 			break;
 	}
@@ -717,12 +717,12 @@ static inline uint64_t CVMX_SLI_MAC_CREDIT_CNT_FUNC(void)
 		case OCTEON_CN68XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000003D70ull;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return 0x0000000000003D70ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return 0x0000000000023D70ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000023D70ull;
 	}
 	return 0x0000000000023D70ull;
@@ -740,12 +740,12 @@ static inline uint64_t CVMX_SLI_MAC_CREDIT_CNT2_FUNC(void)
 			return 0x0000000000013E10ull;
 			break;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 					return 0x0000000000003E10ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 					return 0x0000000000023E10ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000023E10ull;
 			break;
 	}
@@ -763,12 +763,12 @@ static inline uint64_t CVMX_SLI_MAC_CREDIT_CNT2_FUNC(void)
 		case OCTEON_CN61XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000013E10ull;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return 0x0000000000003E10ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return 0x0000000000023E10ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000023E10ull;
 	}
 	return 0x0000000000023E10ull;
@@ -788,12 +788,12 @@ static inline uint64_t CVMX_SLI_MAC_NUMBER_FUNC(void)
 			return 0x0000000000003E00ull;
 			break;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 					return 0x0000000000003E00ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 					return 0x0000000000020050ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000020050ull;
 			break;
 	}
@@ -813,12 +813,12 @@ static inline uint64_t CVMX_SLI_MAC_NUMBER_FUNC(void)
 		case OCTEON_CN68XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000003E00ull;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return 0x0000000000003E00ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return 0x0000000000020050ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000020050ull;
 	}
 	return 0x0000000000020050ull;
@@ -838,12 +838,12 @@ static inline uint64_t CVMX_SLI_MEM_ACCESS_CTL_FUNC(void)
 			return 0x00000000000002F0ull;
 			break;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 					return 0x00000000000002F0ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 					return 0x00000000000282F0ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x00000000000282F0ull;
 			break;
 	}
@@ -863,12 +863,12 @@ static inline uint64_t CVMX_SLI_MEM_ACCESS_CTL_FUNC(void)
 		case OCTEON_CN68XX & OCTEON_FAMILY_MASK:
 			return 0x00000000000002F0ull;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return 0x00000000000002F0ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return 0x00000000000282F0ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x00000000000282F0ull;
 	}
 	return 0x00000000000282F0ull;
@@ -888,7 +888,6 @@ static inline uint64_t CVMX_SLI_MEM_ACCESS_SUBIDX(unsigned long offset)
 				return 0x00000000000000E0ull + ((offset) & 31) * 16 - 16*12;
 			break;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				if (((offset >= 12) && (offset <= 27)))
@@ -896,6 +895,7 @@ static inline uint64_t CVMX_SLI_MEM_ACCESS_SUBIDX(unsigned long offset)
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				if (((offset >= 12) && (offset <= 27)))
 					return 0x00000000000280E0ull + ((offset) & 31) * 16 - 16*12;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			if (((offset >= 12) && (offset <= 27)))
 				return 0x00000000000280E0ull + ((offset) & 31) * 16 - 16*12;
 			break;
@@ -915,12 +915,12 @@ static inline uint64_t CVMX_SLI_MEM_ACCESS_SUBIDX(unsigned long offset)
 		case OCTEON_CN68XX & OCTEON_FAMILY_MASK:
 			return 0x00000000000000E0ull + (offset) * 16 - 16*12;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return 0x00000000000000E0ull + (offset) * 16 - 16*12;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return 0x00000000000280E0ull + (offset) * 16 - 16*12;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x00000000000280E0ull + (offset) * 16 - 16*12;
 	}
 	return 0x00000000000280E0ull + (offset) * 16 - 16*12;
@@ -931,16 +931,16 @@ static inline uint64_t CVMX_SLI_MEM_ACCESS_SUBIDX(unsigned long offset)
 static inline uint64_t CVMX_SLI_MEM_CTL_FUNC(void)
 {
 	switch(cvmx_get_octeon_family()) {
-
-			break;
-		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 					return 0x00000000000005E0ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 					return 0x00000000000285E0ull;
+		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x00000000000285E0ull;
+			break;
+
 			break;
 	}
 	cvmx_warn("CVMX_SLI_MEM_CTL not supported on this chip\n");
@@ -951,15 +951,15 @@ static inline uint64_t CVMX_SLI_MEM_CTL_FUNC(void)
 static inline uint64_t CVMX_SLI_MEM_CTL_FUNC(void)
 {
 	switch(cvmx_get_octeon_family()) {
-
-		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return 0x00000000000005E0ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return 0x00000000000285E0ull;
+		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x00000000000285E0ull;
+
 	}
 	return 0x00000000000285E0ull;
 }
@@ -969,16 +969,16 @@ static inline uint64_t CVMX_SLI_MEM_CTL_FUNC(void)
 static inline uint64_t CVMX_SLI_MEM_INT_SUM_FUNC(void)
 {
 	switch(cvmx_get_octeon_family()) {
-
-			break;
-		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 					return 0x00000000000005D0ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 					return 0x00000000000285D0ull;
+		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x00000000000285D0ull;
+			break;
+
 			break;
 	}
 	cvmx_warn("CVMX_SLI_MEM_INT_SUM not supported on this chip\n");
@@ -989,15 +989,15 @@ static inline uint64_t CVMX_SLI_MEM_INT_SUM_FUNC(void)
 static inline uint64_t CVMX_SLI_MEM_INT_SUM_FUNC(void)
 {
 	switch(cvmx_get_octeon_family()) {
-
-		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return 0x00000000000005D0ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return 0x00000000000285D0ull;
+		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x00000000000285D0ull;
+
 	}
 	return 0x00000000000285D0ull;
 }
@@ -1006,10 +1006,6 @@ static inline uint64_t CVMX_SLI_MEM_INT_SUM_FUNC(void)
 static inline uint64_t CVMX_SLI_MSIXX_TABLE_ADDR(unsigned long offset)
 {
 	switch(cvmx_get_octeon_family()) {
-
-			break;
-		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				if ((offset <= 64))
@@ -1017,8 +1013,12 @@ static inline uint64_t CVMX_SLI_MSIXX_TABLE_ADDR(unsigned long offset)
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				if ((offset <= 64))
 					return 0x0000000000000000ull + ((offset) & 127) * 16;
+		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			if ((offset <= 64))
 				return 0x0000000000000000ull + ((offset) & 127) * 16;
+			break;
+
 			break;
 	}
 	cvmx_warn("CVMX_SLI_MSIXX_TABLE_ADDR (offset = %lu) not supported on this chip\n", offset);
@@ -1028,15 +1028,15 @@ static inline uint64_t CVMX_SLI_MSIXX_TABLE_ADDR(unsigned long offset)
 static inline uint64_t CVMX_SLI_MSIXX_TABLE_ADDR(unsigned long offset)
 {
 	switch(cvmx_get_octeon_family()) {
-
-		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return 0x0000000000006000ull + (offset) * 16;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return 0x0000000000000000ull + (offset) * 16;
+		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000000000ull + (offset) * 16;
+
 	}
 	return 0x0000000000000000ull + (offset) * 16;
 }
@@ -1045,10 +1045,6 @@ static inline uint64_t CVMX_SLI_MSIXX_TABLE_ADDR(unsigned long offset)
 static inline uint64_t CVMX_SLI_MSIXX_TABLE_DATA(unsigned long offset)
 {
 	switch(cvmx_get_octeon_family()) {
-
-			break;
-		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				if ((offset <= 64))
@@ -1056,8 +1052,12 @@ static inline uint64_t CVMX_SLI_MSIXX_TABLE_DATA(unsigned long offset)
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				if ((offset <= 64))
 					return 0x0000000000000008ull + ((offset) & 127) * 16;
+		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			if ((offset <= 64))
 				return 0x0000000000000008ull + ((offset) & 127) * 16;
+			break;
+
 			break;
 	}
 	cvmx_warn("CVMX_SLI_MSIXX_TABLE_DATA (offset = %lu) not supported on this chip\n", offset);
@@ -1067,15 +1067,15 @@ static inline uint64_t CVMX_SLI_MSIXX_TABLE_DATA(unsigned long offset)
 static inline uint64_t CVMX_SLI_MSIXX_TABLE_DATA(unsigned long offset)
 {
 	switch(cvmx_get_octeon_family()) {
-
-		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return 0x0000000000006008ull + (offset) * 16;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return 0x0000000000000008ull + (offset) * 16;
+		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000000008ull + (offset) * 16;
+
 	}
 	return 0x0000000000000008ull + (offset) * 16;
 }
@@ -1107,16 +1107,16 @@ static inline uint64_t CVMX_SLI_MSIX_MACX_PF_TABLE_DATA(unsigned long offset)
 static inline uint64_t CVMX_SLI_MSIX_PBA0_FUNC(void)
 {
 	switch(cvmx_get_octeon_family()) {
-
-			break;
-		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 					return 0x0000000000007000ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 					return 0x0000000000001000ull;
+		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000001000ull;
+			break;
+
 			break;
 	}
 	cvmx_warn("CVMX_SLI_MSIX_PBA0 not supported on this chip\n");
@@ -1127,15 +1127,15 @@ static inline uint64_t CVMX_SLI_MSIX_PBA0_FUNC(void)
 static inline uint64_t CVMX_SLI_MSIX_PBA0_FUNC(void)
 {
 	switch(cvmx_get_octeon_family()) {
-
-		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return 0x0000000000007000ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return 0x0000000000001000ull;
+		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000001000ull;
+
 	}
 	return 0x0000000000001000ull;
 }
@@ -1145,16 +1145,16 @@ static inline uint64_t CVMX_SLI_MSIX_PBA0_FUNC(void)
 static inline uint64_t CVMX_SLI_MSIX_PBA1_FUNC(void)
 {
 	switch(cvmx_get_octeon_family()) {
-
-			break;
-		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 					return 0x0000000000007010ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 					return 0x0000000000001008ull;
+		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000001008ull;
+			break;
+
 			break;
 	}
 	cvmx_warn("CVMX_SLI_MSIX_PBA1 not supported on this chip\n");
@@ -1165,15 +1165,15 @@ static inline uint64_t CVMX_SLI_MSIX_PBA1_FUNC(void)
 static inline uint64_t CVMX_SLI_MSIX_PBA1_FUNC(void)
 {
 	switch(cvmx_get_octeon_family()) {
-
-		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return 0x0000000000007010ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return 0x0000000000001008ull;
+		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000001008ull;
+
 	}
 	return 0x0000000000001008ull;
 }
@@ -1236,12 +1236,12 @@ static inline uint64_t CVMX_SLI_MSI_RCV0_FUNC(void)
 			return 0x0000000000003C10ull;
 			break;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 					return 0x0000000000003C10ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 					return 0x0000000000023C10ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000023C10ull;
 			break;
 	}
@@ -1261,12 +1261,12 @@ static inline uint64_t CVMX_SLI_MSI_RCV0_FUNC(void)
 		case OCTEON_CN68XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000003C10ull;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return 0x0000000000003C10ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return 0x0000000000023C10ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000023C10ull;
 	}
 	return 0x0000000000023C10ull;
@@ -1286,12 +1286,12 @@ static inline uint64_t CVMX_SLI_MSI_RCV1_FUNC(void)
 			return 0x0000000000003C20ull;
 			break;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 					return 0x0000000000003C20ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 					return 0x0000000000023C20ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000023C20ull;
 			break;
 	}
@@ -1311,12 +1311,12 @@ static inline uint64_t CVMX_SLI_MSI_RCV1_FUNC(void)
 		case OCTEON_CN68XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000003C20ull;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return 0x0000000000003C20ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return 0x0000000000023C20ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000023C20ull;
 	}
 	return 0x0000000000023C20ull;
@@ -1336,12 +1336,12 @@ static inline uint64_t CVMX_SLI_MSI_RCV2_FUNC(void)
 			return 0x0000000000003C30ull;
 			break;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 					return 0x0000000000003C30ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 					return 0x0000000000023C30ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000023C30ull;
 			break;
 	}
@@ -1361,12 +1361,12 @@ static inline uint64_t CVMX_SLI_MSI_RCV2_FUNC(void)
 		case OCTEON_CN68XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000003C30ull;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return 0x0000000000003C30ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return 0x0000000000023C30ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000023C30ull;
 	}
 	return 0x0000000000023C30ull;
@@ -1386,12 +1386,12 @@ static inline uint64_t CVMX_SLI_MSI_RCV3_FUNC(void)
 			return 0x0000000000003C40ull;
 			break;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 					return 0x0000000000003C40ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 					return 0x0000000000023C40ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000023C40ull;
 			break;
 	}
@@ -1411,12 +1411,12 @@ static inline uint64_t CVMX_SLI_MSI_RCV3_FUNC(void)
 		case OCTEON_CN68XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000003C40ull;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return 0x0000000000003C40ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return 0x0000000000023C40ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000023C40ull;
 	}
 	return 0x0000000000023C40ull;
@@ -1436,12 +1436,12 @@ static inline uint64_t CVMX_SLI_MSI_RD_MAP_FUNC(void)
 			return 0x0000000000003CA0ull;
 			break;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 					return 0x0000000000003CA0ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 					return 0x0000000000023CA0ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000023CA0ull;
 			break;
 	}
@@ -1461,12 +1461,12 @@ static inline uint64_t CVMX_SLI_MSI_RD_MAP_FUNC(void)
 		case OCTEON_CN68XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000003CA0ull;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return 0x0000000000003CA0ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return 0x0000000000023CA0ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000023CA0ull;
 	}
 	return 0x0000000000023CA0ull;
@@ -1574,12 +1574,12 @@ static inline uint64_t CVMX_SLI_MSI_WR_MAP_FUNC(void)
 			return 0x0000000000003C90ull;
 			break;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 					return 0x0000000000003C90ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 					return 0x0000000000023C90ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000023C90ull;
 			break;
 	}
@@ -1599,12 +1599,12 @@ static inline uint64_t CVMX_SLI_MSI_WR_MAP_FUNC(void)
 		case OCTEON_CN68XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000003C90ull;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return 0x0000000000003C90ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return 0x0000000000023C90ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000023C90ull;
 	}
 	return 0x0000000000023C90ull;
@@ -1635,12 +1635,12 @@ static inline uint64_t CVMX_SLI_PCIE_MSI_RCV_FUNC(void)
 			return 0x0000000000003CB0ull;
 			break;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 					return 0x0000000000003CB0ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 					return 0x0000000000023CB0ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000023CB0ull;
 			break;
 	}
@@ -1660,12 +1660,12 @@ static inline uint64_t CVMX_SLI_PCIE_MSI_RCV_FUNC(void)
 		case OCTEON_CN68XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000003CB0ull;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return 0x0000000000003CB0ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return 0x0000000000023CB0ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000023CB0ull;
 	}
 	return 0x0000000000023CB0ull;
@@ -1685,12 +1685,12 @@ static inline uint64_t CVMX_SLI_PCIE_MSI_RCV_B1_FUNC(void)
 			return 0x0000000000000650ull;
 			break;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 					return 0x0000000000000650ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 					return 0x0000000000028650ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000028650ull;
 			break;
 	}
@@ -1710,12 +1710,12 @@ static inline uint64_t CVMX_SLI_PCIE_MSI_RCV_B1_FUNC(void)
 		case OCTEON_CN68XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000000650ull;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return 0x0000000000000650ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return 0x0000000000028650ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000028650ull;
 	}
 	return 0x0000000000028650ull;
@@ -1735,12 +1735,12 @@ static inline uint64_t CVMX_SLI_PCIE_MSI_RCV_B2_FUNC(void)
 			return 0x0000000000000660ull;
 			break;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 					return 0x0000000000000660ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 					return 0x0000000000028660ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000028660ull;
 			break;
 	}
@@ -1760,12 +1760,12 @@ static inline uint64_t CVMX_SLI_PCIE_MSI_RCV_B2_FUNC(void)
 		case OCTEON_CN68XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000000660ull;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return 0x0000000000000660ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return 0x0000000000028660ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000028660ull;
 	}
 	return 0x0000000000028660ull;
@@ -1785,12 +1785,12 @@ static inline uint64_t CVMX_SLI_PCIE_MSI_RCV_B3_FUNC(void)
 			return 0x0000000000000670ull;
 			break;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 					return 0x0000000000000670ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 					return 0x0000000000028670ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000028670ull;
 			break;
 	}
@@ -1810,12 +1810,12 @@ static inline uint64_t CVMX_SLI_PCIE_MSI_RCV_B3_FUNC(void)
 		case OCTEON_CN68XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000000670ull;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return 0x0000000000000670ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return 0x0000000000028670ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000028670ull;
 	}
 	return 0x0000000000028670ull;
@@ -1837,7 +1837,6 @@ static inline uint64_t CVMX_SLI_PKTX_CNTS(unsigned long offset)
 
 			break;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				if ((offset <= 63))
@@ -1845,6 +1844,7 @@ static inline uint64_t CVMX_SLI_PKTX_CNTS(unsigned long offset)
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				if ((offset <= 63))
 					return 0x00000000000100B0ull + ((offset) & 63) * 0x20000ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			if ((offset <= 63))
 				return 0x00000000000100B0ull + ((offset) & 63) * 0x20000ull;
 			break;
@@ -1865,12 +1865,12 @@ static inline uint64_t CVMX_SLI_PKTX_CNTS(unsigned long offset)
 			return 0x0000000000002400ull + (offset) * 16;
 
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return 0x0000000000002400ull + (offset) * 16;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return 0x00000000000100B0ull + (offset) * 0x20000ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x00000000000100B0ull + (offset) * 0x20000ull;
 	}
 	return 0x00000000000100B0ull + (offset) * 0x20000ull;
@@ -1893,10 +1893,6 @@ static inline uint64_t CVMX_SLI_PKTX_ERROR_INFO(unsigned long offset)
 static inline uint64_t CVMX_SLI_PKTX_INPUT_CONTROL(unsigned long offset)
 {
 	switch(cvmx_get_octeon_family()) {
-
-			break;
-		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				if ((offset <= 63))
@@ -1904,8 +1900,12 @@ static inline uint64_t CVMX_SLI_PKTX_INPUT_CONTROL(unsigned long offset)
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				if ((offset <= 63))
 					return 0x0000000000010000ull + ((offset) & 63) * 0x20000ull;
+		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			if ((offset <= 63))
 				return 0x0000000000010000ull + ((offset) & 63) * 0x20000ull;
+			break;
+
 			break;
 	}
 	cvmx_warn("CVMX_SLI_PKTX_INPUT_CONTROL (offset = %lu) not supported on this chip\n", offset);
@@ -1915,15 +1915,15 @@ static inline uint64_t CVMX_SLI_PKTX_INPUT_CONTROL(unsigned long offset)
 static inline uint64_t CVMX_SLI_PKTX_INPUT_CONTROL(unsigned long offset)
 {
 	switch(cvmx_get_octeon_family()) {
-
-		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return 0x0000000000004000ull + (offset) * 16;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return 0x0000000000010000ull + (offset) * 0x20000ull;
+		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000010000ull + (offset) * 0x20000ull;
+
 	}
 	return 0x0000000000010000ull + (offset) * 0x20000ull;
 }
@@ -1944,7 +1944,6 @@ static inline uint64_t CVMX_SLI_PKTX_INSTR_BADDR(unsigned long offset)
 
 			break;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				if ((offset <= 63))
@@ -1952,6 +1951,7 @@ static inline uint64_t CVMX_SLI_PKTX_INSTR_BADDR(unsigned long offset)
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				if ((offset <= 63))
 					return 0x0000000000010010ull + ((offset) & 63) * 0x20000ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			if ((offset <= 63))
 				return 0x0000000000010010ull + ((offset) & 63) * 0x20000ull;
 			break;
@@ -1972,12 +1972,12 @@ static inline uint64_t CVMX_SLI_PKTX_INSTR_BADDR(unsigned long offset)
 			return 0x0000000000002800ull + (offset) * 16;
 
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return 0x0000000000002800ull + (offset) * 16;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return 0x0000000000010010ull + (offset) * 0x20000ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000010010ull + (offset) * 0x20000ull;
 	}
 	return 0x0000000000010010ull + (offset) * 0x20000ull;
@@ -1999,7 +1999,6 @@ static inline uint64_t CVMX_SLI_PKTX_INSTR_BAOFF_DBELL(unsigned long offset)
 
 			break;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				if ((offset <= 63))
@@ -2007,6 +2006,7 @@ static inline uint64_t CVMX_SLI_PKTX_INSTR_BAOFF_DBELL(unsigned long offset)
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				if ((offset <= 63))
 					return 0x0000000000010020ull + ((offset) & 63) * 0x20000ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			if ((offset <= 63))
 				return 0x0000000000010020ull + ((offset) & 63) * 0x20000ull;
 			break;
@@ -2027,12 +2027,12 @@ static inline uint64_t CVMX_SLI_PKTX_INSTR_BAOFF_DBELL(unsigned long offset)
 			return 0x0000000000002C00ull + (offset) * 16;
 
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return 0x0000000000002C00ull + (offset) * 16;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return 0x0000000000010020ull + (offset) * 0x20000ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000010020ull + (offset) * 0x20000ull;
 	}
 	return 0x0000000000010020ull + (offset) * 0x20000ull;
@@ -2054,7 +2054,6 @@ static inline uint64_t CVMX_SLI_PKTX_INSTR_FIFO_RSIZE(unsigned long offset)
 
 			break;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				if ((offset <= 63))
@@ -2062,6 +2061,7 @@ static inline uint64_t CVMX_SLI_PKTX_INSTR_FIFO_RSIZE(unsigned long offset)
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				if ((offset <= 63))
 					return 0x0000000000010030ull + ((offset) & 63) * 0x20000ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			if ((offset <= 63))
 				return 0x0000000000010030ull + ((offset) & 63) * 0x20000ull;
 			break;
@@ -2082,12 +2082,12 @@ static inline uint64_t CVMX_SLI_PKTX_INSTR_FIFO_RSIZE(unsigned long offset)
 			return 0x0000000000003000ull + (offset) * 16;
 
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return 0x0000000000003000ull + (offset) * 16;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return 0x0000000000010030ull + (offset) * 0x20000ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000010030ull + (offset) * 0x20000ull;
 	}
 	return 0x0000000000010030ull + (offset) * 0x20000ull;
@@ -2113,10 +2113,6 @@ static inline uint64_t CVMX_SLI_PKTX_INSTR_HEADER(unsigned long offset)
 static inline uint64_t CVMX_SLI_PKTX_INT_LEVELS(unsigned long offset)
 {
 	switch(cvmx_get_octeon_family()) {
-
-			break;
-		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				if ((offset <= 63))
@@ -2124,8 +2120,12 @@ static inline uint64_t CVMX_SLI_PKTX_INT_LEVELS(unsigned long offset)
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				if ((offset <= 63))
 					return 0x00000000000100A0ull + ((offset) & 63) * 0x20000ull;
+		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			if ((offset <= 63))
 				return 0x00000000000100A0ull + ((offset) & 63) * 0x20000ull;
+			break;
+
 			break;
 	}
 	cvmx_warn("CVMX_SLI_PKTX_INT_LEVELS (offset = %lu) not supported on this chip\n", offset);
@@ -2135,15 +2135,15 @@ static inline uint64_t CVMX_SLI_PKTX_INT_LEVELS(unsigned long offset)
 static inline uint64_t CVMX_SLI_PKTX_INT_LEVELS(unsigned long offset)
 {
 	switch(cvmx_get_octeon_family()) {
-
-		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return 0x0000000000004400ull + (offset) * 16;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return 0x00000000000100A0ull + (offset) * 0x20000ull;
+		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x00000000000100A0ull + (offset) * 0x20000ull;
+
 	}
 	return 0x00000000000100A0ull + (offset) * 0x20000ull;
 }
@@ -2180,10 +2180,6 @@ static inline uint64_t CVMX_SLI_PKTX_MBOX_INT(unsigned long offset)
 static inline uint64_t CVMX_SLI_PKTX_OUTPUT_CONTROL(unsigned long offset)
 {
 	switch(cvmx_get_octeon_family()) {
-
-			break;
-		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				if ((offset <= 63))
@@ -2191,8 +2187,12 @@ static inline uint64_t CVMX_SLI_PKTX_OUTPUT_CONTROL(unsigned long offset)
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				if ((offset <= 63))
 					return 0x0000000000010050ull + ((offset) & 63) * 0x20000ull;
+		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			if ((offset <= 63))
 				return 0x0000000000010050ull + ((offset) & 63) * 0x20000ull;
+			break;
+
 			break;
 	}
 	cvmx_warn("CVMX_SLI_PKTX_OUTPUT_CONTROL (offset = %lu) not supported on this chip\n", offset);
@@ -2202,15 +2202,15 @@ static inline uint64_t CVMX_SLI_PKTX_OUTPUT_CONTROL(unsigned long offset)
 static inline uint64_t CVMX_SLI_PKTX_OUTPUT_CONTROL(unsigned long offset)
 {
 	switch(cvmx_get_octeon_family()) {
-
-		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return 0x0000000000004800ull + (offset) * 16;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return 0x0000000000010050ull + (offset) * 0x20000ull;
+		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000010050ull + (offset) * 0x20000ull;
+
 	}
 	return 0x0000000000010050ull + (offset) * 0x20000ull;
 }
@@ -2231,7 +2231,6 @@ static inline uint64_t CVMX_SLI_PKTX_OUT_SIZE(unsigned long offset)
 
 			break;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				if ((offset <= 63))
@@ -2239,6 +2238,7 @@ static inline uint64_t CVMX_SLI_PKTX_OUT_SIZE(unsigned long offset)
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				if ((offset <= 63))
 					return 0x0000000000010060ull + ((offset) & 63) * 0x20000ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			if ((offset <= 63))
 				return 0x0000000000010060ull + ((offset) & 63) * 0x20000ull;
 			break;
@@ -2259,12 +2259,12 @@ static inline uint64_t CVMX_SLI_PKTX_OUT_SIZE(unsigned long offset)
 			return 0x0000000000000C00ull + (offset) * 16;
 
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return 0x0000000000000C00ull + (offset) * 16;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return 0x0000000000010060ull + (offset) * 0x20000ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000010060ull + (offset) * 0x20000ull;
 	}
 	return 0x0000000000010060ull + (offset) * 0x20000ull;
@@ -2299,7 +2299,6 @@ static inline uint64_t CVMX_SLI_PKTX_SLIST_BADDR(unsigned long offset)
 
 			break;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				if ((offset <= 63))
@@ -2307,6 +2306,7 @@ static inline uint64_t CVMX_SLI_PKTX_SLIST_BADDR(unsigned long offset)
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				if ((offset <= 63))
 					return 0x0000000000010070ull + ((offset) & 63) * 0x20000ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			if ((offset <= 63))
 				return 0x0000000000010070ull + ((offset) & 63) * 0x20000ull;
 			break;
@@ -2327,12 +2327,12 @@ static inline uint64_t CVMX_SLI_PKTX_SLIST_BADDR(unsigned long offset)
 			return 0x0000000000001400ull + (offset) * 16;
 
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return 0x0000000000001400ull + (offset) * 16;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return 0x0000000000010070ull + (offset) * 0x20000ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000010070ull + (offset) * 0x20000ull;
 	}
 	return 0x0000000000010070ull + (offset) * 0x20000ull;
@@ -2354,7 +2354,6 @@ static inline uint64_t CVMX_SLI_PKTX_SLIST_BAOFF_DBELL(unsigned long offset)
 
 			break;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				if ((offset <= 63))
@@ -2362,6 +2361,7 @@ static inline uint64_t CVMX_SLI_PKTX_SLIST_BAOFF_DBELL(unsigned long offset)
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				if ((offset <= 63))
 					return 0x0000000000010080ull + ((offset) & 63) * 0x20000ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			if ((offset <= 63))
 				return 0x0000000000010080ull + ((offset) & 63) * 0x20000ull;
 			break;
@@ -2382,12 +2382,12 @@ static inline uint64_t CVMX_SLI_PKTX_SLIST_BAOFF_DBELL(unsigned long offset)
 			return 0x0000000000001800ull + (offset) * 16;
 
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return 0x0000000000001800ull + (offset) * 16;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return 0x0000000000010080ull + (offset) * 0x20000ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000010080ull + (offset) * 0x20000ull;
 	}
 	return 0x0000000000010080ull + (offset) * 0x20000ull;
@@ -2409,7 +2409,6 @@ static inline uint64_t CVMX_SLI_PKTX_SLIST_FIFO_RSIZE(unsigned long offset)
 
 			break;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				if ((offset <= 63))
@@ -2417,6 +2416,7 @@ static inline uint64_t CVMX_SLI_PKTX_SLIST_FIFO_RSIZE(unsigned long offset)
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				if ((offset <= 63))
 					return 0x0000000000010090ull + ((offset) & 63) * 0x20000ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			if ((offset <= 63))
 				return 0x0000000000010090ull + ((offset) & 63) * 0x20000ull;
 			break;
@@ -2437,12 +2437,12 @@ static inline uint64_t CVMX_SLI_PKTX_SLIST_FIFO_RSIZE(unsigned long offset)
 			return 0x0000000000001C00ull + (offset) * 16;
 
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return 0x0000000000001C00ull + (offset) * 16;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return 0x0000000000010090ull + (offset) * 0x20000ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000010090ull + (offset) * 0x20000ull;
 	}
 	return 0x0000000000010090ull + (offset) * 0x20000ull;
@@ -2497,12 +2497,12 @@ static inline uint64_t CVMX_SLI_PKT_CNT_INT_FUNC(void)
 			return 0x0000000000001130ull;
 			break;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 					return 0x0000000000001130ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 					return 0x0000000000029130ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000029130ull;
 			break;
 	}
@@ -2522,12 +2522,12 @@ static inline uint64_t CVMX_SLI_PKT_CNT_INT_FUNC(void)
 		case OCTEON_CN68XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000001130ull;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return 0x0000000000001130ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return 0x0000000000029130ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000029130ull;
 	}
 	return 0x0000000000029130ull;
@@ -2659,16 +2659,16 @@ static inline uint64_t CVMX_SLI_PKT_INSTR_SIZE_FUNC(void)
 static inline uint64_t CVMX_SLI_PKT_INT_FUNC(void)
 {
 	switch(cvmx_get_octeon_family()) {
-
-			break;
-		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 					return 0x0000000000001160ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 					return 0x0000000000029160ull;
+		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000029160ull;
+			break;
+
 			break;
 	}
 	cvmx_warn("CVMX_SLI_PKT_INT not supported on this chip\n");
@@ -2679,15 +2679,15 @@ static inline uint64_t CVMX_SLI_PKT_INT_FUNC(void)
 static inline uint64_t CVMX_SLI_PKT_INT_FUNC(void)
 {
 	switch(cvmx_get_octeon_family()) {
-
-		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return 0x0000000000001160ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return 0x0000000000029160ull;
+		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000029160ull;
+
 	}
 	return 0x0000000000029160ull;
 }
@@ -2730,7 +2730,6 @@ static inline uint64_t CVMX_SLI_PKT_IN_DONEX_CNTS(unsigned long offset)
 
 			break;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				if ((offset <= 63))
@@ -2738,6 +2737,7 @@ static inline uint64_t CVMX_SLI_PKT_IN_DONEX_CNTS(unsigned long offset)
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				if ((offset <= 63))
 					return 0x0000000000010040ull + ((offset) & 63) * 0x20000ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			if ((offset <= 63))
 				return 0x0000000000010040ull + ((offset) & 63) * 0x20000ull;
 			break;
@@ -2758,12 +2758,12 @@ static inline uint64_t CVMX_SLI_PKT_IN_DONEX_CNTS(unsigned long offset)
 			return 0x0000000000002000ull + (offset) * 16;
 
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return 0x0000000000002000ull + (offset) * 16;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return 0x0000000000010040ull + (offset) * 0x20000ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000010040ull + (offset) * 0x20000ull;
 	}
 	return 0x0000000000010040ull + (offset) * 0x20000ull;
@@ -2783,12 +2783,12 @@ static inline uint64_t CVMX_SLI_PKT_IN_INSTR_COUNTS_FUNC(void)
 			return 0x0000000000001200ull;
 			break;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 					return 0x0000000000001200ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 					return 0x0000000000029200ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000029200ull;
 			break;
 	}
@@ -2808,12 +2808,12 @@ static inline uint64_t CVMX_SLI_PKT_IN_INSTR_COUNTS_FUNC(void)
 		case OCTEON_CN68XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000001200ull;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return 0x0000000000001200ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return 0x0000000000029200ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000029200ull;
 	}
 	return 0x0000000000029200ull;
@@ -2824,16 +2824,16 @@ static inline uint64_t CVMX_SLI_PKT_IN_INSTR_COUNTS_FUNC(void)
 static inline uint64_t CVMX_SLI_PKT_IN_INT_FUNC(void)
 {
 	switch(cvmx_get_octeon_family()) {
-
-			break;
-		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 					return 0x0000000000001150ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 					return 0x0000000000029150ull;
+		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000029150ull;
+			break;
+
 			break;
 	}
 	cvmx_warn("CVMX_SLI_PKT_IN_INT not supported on this chip\n");
@@ -2844,15 +2844,15 @@ static inline uint64_t CVMX_SLI_PKT_IN_INT_FUNC(void)
 static inline uint64_t CVMX_SLI_PKT_IN_INT_FUNC(void)
 {
 	switch(cvmx_get_octeon_family()) {
-
-		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return 0x0000000000001150ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return 0x0000000000029150ull;
+		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000029150ull;
+
 	}
 	return 0x0000000000029150ull;
 }
@@ -2963,16 +2963,16 @@ static inline uint64_t CVMX_SLI_PKT_MACX_RINFO(unsigned long offset)
 static inline uint64_t CVMX_SLI_PKT_MEM_CTL_FUNC(void)
 {
 	switch(cvmx_get_octeon_family()) {
-
-			break;
-		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 					return 0x0000000000001120ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 					return 0x0000000000029120ull;
+		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000029120ull;
+			break;
+
 			break;
 	}
 	cvmx_warn("CVMX_SLI_PKT_MEM_CTL not supported on this chip\n");
@@ -2983,15 +2983,15 @@ static inline uint64_t CVMX_SLI_PKT_MEM_CTL_FUNC(void)
 static inline uint64_t CVMX_SLI_PKT_MEM_CTL_FUNC(void)
 {
 	switch(cvmx_get_octeon_family()) {
-
-		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return 0x0000000000001120ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return 0x0000000000029120ull;
+		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000029120ull;
+
 	}
 	return 0x0000000000029120ull;
 }
@@ -3010,12 +3010,12 @@ static inline uint64_t CVMX_SLI_PKT_OUTPUT_WMARK_FUNC(void)
 			return 0x0000000000001180ull;
 			break;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 					return 0x0000000000001180ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 					return 0x0000000000029180ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000029180ull;
 			break;
 	}
@@ -3035,12 +3035,12 @@ static inline uint64_t CVMX_SLI_PKT_OUTPUT_WMARK_FUNC(void)
 		case OCTEON_CN68XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000001180ull;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return 0x0000000000001180ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return 0x0000000000029180ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000029180ull;
 	}
 	return 0x0000000000029180ull;
@@ -3161,16 +3161,16 @@ static inline uint64_t CVMX_SLI_PKT_PORT_IN_RST_FUNC(void)
 static inline uint64_t CVMX_SLI_PKT_RING_RST_FUNC(void)
 {
 	switch(cvmx_get_octeon_family()) {
-
-			break;
-		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 					return 0x00000000000011E0ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 					return 0x00000000000291E0ull;
+		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x00000000000291E0ull;
+			break;
+
 			break;
 	}
 	cvmx_warn("CVMX_SLI_PKT_RING_RST not supported on this chip\n");
@@ -3181,15 +3181,15 @@ static inline uint64_t CVMX_SLI_PKT_RING_RST_FUNC(void)
 static inline uint64_t CVMX_SLI_PKT_RING_RST_FUNC(void)
 {
 	switch(cvmx_get_octeon_family()) {
-
-		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return 0x00000000000011E0ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return 0x00000000000291E0ull;
+		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x00000000000291E0ull;
+
 	}
 	return 0x00000000000291E0ull;
 }
@@ -3241,12 +3241,12 @@ static inline uint64_t CVMX_SLI_PKT_TIME_INT_FUNC(void)
 			return 0x0000000000001140ull;
 			break;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 					return 0x0000000000001140ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 					return 0x0000000000029140ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000029140ull;
 			break;
 	}
@@ -3266,12 +3266,12 @@ static inline uint64_t CVMX_SLI_PKT_TIME_INT_FUNC(void)
 		case OCTEON_CN68XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000001140ull;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return 0x0000000000001140ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return 0x0000000000029140ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000029140ull;
 	}
 	return 0x0000000000029140ull;
@@ -3315,16 +3315,16 @@ static inline uint64_t CVMX_SLI_PP_PKT_CSR_CONTROL_FUNC(void)
 static inline uint64_t CVMX_SLI_S2C_END_MERGE_FUNC(void)
 {
 	switch(cvmx_get_octeon_family()) {
-
-			break;
-		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 					return CVMX_ADD_IO_SEG(0x00011F0000015000ull);
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 					return CVMX_ADD_IO_SEG(0x00011F0000025000ull);
+		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x00011F0000025000ull);
+			break;
+
 			break;
 	}
 	cvmx_warn("CVMX_SLI_S2C_END_MERGE not supported on this chip\n");
@@ -3335,15 +3335,15 @@ static inline uint64_t CVMX_SLI_S2C_END_MERGE_FUNC(void)
 static inline uint64_t CVMX_SLI_S2C_END_MERGE_FUNC(void)
 {
 	switch(cvmx_get_octeon_family()) {
-
-		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return CVMX_ADD_IO_SEG(0x00011F0000015000ull);
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return CVMX_ADD_IO_SEG(0x00011F0000025000ull);
+		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return CVMX_ADD_IO_SEG(0x00011F0000025000ull);
+
 	}
 	return CVMX_ADD_IO_SEG(0x00011F0000025000ull);
 }
@@ -3359,16 +3359,15 @@ static inline uint64_t CVMX_SLI_S2M_PORTX_CTL(unsigned long offset)
 			if ((offset <= 1))
 				return 0x0000000000003D80ull + ((offset) & 1) * 16;
 			break;
-		case OCTEON_CN70XX & OCTEON_FAMILY_MASK:
-			if ((offset <= 2))
-				return 0x0000000000013D80ull + ((offset) & 3) * 16;
-			break;
 		case OCTEON_CN66XX & OCTEON_FAMILY_MASK:
 			if ((offset <= 3))
 				return 0x0000000000003D80ull + ((offset) & 3) * 16;
 			break;
+		case OCTEON_CN70XX & OCTEON_FAMILY_MASK:
+			if ((offset <= 2))
+				return 0x0000000000013D80ull + ((offset) & 3) * 16;
+			break;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				if ((offset <= 3))
@@ -3376,6 +3375,7 @@ static inline uint64_t CVMX_SLI_S2M_PORTX_CTL(unsigned long offset)
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				if ((offset <= 3))
 					return 0x0000000000023D80ull + ((offset) & 3) * 16;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			if ((offset <= 3))
 				return 0x0000000000023D80ull + ((offset) & 3) * 16;
 			break;
@@ -3392,17 +3392,17 @@ static inline uint64_t CVMX_SLI_S2M_PORTX_CTL(unsigned long offset)
 		case OCTEON_CN61XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN68XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000003D80ull + (offset) * 16;
-		case OCTEON_CN70XX & OCTEON_FAMILY_MASK:
-			return 0x0000000000013D80ull + (offset) * 16;
 		case OCTEON_CN66XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000003D80ull + (offset) * 16;
+		case OCTEON_CN70XX & OCTEON_FAMILY_MASK:
+			return 0x0000000000013D80ull + (offset) * 16;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return 0x0000000000003D80ull + (offset) * 16;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return 0x0000000000023D80ull + (offset) * 16;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000023D80ull + (offset) * 16;
 	}
 	return 0x0000000000023D80ull + (offset) * 16;
@@ -3422,12 +3422,12 @@ static inline uint64_t CVMX_SLI_SCRATCH_1_FUNC(void)
 			return 0x00000000000003C0ull;
 			break;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 					return 0x00000000000003C0ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 					return 0x00000000000283C0ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x00000000000283C0ull;
 			break;
 	}
@@ -3447,12 +3447,12 @@ static inline uint64_t CVMX_SLI_SCRATCH_1_FUNC(void)
 		case OCTEON_CN68XX & OCTEON_FAMILY_MASK:
 			return 0x00000000000003C0ull;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return 0x00000000000003C0ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return 0x00000000000283C0ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x00000000000283C0ull;
 	}
 	return 0x00000000000283C0ull;
@@ -3472,12 +3472,12 @@ static inline uint64_t CVMX_SLI_SCRATCH_2_FUNC(void)
 			return 0x00000000000003D0ull;
 			break;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 					return 0x00000000000003D0ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 					return 0x00000000000283D0ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x00000000000283D0ull;
 			break;
 	}
@@ -3497,12 +3497,12 @@ static inline uint64_t CVMX_SLI_SCRATCH_2_FUNC(void)
 		case OCTEON_CN68XX & OCTEON_FAMILY_MASK:
 			return 0x00000000000003D0ull;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return 0x00000000000003D0ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return 0x00000000000283D0ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x00000000000283D0ull;
 	}
 	return 0x00000000000283D0ull;
@@ -3522,12 +3522,12 @@ static inline uint64_t CVMX_SLI_STATE1_FUNC(void)
 			return 0x0000000000000620ull;
 			break;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 					return 0x0000000000000620ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 					return 0x0000000000028620ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000028620ull;
 			break;
 	}
@@ -3547,12 +3547,12 @@ static inline uint64_t CVMX_SLI_STATE1_FUNC(void)
 		case OCTEON_CN68XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000000620ull;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return 0x0000000000000620ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return 0x0000000000028620ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000028620ull;
 	}
 	return 0x0000000000028620ull;
@@ -3572,12 +3572,12 @@ static inline uint64_t CVMX_SLI_STATE2_FUNC(void)
 			return 0x0000000000000630ull;
 			break;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 					return 0x0000000000000630ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 					return 0x0000000000028630ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000028630ull;
 			break;
 	}
@@ -3597,12 +3597,12 @@ static inline uint64_t CVMX_SLI_STATE2_FUNC(void)
 		case OCTEON_CN68XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000000630ull;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return 0x0000000000000630ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return 0x0000000000028630ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000028630ull;
 	}
 	return 0x0000000000028630ull;
@@ -3622,12 +3622,12 @@ static inline uint64_t CVMX_SLI_STATE3_FUNC(void)
 			return 0x0000000000000640ull;
 			break;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 					return 0x0000000000000640ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 					return 0x0000000000028640ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000028640ull;
 			break;
 	}
@@ -3647,12 +3647,12 @@ static inline uint64_t CVMX_SLI_STATE3_FUNC(void)
 		case OCTEON_CN68XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000000640ull;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return 0x0000000000000640ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return 0x0000000000028640ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000028640ull;
 	}
 	return 0x0000000000028640ull;
@@ -3683,12 +3683,12 @@ static inline uint64_t CVMX_SLI_WINDOW_CTL_FUNC(void)
 			return 0x00000000000002E0ull;
 			break;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 					return 0x00000000000002E0ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 					return 0x00000000000282E0ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x00000000000282E0ull;
 			break;
 	}
@@ -3708,12 +3708,12 @@ static inline uint64_t CVMX_SLI_WINDOW_CTL_FUNC(void)
 		case OCTEON_CN68XX & OCTEON_FAMILY_MASK:
 			return 0x00000000000002E0ull;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return 0x00000000000002E0ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return 0x00000000000282E0ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x00000000000282E0ull;
 	}
 	return 0x00000000000282E0ull;
@@ -3733,12 +3733,12 @@ static inline uint64_t CVMX_SLI_WIN_RD_ADDR_FUNC(void)
 			return 0x0000000000000010ull;
 			break;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 					return 0x0000000000000010ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 					return 0x0000000000020010ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000020010ull;
 			break;
 	}
@@ -3758,12 +3758,12 @@ static inline uint64_t CVMX_SLI_WIN_RD_ADDR_FUNC(void)
 		case OCTEON_CN68XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000000010ull;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return 0x0000000000000010ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return 0x0000000000020010ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000020010ull;
 	}
 	return 0x0000000000020010ull;
@@ -3783,12 +3783,12 @@ static inline uint64_t CVMX_SLI_WIN_RD_DATA_FUNC(void)
 			return 0x0000000000000040ull;
 			break;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 					return 0x0000000000000040ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 					return 0x0000000000020040ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000020040ull;
 			break;
 	}
@@ -3808,12 +3808,12 @@ static inline uint64_t CVMX_SLI_WIN_RD_DATA_FUNC(void)
 		case OCTEON_CN68XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000000040ull;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return 0x0000000000000040ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return 0x0000000000020040ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000020040ull;
 	}
 	return 0x0000000000020040ull;
@@ -3833,12 +3833,12 @@ static inline uint64_t CVMX_SLI_WIN_WR_ADDR_FUNC(void)
 			return 0x0000000000000000ull;
 			break;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 					return 0x0000000000000000ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 					return 0x0000000000020000ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000020000ull;
 			break;
 	}
@@ -3858,12 +3858,12 @@ static inline uint64_t CVMX_SLI_WIN_WR_ADDR_FUNC(void)
 		case OCTEON_CN68XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000000000ull;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return 0x0000000000000000ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return 0x0000000000020000ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000020000ull;
 	}
 	return 0x0000000000020000ull;
@@ -3883,12 +3883,12 @@ static inline uint64_t CVMX_SLI_WIN_WR_DATA_FUNC(void)
 			return 0x0000000000000020ull;
 			break;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 					return 0x0000000000000020ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 					return 0x0000000000020020ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000020020ull;
 			break;
 	}
@@ -3908,12 +3908,12 @@ static inline uint64_t CVMX_SLI_WIN_WR_DATA_FUNC(void)
 		case OCTEON_CN68XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000000020ull;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return 0x0000000000000020ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return 0x0000000000020020ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000020020ull;
 	}
 	return 0x0000000000020020ull;
@@ -3933,12 +3933,12 @@ static inline uint64_t CVMX_SLI_WIN_WR_MASK_FUNC(void)
 			return 0x0000000000000030ull;
 			break;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 					return 0x0000000000000030ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 					return 0x0000000000020030ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000020030ull;
 			break;
 	}
@@ -3958,12 +3958,12 @@ static inline uint64_t CVMX_SLI_WIN_WR_MASK_FUNC(void)
 		case OCTEON_CN68XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000000030ull;
 		case OCTEON_CNF75XX & OCTEON_FAMILY_MASK:
-		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN78XX & OCTEON_FAMILY_MASK:
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX_PASS1_X))
 				return 0x0000000000000030ull;
 			if (OCTEON_IS_MODEL(OCTEON_CN78XX))
 				return 0x0000000000020030ull;
+		case OCTEON_CN73XX & OCTEON_FAMILY_MASK:
 			return 0x0000000000020030ull;
 	}
 	return 0x0000000000020030ull;
@@ -4201,7 +4201,7 @@ union cvmx_sli_bist_status {
 	struct cvmx_sli_bist_status_cn70xx    cn70xxp1;
 	struct cvmx_sli_bist_status_s         cn73xx;
 	struct cvmx_sli_bist_status_s         cn78xx;
-	struct cvmx_sli_bist_status_s         cn78xxp2;
+	struct cvmx_sli_bist_status_s         cn78xxp1;
 	struct cvmx_sli_bist_status_cn61xx    cnf71xx;
 	struct cvmx_sli_bist_status_s         cnf75xx;
 };
@@ -4319,7 +4319,7 @@ union cvmx_sli_ciu_int_enb {
 #endif
 	} s;
 	struct cvmx_sli_ciu_int_enb_s         cn73xx;
-	struct cvmx_sli_ciu_int_enb_s         cn78xxp2;
+	struct cvmx_sli_ciu_int_enb_s         cn78xx;
 	struct cvmx_sli_ciu_int_enb_s         cnf75xx;
 };
 typedef union cvmx_sli_ciu_int_enb cvmx_sli_ciu_int_enb_t;
@@ -4335,51 +4335,75 @@ union cvmx_sli_ciu_int_sum {
 	struct cvmx_sli_ciu_int_sum_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_51_63               : 13;
-	uint64_t m3_un_wi                     : 1;  /**< Received unsupported N-TLP for window register from MAC 3. This occurs when the window
+	uint64_t m3_un_wi                     : 1;  /**< For CNF73XX, this interrupt should not occur.
+                                                         For CNF75XX, received unsupported N-TLP for window register from MAC 3. This occurs when
+                                                         the window
                                                          registers are disabled and a window register access occurs.
                                                          This can only be set by a PF and not a VF access.
                                                          This bit is set when SLI_MAC()_PF()_INT_SUM[UN_WI]
                                                          Throws SLI_INTSN_E::SLI_INT_M3_UN_WI. */
-	uint64_t m3_un_b0                     : 1;  /**< Received unsupported N-TLP for Bar 0 from MAC 3. This occurs when the BAR 0 address space
+	uint64_t m3_un_b0                     : 1;  /**< For CNF73XX, this interrupt should not occur.
+                                                         For CNF75XX, received unsupported N-TLP for Bar 0 from MAC 3. This occurs when the BAR 0
+                                                         address space
                                                          is disabled.
                                                          This can only be set by a PF and not a VF access.
                                                          This bit is set when SLI_MAC()_PF()_INT_SUM[UN_B0]
                                                          Throws SLI_INTSN_E::SLI_INT_M3_UN_B0. */
-	uint64_t m3_up_wi                     : 1;  /**< Received unsupported P-TLP for window register from MAC 3. This occurs when the window
+	uint64_t m3_up_wi                     : 1;  /**< For CNF73XX, this interrupt should not occur.
+                                                         For CNF75XX, received unsupported P-TLP for window register from MAC 3. This occurs when
+                                                         the window
                                                          registers are disabled and a window register access occurs.
                                                          This can only be set by a PF and not a VF access.
                                                          Throws SLI_INTSN_E::SLI_INT_M3_UP_WI. */
-	uint64_t m3_up_b0                     : 1;  /**< Received unsupported P-TLP for Bar 0 from MAC 3. This occurs when the BAR 0 address space
+	uint64_t m3_up_b0                     : 1;  /**< For CNF73XX, this interrupt should not occur.
+                                                         For CNF75XX, received unsupported P-TLP for Bar 0 from MAC 3. This occurs when the BAR 0
+                                                         address space
                                                          This can only be set by a PF and not a VF access.
                                                          Throws SLI_INTSN_E::SLI_INT_M3_UP_B0. */
-	uint64_t m2_un_wi                     : 1;  /**< Received unsupported N-TLP for window register from MAC 2. This occurs when the window
+	uint64_t m2_un_wi                     : 1;  /**< For CNF73XX, this interrupt should not occur.
+                                                         For CNF75XX, received unsupported N-TLP for window register from MAC 2. This occurs when
+                                                         the window
                                                          registers are disabled and a window register access occurs.
                                                          This can only be set by a PF and not a VF access.
                                                          Throws SLI_INTSN_E::SLI_INT_M2_UN_WI. */
-	uint64_t m2_un_b0                     : 1;  /**< Received unsupported N-TLP for Bar 0 from MAC 2. This occurs when the BAR 0 address space
+	uint64_t m2_un_b0                     : 1;  /**< For CNF73XX, this interrupt should not occur.
+                                                         For CNF75XX, received unsupported N-TLP for Bar 0 from MAC 2. This occurs when the BAR 0
+                                                         address space
                                                          is disabled.
                                                          This can only be set by a PF and not a VF access.
                                                          Throws SLI_INTSN_E::SLI_INT_M2_UN_B0. */
-	uint64_t m2_up_wi                     : 1;  /**< Received unsupported P-TLP for window register from MAC 2. This occurs when the window
+	uint64_t m2_up_wi                     : 1;  /**< For CNF73XX, this interrupt should not occur.
+                                                         For CNF75XX, received unsupported P-TLP for window register from MAC 2. This occurs when
+                                                         the window
                                                          registers are disabled and a window register access occurs.
                                                          This can only be set by a PF and not a VF access.
                                                          Throws SLI_INTSN_E::SLI_INT_M2_UP_WI. */
-	uint64_t m2_up_b0                     : 1;  /**< Received unsupported P-TLP for Bar 0 from MAC 2. This occurs when the BAR 0 address space
+	uint64_t m2_up_b0                     : 1;  /**< For CNF73XX, this interrupt should not occur.
+                                                         For CNF75XX, received unsupported P-TLP for Bar 0 from MAC 2. This occurs when the BAR 0
+                                                         address space
                                                          This can only be set by a PF and not a VF access.
                                                          Throws SLI_INTSN_E::SLI_INT_M2_UP_B0. */
-	uint64_t m1_un_wi                     : 1;  /**< Received unsupported N-TLP for window register from MAC 1. This occurs when the window
+	uint64_t m1_un_wi                     : 1;  /**< For CNF73XX, this interrupt should not occur.
+                                                         For CNF75XX, received unsupported N-TLP for window register from MAC 1. This occurs when
+                                                         the window
                                                          registers are disabled and a window register access occurs.
                                                          This can only be set by a PF and not a VF access.
                                                          Throws SLI_INTSN_E::SLI_INT_M1_UN_WI. */
-	uint64_t m1_un_b0                     : 1;  /**< Received unsupported N-TLP for Bar 0 from MAC 1. This occurs when the BAR 0 address space
+	uint64_t m1_un_b0                     : 1;  /**< For CNF73XX, this interrupt should not occur.
+                                                         For CNF75XX, received unsupported N-TLP for Bar 0 from MAC 1. This occurs when the BAR 0
+                                                         address space
                                                          is disabled.
                                                          This can only be set by a PF and not a VF access.
                                                          Throws SLI_INTSN_E::SLI_INT_M1_UN_B0. */
-	uint64_t m1_up_wi                     : 1;  /**< Received unsupported P-TLP for window register from MAC 1. This occurs when the window
+	uint64_t m1_up_wi                     : 1;  /**< For CNF73XX, this interrupt should not occur.
+                                                         For CNF75XX, received unsupported P-TLP for window register from MAC 1. This occurs when
+                                                         the window
                                                          registers are disabled and a window register access occurs.
                                                          This can only be set by a PF and not a VF access.
                                                          Throws SLI_INTSN_E::SLI_INT_M1_UP_WI. */
-	uint64_t m1_up_b0                     : 1;  /**< Received unsupported P-TLP for Bar 0 from MAC 1. This occurs when the BAR 0 address space
+	uint64_t m1_up_b0                     : 1;  /**< For CNF73XX, this interrupt should not occur.
+                                                         For CNF75XX, received unsupported P-TLP for Bar 0 from MAC 1. This occurs when the BAR 0
+                                                         address space
                                                          This can only be set by a PF and not a VF access.
                                                          Throws SLI_INTSN_E::SLI_INT_M1_UP_B0. */
 	uint64_t m0_un_wi                     : 1;  /**< Received unsupported N-TLP for window register from MAC 0. This occurs when the window
@@ -4397,39 +4421,57 @@ union cvmx_sli_ciu_int_sum {
 	uint64_t m0_up_b0                     : 1;  /**< Received unsupported P-TLP for Bar 0 from MAC 0. This occurs when the BAR 0 address space
                                                          This can only be set by a PF and not a VF access.
                                                          Throws SLI_INTSN_E::SLI_INT_M0_UP_B0. */
-	uint64_t m3p0_pppf_err                : 1;  /**< On SLI_PORT_E::SRIO1 PF0, when an error response is received for a PF PP transaction read,
+	uint64_t m3p0_pppf_err                : 1;  /**< For CNF73XX, this interrupt should not occur.
+                                                         For CNF75XX, on SLI_PORT_E::SRIO1 PF0, when an error response is received for a PF PP
+                                                         transaction read,
                                                          this bit is set.
                                                          Throws SLI_INTSN_E::SLI_INT_M3P0_PPPF_ERR. */
-	uint64_t m3p0_pktpf_err               : 1;  /**< On SLI_PORT_E::SRIO1 PF0, When an error response is received for a PF packet transaction
+	uint64_t m3p0_pktpf_err               : 1;  /**< For CNF73XX, this interrupt should not occur.
+                                                         For CNF75XX, on SLI_PORT_E::SRIO1 PF0, When an error response is received for a PF packet
+                                                         transaction
                                                          read or a doorbell overflow for a ring associated with this PF occurs, this bit is set.
                                                          Throws SLI_INTSN_E::SLI_INT_M3P0_PKTPF_ERR. */
-	uint64_t m3p0_dmapf_err               : 1;  /**< On SLI_PORT_E::SRIO1 PF0, when an error response is received for a PF DMA transaction
+	uint64_t m3p0_dmapf_err               : 1;  /**< For CNF73XX, this interrupt should not occur.
+                                                         For CNF75XX, on SLI_PORT_E::SRIO1 PF0, when an error response is received for a PF DMA
+                                                         transaction
                                                          read,
                                                          this bit is set.
                                                          Throws SLI_INTSN_E::SLI_INT_M3P0_DMAPF_ERR. */
-	uint64_t m2p0_pppf_err                : 1;  /**< On SLI_PORT_E::SRIO0 PF0, when an error response is received for a PF PP transaction read,
+	uint64_t m2p0_pppf_err                : 1;  /**< For CNF73XX, this interrupt should not occur.
+                                                         For CNF75XX, on SLI_PORT_E::SRIO0 PF0, when an error response is received for a PF PP
+                                                         transaction read,
                                                          this bit is set.
                                                          Throws SLI_INTSN_E::SLI_INT_M2P0_PPPF_ERR. */
 	uint64_t m2p0_ppvf_err                : 1;  /**< This interrupt should not occur.
                                                          Throws SLI_INTSN_E::SLI_INT_M2P0_PPVF_ERR. */
-	uint64_t m2p0_pktpf_err               : 1;  /**< On SLI_PORT_E::SRIO0 PF0, When an error response is received for a PF packet transaction
+	uint64_t m2p0_pktpf_err               : 1;  /**< For CNF73XX, this interrupt should not occur.
+                                                         For CNF75XX, on SLI_PORT_E::SRIO0 PF0, When an error response is received for a PF packet
+                                                         transaction
                                                          read or a doorbell overflow for a ring associated with this PF occurs, this bit is set.
                                                          Throws SLI_INTSN_E::SLI_INT_M2P0_PKTPF_ERR. */
 	uint64_t m2p0_pktvf_err               : 1;  /**< This interrupt should not occur.
                                                          Throws SLI_INTSN_E::SLI_INT_M2P0_PKTVF_ERR. */
-	uint64_t m2p0_dmapf_err               : 1;  /**< On SLI_PORT_E::SRIO0 PF0, when an error response is received for a PF DMA transaction
+	uint64_t m2p0_dmapf_err               : 1;  /**< For CNF73XX, this interrupt should not occur.
+                                                         For CNF75XX, on SLI_PORT_E::SRIO0 PF0, when an error response is received for a PF DMA
+                                                         transaction
                                                          read,
                                                          this bit is set.
                                                          Throws SLI_INTSN_E::SLI_INT_M2P0_DMAPF_ERR. */
 	uint64_t m2p0_dmavf_err               : 1;  /**< This interrupt should not occur.
                                                          Throws SLI_INTSN_E::SLI_INT_M2P0_DMAVF_ERR. */
-	uint64_t m1p0_pppf_err                : 1;  /**< On SLI_PORT_E::PEM1 PF0, when an error response is received for a PF PP transaction read,
+	uint64_t m1p0_pppf_err                : 1;  /**< For CNF73XX, this interrupt should not occur.
+                                                         For CNF75XX, on SLI_PORT_E::PEM1 PF0, when an error response is received for a PF PP
+                                                         transaction read,
                                                          this bit is set.
                                                          Throws SLI_INTSN_E::SLI_INT_M1P0_PPPF_ERR. */
-	uint64_t m1p0_pktpf_err               : 1;  /**< On SLI_PORT_E::PEM1 PF0, When an error response is received for a PF packet transaction
+	uint64_t m1p0_pktpf_err               : 1;  /**< For CNF73XX, this interrupt should not occur.
+                                                         For CNF75XX, on SLI_PORT_E::PEM1 PF0, When an error response is received for a PF packet
+                                                         transaction
                                                          read or a doorbell overflow for a ring associated with this PF occurs, this bit is set.
                                                          Throws SLI_INTSN_E::SLI_INT_M1P0_PKTPF_ERR. */
-	uint64_t m1p0_dmapf_err               : 1;  /**< On SLI_PORT_E::PEM1 PF0, when an error response is received for a PF DMA transaction read,
+	uint64_t m1p0_dmapf_err               : 1;  /**< For CNF73XX, this interrupt should not occur.
+                                                         For CNF75XX, on SLI_PORT_E::PEM1 PF0, when an error response is received for a PF DMA
+                                                         transaction read,
                                                          this bit is set.
                                                          Throws SLI_INTSN_E::SLI_INT_M1P0_DMAPF_ERR. */
 	uint64_t m0p1_pppf_err                : 1;  /**< This interrupt cannot occur.
@@ -4538,7 +4580,7 @@ union cvmx_sli_ciu_int_sum {
 #endif
 	} s;
 	struct cvmx_sli_ciu_int_sum_s         cn73xx;
-	struct cvmx_sli_ciu_int_sum_s         cn78xxp2;
+	struct cvmx_sli_ciu_int_sum_s         cn78xx;
 	struct cvmx_sli_ciu_int_sum_s         cnf75xx;
 };
 typedef union cvmx_sli_ciu_int_sum cvmx_sli_ciu_int_sum_t;
@@ -4702,7 +4744,7 @@ union cvmx_sli_ctl_portx {
 #endif
 	} cn73xx;
 	struct cvmx_sli_ctl_portx_cn73xx      cn78xx;
-	struct cvmx_sli_ctl_portx_cn73xx      cn78xxp2;
+	struct cvmx_sli_ctl_portx_cn73xx      cn78xxp1;
 	struct cvmx_sli_ctl_portx_s           cnf71xx;
 	struct cvmx_sli_ctl_portx_cn73xx      cnf75xx;
 };
@@ -4721,7 +4763,9 @@ union cvmx_sli_ctl_status {
 	struct cvmx_sli_ctl_status_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_32_63               : 32;
-	uint64_t m2s1_ncbi                    : 4;  /**< Contains the IOBI that traffic (inbound BAR1/BAR2 posted writes, inbound BAR1/BAR2
+	uint64_t m2s1_ncbi                    : 4;  /**< For CNF73XX, this field is reserved.
+                                                         For CNF75XX, contains the IOBI that traffic (inbound BAR1/BAR2 posted writes, inbound
+                                                         BAR1/BAR2
                                                          non-posted reads, outbound BAR1/BAR2 completions, and inbound CPU completions)
                                                          from SLI_PORT_E::SRIO0 and SLI_PORT_E::SRIO1 is placed on. Values 2-15 are reserved. */
 	uint64_t m2s0_ncbi                    : 4;  /**< Contains the IOBI that traffic  (inbound BAR1/BAR2 posted writes, inbound BAR1/BAR2
@@ -4834,7 +4878,7 @@ union cvmx_sli_ctl_status {
 #endif
 	} cn73xx;
 	struct cvmx_sli_ctl_status_s          cn78xx;
-	struct cvmx_sli_ctl_status_s          cn78xxp2;
+	struct cvmx_sli_ctl_status_s          cn78xxp1;
 	struct cvmx_sli_ctl_status_cn61xx     cnf71xx;
 	struct cvmx_sli_ctl_status_cn73xx     cnf75xx;
 };
@@ -4851,9 +4895,12 @@ union cvmx_sli_data_out_cnt {
 	struct cvmx_sli_data_out_cnt_s {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_44_63               : 20;
-	uint64_t p1_ucnt                      : 16; /**< FIFO1 unload count. This counter is incremented by 1 every time a word is removed from
+	uint64_t p1_ucnt                      : 16; /**< For CNF73XX, reserved.
+                                                         For CNF75XX, FIFO1 unload count. This counter is incremented by 1 every time a word is removed from
                                                          data out FIFO1, whose count is shown in P1_FCNT. */
-	uint64_t p1_fcnt                      : 6;  /**< FIFO1 data out count. Number of address data words presently buffered in the FIFO1. MACs
+	uint64_t p1_fcnt                      : 6;  /**< For CNF73XX, reserved.
+                                                         For CNF75XX, FIFO1 data out count. Number of address data words presently
+                                                         buffered in the FIFO1. MACs
                                                          associated with FIFO1: SRIO0, SRIO1. */
 	uint64_t p0_ucnt                      : 16; /**< FIFO0 unload count. This counter is incremented by 1 every time a word is removed from
                                                          data out FIFO0, whose count is shown in P0_FCNT. */
@@ -4877,7 +4924,7 @@ union cvmx_sli_data_out_cnt {
 	struct cvmx_sli_data_out_cnt_s        cn70xxp1;
 	struct cvmx_sli_data_out_cnt_s        cn73xx;
 	struct cvmx_sli_data_out_cnt_s        cn78xx;
-	struct cvmx_sli_data_out_cnt_s        cn78xxp2;
+	struct cvmx_sli_data_out_cnt_s        cn78xxp1;
 	struct cvmx_sli_data_out_cnt_s        cnf71xx;
 	struct cvmx_sli_data_out_cnt_s        cnf75xx;
 };
@@ -4990,7 +5037,7 @@ union cvmx_sli_dmax_cnt {
 	struct cvmx_sli_dmax_cnt_s            cn70xxp1;
 	struct cvmx_sli_dmax_cnt_s            cn73xx;
 	struct cvmx_sli_dmax_cnt_s            cn78xx;
-	struct cvmx_sli_dmax_cnt_s            cn78xxp2;
+	struct cvmx_sli_dmax_cnt_s            cn78xxp1;
 	struct cvmx_sli_dmax_cnt_s            cnf71xx;
 	struct cvmx_sli_dmax_cnt_s            cnf75xx;
 };
@@ -5027,7 +5074,7 @@ union cvmx_sli_dmax_int_level {
 	struct cvmx_sli_dmax_int_level_s      cn70xxp1;
 	struct cvmx_sli_dmax_int_level_s      cn73xx;
 	struct cvmx_sli_dmax_int_level_s      cn78xx;
-	struct cvmx_sli_dmax_int_level_s      cn78xxp2;
+	struct cvmx_sli_dmax_int_level_s      cn78xxp1;
 	struct cvmx_sli_dmax_int_level_s      cnf71xx;
 	struct cvmx_sli_dmax_int_level_s      cnf75xx;
 };
@@ -5061,7 +5108,7 @@ union cvmx_sli_dmax_tim {
 	struct cvmx_sli_dmax_tim_s            cn70xxp1;
 	struct cvmx_sli_dmax_tim_s            cn73xx;
 	struct cvmx_sli_dmax_tim_s            cn78xx;
-	struct cvmx_sli_dmax_tim_s            cn78xxp2;
+	struct cvmx_sli_dmax_tim_s            cn78xxp1;
 	struct cvmx_sli_dmax_tim_s            cnf71xx;
 	struct cvmx_sli_dmax_tim_s            cnf75xx;
 };
@@ -6222,7 +6269,7 @@ union cvmx_sli_int_enb_portx {
 #endif
 	} cn70xx;
 	struct cvmx_sli_int_enb_portx_cn70xx  cn70xxp1;
-	struct cvmx_sli_int_enb_portx_cn78xx {
+	struct cvmx_sli_int_enb_portx_cn78xxp1 {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_60_63               : 4;
 	uint64_t sprt3_err                    : 1;  /**< Enables SLI_INT_SUM[SPRT3_ERR] to generate an interrupt to the MAC core for MSI/INTA. */
@@ -6316,7 +6363,7 @@ union cvmx_sli_int_enb_portx {
 	uint64_t sprt3_err                    : 1;
 	uint64_t reserved_60_63               : 4;
 #endif
-	} cn78xx;
+	} cn78xxp1;
 	struct cvmx_sli_int_enb_portx_cn61xx  cnf71xx;
 };
 typedef union cvmx_sli_int_enb_portx cvmx_sli_int_enb_portx_t;
@@ -7051,7 +7098,7 @@ union cvmx_sli_int_sum {
 #endif
 	} cn70xx;
 	struct cvmx_sli_int_sum_cn70xx        cn70xxp1;
-	struct cvmx_sli_int_sum_cn78xx {
+	struct cvmx_sli_int_sum_cn78xxp1 {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_60_63               : 4;
 	uint64_t sprt3_err                    : 1;  /**< SLI/DPI sets [SPRT3_ERR] when it receives an error response on a completion for a
@@ -7222,7 +7269,7 @@ union cvmx_sli_int_sum {
 	uint64_t sprt3_err                    : 1;
 	uint64_t reserved_60_63               : 4;
 #endif
-	} cn78xx;
+	} cn78xxp1;
 	struct cvmx_sli_int_sum_cn61xx        cnf71xx;
 };
 typedef union cvmx_sli_int_sum cvmx_sli_int_sum_t;
@@ -7346,7 +7393,7 @@ union cvmx_sli_macx_pfx_dma_vf_int {
 #endif
 	} s;
 	struct cvmx_sli_macx_pfx_dma_vf_int_s cn73xx;
-	struct cvmx_sli_macx_pfx_dma_vf_int_s cn78xxp2;
+	struct cvmx_sli_macx_pfx_dma_vf_int_s cn78xx;
 	struct cvmx_sli_macx_pfx_dma_vf_int_s cnf75xx;
 };
 typedef union cvmx_sli_macx_pfx_dma_vf_int cvmx_sli_macx_pfx_dma_vf_int_t;
@@ -7367,7 +7414,7 @@ union cvmx_sli_macx_pfx_dma_vf_int_enb {
 #endif
 	} s;
 	struct cvmx_sli_macx_pfx_dma_vf_int_enb_s cn73xx;
-	struct cvmx_sli_macx_pfx_dma_vf_int_enb_s cn78xxp2;
+	struct cvmx_sli_macx_pfx_dma_vf_int_enb_s cn78xx;
 	struct cvmx_sli_macx_pfx_dma_vf_int_enb_s cnf75xx;
 };
 typedef union cvmx_sli_macx_pfx_dma_vf_int_enb cvmx_sli_macx_pfx_dma_vf_int_enb_t;
@@ -7388,7 +7435,7 @@ union cvmx_sli_macx_pfx_flr_vf_int {
 #endif
 	} s;
 	struct cvmx_sli_macx_pfx_flr_vf_int_s cn73xx;
-	struct cvmx_sli_macx_pfx_flr_vf_int_s cn78xxp2;
+	struct cvmx_sli_macx_pfx_flr_vf_int_s cn78xx;
 	struct cvmx_sli_macx_pfx_flr_vf_int_s cnf75xx;
 };
 typedef union cvmx_sli_macx_pfx_flr_vf_int cvmx_sli_macx_pfx_flr_vf_int_t;
@@ -7475,7 +7522,7 @@ union cvmx_sli_macx_pfx_int_enb {
 #endif
 	} s;
 	struct cvmx_sli_macx_pfx_int_enb_s    cn73xx;
-	struct cvmx_sli_macx_pfx_int_enb_s    cn78xxp2;
+	struct cvmx_sli_macx_pfx_int_enb_s    cn78xx;
 	struct cvmx_sli_macx_pfx_int_enb_s    cnf75xx;
 };
 typedef union cvmx_sli_macx_pfx_int_enb cvmx_sli_macx_pfx_int_enb_t;
@@ -7582,7 +7629,7 @@ union cvmx_sli_macx_pfx_int_sum {
 #endif
 	} s;
 	struct cvmx_sli_macx_pfx_int_sum_s    cn73xx;
-	struct cvmx_sli_macx_pfx_int_sum_s    cn78xxp2;
+	struct cvmx_sli_macx_pfx_int_sum_s    cn78xx;
 	struct cvmx_sli_macx_pfx_int_sum_s    cnf75xx;
 };
 typedef union cvmx_sli_macx_pfx_int_sum cvmx_sli_macx_pfx_int_sum_t;
@@ -7606,7 +7653,7 @@ union cvmx_sli_macx_pfx_mbox_int {
 #endif
 	} s;
 	struct cvmx_sli_macx_pfx_mbox_int_s   cn73xx;
-	struct cvmx_sli_macx_pfx_mbox_int_s   cn78xxp2;
+	struct cvmx_sli_macx_pfx_mbox_int_s   cn78xx;
 	struct cvmx_sli_macx_pfx_mbox_int_s   cnf75xx;
 };
 typedef union cvmx_sli_macx_pfx_mbox_int cvmx_sli_macx_pfx_mbox_int_t;
@@ -7632,7 +7679,7 @@ union cvmx_sli_macx_pfx_pkt_vf_int {
 #endif
 	} s;
 	struct cvmx_sli_macx_pfx_pkt_vf_int_s cn73xx;
-	struct cvmx_sli_macx_pfx_pkt_vf_int_s cn78xxp2;
+	struct cvmx_sli_macx_pfx_pkt_vf_int_s cn78xx;
 	struct cvmx_sli_macx_pfx_pkt_vf_int_s cnf75xx;
 };
 typedef union cvmx_sli_macx_pfx_pkt_vf_int cvmx_sli_macx_pfx_pkt_vf_int_t;
@@ -7653,7 +7700,7 @@ union cvmx_sli_macx_pfx_pkt_vf_int_enb {
 #endif
 	} s;
 	struct cvmx_sli_macx_pfx_pkt_vf_int_enb_s cn73xx;
-	struct cvmx_sli_macx_pfx_pkt_vf_int_enb_s cn78xxp2;
+	struct cvmx_sli_macx_pfx_pkt_vf_int_enb_s cn78xx;
 	struct cvmx_sli_macx_pfx_pkt_vf_int_enb_s cnf75xx;
 };
 typedef union cvmx_sli_macx_pfx_pkt_vf_int_enb cvmx_sli_macx_pfx_pkt_vf_int_enb_t;
@@ -7677,7 +7724,7 @@ union cvmx_sli_macx_pfx_pp_vf_int {
 #endif
 	} s;
 	struct cvmx_sli_macx_pfx_pp_vf_int_s  cn73xx;
-	struct cvmx_sli_macx_pfx_pp_vf_int_s  cn78xxp2;
+	struct cvmx_sli_macx_pfx_pp_vf_int_s  cn78xx;
 	struct cvmx_sli_macx_pfx_pp_vf_int_s  cnf75xx;
 };
 typedef union cvmx_sli_macx_pfx_pp_vf_int cvmx_sli_macx_pfx_pp_vf_int_t;
@@ -7698,7 +7745,7 @@ union cvmx_sli_macx_pfx_pp_vf_int_enb {
 #endif
 	} s;
 	struct cvmx_sli_macx_pfx_pp_vf_int_enb_s cn73xx;
-	struct cvmx_sli_macx_pfx_pp_vf_int_enb_s cn78xxp2;
+	struct cvmx_sli_macx_pfx_pp_vf_int_enb_s cn78xx;
 	struct cvmx_sli_macx_pfx_pp_vf_int_enb_s cnf75xx;
 };
 typedef union cvmx_sli_macx_pfx_pp_vf_int_enb cvmx_sli_macx_pfx_pp_vf_int_enb_t;
@@ -7778,7 +7825,7 @@ union cvmx_sli_mac_credit_cnt {
 	struct cvmx_sli_mac_credit_cnt_s      cn70xxp1;
 	struct cvmx_sli_mac_credit_cnt_s      cn73xx;
 	struct cvmx_sli_mac_credit_cnt_s      cn78xx;
-	struct cvmx_sli_mac_credit_cnt_s      cn78xxp2;
+	struct cvmx_sli_mac_credit_cnt_s      cn78xxp1;
 	struct cvmx_sli_mac_credit_cnt_s      cnf71xx;
 	struct cvmx_sli_mac_credit_cnt_s      cnf75xx;
 };
@@ -7831,7 +7878,7 @@ union cvmx_sli_mac_credit_cnt2 {
 	struct cvmx_sli_mac_credit_cnt2_s     cn70xxp1;
 	struct cvmx_sli_mac_credit_cnt2_s     cn73xx;
 	struct cvmx_sli_mac_credit_cnt2_s     cn78xx;
-	struct cvmx_sli_mac_credit_cnt2_s     cn78xxp2;
+	struct cvmx_sli_mac_credit_cnt2_s     cn78xxp1;
 	struct cvmx_sli_mac_credit_cnt2_s     cnf71xx;
 	struct cvmx_sli_mac_credit_cnt2_s     cnf75xx;
 };
@@ -7873,7 +7920,7 @@ union cvmx_sli_mac_number {
 	struct cvmx_sli_mac_number_s          cn70xxp1;
 	struct cvmx_sli_mac_number_s          cn73xx;
 	struct cvmx_sli_mac_number_s          cn78xx;
-	struct cvmx_sli_mac_number_s          cn78xxp2;
+	struct cvmx_sli_mac_number_s          cn78xxp1;
 	struct cvmx_sli_mac_number_s          cnf71xx;
 	struct cvmx_sli_mac_number_s          cnf75xx;
 };
@@ -7911,7 +7958,7 @@ union cvmx_sli_mem_access_ctl {
 	struct cvmx_sli_mem_access_ctl_s      cn70xxp1;
 	struct cvmx_sli_mem_access_ctl_s      cn73xx;
 	struct cvmx_sli_mem_access_ctl_s      cn78xx;
-	struct cvmx_sli_mem_access_ctl_s      cn78xxp2;
+	struct cvmx_sli_mem_access_ctl_s      cn78xxp1;
 	struct cvmx_sli_mem_access_ctl_s      cnf71xx;
 	struct cvmx_sli_mem_access_ctl_s      cnf75xx;
 };
@@ -8107,8 +8154,8 @@ union cvmx_sli_mem_access_subidx {
 	uint64_t reserved_60_63               : 4;
 #endif
 	} cn73xx;
-	struct cvmx_sli_mem_access_subidx_cn61xx cn78xx;
-	struct cvmx_sli_mem_access_subidx_cn73xx cn78xxp2;
+	struct cvmx_sli_mem_access_subidx_cn73xx cn78xx;
+	struct cvmx_sli_mem_access_subidx_cn61xx cn78xxp1;
 	struct cvmx_sli_mem_access_subidx_cn61xx cnf71xx;
 	struct cvmx_sli_mem_access_subidx_cn73xx cnf75xx;
 };
@@ -8167,7 +8214,7 @@ union cvmx_sli_mem_ctl {
 	} s;
 	struct cvmx_sli_mem_ctl_s             cn73xx;
 	struct cvmx_sli_mem_ctl_s             cn78xx;
-	struct cvmx_sli_mem_ctl_s             cn78xxp2;
+	struct cvmx_sli_mem_ctl_s             cn78xxp1;
 	struct cvmx_sli_mem_ctl_s             cnf75xx;
 };
 typedef union cvmx_sli_mem_ctl cvmx_sli_mem_ctl_t;
@@ -8225,7 +8272,7 @@ union cvmx_sli_mem_int_sum {
 	} s;
 	struct cvmx_sli_mem_int_sum_s         cn73xx;
 	struct cvmx_sli_mem_int_sum_s         cn78xx;
-	struct cvmx_sli_mem_int_sum_s         cn78xxp2;
+	struct cvmx_sli_mem_int_sum_s         cn78xxp1;
 	struct cvmx_sli_mem_int_sum_s         cnf75xx;
 };
 typedef union cvmx_sli_mem_int_sum cvmx_sli_mem_int_sum_t;
@@ -8363,7 +8410,7 @@ union cvmx_sli_msi_rcv0 {
 	struct cvmx_sli_msi_rcv0_s            cn70xxp1;
 	struct cvmx_sli_msi_rcv0_s            cn73xx;
 	struct cvmx_sli_msi_rcv0_s            cn78xx;
-	struct cvmx_sli_msi_rcv0_s            cn78xxp2;
+	struct cvmx_sli_msi_rcv0_s            cn78xxp1;
 	struct cvmx_sli_msi_rcv0_s            cnf71xx;
 	struct cvmx_sli_msi_rcv0_s            cnf75xx;
 };
@@ -8394,7 +8441,7 @@ union cvmx_sli_msi_rcv1 {
 	struct cvmx_sli_msi_rcv1_s            cn70xxp1;
 	struct cvmx_sli_msi_rcv1_s            cn73xx;
 	struct cvmx_sli_msi_rcv1_s            cn78xx;
-	struct cvmx_sli_msi_rcv1_s            cn78xxp2;
+	struct cvmx_sli_msi_rcv1_s            cn78xxp1;
 	struct cvmx_sli_msi_rcv1_s            cnf71xx;
 	struct cvmx_sli_msi_rcv1_s            cnf75xx;
 };
@@ -8425,7 +8472,7 @@ union cvmx_sli_msi_rcv2 {
 	struct cvmx_sli_msi_rcv2_s            cn70xxp1;
 	struct cvmx_sli_msi_rcv2_s            cn73xx;
 	struct cvmx_sli_msi_rcv2_s            cn78xx;
-	struct cvmx_sli_msi_rcv2_s            cn78xxp2;
+	struct cvmx_sli_msi_rcv2_s            cn78xxp1;
 	struct cvmx_sli_msi_rcv2_s            cnf71xx;
 	struct cvmx_sli_msi_rcv2_s            cnf75xx;
 };
@@ -8456,7 +8503,7 @@ union cvmx_sli_msi_rcv3 {
 	struct cvmx_sli_msi_rcv3_s            cn70xxp1;
 	struct cvmx_sli_msi_rcv3_s            cn73xx;
 	struct cvmx_sli_msi_rcv3_s            cn78xx;
-	struct cvmx_sli_msi_rcv3_s            cn78xxp2;
+	struct cvmx_sli_msi_rcv3_s            cn78xxp1;
 	struct cvmx_sli_msi_rcv3_s            cnf71xx;
 	struct cvmx_sli_msi_rcv3_s            cnf75xx;
 };
@@ -8491,7 +8538,7 @@ union cvmx_sli_msi_rd_map {
 	struct cvmx_sli_msi_rd_map_s          cn70xxp1;
 	struct cvmx_sli_msi_rd_map_s          cn73xx;
 	struct cvmx_sli_msi_rd_map_s          cn78xx;
-	struct cvmx_sli_msi_rd_map_s          cn78xxp2;
+	struct cvmx_sli_msi_rd_map_s          cn78xxp1;
 	struct cvmx_sli_msi_rd_map_s          cnf71xx;
 	struct cvmx_sli_msi_rd_map_s          cnf75xx;
 };
@@ -8761,7 +8808,7 @@ union cvmx_sli_msi_wr_map {
 	struct cvmx_sli_msi_wr_map_s          cn70xxp1;
 	struct cvmx_sli_msi_wr_map_s          cn73xx;
 	struct cvmx_sli_msi_wr_map_s          cn78xx;
-	struct cvmx_sli_msi_wr_map_s          cn78xxp2;
+	struct cvmx_sli_msi_wr_map_s          cn78xxp1;
 	struct cvmx_sli_msi_wr_map_s          cnf71xx;
 	struct cvmx_sli_msi_wr_map_s          cnf75xx;
 };
@@ -8805,7 +8852,7 @@ union cvmx_sli_msixx_table_addr {
 	} s;
 	struct cvmx_sli_msixx_table_addr_s    cn73xx;
 	struct cvmx_sli_msixx_table_addr_s    cn78xx;
-	struct cvmx_sli_msixx_table_addr_s    cn78xxp2;
+	struct cvmx_sli_msixx_table_addr_s    cn78xxp1;
 	struct cvmx_sli_msixx_table_addr_s    cnf75xx;
 };
 typedef union cvmx_sli_msixx_table_addr cvmx_sli_msixx_table_addr_t;
@@ -8831,7 +8878,7 @@ union cvmx_sli_msixx_table_data {
 	} s;
 	struct cvmx_sli_msixx_table_data_s    cn73xx;
 	struct cvmx_sli_msixx_table_data_s    cn78xx;
-	struct cvmx_sli_msixx_table_data_s    cn78xxp2;
+	struct cvmx_sli_msixx_table_data_s    cn78xxp1;
 	struct cvmx_sli_msixx_table_data_s    cnf75xx;
 };
 typedef union cvmx_sli_msixx_table_data cvmx_sli_msixx_table_data_t;
@@ -8851,7 +8898,7 @@ union cvmx_sli_msix_macx_pf_table_addr {
 	uint64_t addr                         : 64;
 #endif
 	} s;
-	struct cvmx_sli_msix_macx_pf_table_addr_s cn78xx;
+	struct cvmx_sli_msix_macx_pf_table_addr_s cn78xxp1;
 };
 typedef union cvmx_sli_msix_macx_pf_table_addr cvmx_sli_msix_macx_pf_table_addr_t;
 
@@ -8874,7 +8921,7 @@ union cvmx_sli_msix_macx_pf_table_data {
 	uint64_t reserved_33_63               : 31;
 #endif
 	} s;
-	struct cvmx_sli_msix_macx_pf_table_data_s cn78xx;
+	struct cvmx_sli_msix_macx_pf_table_data_s cn78xxp1;
 };
 typedef union cvmx_sli_msix_macx_pf_table_data cvmx_sli_msix_macx_pf_table_data_t;
 
@@ -8882,7 +8929,7 @@ typedef union cvmx_sli_msix_macx_pf_table_data cvmx_sli_msix_macx_pf_table_data_
  * cvmx_sli_msix_pba0
  *
  * The MSI-X pending bit array cannot be burst read.
- * In SRIO-V mode, a VF will find its pending completion interrupts in bit
+ * In SR-IOV mode, a VF will find its pending completion interrupts in bit
  * positions [(RPVF-1):0]. If RPVF<64, bits [63:RPVF] are returned as zero.
  *
  * Each VF can read their own pending completion interrupts based on the ring/VF
@@ -8909,7 +8956,7 @@ typedef union cvmx_sli_msix_macx_pf_table_data cvmx_sli_msix_macx_pf_table_data_
  * error interrupt in bit position [(TNR+1)]. Bits [63:(TNR+2)] are returned as zero.
  * When SLI_PKT_MAC()_PF()_RINFO[TRS]<63, SLI_MSIX_PBA1 is not used and returns zeros.
  *
- * If SRIO-V Mode is off there is no virtual function support, but the PF can configure up to 65
+ * If SR-IOV Mode is off there is no virtual function support, but the PF can configure up to 65
  * entries (up to 64 DPI Packet Rings plus 1 PF ring) for itself.
  */
 union cvmx_sli_msix_pba0 {
@@ -8923,7 +8970,7 @@ union cvmx_sli_msix_pba0 {
 	} s;
 	struct cvmx_sli_msix_pba0_s           cn73xx;
 	struct cvmx_sli_msix_pba0_s           cn78xx;
-	struct cvmx_sli_msix_pba0_s           cn78xxp2;
+	struct cvmx_sli_msix_pba0_s           cn78xxp1;
 	struct cvmx_sli_msix_pba0_s           cnf75xx;
 };
 typedef union cvmx_sli_msix_pba0 cvmx_sli_msix_pba0_t;
@@ -8954,7 +9001,7 @@ union cvmx_sli_msix_pba1 {
 	} s;
 	struct cvmx_sli_msix_pba1_s           cn73xx;
 	struct cvmx_sli_msix_pba1_s           cn78xx;
-	struct cvmx_sli_msix_pba1_s           cn78xxp2;
+	struct cvmx_sli_msix_pba1_s           cn78xxp1;
 	struct cvmx_sli_msix_pba1_s           cnf75xx;
 };
 typedef union cvmx_sli_msix_pba1 cvmx_sli_msix_pba1_t;
@@ -8977,7 +9024,7 @@ union cvmx_sli_nqm_rsp_err_snd_dbg {
 #endif
 	} s;
 	struct cvmx_sli_nqm_rsp_err_snd_dbg_s cn73xx;
-	struct cvmx_sli_nqm_rsp_err_snd_dbg_s cn78xxp2;
+	struct cvmx_sli_nqm_rsp_err_snd_dbg_s cn78xx;
 	struct cvmx_sli_nqm_rsp_err_snd_dbg_s cnf75xx;
 };
 typedef union cvmx_sli_nqm_rsp_err_snd_dbg cvmx_sli_nqm_rsp_err_snd_dbg_t;
@@ -9011,7 +9058,7 @@ union cvmx_sli_pcie_msi_rcv {
 	struct cvmx_sli_pcie_msi_rcv_s        cn70xxp1;
 	struct cvmx_sli_pcie_msi_rcv_s        cn73xx;
 	struct cvmx_sli_pcie_msi_rcv_s        cn78xx;
-	struct cvmx_sli_pcie_msi_rcv_s        cn78xxp2;
+	struct cvmx_sli_pcie_msi_rcv_s        cn78xxp1;
 	struct cvmx_sli_pcie_msi_rcv_s        cnf71xx;
 	struct cvmx_sli_pcie_msi_rcv_s        cnf75xx;
 };
@@ -9048,7 +9095,7 @@ union cvmx_sli_pcie_msi_rcv_b1 {
 	struct cvmx_sli_pcie_msi_rcv_b1_s     cn70xxp1;
 	struct cvmx_sli_pcie_msi_rcv_b1_s     cn73xx;
 	struct cvmx_sli_pcie_msi_rcv_b1_s     cn78xx;
-	struct cvmx_sli_pcie_msi_rcv_b1_s     cn78xxp2;
+	struct cvmx_sli_pcie_msi_rcv_b1_s     cn78xxp1;
 	struct cvmx_sli_pcie_msi_rcv_b1_s     cnf71xx;
 	struct cvmx_sli_pcie_msi_rcv_b1_s     cnf75xx;
 };
@@ -9085,7 +9132,7 @@ union cvmx_sli_pcie_msi_rcv_b2 {
 	struct cvmx_sli_pcie_msi_rcv_b2_s     cn70xxp1;
 	struct cvmx_sli_pcie_msi_rcv_b2_s     cn73xx;
 	struct cvmx_sli_pcie_msi_rcv_b2_s     cn78xx;
-	struct cvmx_sli_pcie_msi_rcv_b2_s     cn78xxp2;
+	struct cvmx_sli_pcie_msi_rcv_b2_s     cn78xxp1;
 	struct cvmx_sli_pcie_msi_rcv_b2_s     cnf71xx;
 	struct cvmx_sli_pcie_msi_rcv_b2_s     cnf75xx;
 };
@@ -9122,7 +9169,7 @@ union cvmx_sli_pcie_msi_rcv_b3 {
 	struct cvmx_sli_pcie_msi_rcv_b3_s     cn70xxp1;
 	struct cvmx_sli_pcie_msi_rcv_b3_s     cn73xx;
 	struct cvmx_sli_pcie_msi_rcv_b3_s     cn78xx;
-	struct cvmx_sli_pcie_msi_rcv_b3_s     cn78xxp2;
+	struct cvmx_sli_pcie_msi_rcv_b3_s     cn78xxp1;
 	struct cvmx_sli_pcie_msi_rcv_b3_s     cnf71xx;
 	struct cvmx_sli_pcie_msi_rcv_b3_s     cnf75xx;
 };
@@ -9234,7 +9281,8 @@ union cvmx_sli_pktx_cnts {
 	} cn70xx;
 	struct cvmx_sli_pktx_cnts_cn70xx      cn70xxp1;
 	struct cvmx_sli_pktx_cnts_s           cn73xx;
-	struct cvmx_sli_pktx_cnts_cn78xx {
+	struct cvmx_sli_pktx_cnts_s           cn78xx;
+	struct cvmx_sli_pktx_cnts_cn78xxp1 {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t po_int                       : 1;  /**< Packet output interrupt bit for the ring (i). [PO_INT] reads as one whenever:
                                                           * [CNT]   > SLI_PKT(i)_INT_LEVELS[CNT], or
@@ -9264,8 +9312,7 @@ union cvmx_sli_pktx_cnts {
 	uint64_t pi_int                       : 1;
 	uint64_t po_int                       : 1;
 #endif
-	} cn78xx;
-	struct cvmx_sli_pktx_cnts_s           cn78xxp2;
+	} cn78xxp1;
 	struct cvmx_sli_pktx_cnts_cn61xx      cnf71xx;
 	struct cvmx_sli_pktx_cnts_s           cnf75xx;
 };
@@ -9310,7 +9357,7 @@ union cvmx_sli_pktx_error_info {
 #endif
 	} s;
 	struct cvmx_sli_pktx_error_info_s     cn73xx;
-	struct cvmx_sli_pktx_error_info_s     cn78xxp2;
+	struct cvmx_sli_pktx_error_info_s     cn78xx;
 	struct cvmx_sli_pktx_error_info_s     cnf75xx;
 };
 typedef union cvmx_sli_pktx_error_info cvmx_sli_pktx_error_info_t;
@@ -9400,7 +9447,7 @@ union cvmx_sli_pktx_input_control {
 	uint64_t pbp_dhi                      : 13; /**< Not used by hardware, but may be cleared by hardware when [RST] is set. */
 	uint64_t d_nsr                        : 1;  /**< If [USE_CSR]=1 (DPTR Format 0), [D_NSR] is ADDRTYPE<1> for First Direct and
                                                          Gather DPTR reads. ADDRTYPE<1> is the no-snoop attribute for PCIe.
-                                                         ADDRTYPE<1> helps select an SRIO()_S2M_TYPE() entry with sRIO.
+                                                         For CNF75XXX, ADDRTYPE<1> helps select an SRIO()_S2M_TYPE() entry with sRIO.
                                                          If [USE_CSR]=0 (DPTR Format 1), [D_NSR] is MACADD<61> for First Direct and
                                                          Gather DPTR reads. (ADDRTYPE<1> comes from DPTR<61> in these cases when
                                                          [USE_CSR]=0.) */
@@ -9411,8 +9458,8 @@ union cvmx_sli_pktx_input_control {
                                                          Gather DPTR reads. (ES<1:0> comes from DPTR<63:62> in these cases when
                                                          [USE_CSR]=0.) */
 	uint64_t d_ror                        : 1;  /**< If [USE_CSR]=1 (DPTR Format 0), [D_ROR] is ADDRTYPE<0> for First Direct and
-                                                         Gather DPTR reads. ADDRTYPE<0> is the relaxed-order attribute for PCIe. It helps
-                                                         select an SRIO()_S2M_TYPE() entry with sRIO.
+                                                         Gather DPTR reads. ADDRTYPE<0> is the relaxed-order attribute for PCIe.
+                                                         For CNF75XX, ADDRTYPE<0> helps select an SRIO()_S2M_TYPE() entry with sRIO.
                                                          If [USE_CSR]=0 (DPTR Format 1), [D_NSR] is MACADD<60> for First Direct and
                                                          Gather DPTR reads. (ADDRTYPE<0> comes from DPTR<60> in these cases when
                                                          [USE_CSR]=0.) */
@@ -9555,7 +9602,8 @@ union cvmx_sli_pktx_input_control {
 	uint64_t reserved_55_63               : 9;
 #endif
 	} cn73xx;
-	struct cvmx_sli_pktx_input_control_cn78xx {
+	struct cvmx_sli_pktx_input_control_cn73xx cn78xx;
+	struct cvmx_sli_pktx_input_control_cn78xxp1 {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_39_63               : 25;
 	uint64_t vf_num                       : 7;  /**< The function number that the ring belongs to. When [VF_NUM]=0, the physical
@@ -9646,8 +9694,7 @@ union cvmx_sli_pktx_input_control {
 	uint64_t vf_num                       : 7;
 	uint64_t reserved_39_63               : 25;
 #endif
-	} cn78xx;
-	struct cvmx_sli_pktx_input_control_cn73xx cn78xxp2;
+	} cn78xxp1;
 	struct cvmx_sli_pktx_input_control_cn73xx cnf75xx;
 };
 typedef union cvmx_sli_pktx_input_control cvmx_sli_pktx_input_control_t;
@@ -9681,7 +9728,7 @@ union cvmx_sli_pktx_instr_baddr {
 	struct cvmx_sli_pktx_instr_baddr_s    cn70xxp1;
 	struct cvmx_sli_pktx_instr_baddr_s    cn73xx;
 	struct cvmx_sli_pktx_instr_baddr_s    cn78xx;
-	struct cvmx_sli_pktx_instr_baddr_s    cn78xxp2;
+	struct cvmx_sli_pktx_instr_baddr_s    cn78xxp1;
 	struct cvmx_sli_pktx_instr_baddr_s    cnf71xx;
 	struct cvmx_sli_pktx_instr_baddr_s    cnf75xx;
 };
@@ -9720,7 +9767,7 @@ union cvmx_sli_pktx_instr_baoff_dbell {
 	struct cvmx_sli_pktx_instr_baoff_dbell_s cn70xxp1;
 	struct cvmx_sli_pktx_instr_baoff_dbell_s cn73xx;
 	struct cvmx_sli_pktx_instr_baoff_dbell_s cn78xx;
-	struct cvmx_sli_pktx_instr_baoff_dbell_s cn78xxp2;
+	struct cvmx_sli_pktx_instr_baoff_dbell_s cn78xxp1;
 	struct cvmx_sli_pktx_instr_baoff_dbell_s cnf71xx;
 	struct cvmx_sli_pktx_instr_baoff_dbell_s cnf75xx;
 };
@@ -9760,7 +9807,7 @@ union cvmx_sli_pktx_instr_fifo_rsize {
 	struct cvmx_sli_pktx_instr_fifo_rsize_s cn70xxp1;
 	struct cvmx_sli_pktx_instr_fifo_rsize_s cn73xx;
 	struct cvmx_sli_pktx_instr_fifo_rsize_s cn78xx;
-	struct cvmx_sli_pktx_instr_fifo_rsize_s cn78xxp2;
+	struct cvmx_sli_pktx_instr_fifo_rsize_s cn78xxp1;
 	struct cvmx_sli_pktx_instr_fifo_rsize_s cnf71xx;
 	struct cvmx_sli_pktx_instr_fifo_rsize_s cnf75xx;
 };
@@ -10015,7 +10062,7 @@ union cvmx_sli_pktx_int_levels {
 	} s;
 	struct cvmx_sli_pktx_int_levels_s     cn73xx;
 	struct cvmx_sli_pktx_int_levels_s     cn78xx;
-	struct cvmx_sli_pktx_int_levels_s     cn78xxp2;
+	struct cvmx_sli_pktx_int_levels_s     cn78xxp1;
 	struct cvmx_sli_pktx_int_levels_s     cnf75xx;
 };
 typedef union cvmx_sli_pktx_int_levels cvmx_sli_pktx_int_levels_t;
@@ -10058,7 +10105,7 @@ union cvmx_sli_pktx_mbox_int {
 #endif
 	} s;
 	struct cvmx_sli_pktx_mbox_int_s       cn73xx;
-	struct cvmx_sli_pktx_mbox_int_s       cn78xxp2;
+	struct cvmx_sli_pktx_mbox_int_s       cn78xx;
 	struct cvmx_sli_pktx_mbox_int_s       cnf75xx;
 };
 typedef union cvmx_sli_pktx_mbox_int cvmx_sli_pktx_mbox_int_t;
@@ -10111,8 +10158,8 @@ union cvmx_sli_pktx_out_size {
 	uint64_t reserved_22_63               : 42;
 #endif
 	} cn73xx;
-	struct cvmx_sli_pktx_out_size_s       cn78xx;
-	struct cvmx_sli_pktx_out_size_cn73xx  cn78xxp2;
+	struct cvmx_sli_pktx_out_size_cn73xx  cn78xx;
+	struct cvmx_sli_pktx_out_size_s       cn78xxp1;
 	struct cvmx_sli_pktx_out_size_s       cnf71xx;
 	struct cvmx_sli_pktx_out_size_cn73xx  cnf75xx;
 };
@@ -10205,7 +10252,7 @@ union cvmx_sli_pktx_output_control {
 	} s;
 	struct cvmx_sli_pktx_output_control_s cn73xx;
 	struct cvmx_sli_pktx_output_control_s cn78xx;
-	struct cvmx_sli_pktx_output_control_s cn78xxp2;
+	struct cvmx_sli_pktx_output_control_s cn78xxp1;
 	struct cvmx_sli_pktx_output_control_s cnf75xx;
 };
 typedef union cvmx_sli_pktx_output_control cvmx_sli_pktx_output_control_t;
@@ -10246,7 +10293,7 @@ union cvmx_sli_pktx_pf_vf_mbox_sigx {
 #endif
 	} s;
 	struct cvmx_sli_pktx_pf_vf_mbox_sigx_s cn73xx;
-	struct cvmx_sli_pktx_pf_vf_mbox_sigx_s cn78xxp2;
+	struct cvmx_sli_pktx_pf_vf_mbox_sigx_s cn78xx;
 	struct cvmx_sli_pktx_pf_vf_mbox_sigx_s cnf75xx;
 };
 typedef union cvmx_sli_pktx_pf_vf_mbox_sigx cvmx_sli_pktx_pf_vf_mbox_sigx_t;
@@ -10278,7 +10325,7 @@ union cvmx_sli_pktx_slist_baddr {
 	struct cvmx_sli_pktx_slist_baddr_s    cn70xxp1;
 	struct cvmx_sli_pktx_slist_baddr_s    cn73xx;
 	struct cvmx_sli_pktx_slist_baddr_s    cn78xx;
-	struct cvmx_sli_pktx_slist_baddr_s    cn78xxp2;
+	struct cvmx_sli_pktx_slist_baddr_s    cn78xxp1;
 	struct cvmx_sli_pktx_slist_baddr_s    cnf71xx;
 	struct cvmx_sli_pktx_slist_baddr_s    cnf75xx;
 };
@@ -10318,7 +10365,7 @@ union cvmx_sli_pktx_slist_baoff_dbell {
 	struct cvmx_sli_pktx_slist_baoff_dbell_s cn70xxp1;
 	struct cvmx_sli_pktx_slist_baoff_dbell_s cn73xx;
 	struct cvmx_sli_pktx_slist_baoff_dbell_s cn78xx;
-	struct cvmx_sli_pktx_slist_baoff_dbell_s cn78xxp2;
+	struct cvmx_sli_pktx_slist_baoff_dbell_s cn78xxp1;
 	struct cvmx_sli_pktx_slist_baoff_dbell_s cnf71xx;
 	struct cvmx_sli_pktx_slist_baoff_dbell_s cnf75xx;
 };
@@ -10362,7 +10409,7 @@ union cvmx_sli_pktx_slist_fifo_rsize {
 	struct cvmx_sli_pktx_slist_fifo_rsize_cn70xx cn70xxp1;
 	struct cvmx_sli_pktx_slist_fifo_rsize_cn70xx cn73xx;
 	struct cvmx_sli_pktx_slist_fifo_rsize_cn70xx cn78xx;
-	struct cvmx_sli_pktx_slist_fifo_rsize_cn70xx cn78xxp2;
+	struct cvmx_sli_pktx_slist_fifo_rsize_cn70xx cn78xxp1;
 	struct cvmx_sli_pktx_slist_fifo_rsize_s cnf71xx;
 	struct cvmx_sli_pktx_slist_fifo_rsize_cn70xx cnf75xx;
 };
@@ -10395,7 +10442,7 @@ union cvmx_sli_pktx_vf_int_sum {
 #endif
 	} s;
 	struct cvmx_sli_pktx_vf_int_sum_s     cn73xx;
-	struct cvmx_sli_pktx_vf_int_sum_s     cn78xxp2;
+	struct cvmx_sli_pktx_vf_int_sum_s     cn78xx;
 	struct cvmx_sli_pktx_vf_int_sum_s     cnf75xx;
 };
 typedef union cvmx_sli_pktx_vf_int_sum cvmx_sli_pktx_vf_int_sum_t;
@@ -10415,7 +10462,7 @@ union cvmx_sli_pktx_vf_sig {
 	uint64_t data                         : 64;
 #endif
 	} s;
-	struct cvmx_sli_pktx_vf_sig_s         cn78xx;
+	struct cvmx_sli_pktx_vf_sig_s         cn78xxp1;
 };
 typedef union cvmx_sli_pktx_vf_sig cvmx_sli_pktx_vf_sig_t;
 
@@ -10437,7 +10484,7 @@ union cvmx_sli_pkt_bist_status {
 #endif
 	} s;
 	struct cvmx_sli_pkt_bist_status_s     cn73xx;
-	struct cvmx_sli_pkt_bist_status_s     cn78xxp2;
+	struct cvmx_sli_pkt_bist_status_s     cn78xx;
 	struct cvmx_sli_pkt_bist_status_s     cnf75xx;
 };
 typedef union cvmx_sli_pkt_bist_status cvmx_sli_pkt_bist_status_t;
@@ -10495,7 +10542,7 @@ union cvmx_sli_pkt_cnt_int {
 #endif
 	} cn73xx;
 	struct cvmx_sli_pkt_cnt_int_cn73xx    cn78xx;
-	struct cvmx_sli_pkt_cnt_int_cn73xx    cn78xxp2;
+	struct cvmx_sli_pkt_cnt_int_cn73xx    cn78xxp1;
 	struct cvmx_sli_pkt_cnt_int_cn61xx    cnf71xx;
 	struct cvmx_sli_pkt_cnt_int_cn73xx    cnf75xx;
 };
@@ -10759,7 +10806,7 @@ union cvmx_sli_pkt_gbl_control {
 #endif
 	} s;
 	struct cvmx_sli_pkt_gbl_control_s     cn73xx;
-	struct cvmx_sli_pkt_gbl_control_s     cn78xxp2;
+	struct cvmx_sli_pkt_gbl_control_s     cn78xx;
 	struct cvmx_sli_pkt_gbl_control_s     cnf75xx;
 };
 typedef union cvmx_sli_pkt_gbl_control cvmx_sli_pkt_gbl_control_t;
@@ -10826,7 +10873,7 @@ union cvmx_sli_pkt_in_donex_cnts {
 	uint64_t cint_enb                     : 1;  /**< Packet input interrupt enable bit for the ring. When [CINT_ENB] is set,
                                                          the hardware sets [PI_INT] whenever it updates [CNT] and it is greater
                                                          than [WMARK].
-                                                         When [CINT_ENB] is clear,  the hardware will never set [PI_INT]. */
+                                                         When [CINT_ENB] is clear, the hardware will never set [PI_INT]. */
 	uint64_t wmark                        : 16; /**< Packet input interrupt watermark for the ring. If [CINT_ENB] is set
                                                          and WMARK does not equal 0xFFFF, the hardware sets [PI_INT] whenever
                                                          it updates [CNT][31:0] and it is greater than [16'b0,[WMARK][15:0]]. */
@@ -10875,7 +10922,8 @@ union cvmx_sli_pkt_in_donex_cnts {
 	} cn70xx;
 	struct cvmx_sli_pkt_in_donex_cnts_cn70xx cn70xxp1;
 	struct cvmx_sli_pkt_in_donex_cnts_s   cn73xx;
-	struct cvmx_sli_pkt_in_donex_cnts_cn78xx {
+	struct cvmx_sli_pkt_in_donex_cnts_s   cn78xx;
+	struct cvmx_sli_pkt_in_donex_cnts_cn78xxp1 {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t po_int                       : 1;  /**< Packet output interrupt bit for the ring. A copy of SLI_PKT(i)_CNTS[PO_INT]. */
 	uint64_t pi_int                       : 1;  /**< Packet input interrupt bit for the ring. The hardware sets [PI_INT] whenever it updates
@@ -10901,8 +10949,7 @@ union cvmx_sli_pkt_in_donex_cnts {
 	uint64_t pi_int                       : 1;
 	uint64_t po_int                       : 1;
 #endif
-	} cn78xx;
-	struct cvmx_sli_pkt_in_donex_cnts_s   cn78xxp2;
+	} cn78xxp1;
 	struct cvmx_sli_pkt_in_donex_cnts_cn61xx cnf71xx;
 	struct cvmx_sli_pkt_in_donex_cnts_s   cnf75xx;
 };
@@ -10936,7 +10983,7 @@ union cvmx_sli_pkt_in_instr_counts {
 	struct cvmx_sli_pkt_in_instr_counts_s cn70xxp1;
 	struct cvmx_sli_pkt_in_instr_counts_s cn73xx;
 	struct cvmx_sli_pkt_in_instr_counts_s cn78xx;
-	struct cvmx_sli_pkt_in_instr_counts_s cn78xxp2;
+	struct cvmx_sli_pkt_in_instr_counts_s cn78xxp1;
 	struct cvmx_sli_pkt_in_instr_counts_s cnf71xx;
 	struct cvmx_sli_pkt_in_instr_counts_s cnf75xx;
 };
@@ -10965,7 +11012,7 @@ union cvmx_sli_pkt_in_int {
 	} s;
 	struct cvmx_sli_pkt_in_int_s          cn73xx;
 	struct cvmx_sli_pkt_in_int_s          cn78xx;
-	struct cvmx_sli_pkt_in_int_s          cn78xxp2;
+	struct cvmx_sli_pkt_in_int_s          cn78xxp1;
 	struct cvmx_sli_pkt_in_int_s          cnf75xx;
 };
 typedef union cvmx_sli_pkt_in_int cvmx_sli_pkt_in_int_t;
@@ -10982,14 +11029,14 @@ union cvmx_sli_pkt_in_jabber {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_32_63               : 32;
 	uint64_t size                         : 32; /**< Byte count for limiting sizes of packet sizes that are allowed for SLI packet inbound
-                                                         packets.  This byte limit does not include FSZ bytes of a packet. */
+                                                         packets. This byte limit does not include FSZ bytes of a packet. */
 #else
 	uint64_t size                         : 32;
 	uint64_t reserved_32_63               : 32;
 #endif
 	} s;
 	struct cvmx_sli_pkt_in_jabber_s       cn73xx;
-	struct cvmx_sli_pkt_in_jabber_s       cn78xxp2;
+	struct cvmx_sli_pkt_in_jabber_s       cn78xx;
 	struct cvmx_sli_pkt_in_jabber_s       cnf75xx;
 };
 typedef union cvmx_sli_pkt_in_jabber cvmx_sli_pkt_in_jabber_t;
@@ -11249,7 +11296,7 @@ union cvmx_sli_pkt_instr_enb {
 	struct cvmx_sli_pkt_instr_enb_cn61xx  cn68xxp1;
 	struct cvmx_sli_pkt_instr_enb_cn61xx  cn70xx;
 	struct cvmx_sli_pkt_instr_enb_cn61xx  cn70xxp1;
-	struct cvmx_sli_pkt_instr_enb_s       cn78xx;
+	struct cvmx_sli_pkt_instr_enb_s       cn78xxp1;
 	struct cvmx_sli_pkt_instr_enb_cn61xx  cnf71xx;
 };
 typedef union cvmx_sli_pkt_instr_enb cvmx_sli_pkt_instr_enb_t;
@@ -11349,7 +11396,7 @@ union cvmx_sli_pkt_int {
 	} s;
 	struct cvmx_sli_pkt_int_s             cn73xx;
 	struct cvmx_sli_pkt_int_s             cn78xx;
-	struct cvmx_sli_pkt_int_s             cn78xxp2;
+	struct cvmx_sli_pkt_int_s             cn78xxp1;
 	struct cvmx_sli_pkt_int_s             cnf75xx;
 };
 typedef union cvmx_sli_pkt_int cvmx_sli_pkt_int_t;
@@ -11432,7 +11479,7 @@ typedef union cvmx_sli_pkt_iptr cvmx_sli_pkt_iptr_t;
  * A PF will own the rings starting from ((SLI_PKT_MAC()_PF()_RINFO[SRN] +
  * (SLI_PKT_MAC()_PF()_RINFO[RPVF] * SLI_PKT_MAC()_PF()_RINFO[NVFS]))
  * to (SLI_PKT_MAC()_PF()_RINFO[SRN] + (SLI_PKT_MAC()_PF()_RINFO[TRS] -
- * 1)).  SLI_PKT()_INPUT_CONTROL[PVF_NUM] must be written to values that
+ * 1)). SLI_PKT()_INPUT_CONTROL[PVF_NUM] must be written to values that
  * correlate with the fields in this register.
  *
  * e.g. Given:
@@ -11475,7 +11522,7 @@ union cvmx_sli_pkt_macx_pfx_rinfo {
 #endif
 	} s;
 	struct cvmx_sli_pkt_macx_pfx_rinfo_s  cn73xx;
-	struct cvmx_sli_pkt_macx_pfx_rinfo_s  cn78xxp2;
+	struct cvmx_sli_pkt_macx_pfx_rinfo_s  cn78xx;
 	struct cvmx_sli_pkt_macx_pfx_rinfo_s  cnf75xx;
 };
 typedef union cvmx_sli_pkt_macx_pfx_rinfo cvmx_sli_pkt_macx_pfx_rinfo_t;
@@ -11505,7 +11552,7 @@ union cvmx_sli_pkt_macx_rinfo {
 	uint64_t reserved_40_63               : 24;
 #endif
 	} s;
-	struct cvmx_sli_pkt_macx_rinfo_s      cn78xx;
+	struct cvmx_sli_pkt_macx_rinfo_s      cn78xxp1;
 };
 typedef union cvmx_sli_pkt_macx_rinfo cvmx_sli_pkt_macx_rinfo_t;
 
@@ -11524,7 +11571,7 @@ union cvmx_sli_pkt_mac0_sig0 {
 	uint64_t data                         : 64;
 #endif
 	} s;
-	struct cvmx_sli_pkt_mac0_sig0_s       cn78xx;
+	struct cvmx_sli_pkt_mac0_sig0_s       cn78xxp1;
 };
 typedef union cvmx_sli_pkt_mac0_sig0 cvmx_sli_pkt_mac0_sig0_t;
 
@@ -11543,7 +11590,7 @@ union cvmx_sli_pkt_mac0_sig1 {
 	uint64_t data                         : 64;
 #endif
 	} s;
-	struct cvmx_sli_pkt_mac0_sig1_s       cn78xx;
+	struct cvmx_sli_pkt_mac0_sig1_s       cn78xxp1;
 };
 typedef union cvmx_sli_pkt_mac0_sig1 cvmx_sli_pkt_mac0_sig1_t;
 
@@ -11562,7 +11609,7 @@ union cvmx_sli_pkt_mac1_sig0 {
 	uint64_t data                         : 64;
 #endif
 	} s;
-	struct cvmx_sli_pkt_mac1_sig0_s       cn78xx;
+	struct cvmx_sli_pkt_mac1_sig0_s       cn78xxp1;
 };
 typedef union cvmx_sli_pkt_mac1_sig0 cvmx_sli_pkt_mac1_sig0_t;
 
@@ -11581,7 +11628,7 @@ union cvmx_sli_pkt_mac1_sig1 {
 	uint64_t data                         : 64;
 #endif
 	} s;
-	struct cvmx_sli_pkt_mac1_sig1_s       cn78xx;
+	struct cvmx_sli_pkt_mac1_sig1_s       cn78xxp1;
 };
 typedef union cvmx_sli_pkt_mac1_sig1 cvmx_sli_pkt_mac1_sig1_t;
 
@@ -11725,7 +11772,8 @@ union cvmx_sli_pkt_mem_ctl {
 	uint64_t reserved_48_63               : 16;
 #endif
 	} cn73xx;
-	struct cvmx_sli_pkt_mem_ctl_cn78xx {
+	struct cvmx_sli_pkt_mem_ctl_cn73xx    cn78xx;
+	struct cvmx_sli_pkt_mem_ctl_cn78xxp1 {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_44_63               : 20;
 	uint64_t msid_fs                      : 2;  /**< Used to flip the synd. for pcsr_ncsr_msix_data_flip_synd. */
@@ -11789,8 +11837,7 @@ union cvmx_sli_pkt_mem_ctl {
 	uint64_t msid_fs                      : 2;
 	uint64_t reserved_44_63               : 20;
 #endif
-	} cn78xx;
-	struct cvmx_sli_pkt_mem_ctl_cn73xx    cn78xxp2;
+	} cn78xxp1;
 	struct cvmx_sli_pkt_mem_ctl_cn73xx    cnf75xx;
 };
 typedef union cvmx_sli_pkt_mem_ctl cvmx_sli_pkt_mem_ctl_t;
@@ -11857,7 +11904,7 @@ union cvmx_sli_pkt_out_bp_en {
 #endif
 	} cn68xx;
 	struct cvmx_sli_pkt_out_bp_en_cn68xx  cn68xxp1;
-	struct cvmx_sli_pkt_out_bp_en_s       cn78xx;
+	struct cvmx_sli_pkt_out_bp_en_s       cn78xxp1;
 };
 typedef union cvmx_sli_pkt_out_bp_en cvmx_sli_pkt_out_bp_en_t;
 
@@ -11921,7 +11968,7 @@ union cvmx_sli_pkt_out_bp_en_w1c {
 #endif
 	} s;
 	struct cvmx_sli_pkt_out_bp_en_w1c_s   cn73xx;
-	struct cvmx_sli_pkt_out_bp_en_w1c_s   cn78xxp2;
+	struct cvmx_sli_pkt_out_bp_en_w1c_s   cn78xx;
 	struct cvmx_sli_pkt_out_bp_en_w1c_s   cnf75xx;
 };
 typedef union cvmx_sli_pkt_out_bp_en_w1c cvmx_sli_pkt_out_bp_en_w1c_t;
@@ -11944,7 +11991,7 @@ union cvmx_sli_pkt_out_bp_en_w1s {
 #endif
 	} s;
 	struct cvmx_sli_pkt_out_bp_en_w1s_s   cn73xx;
-	struct cvmx_sli_pkt_out_bp_en_w1s_s   cn78xxp2;
+	struct cvmx_sli_pkt_out_bp_en_w1s_s   cn78xx;
 	struct cvmx_sli_pkt_out_bp_en_w1s_s   cnf75xx;
 };
 typedef union cvmx_sli_pkt_out_bp_en_w1s cvmx_sli_pkt_out_bp_en_w1s_t;
@@ -11986,7 +12033,7 @@ union cvmx_sli_pkt_out_enb {
 	struct cvmx_sli_pkt_out_enb_cn61xx    cn68xxp1;
 	struct cvmx_sli_pkt_out_enb_cn61xx    cn70xx;
 	struct cvmx_sli_pkt_out_enb_cn61xx    cn70xxp1;
-	struct cvmx_sli_pkt_out_enb_s         cn78xx;
+	struct cvmx_sli_pkt_out_enb_s         cn78xxp1;
 	struct cvmx_sli_pkt_out_enb_cn61xx    cnf71xx;
 };
 typedef union cvmx_sli_pkt_out_enb cvmx_sli_pkt_out_enb_t;
@@ -12021,7 +12068,7 @@ union cvmx_sli_pkt_output_wmark {
 	struct cvmx_sli_pkt_output_wmark_s    cn70xxp1;
 	struct cvmx_sli_pkt_output_wmark_s    cn73xx;
 	struct cvmx_sli_pkt_output_wmark_s    cn78xx;
-	struct cvmx_sli_pkt_output_wmark_s    cn78xxp2;
+	struct cvmx_sli_pkt_output_wmark_s    cn78xxp1;
 	struct cvmx_sli_pkt_output_wmark_s    cnf71xx;
 	struct cvmx_sli_pkt_output_wmark_s    cnf75xx;
 };
@@ -12068,7 +12115,7 @@ union cvmx_sli_pkt_pkind_valid {
 	uint64_t u64;
 	struct cvmx_sli_pkt_pkind_valid_s {
 #ifdef __BIG_ENDIAN_BITFIELD
-	uint64_t enb                          : 64; /**< Enables bits for 64 possible pkinds.  If set to a 1, the corresponding
+	uint64_t enb                          : 64; /**< Enables bits for 64 possible pkinds. If set to a 1, the corresponding
                                                          DPI_PKT_INST_HDR_S[PKIND] is allowed to be passed to PKI. If cleared to a 0,
                                                          the DPI_PKT_INST_HDR_S[PKIND] will be changed to the pkind set in
                                                          SLI_PKT_GBL_CONTROL[BPKIND] when sent to PKI. */
@@ -12077,7 +12124,7 @@ union cvmx_sli_pkt_pkind_valid {
 #endif
 	} s;
 	struct cvmx_sli_pkt_pkind_valid_s     cn73xx;
-	struct cvmx_sli_pkt_pkind_valid_s     cn78xxp2;
+	struct cvmx_sli_pkt_pkind_valid_s     cn78xx;
 	struct cvmx_sli_pkt_pkind_valid_s     cnf75xx;
 };
 typedef union cvmx_sli_pkt_pkind_valid cvmx_sli_pkt_pkind_valid_t;
@@ -12130,7 +12177,7 @@ union cvmx_sli_pkt_ring_rst {
 	} s;
 	struct cvmx_sli_pkt_ring_rst_s        cn73xx;
 	struct cvmx_sli_pkt_ring_rst_s        cn78xx;
-	struct cvmx_sli_pkt_ring_rst_s        cn78xxp2;
+	struct cvmx_sli_pkt_ring_rst_s        cn78xxp1;
 	struct cvmx_sli_pkt_ring_rst_s        cnf75xx;
 };
 typedef union cvmx_sli_pkt_ring_rst cvmx_sli_pkt_ring_rst_t;
@@ -12296,7 +12343,7 @@ union cvmx_sli_pkt_time_int {
 #endif
 	} cn73xx;
 	struct cvmx_sli_pkt_time_int_cn73xx   cn78xx;
-	struct cvmx_sli_pkt_time_int_cn73xx   cn78xxp2;
+	struct cvmx_sli_pkt_time_int_cn73xx   cn78xxp1;
 	struct cvmx_sli_pkt_time_int_cn61xx   cnf71xx;
 	struct cvmx_sli_pkt_time_int_cn73xx   cnf75xx;
 };
@@ -12401,26 +12448,26 @@ typedef union cvmx_sli_portx_pkind cvmx_sli_portx_pkind_t;
  *
  * This register provides access to SLI packet register space from the cores.
  * These SLI packet registers include the following:
- * SLI_MSIXX_TABLE_ADDR,
- * SLI_MSIXX_TABLE_DATA,
- * SLI_MSIX_PBA0,
- * SLI_MSIX_PBA1,
- * SLI_PKTX_INPUT_CONTROL,
- * SLI_PKTX_INSTR_BADDR,
- * SLI_PKTX_INSTR_BAOFF_DBELL,
- * SLI_PKTX_INSTR_FIFO_RSIZE,
- * SLI_PKT_IN_DONEX_CNTS,
- * SLI_PKTX_OUTPUT_CONTROL,
- * SLI_PKTX_OUT_SIZE,
- * SLI_PKTX_SLIST_BADDR,
- * SLI_PKTX_SLIST_BAOFF_DBELL,
- * SLI_PKTX_SLIST_FIFO_RSIZE,
- * SLI_PKTX_INT_LEVELS,
- * SLI_PKTX_CNTS,
- * SLI_PKTX_ERROR_INFO,
- * SLI_PKTX_VF_INT_SUM,
- * SLI_PKTX_PF_VF_MBOX_SIG,
- * SLI_PKTX_MBOX_INT.
+ *  SLI_MSIXX_TABLE_ADDR,
+ *  SLI_MSIXX_TABLE_DATA,
+ *  SLI_MSIX_PBA0,
+ *  SLI_MSIX_PBA1,
+ *  SLI_PKTX_INPUT_CONTROL,
+ *  SLI_PKTX_INSTR_BADDR,
+ *  SLI_PKTX_INSTR_BAOFF_DBELL,
+ *  SLI_PKTX_INSTR_FIFO_RSIZE,
+ *  SLI_PKT_IN_DONEX_CNTS,
+ *  SLI_PKTX_OUTPUT_CONTROL,
+ *  SLI_PKTX_OUT_SIZE,
+ *  SLI_PKTX_SLIST_BADDR,
+ *  SLI_PKTX_SLIST_BAOFF_DBELL,
+ *  SLI_PKTX_SLIST_FIFO_RSIZE,
+ *  SLI_PKTX_INT_LEVELS,
+ *  SLI_PKTX_CNTS,
+ *  SLI_PKTX_ERROR_INFO,
+ *  SLI_PKTX_VF_INT_SUM,
+ *  SLI_PKTX_PF_VF_MBOX_SIG,
+ *  SLI_PKTX_MBOX_INT.
  */
 union cvmx_sli_pp_pkt_csr_control {
 	uint64_t u64;
@@ -12439,7 +12486,7 @@ union cvmx_sli_pp_pkt_csr_control {
 #endif
 	} s;
 	struct cvmx_sli_pp_pkt_csr_control_s  cn73xx;
-	struct cvmx_sli_pp_pkt_csr_control_s  cn78xxp2;
+	struct cvmx_sli_pp_pkt_csr_control_s  cn78xx;
 	struct cvmx_sli_pp_pkt_csr_control_s  cnf75xx;
 };
 typedef union cvmx_sli_pp_pkt_csr_control cvmx_sli_pp_pkt_csr_control_t;
@@ -12461,7 +12508,7 @@ union cvmx_sli_s2c_end_merge {
 	} s;
 	struct cvmx_sli_s2c_end_merge_s       cn73xx;
 	struct cvmx_sli_s2c_end_merge_s       cn78xx;
-	struct cvmx_sli_s2c_end_merge_s       cn78xxp2;
+	struct cvmx_sli_s2c_end_merge_s       cn78xxp1;
 	struct cvmx_sli_s2c_end_merge_s       cnf75xx;
 };
 typedef union cvmx_sli_s2c_end_merge cvmx_sli_s2c_end_merge_t;
@@ -12607,7 +12654,8 @@ union cvmx_sli_s2m_portx_ctl {
 	uint64_t reserved_7_63                : 57;
 #endif
 	} cn73xx;
-	struct cvmx_sli_s2m_portx_ctl_cn78xx {
+	struct cvmx_sli_s2m_portx_ctl_cn73xx  cn78xx;
+	struct cvmx_sli_s2m_portx_ctl_cn78xxp1 {
 #ifdef __BIG_ENDIAN_BITFIELD
 	uint64_t reserved_6_63                : 58;
 	uint64_t lcl_node                     : 1;  /**< Local CCPI node. When set to 1, all window access is treated as local CCPI
@@ -12636,8 +12684,7 @@ union cvmx_sli_s2m_portx_ctl {
 	uint64_t lcl_node                     : 1;
 	uint64_t reserved_6_63                : 58;
 #endif
-	} cn78xx;
-	struct cvmx_sli_s2m_portx_ctl_cn73xx  cn78xxp2;
+	} cn78xxp1;
 	struct cvmx_sli_s2m_portx_ctl_cn61xx  cnf71xx;
 	struct cvmx_sli_s2m_portx_ctl_cn73xx  cnf75xx;
 };
@@ -12668,7 +12715,7 @@ union cvmx_sli_scratch_1 {
 	struct cvmx_sli_scratch_1_s           cn70xxp1;
 	struct cvmx_sli_scratch_1_s           cn73xx;
 	struct cvmx_sli_scratch_1_s           cn78xx;
-	struct cvmx_sli_scratch_1_s           cn78xxp2;
+	struct cvmx_sli_scratch_1_s           cn78xxp1;
 	struct cvmx_sli_scratch_1_s           cnf71xx;
 	struct cvmx_sli_scratch_1_s           cnf75xx;
 };
@@ -12699,7 +12746,7 @@ union cvmx_sli_scratch_2 {
 	struct cvmx_sli_scratch_2_s           cn70xxp1;
 	struct cvmx_sli_scratch_2_s           cn73xx;
 	struct cvmx_sli_scratch_2_s           cn78xx;
-	struct cvmx_sli_scratch_2_s           cn78xxp2;
+	struct cvmx_sli_scratch_2_s           cn78xxp1;
 	struct cvmx_sli_scratch_2_s           cnf71xx;
 	struct cvmx_sli_scratch_2_s           cnf75xx;
 };
@@ -12736,7 +12783,7 @@ union cvmx_sli_state1 {
 	struct cvmx_sli_state1_s              cn70xxp1;
 	struct cvmx_sli_state1_s              cn73xx;
 	struct cvmx_sli_state1_s              cn78xx;
-	struct cvmx_sli_state1_s              cn78xxp2;
+	struct cvmx_sli_state1_s              cn78xxp1;
 	struct cvmx_sli_state1_s              cnf71xx;
 	struct cvmx_sli_state1_s              cnf75xx;
 };
@@ -12807,7 +12854,7 @@ union cvmx_sli_state2 {
 #endif
 	} cn73xx;
 	struct cvmx_sli_state2_cn73xx         cn78xx;
-	struct cvmx_sli_state2_cn73xx         cn78xxp2;
+	struct cvmx_sli_state2_cn73xx         cn78xxp1;
 	struct cvmx_sli_state2_cn61xx         cnf71xx;
 	struct cvmx_sli_state2_cn73xx         cnf75xx;
 };
@@ -12866,7 +12913,7 @@ union cvmx_sli_state3 {
 #endif
 	} cn73xx;
 	struct cvmx_sli_state3_cn73xx         cn78xx;
-	struct cvmx_sli_state3_cn73xx         cn78xxp2;
+	struct cvmx_sli_state3_cn73xx         cn78xxp1;
 	struct cvmx_sli_state3_cn61xx         cnf71xx;
 	struct cvmx_sli_state3_cn73xx         cnf75xx;
 };
@@ -12965,7 +13012,7 @@ union cvmx_sli_win_rd_addr {
 	struct cvmx_sli_win_rd_addr_s         cn70xxp1;
 	struct cvmx_sli_win_rd_addr_s         cn73xx;
 	struct cvmx_sli_win_rd_addr_s         cn78xx;
-	struct cvmx_sli_win_rd_addr_s         cn78xxp2;
+	struct cvmx_sli_win_rd_addr_s         cn78xxp1;
 	struct cvmx_sli_win_rd_addr_s         cnf71xx;
 	struct cvmx_sli_win_rd_addr_s         cnf75xx;
 };
@@ -12996,7 +13043,7 @@ union cvmx_sli_win_rd_data {
 	struct cvmx_sli_win_rd_data_s         cn70xxp1;
 	struct cvmx_sli_win_rd_data_s         cn73xx;
 	struct cvmx_sli_win_rd_data_s         cn78xx;
-	struct cvmx_sli_win_rd_data_s         cn78xxp2;
+	struct cvmx_sli_win_rd_data_s         cn78xxp1;
 	struct cvmx_sli_win_rd_data_s         cnf71xx;
 	struct cvmx_sli_win_rd_data_s         cnf75xx;
 };
@@ -13045,7 +13092,7 @@ union cvmx_sli_win_wr_addr {
 	struct cvmx_sli_win_wr_addr_s         cn70xxp1;
 	struct cvmx_sli_win_wr_addr_s         cn73xx;
 	struct cvmx_sli_win_wr_addr_s         cn78xx;
-	struct cvmx_sli_win_wr_addr_s         cn78xxp2;
+	struct cvmx_sli_win_wr_addr_s         cn78xxp1;
 	struct cvmx_sli_win_wr_addr_s         cnf71xx;
 	struct cvmx_sli_win_wr_addr_s         cnf75xx;
 };
@@ -13078,7 +13125,7 @@ union cvmx_sli_win_wr_data {
 	struct cvmx_sli_win_wr_data_s         cn70xxp1;
 	struct cvmx_sli_win_wr_data_s         cn73xx;
 	struct cvmx_sli_win_wr_data_s         cn78xx;
-	struct cvmx_sli_win_wr_data_s         cn78xxp2;
+	struct cvmx_sli_win_wr_data_s         cn78xxp1;
 	struct cvmx_sli_win_wr_data_s         cnf71xx;
 	struct cvmx_sli_win_wr_data_s         cnf75xx;
 };
@@ -13114,7 +13161,7 @@ union cvmx_sli_win_wr_mask {
 	struct cvmx_sli_win_wr_mask_s         cn70xxp1;
 	struct cvmx_sli_win_wr_mask_s         cn73xx;
 	struct cvmx_sli_win_wr_mask_s         cn78xx;
-	struct cvmx_sli_win_wr_mask_s         cn78xxp2;
+	struct cvmx_sli_win_wr_mask_s         cn78xxp1;
 	struct cvmx_sli_win_wr_mask_s         cnf71xx;
 	struct cvmx_sli_win_wr_mask_s         cnf75xx;
 };
@@ -13159,7 +13206,7 @@ union cvmx_sli_window_ctl {
 	struct cvmx_sli_window_ctl_cn61xx     cn70xxp1;
 	struct cvmx_sli_window_ctl_s          cn73xx;
 	struct cvmx_sli_window_ctl_s          cn78xx;
-	struct cvmx_sli_window_ctl_s          cn78xxp2;
+	struct cvmx_sli_window_ctl_s          cn78xxp1;
 	struct cvmx_sli_window_ctl_cn61xx     cnf71xx;
 	struct cvmx_sli_window_ctl_s          cnf75xx;
 };

@@ -19,6 +19,8 @@
 #include <linux/io.h>
 #include <linux/gpio.h>
 
+#include <mach/gpio-samsung.h>
+
 #include <plat/gpio-core.h>
 #include <plat/pm.h>
 
@@ -30,15 +32,15 @@
 
 static void samsung_gpio_pm_1bit_save(struct samsung_gpio_chip *chip)
 {
-	chip->pm_save[0] = readl_relaxed(chip->base + OFFS_CON);
-	chip->pm_save[1] = readl_relaxed(chip->base + OFFS_DAT);
+	chip->pm_save[0] = __raw_readl(chip->base + OFFS_CON);
+	chip->pm_save[1] = __raw_readl(chip->base + OFFS_DAT);
 }
 
 static void samsung_gpio_pm_1bit_resume(struct samsung_gpio_chip *chip)
 {
 	void __iomem *base = chip->base;
-	u32 old_gpcon = readl_relaxed(base + OFFS_CON);
-	u32 old_gpdat = readl_relaxed(base + OFFS_DAT);
+	u32 old_gpcon = __raw_readl(base + OFFS_CON);
+	u32 old_gpdat = __raw_readl(base + OFFS_DAT);
 	u32 gps_gpcon = chip->pm_save[0];
 	u32 gps_gpdat = chip->pm_save[1];
 	u32 gpcon;
@@ -49,12 +51,12 @@ static void samsung_gpio_pm_1bit_resume(struct samsung_gpio_chip *chip)
 	/* first set all SFN bits to SFN */
 
 	gpcon = old_gpcon | gps_gpcon;
-	writel_relaxed(gpcon, base + OFFS_CON);
+	__raw_writel(gpcon, base + OFFS_CON);
 
 	/* now set all the other bits */
 
-	writel_relaxed(gps_gpdat, base + OFFS_DAT);
-	writel_relaxed(gps_gpcon, base + OFFS_CON);
+	__raw_writel(gps_gpdat, base + OFFS_DAT);
+	__raw_writel(gps_gpcon, base + OFFS_CON);
 
 	S3C_PMDBG("%s: CON %08x => %08x, DAT %08x => %08x\n",
 		  chip->chip.label, old_gpcon, gps_gpcon, old_gpdat, gps_gpdat);
@@ -67,9 +69,9 @@ struct samsung_gpio_pm samsung_gpio_pm_1bit = {
 
 static void samsung_gpio_pm_2bit_save(struct samsung_gpio_chip *chip)
 {
-	chip->pm_save[0] = readl_relaxed(chip->base + OFFS_CON);
-	chip->pm_save[1] = readl_relaxed(chip->base + OFFS_DAT);
-	chip->pm_save[2] = readl_relaxed(chip->base + OFFS_UP);
+	chip->pm_save[0] = __raw_readl(chip->base + OFFS_CON);
+	chip->pm_save[1] = __raw_readl(chip->base + OFFS_DAT);
+	chip->pm_save[2] = __raw_readl(chip->base + OFFS_UP);
 }
 
 /* Test whether the given masked+shifted bits of an GPIO configuration
@@ -124,8 +126,8 @@ static inline int is_out(unsigned long con)
 static void samsung_gpio_pm_2bit_resume(struct samsung_gpio_chip *chip)
 {
 	void __iomem *base = chip->base;
-	u32 old_gpcon = readl_relaxed(base + OFFS_CON);
-	u32 old_gpdat = readl_relaxed(base + OFFS_DAT);
+	u32 old_gpcon = __raw_readl(base + OFFS_CON);
+	u32 old_gpdat = __raw_readl(base + OFFS_DAT);
 	u32 gps_gpcon = chip->pm_save[0];
 	u32 gps_gpdat = chip->pm_save[1];
 	u32 gpcon, old, new, mask;
@@ -133,7 +135,7 @@ static void samsung_gpio_pm_2bit_resume(struct samsung_gpio_chip *chip)
 	int nr;
 
 	/* restore GPIO pull-up settings */
-	writel_relaxed(chip->pm_save[2], base + OFFS_UP);
+	__raw_writel(chip->pm_save[2], base + OFFS_UP);
 
 	/* Create a change_mask of all the items that need to have
 	 * their CON value changed before their DAT value, so that
@@ -176,12 +178,12 @@ static void samsung_gpio_pm_2bit_resume(struct samsung_gpio_chip *chip)
 	gpcon = old_gpcon & ~change_mask;
 	gpcon |= gps_gpcon & change_mask;
 
-	writel_relaxed(gpcon, base + OFFS_CON);
+	__raw_writel(gpcon, base + OFFS_CON);
 
 	/* Now change any items that require DAT,CON */
 
-	writel_relaxed(gps_gpdat, base + OFFS_DAT);
-	writel_relaxed(gps_gpcon, base + OFFS_CON);
+	__raw_writel(gps_gpdat, base + OFFS_DAT);
+	__raw_writel(gps_gpcon, base + OFFS_CON);
 
 	S3C_PMDBG("%s: CON %08x => %08x, DAT %08x => %08x\n",
 		  chip->chip.label, old_gpcon, gps_gpcon, old_gpdat, gps_gpdat);
@@ -192,16 +194,15 @@ struct samsung_gpio_pm samsung_gpio_pm_2bit = {
 	.resume = samsung_gpio_pm_2bit_resume,
 };
 
-#if defined(CONFIG_ARCH_S3C64XX) || defined(CONFIG_PLAT_S5P) \
-	|| defined(CONFIG_ARCH_EXYNOS)
+#if defined(CONFIG_ARCH_S3C64XX)
 static void samsung_gpio_pm_4bit_save(struct samsung_gpio_chip *chip)
 {
-	chip->pm_save[1] = readl_relaxed(chip->base + OFFS_CON);
-	chip->pm_save[2] = readl_relaxed(chip->base + OFFS_DAT);
-	chip->pm_save[3] = readl_relaxed(chip->base + OFFS_UP);
+	chip->pm_save[1] = __raw_readl(chip->base + OFFS_CON);
+	chip->pm_save[2] = __raw_readl(chip->base + OFFS_DAT);
+	chip->pm_save[3] = __raw_readl(chip->base + OFFS_UP);
 
 	if (chip->chip.ngpio > 8)
-		chip->pm_save[0] = readl_relaxed(chip->base - 4);
+		chip->pm_save[0] = __raw_readl(chip->base - 4);
 }
 
 static u32 samsung_gpio_pm_4bit_mask(u32 old_gpcon, u32 gps_gpcon)
@@ -246,7 +247,7 @@ static u32 samsung_gpio_pm_4bit_mask(u32 old_gpcon, u32 gps_gpcon)
 static void samsung_gpio_pm_4bit_con(struct samsung_gpio_chip *chip, int index)
 {
 	void __iomem *con = chip->base + (index * 4);
-	u32 old_gpcon = readl_relaxed(con);
+	u32 old_gpcon = __raw_readl(con);
 	u32 gps_gpcon = chip->pm_save[index + 1];
 	u32 gpcon, mask;
 
@@ -255,47 +256,47 @@ static void samsung_gpio_pm_4bit_con(struct samsung_gpio_chip *chip, int index)
 	gpcon = old_gpcon & ~mask;
 	gpcon |= gps_gpcon & mask;
 
-	writel_relaxed(gpcon, con);
+	__raw_writel(gpcon, con);
 }
 
 static void samsung_gpio_pm_4bit_resume(struct samsung_gpio_chip *chip)
 {
 	void __iomem *base = chip->base;
 	u32 old_gpcon[2];
-	u32 old_gpdat = readl_relaxed(base + OFFS_DAT);
+	u32 old_gpdat = __raw_readl(base + OFFS_DAT);
 	u32 gps_gpdat = chip->pm_save[2];
 
 	/* First, modify the CON settings */
 
 	old_gpcon[0] = 0;
-	old_gpcon[1] = readl_relaxed(base + OFFS_CON);
+	old_gpcon[1] = __raw_readl(base + OFFS_CON);
 
 	samsung_gpio_pm_4bit_con(chip, 0);
 	if (chip->chip.ngpio > 8) {
-		old_gpcon[0] = readl_relaxed(base - 4);
+		old_gpcon[0] = __raw_readl(base - 4);
 		samsung_gpio_pm_4bit_con(chip, -1);
 	}
 
 	/* Now change the configurations that require DAT,CON */
 
-	writel_relaxed(chip->pm_save[2], base + OFFS_DAT);
-	writel_relaxed(chip->pm_save[1], base + OFFS_CON);
+	__raw_writel(chip->pm_save[2], base + OFFS_DAT);
+	__raw_writel(chip->pm_save[1], base + OFFS_CON);
 	if (chip->chip.ngpio > 8)
-		writel_relaxed(chip->pm_save[0], base - 4);
+		__raw_writel(chip->pm_save[0], base - 4);
 
-	writel_relaxed(chip->pm_save[2], base + OFFS_DAT);
-	writel_relaxed(chip->pm_save[3], base + OFFS_UP);
+	__raw_writel(chip->pm_save[2], base + OFFS_DAT);
+	__raw_writel(chip->pm_save[3], base + OFFS_UP);
 
 	if (chip->chip.ngpio > 8) {
 		S3C_PMDBG("%s: CON4 %08x,%08x => %08x,%08x, DAT %08x => %08x\n",
 			  chip->chip.label, old_gpcon[0], old_gpcon[1],
-			  readl_relaxed(base - 4),
-			  readl_relaxed(base + OFFS_CON),
+			  __raw_readl(base - 4),
+			  __raw_readl(base + OFFS_CON),
 			  old_gpdat, gps_gpdat);
 	} else
 		S3C_PMDBG("%s: CON4 %08x => %08x, DAT %08x => %08x\n",
 			  chip->chip.label, old_gpcon[1],
-			  readl_relaxed(base + OFFS_CON),
+			  __raw_readl(base + OFFS_CON),
 			  old_gpdat, gps_gpdat);
 }
 
@@ -303,7 +304,7 @@ struct samsung_gpio_pm samsung_gpio_pm_4bit = {
 	.save	= samsung_gpio_pm_4bit_save,
 	.resume = samsung_gpio_pm_4bit_resume,
 };
-#endif /* CONFIG_ARCH_S3C64XX || CONFIG_PLAT_S5P || CONFIG_ARCH_EXYNOS */
+#endif /* CONFIG_ARCH_S3C64XX */
 
 /**
  * samsung_pm_save_gpio() - save gpio chip data for suspend

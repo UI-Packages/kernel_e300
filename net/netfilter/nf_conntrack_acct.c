@@ -39,28 +39,32 @@ static struct ctl_table acct_sysctl_table[] = {
 unsigned int
 seq_print_acct(struct seq_file *s, const struct nf_conn *ct, int dir)
 {
-	struct nf_conn_counter *acct;
+	struct nf_conn_acct *acct;
+	struct nf_conn_counter *counter;
 
 	acct = nf_conn_acct_find(ct);
 	if (!acct)
 		return 0;
 
-	return seq_printf(s, "packets=%llu bytes=%llu ",
-			  (unsigned long long)atomic64_read(&acct[dir].packets),
-			  (unsigned long long)atomic64_read(&acct[dir].bytes));
+	counter = acct->counter;
+	seq_printf(s, "packets=%llu bytes=%llu ",
+		   (unsigned long long)atomic64_read(&counter[dir].packets),
+		   (unsigned long long)atomic64_read(&counter[dir].bytes));
+
+	return 0;
 };
 EXPORT_SYMBOL_GPL(seq_print_acct);
 
 static struct nf_ct_ext_type acct_extend __read_mostly = {
-	.len	= sizeof(struct nf_conn_counter[IP_CT_DIR_MAX]),
-	.align	= __alignof__(struct nf_conn_counter[IP_CT_DIR_MAX]),
+	.len	= sizeof(struct nf_conn_acct),
+	.align	= __alignof__(struct nf_conn_acct),
 	.id	= NF_CT_EXT_ACCT,
 };
 
 #ifdef CONFIG_SYSCTL
 static int nf_conntrack_acct_init_sysctl(struct net *net)
 {
-	ctl_table_no_const *table;
+	struct ctl_table *table;
 
 	table = kmemdup(acct_sysctl_table, sizeof(acct_sysctl_table),
 			GFP_KERNEL);

@@ -754,7 +754,7 @@ int cvmx_fsm_init(int			node,
 
 	/* The OR term determines the new state */
 	if (IS_OCLA_REV1)
-	fsm_or.s.or_state = and_term;
+		fsm_or.s.or_state = and_term;
 	else
 		fsm_or.s.or_state = 1 << and_term;
 

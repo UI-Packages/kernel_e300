@@ -26,6 +26,8 @@
 #include <linux/async.h>
 #include <linux/fs_struct.h>
 #include <linux/slab.h>
+#include <linux/ramfs.h>
+#include <linux/shmem_fs.h>
 
 #include <linux/nfs_fs.h>
 #include <linux/nfs_fs_sb.h>
@@ -101,13 +103,13 @@ no_match:
 
 /**
  * devt_from_partuuid - looks up the dev_t of a partition by its UUID
- * @uuid:	char array containing ascii UUID
+ * @uuid_str:	char array containing ascii UUID
  *
  * The function will return the first partition which contains a matching
  * UUID value in its partition_meta_info struct.  This does not search
  * by filesystem UUIDs.
  *
- * If @uuid is followed by a "/PARTNROFF=%d", then the number will be
+ * If @uuid_str is followed by a "/PARTNROFF=%d", then the number will be
  * extracted and used as an offset from the partition identified by the UUID.
  *
  * Returns the matching dev_t on success or 0 on failure.
@@ -181,7 +183,8 @@ done:
 /*
  *	Convert a name into device number.  We accept the following variants:
  *
- *	1) device number in hexadecimal	represents itself
+ *	1) <hex_major><hex_minor> device number in hexadecimal represents itself
+ *         no leading 0x, for example b302.
  *	2) /dev/nfs represents Root_NFS (0xff)
  *	3) /dev/<disk_name> represents the device number of disk
  *	4) /dev/<disk_name><decimal> represents the device number
@@ -196,6 +199,8 @@ done:
  *	   is a zero-filled hex representation of the 1-based partition number.
  *	7) PARTUUID=<UUID>/PARTNROFF=<int> to select a partition in relation to
  *	   a partition with a known unique id.
+ *	8) <major>:<minor> major and minor number of the device separated by
+ *	   a colon.
  *
  *	If name doesn't have fall into the categories above, we return (0,0).
  *	block_class is used to check if something is a disk name. If the disk
@@ -203,7 +208,7 @@ done:
  *	bangs.
  */
 
-dev_t name_to_dev_t(char *name)
+dev_t name_to_dev_t(const char *name)
 {
 	char s[32];
 	char *p;
@@ -221,9 +226,11 @@ dev_t name_to_dev_t(char *name)
 #endif
 
 	if (strncmp(name, "/dev/", 5) != 0) {
-		unsigned maj, min;
+		unsigned maj, min, offset;
+		char dummy;
 
-		if (sscanf(name, "%u:%u", &maj, &min) == 2) {
+		if ((sscanf(name, "%u:%u%c", &maj, &min, &dummy) == 2) ||
+		    (sscanf(name, "%u:%u:%u:%c", &maj, &min, &offset, &dummy) == 3)) {
 			res = MKDEV(maj, min);
 			if (maj != MAJOR(res) || min != MINOR(res))
 				goto fail;
@@ -282,6 +289,7 @@ fail:
 done:
 	return res;
 }
+EXPORT_SYMBOL_GPL(name_to_dev_t);
 
 static int __init root_dev_setup(char *line)
 {
@@ -387,11 +395,12 @@ static int __init do_mount_squash_image(char *name, char *rdir, char *fs,
 	char *rrdir = "/root.dev";
 	char *loop_dir = "/root.loop";
 	char *loop_dev = "/dev/loop_root";
+	char *workdir = "/root.dev/work";
 	char img_file[64];
 	char w_dir[64];
 	char wb_dir[64];
 	char opt_buf[128];
-	int lfd = -1, ifd = -1, mk_w_dir = 0;
+	int lfd = -1, ifd = -1, mk_w_dir = 0, mk_workdir = 0;
 	struct loop_info64 linfo;
 	struct stat stbuf;
 
@@ -407,8 +416,7 @@ static int __init do_mount_squash_image(char *name, char *rdir, char *fs,
 			root_squash_wdir) >= sizeof(w_dir)
 	    || snprintf(wb_dir, sizeof(wb_dir), "%s.%08x", w_dir,
 			prandom_u32()) >= sizeof(wb_dir)
-	    || snprintf(opt_buf, sizeof(opt_buf), "br=%s=rw:%s=ro", w_dir,
-			loop_dir) >= sizeof(opt_buf)) {
+	    || snprintf(opt_buf, sizeof(opt_buf), "upperdir=%s,lowerdir=%s,workdir=%s", w_dir, loop_dir, workdir) >= sizeof(opt_buf)) {
 		printk("%s: image/dir name too long\n", __func__);
 		return -1;
 	}
@@ -465,7 +473,15 @@ static int __init do_mount_squash_image(char *name, char *rdir, char *fs,
 		goto out;
 	}
 
-	if ((err = sys_mount("aufs", rdir, "aufs", MS_NOATIME,
+	if (sys_newstat(workdir, &stbuf)) {
+		mk_workdir = 1;
+	}
+	if (mk_workdir && (err = sys_mkdir(workdir, 0755))) {
+		printk("%s: mkdir %s failed\n", __func__, workdir);
+		goto out;
+	}
+
+	if ((err = sys_mount("overlay", rdir, "overlay", MS_NOATIME,
 	                     opt_buf))) {
 		printk("%s: mount root failed\n", __func__);
 		goto out;
@@ -500,15 +516,12 @@ static int __init do_mount_root(char *name, char *fs, int flags, void *data)
 	if (root_squash_image && root_squash_wdir)
 		err = do_mount_squash_image(name, "/root", fs, flags, data);
 	else
-		err = sys_mount((char __force_user *) name,
-				(char __force_user *) "/root",
-				(char __force_user *) fs, flags,
-				(void __force_user *) data);
+		err = sys_mount(name, "/root", fs, flags, data);
 
 	if (err)
 		return err;
 
-	sys_chdir((const char __force_user *)"/root");
+	sys_chdir("/root");
 	s = current->fs->pwd.dentry->d_sb;
 	ROOT_DEV = s->s_dev;
 	printk(KERN_INFO
@@ -539,8 +552,6 @@ retry:
 			case 0:
 				goto out;
 			case -EACCES:
-				flags |= MS_RDONLY;
-				goto retry;
 			case -EINVAL:
 				continue;
 		}
@@ -562,6 +573,10 @@ retry:
 		       "explicit textual name for \"root=\" boot option.\n");
 #endif
 		panic("VFS: Unable to mount root fs on %s", b);
+	}
+	if (!(flags & MS_RDONLY)) {
+		flags |= MS_RDONLY;
+		goto retry;
 	}
 
 	printk("List of all partitions:\n");
@@ -629,18 +644,18 @@ void __init change_floppy(char *fmt, ...)
 	va_start(args, fmt);
 	vsprintf(buf, fmt, args);
 	va_end(args);
-	fd = sys_open((char __user *)"/dev/root", O_RDWR | O_NDELAY, 0);
+	fd = sys_open("/dev/root", O_RDWR | O_NDELAY, 0);
 	if (fd >= 0) {
 		sys_ioctl(fd, FDEJECT, 0);
 		sys_close(fd);
 	}
 	printk(KERN_NOTICE "VFS: Insert %s and press ENTER\n", buf);
-	fd = sys_open((__force const char __user *)"/dev/console", O_RDWR, 0);
+	fd = sys_open("/dev/console", O_RDWR, 0);
 	if (fd >= 0) {
 		sys_ioctl(fd, TCGETS, (long)&termios);
 		termios.c_lflag &= ~ICANON;
 		sys_ioctl(fd, TCSETSF, (long)&termios);
-		sys_read(fd, (char __user *)&c, 1);
+		sys_read(fd, &c, 1);
 		termios.c_lflag |= ICANON;
 		sys_ioctl(fd, TCSETSF, (long)&termios);
 		sys_close(fd);
@@ -672,8 +687,13 @@ void __init mount_root(void)
 	}
 #endif
 #ifdef CONFIG_BLOCK
-	create_dev("/dev/root", ROOT_DEV);
-	mount_block_root("/dev/root", root_mountflags);
+	{
+		int err = create_dev("/dev/root", ROOT_DEV);
+
+		if (err < 0)
+			pr_emerg("Failed to create /dev/root: %d\n", err);
+		mount_block_root("/dev/root", root_mountflags);
+	}
 #endif
 }
 
@@ -685,7 +705,7 @@ void __init prepare_namespace(void)
 	int is_floppy;
 
 	if (root_delay) {
-		printk(KERN_INFO "Waiting %dsec before mounting root device...\n",
+		printk(KERN_INFO "Waiting %d sec before mounting root device...\n",
 		       root_delay);
 		ssleep(root_delay);
 	}
@@ -734,6 +754,49 @@ void __init prepare_namespace(void)
 	mount_root();
 out:
 	devtmpfs_mount("dev");
-	sys_mount((char __force_user *)".", (char __force_user *)"/", NULL, MS_MOVE, NULL);
-	sys_chroot((const char __force_user *)".");
+	sys_mount(".", "/", NULL, MS_MOVE, NULL);
+	sys_chroot(".");
+}
+
+static bool is_tmpfs;
+static struct dentry *rootfs_mount(struct file_system_type *fs_type,
+	int flags, const char *dev_name, void *data)
+{
+	static unsigned long once;
+	void *fill = ramfs_fill_super;
+
+	if (test_and_set_bit(0, &once))
+		return ERR_PTR(-ENODEV);
+
+	if (IS_ENABLED(CONFIG_TMPFS) && is_tmpfs)
+		fill = shmem_fill_super;
+
+	return mount_nodev(fs_type, flags, data, fill);
+}
+
+static struct file_system_type rootfs_fs_type = {
+	.name		= "rootfs",
+	.mount		= rootfs_mount,
+	.kill_sb	= kill_litter_super,
+};
+
+int __init init_rootfs(void)
+{
+	int err = register_filesystem(&rootfs_fs_type);
+
+	if (err)
+		return err;
+
+	if (IS_ENABLED(CONFIG_TMPFS) && !saved_root_name[0] &&
+		(!root_fs_names || strstr(root_fs_names, "tmpfs"))) {
+		err = shmem_init();
+		is_tmpfs = true;
+	} else {
+		err = init_ramfs_fs();
+	}
+
+	if (err)
+		unregister_filesystem(&rootfs_fs_type);
+
+	return err;
 }

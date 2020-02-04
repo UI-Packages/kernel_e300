@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2005-2014 Junjiro R. Okajima
+ * Copyright (C) 2005-2017 Junjiro R. Okajima
  *
  * This program, aufs is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,8 +27,6 @@
 #include <linux/dcache.h>
 #include <linux/fs.h>
 
-struct dentry;
-
 struct au_dpage {
 	int ndentry;
 	struct dentry **dentries;
@@ -55,14 +53,34 @@ int au_test_subdir(struct dentry *d1, struct dentry *d2);
 
 /* ---------------------------------------------------------------------- */
 
+/*
+ * todo: in linux-3.13, several similar (but faster) helpers are added to
+ * include/linux/dcache.h. Try them (in the future).
+ */
+
 static inline int au_d_hashed_positive(struct dentry *d)
 {
 	int err;
-	struct inode *inode = d->d_inode;
+	struct inode *inode = d_inode(d);
 
 	err = 0;
-	if (unlikely(d_unhashed(d) || !inode || !inode->i_nlink))
+	if (unlikely(d_unhashed(d)
+		     || d_is_negative(d)
+		     || !inode->i_nlink))
 		err = -ENOENT;
+	return err;
+}
+
+static inline int au_d_linkable(struct dentry *d)
+{
+	int err;
+	struct inode *inode = d_inode(d);
+
+	err = au_d_hashed_positive(d);
+	if (err
+	    && d_is_positive(d)
+	    && (inode->i_state & I_LINKABLE))
+		err = 0;
 	return err;
 }
 
@@ -75,8 +93,10 @@ static inline int au_d_alive(struct dentry *d)
 	if (!IS_ROOT(d))
 		err = au_d_hashed_positive(d);
 	else {
-		inode = d->d_inode;
-		if (unlikely(d_unlinked(d) || !inode || !inode->i_nlink))
+		inode = d_inode(d);
+		if (unlikely(d_unlinked(d)
+			     || d_is_negative(d)
+			     || !inode->i_nlink))
 			err = -ENOENT;
 	}
 	return err;
@@ -87,7 +107,7 @@ static inline int au_alive_dir(struct dentry *d)
 	int err;
 
 	err = au_d_alive(d);
-	if (unlikely(err || IS_DEADDIR(d->d_inode)))
+	if (unlikely(err || IS_DEADDIR(d_inode(d))))
 		err = -ENOENT;
 	return err;
 }
@@ -96,6 +116,20 @@ static inline int au_qstreq(struct qstr *a, struct qstr *b)
 {
 	return a->len == b->len
 		&& !memcmp(a->name, b->name, a->len);
+}
+
+/*
+ * by the commit
+ * 360f547 2015-01-25 dcache: let the dentry count go down to zero without
+ *			taking d_lock
+ * the type of d_lockref.count became int, but the inlined function d_count()
+ * still returns unsigned int.
+ * I don't know why. Maybe it is for every d_count() users?
+ * Anyway au_dcount() lives on.
+ */
+static inline int au_dcount(struct dentry *d)
+{
+	return (int)d_count(d);
 }
 
 #endif /* __KERNEL__ */

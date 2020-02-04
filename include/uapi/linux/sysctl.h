@@ -26,8 +26,6 @@
 #include <linux/types.h>
 #include <linux/compiler.h>
 
-struct completion;
-
 #define CTL_MAXNAME 10		/* how many path components do we allow in a
 				   call to sysctl?   In other words, what is
 				   the largest acceptable value for the nlen
@@ -153,15 +151,12 @@ enum
 	KERN_MAX_LOCK_DEPTH=74, /* int: rtmutex's maximum lock depth */
 	KERN_NMI_WATCHDOG=75, /* int: enable/disable nmi watchdog */
 	KERN_PANIC_ON_NMI=76, /* int: whether we will panic on an unrecovered */
-	KERN_CORE_IGNORE_RLIMIT=77,	/* int: ignore max core file size */
-	KERN_CORE_DISABLED=78,	/* int: do not generate a core dump */
+	KERN_PANIC_ON_WARN=77, /* int: call panic() in WARN() functions */
+	KERN_CORE_IGNORE_RLIMIT=78,	/* int: ignore max core file size */
+	KERN_CORE_DISABLED=79,	/* int: do not generate a core dump */
 };
 
-#ifdef CONFIG_PAX_SOFTMODE
-enum {
-	PAX_SOFTMODE=1		/* PaX: disable/enable soft mode */
-};
-#endif
+
 
 /* CTL_VM names: */
 enum
@@ -487,11 +482,6 @@ enum
 	NET_IPV4_CONF_PROMOTE_SECONDARIES=20,
 	NET_IPV4_CONF_ARP_ACCEPT=21,
 	NET_IPV4_CONF_ARP_NOTIFY=22,
-	NET_IPV4_CONF_ACCEPT_LOCAL=23,
-	NET_IPV4_CONF_SRC_VMARK=24,
-	NET_IPV4_CONF_PROXY_ARP_PVLAN=25,
-	NET_IPV4_CONF_ROUTE_LOCALNET=26,
-	NET_IPV4_CONF_LINKFILTER=27,
 };
 
 /* /proc/sys/net/ipv4/netfilter */
@@ -579,6 +569,7 @@ enum {
 	NET_IPV6_ACCEPT_RA_RT_INFO_MAX_PLEN=22,
 	NET_IPV6_PROXY_NDP=23,
 	NET_IPV6_ACCEPT_SOURCE_ROUTE=25,
+	NET_IPV6_ACCEPT_RA_FROM_LOCAL=26,
 	__NET_IPV6_MAX
 };
 

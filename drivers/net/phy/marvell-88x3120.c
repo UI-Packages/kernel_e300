@@ -77,7 +77,7 @@ static int m88x3120_did_interrupt(struct phy_device *phydev)
 	reg = phy_read(phydev, MARVELL_LASI_STATUS);
 
 	if (reg < 0) {
-		dev_err(&phydev->dev,
+		dev_err(&phydev->mdio.dev,
 			"Error: Read of MARVELL_LASI_STATUS failed: %d\n", reg);
 		return 0;
 	}
@@ -109,15 +109,13 @@ static struct phy_driver m88x3120_driver[] = {
 	.config_intr	= m88x3120_config_intr,
 	.did_interrupt	= m88x3120_did_interrupt,
 	.match_phy_device = m88x3120_match_phy_device,
-	.driver		= {
-		.owner = THIS_MODULE,
-	},
 } };
 
 static int __init m88x3120_init(void)
 {
 	return phy_drivers_register(m88x3120_driver,
-		ARRAY_SIZE(m88x3120_driver));
+				    ARRAY_SIZE(m88x3120_driver),
+				    THIS_MODULE);
 }
 module_init(m88x3120_init);
 

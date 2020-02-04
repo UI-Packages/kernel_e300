@@ -23,7 +23,6 @@
 
 #include <linux/fs.h>
 #include <linux/string.h>
-#include <linux/buffer_head.h>
 #include <linux/crc-itu-t.h>
 
 #include "udf_i.h"
@@ -289,7 +288,7 @@ void udf_new_tag(char *data, uint16_t ident, uint16_t version, uint16_t snum,
 
 u8 udf_tag_checksum(const struct tag *t)
 {
-	const u8 *data = (const u8 *)t;
+	u8 *data = (u8 *)t;
 	u8 checksum = 0;
 	int i;
 	for (i = 0; i < sizeof(struct tag); ++i)

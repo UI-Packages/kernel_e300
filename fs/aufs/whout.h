@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2005-2014 Junjiro R. Okajima
+ * Copyright (C) 2005-2017 Junjiro R. Okajima
  *
  * This program, aufs is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,9 +28,9 @@
 
 /* whout.c */
 int au_wh_name_alloc(struct qstr *wh, const struct qstr *name);
-struct au_branch;
 int au_wh_test(struct dentry *h_parent, struct qstr *wh_name, int try_sio);
 int au_diropq_test(struct dentry *h_dentry);
+struct au_branch;
 struct dentry *au_whtmp_lkup(struct dentry *h_parent, struct au_branch *br,
 			     struct qstr *prefix);
 int au_whtmp_ren(struct dentry *h_dentry, struct au_branch *br);

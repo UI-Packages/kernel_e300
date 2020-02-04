@@ -153,6 +153,9 @@ static int timeout = 10;
 /* The pre-timeout is disabled by default. */
 static int pretimeout;
 
+/* Default timeout to set on panic */
+static int panic_wdt_timeout = 255;
+
 /* Default action is to reset the board on a timeout. */
 static unsigned char action_val = WDOG_TIMEOUT_RESET;
 
@@ -208,7 +211,7 @@ static int set_param_timeout(const char *val, const struct kernel_param *kp)
 	return rv;
 }
 
-static struct kernel_param_ops param_ops_timeout = {
+static const struct kernel_param_ops param_ops_timeout = {
 	.set = set_param_timeout,
 	.get = param_get_int,
 };
@@ -270,14 +273,14 @@ static int set_param_wdog_ifnum(const char *val, const struct kernel_param *kp)
 	return 0;
 }
 
-static struct kernel_param_ops param_ops_wdog_ifnum = {
+static const struct kernel_param_ops param_ops_wdog_ifnum = {
 	.set = set_param_wdog_ifnum,
 	.get = param_get_int,
 };
 
 #define param_check_wdog_ifnum param_check_int
 
-static struct kernel_param_ops param_ops_str = {
+static const struct kernel_param_ops param_ops_str = {
 	.set = set_param_str,
 	.get = get_param_str,
 };
@@ -292,6 +295,9 @@ MODULE_PARM_DESC(timeout, "Timeout value in seconds.");
 
 module_param(pretimeout, timeout, 0644);
 MODULE_PARM_DESC(pretimeout, "Pretimeout value in seconds.");
+
+module_param(panic_wdt_timeout, timeout, 0644);
+MODULE_PARM_DESC(timeout, "Timeout value on kernel panic in seconds.");
 
 module_param_cb(action, &param_ops_str, action_op, 0644);
 MODULE_PARM_DESC(action, "Timeout action. One of: "
@@ -557,22 +563,6 @@ static void panic_halt_ipmi_set_timeout(void)
 	}
 	while (atomic_read(&panic_done_count) != 0)
 		ipmi_poll_interface(watchdog_user);
-}
-
-/*
- * Do a delayed shutdown, with the delay in milliseconds.  If power_off is
- * false, do a reset.  If power_off is true, do a power down.  This is
- * primarily for the IMB code's shutdown.
- */
-void ipmi_delayed_shutdown(long delay, int power_off)
-{
-	ipmi_ignore_heartbeat = 1;
-	if (power_off)
-		ipmi_watchdog_state = WDOG_TIMEOUT_POWER_DOWN;
-	else
-		ipmi_watchdog_state = WDOG_TIMEOUT_RESET;
-	timeout = delay;
-	ipmi_set_timeout(IPMI_SET_TIMEOUT_HB_IF_NECESSARY);
 }
 
 /*
@@ -1150,7 +1140,7 @@ ipmi_nmi(unsigned int val, struct pt_regs *regs)
 		   the timer.   So do so. */
 		pretimeout_since_last_heartbeat = 1;
 		if (atomic_inc_and_test(&preop_panic_excl))
-			panic(PFX "pre-timeout");
+			nmi_panic(regs, PFX "pre-timeout");
 	}
 
 	return NMI_HANDLED;
@@ -1172,10 +1162,11 @@ static int wdog_reboot_handler(struct notifier_block *this,
 			ipmi_watchdog_state = WDOG_TIMEOUT_NONE;
 			ipmi_set_timeout(IPMI_SET_TIMEOUT_NO_HB);
 		} else if (ipmi_watchdog_state != WDOG_TIMEOUT_NONE) {
-			/* Set a long timer to let the reboot happens, but
-			   reboot if it hangs, but only if the watchdog
+			/* Set a long timer to let the reboot happen or
+			   reset if it hangs, but only if the watchdog
 			   timer was already running. */
-			timeout = 120;
+			if (timeout < 120)
+				timeout = 120;
 			pretimeout = 0;
 			ipmi_watchdog_state = WDOG_TIMEOUT_RESET;
 			ipmi_set_timeout(IPMI_SET_TIMEOUT_NO_HB);
@@ -1200,12 +1191,12 @@ static int wdog_panic_handler(struct notifier_block *this,
 	   the watchdog timer to a reasonable value to complete the
 	   panic, if the watchdog timer is running.  Plus the
 	   pretimeout is meaningless at panic time. */
-	if (watchdog_user && ipmi_have_poll_interface(watchdog_user) &&
-	    !panic_event_handled && ipmi_watchdog_state != WDOG_TIMEOUT_NONE) {
+	if (watchdog_user && !panic_event_handled &&
+	    ipmi_watchdog_state != WDOG_TIMEOUT_NONE) {
 		/* Make sure we do this only once. */
 		panic_event_handled = 1;
 
-		timeout = 255;
+		timeout = panic_wdt_timeout;
 		pretimeout = 0;
 		panic_halt_ipmi_set_timeout();
 	}
@@ -1396,9 +1387,6 @@ static void __exit ipmi_wdog_exit(void)
 }
 module_exit(ipmi_wdog_exit);
 module_init(ipmi_wdog_init);
-
-EXPORT_SYMBOL(ipmi_delayed_shutdown);
-
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Corey Minyard <minyard@mvista.com>");
 MODULE_DESCRIPTION("watchdog timer based upon the IPMI interface.");
