@@ -167,6 +167,7 @@ static int gindex = 0;
 static char *intf_remap_300[4] = {"eth3", "eth0", "eth1", "eth2"};
 static char *intf_remap_301[6] = {"eth5", "eth0", "eth1", "eth2", "eth3",
 	"eth4"};
+static char *intf_remap_302[8] = {"eth11", "eth10", "eth8", "eth9", "itf0", "itf1", "itf2", "itf3"};
 #endif
 
 static void cvm_oct_rx_refill_worker(struct work_struct *work)
@@ -1167,6 +1168,10 @@ static int cvm_oct_probe(struct platform_device *pdev)
 					strcpy(dev->name, intf_remap_300[gindex++]);
 				else if (octeon_board_major_rev() == BOARD_E301_MAJOR)
 					strcpy(dev->name, intf_remap_301[gindex++]);
+				else if (octeon_board_major_rev() == 2/*BOARD_E302_MAJOR*/)
+					strcpy(dev->name, intf_remap_302[gindex++]);
+				else
+					strcpy(dev->name, "eth%d");
 #endif
 				break;
 

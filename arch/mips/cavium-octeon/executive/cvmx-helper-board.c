@@ -3795,6 +3795,18 @@ cvmx_helper_link_info_t __cvmx_helper_board_link_get(int ipd_port)
 	case CVMX_BOARD_TYPE_NIC68_4:
 		is_cortina_phy = 1;
 		break;
+
+	case CVMX_BOARD_TYPE_UBNT_E300:
+		if (octeon_bootinfo->board_rev_major == 2) {
+				/* On ER-12(E302), CN7130 QSGMII1 to QCA8511 use force-link */
+				if ((ipd_port >= 16) && (ipd_port <=19)) {
+					result.s.link_up = 1;
+					result.s.full_duplex = 1;
+					result.s.speed = 1000;
+					return result;
+				}
+			}
+		break;
 	}
 
 	memset(&phy_info, 0, sizeof(phy_info));

@@ -251,6 +251,12 @@ struct mii_bus *mdiobus_find(char * name)
 
 EXPORT_SYMBOL(mdiobus_find);
 
+struct phy_device *mdiobus_get_phy(struct mii_bus *bus, int addr)
+{
+	struct phy_device *phydev = bus->phy_map[addr];
+	return phydev;
+}
+EXPORT_SYMBOL(mdiobus_get_phy);
 
 struct phy_device *mdiobus_scan(struct mii_bus *bus, int addr)
 {
