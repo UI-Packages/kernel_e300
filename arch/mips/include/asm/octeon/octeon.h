@@ -80,6 +80,8 @@ struct octeon_boot_descriptor {
 	uint16_t board_type;
 #define BOARD_E300_MAJOR 0
 #define BOARD_E301_MAJOR 1
+#define BOARD_E302_MAJOR 2
+#define BOARD_E303_MAJOR 3
 	uint8_t board_rev_major;
 	uint8_t board_rev_minor;
 	uint16_t chip_type;

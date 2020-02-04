@@ -1168,7 +1168,7 @@ static int cvm_oct_probe(struct platform_device *pdev)
 					strcpy(dev->name, intf_remap_300[gindex++]);
 				else if (octeon_board_major_rev() == BOARD_E301_MAJOR)
 					strcpy(dev->name, intf_remap_301[gindex++]);
-				else if (octeon_board_major_rev() == 2/*BOARD_E302_MAJOR*/)
+				else if (octeon_board_major_rev() == BOARD_E302_MAJOR || octeon_board_major_rev() == BOARD_E303_MAJOR)
 					strcpy(dev->name, intf_remap_302[gindex++]);
 				else
 					strcpy(dev->name, "eth%d");
