@@ -533,6 +533,21 @@ static void __init mm_init(void)
 int __init init_msa_irq(void);
 #endif
 
+#define UBNT_MTD_CMDLINE        "1024k(boot0),3072k(boot1)"
+void ubnt_mtd_cmdline_replace(char* command_line, const char* mtd_cmdline)
+{
+	char *mtdpart_ptr = NULL;
+
+	if(command_line == NULL || mtd_cmdline == NULL)
+		return;
+
+	mtdpart_ptr = strstr(command_line, "3072k(boot0),1024k(dummy)");
+	if(mtdpart_ptr == NULL)
+		return;
+
+	strncpy(mtdpart_ptr, UBNT_MTD_CMDLINE, strlen(UBNT_MTD_CMDLINE));
+}
+
 asmlinkage void __init start_kernel(void)
 {
 	char * command_line;
@@ -564,6 +579,8 @@ asmlinkage void __init start_kernel(void)
 	page_address_init();
 	pr_notice("%s", linux_banner);
 	setup_arch(&command_line);
+	ubnt_mtd_cmdline_replace(command_line, UBNT_MTD_CMDLINE);
+	ubnt_mtd_cmdline_replace(boot_command_line, UBNT_MTD_CMDLINE);
 	mm_init_owner(&init_mm, &init_task);
 	mm_init_cpumask(&init_mm);
 	setup_command_line(command_line);
