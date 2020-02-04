@@ -348,7 +348,7 @@ int bgx_port_enable(struct net_device *netdev)
 
 	}
 
-	switch (cvmx_helper_interface_get_mode(priv->xiface)) {
+	switch (cvmx_helper_bgx_get_mode(priv->xiface, priv->index)) {
 	case CVMX_HELPER_INTERFACE_MODE_XLAUI:
 	case CVMX_HELPER_INTERFACE_MODE_XFI:
 	case CVMX_HELPER_INTERFACE_MODE_10G_KR:
@@ -531,6 +531,13 @@ static int bgx_port_probe(struct platform_device *pdev)
 	priv->ipd_port = cvmx_helper_get_ipd_port(priv->xiface, index);
 	if (mac)
 		priv->mac_addr = mac;
+
+	cvmx_helper_set_mac_phy_mode(priv->xiface, priv->index, 
+				of_get_property(pdev->dev.of_node,
+					"cavium,sgmii-mac-phy-mode", NULL));
+	cvmx_helper_set_1000x_mode(priv->xiface, priv->index,
+				of_get_property(pdev->dev.of_node,
+					"cavium,sgmii-mac-1000x-mode", NULL));
 
 	priv->phy_np = of_parse_phandle(pdev->dev.of_node, "phy-handle", 0);
 

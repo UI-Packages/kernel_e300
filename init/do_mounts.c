@@ -407,7 +407,7 @@ static int __init do_mount_squash_image(char *name, char *rdir, char *fs,
 			root_squash_wdir) >= sizeof(w_dir)
 	    || snprintf(wb_dir, sizeof(wb_dir), "%s.%08x", w_dir,
 			prandom_u32()) >= sizeof(wb_dir)
-	    || snprintf(opt_buf, sizeof(opt_buf), "dirs=%s=rw:%s=ro", w_dir,
+	    || snprintf(opt_buf, sizeof(opt_buf), "br=%s=rw:%s=ro", w_dir,
 			loop_dir) >= sizeof(opt_buf)) {
 		printk("%s: image/dir name too long\n", __func__);
 		return -1;
@@ -465,7 +465,7 @@ static int __init do_mount_squash_image(char *name, char *rdir, char *fs,
 		goto out;
 	}
 
-	if ((err = sys_mount("unionfs", rdir, "unionfs", MS_NOATIME,
+	if ((err = sys_mount("aufs", rdir, "aufs", MS_NOATIME,
 	                     opt_buf))) {
 		printk("%s: mount root failed\n", __func__);
 		goto out;

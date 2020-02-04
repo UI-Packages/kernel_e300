@@ -43,7 +43,7 @@
  * Helper functions to abstract board specific data about
  * network ports from the rest of the cvmx-helper files.
  *
- * <hr>$Revision: 122844 $<hr>
+ * <hr>$Revision: 154327 $<hr>
  */
 #ifndef __CVMX_HELPER_BOARD_H__
 #define __CVMX_HELPER_BOARD_H__
@@ -53,6 +53,8 @@
 extern "C" {
 /* *INDENT-ON* */
 #endif
+
+#define CVMX_VSC7224_NAME_LEN	16
 
 typedef enum {
 	USB_CLOCK_TYPE_REF_12,
@@ -118,6 +120,13 @@ typedef enum {
 } cvmx_phy_gpio_type_t;
 #endif
 
+/* Forward declarations */
+struct cvmx_fdt_sfp_info;	/** Defined in cvmx-helper-fdt.h */
+struct cvmx_vsc7224;
+struct cvmx_fdt_gpio_info;	/** Defined in cvmx-helper-fdt.h */
+struct cvmx_fdt_i2c_bus_info;	/** Defined in cvmx-helper-fdt.h */
+struct cvmx_phy_info;
+
 /**
  * @INTERNAL
  * This data structure is used when the port LEDs are wired up to Octeon's GPIO
@@ -141,9 +150,101 @@ typedef struct cvmx_phy_gpio_leds {
 	bool error_active_low;		/** True if error is active low */
 	bool rx_activity_active_low;	/** True if rx activity is active low */
 	bool tx_activity_active_low;	/** True if tx activity is active low */
+	/** Set true if LEDs are shared on an interface by all ports */
+	bool interface_leds;
 	int8_t rx_gpio_timer;		/** GPIO clock generator timer [0-3] */
 	int8_t tx_gpio_timer;		/** GPIO clock generator timer [0-3] */
 } cvmx_phy_gpio_leds_t;
+
+#ifndef CVMX_BUILD_FOR_LINUX_KERNEL
+/** This structure contains the tap values to use for various cable lengths */
+struct cvmx_vsc7224_tap {
+	uint16_t len;		/** Starting cable length for tap values */
+	uint16_t main_tap;	/** Main tap value to use */
+	uint16_t pre_tap;	/** Pre-tap value to use */
+	uint16_t post_tap;	/** Post-tap value to use */
+};
+
+/** Data structure for Microsemi VSC7224 channel */
+struct cvmx_vsc7224_chan {
+	struct cvmx_vsc7224_chan *next, *prev;	/** Used for linking */
+	int	ipd_port;		/** IPD port this channel belongs to */
+	int	xiface;			/** xinterface of SFP */
+	int	index;			/** Port index of SFP */
+	int	lane;			/** Lane on port */
+	int	of_offset;		/** Offset of channel info in dt */
+	bool	is_tx;			/** True if is transmit channel */
+	bool	maintap_disable;	/** True to disable the main tap */
+	bool	pretap_disable;		/** True to disable pre-tap */
+	bool	posttap_disable;	/** True to disable post-tap */
+	int	num_taps;		/** Number of tap values */
+	/** (Q)SFP attached to this channel */
+	struct cvmx_fdt_sfp_info *sfp_info;
+	struct cvmx_vsc7224 *vsc7224;	/** Pointer to parent */
+	/** Tap values for various lengths, must be at the end */
+	struct cvmx_vsc7224_tap	taps[0];
+};
+
+/** Data structure for Microsemi VSC7224 reclocking chip */
+struct cvmx_vsc7224 {
+	const char *name;			/** Name */
+	/** Pointer to cannel data */
+	struct cvmx_vsc7224_chan	*channel[4];
+	/** I2C bus device is connected to */
+	struct cvmx_fdt_i2c_bus_info	*i2c_bus;
+	/** Address of VSC7224 on i2c bus */
+	int	i2c_addr;
+	struct cvmx_fdt_gpio_info *los_gpio;	/** LoS GPIO pin */
+	struct cvmx_fdt_gpio_info *reset_gpio;	/** Reset GPIO pin */
+	int	of_offset;	/** Offset in device tree */
+};
+
+struct cvmx_cs4343_info;
+
+/**
+ * @INTERNAL
+ *
+ * Data structure containing Inphi CS4343 slice information
+ */
+struct cvmx_cs4343_slice_info {
+	const char *name;		/** Name of this slice in device tree */
+	struct cvmx_cs4343_info *mphy;	/** Pointer to mphy cs4343 */
+	struct cvmx_phy_info *phy_info;
+	int of_offset;			/** Offset in device tree */
+	int slice_no;			/** Slice number */
+	int reg_offset;			/** Offset for this slice */
+	uint16_t sr_stx_cmode_res;	/** See Rainier device tree */
+	uint16_t sr_stx_drv_lower_cm;	/** See Rainier device tree */
+	uint16_t sr_stx_level;		/** See Rainier device tree */
+	uint16_t sr_stx_pre_peak;	/** See Rainier device tree */
+	uint16_t sr_stx_muxsubrate_sel;	/** See Rainier device tree */
+	uint16_t sr_stx_post_peak;	/** See Rainier device tree */
+	uint16_t cx_stx_cmode_res;	/** See Rainier device tree */
+	uint16_t cx_stx_drv_lower_cm;	/** See Rainier device tree */
+	uint16_t cx_stx_level;		/** See Rainier device tree */
+	uint16_t cx_stx_pre_peak;	/** See Rainier device tree */
+	uint16_t cx_stx_muxsubrate_sel;	/** See Rainier device tree */
+	uint16_t cx_stx_post_peak;	/** See Rainier device tree */
+	uint16_t basex_stx_cmode_res;	/** See Rainier device tree */
+	uint16_t basex_stx_drv_lower_cm;/** See Rainier device tree */
+	uint16_t basex_stx_level;	/** See Rainier device tree */
+	uint16_t basex_stx_pre_peak;	/** See Rainier device tree */
+	uint16_t basex_stx_muxsubrate_sel;/** See Rainier device tree */
+	uint16_t basex_stx_post_peak;	/** See Rainier device tree */
+};
+
+/**
+ * @INTERNAL
+ *
+ * Data structure for Cortina/Inphi CS4343 device
+ */
+struct cvmx_cs4343_info {
+	const char *name;	/** Name of Inphi/Cortina CS4343 in DT */
+	struct cvmx_phy_info *phy_info;
+	struct cvmx_cs4343_slice_info slice[4];	/** Slice information */
+	int of_offset;
+};
+#endif
 
 /**
  * @INTERNAL
@@ -178,6 +279,17 @@ typedef struct cvmx_phy_info {
 	int mux_twsi_addr;		/** Address of the MDIO mux */
 	cvmx_phy_host_mode_t host_mode;	/** Used by Cortina PHY */
 	void *phydev;			/** Pointer to parent phy device */
+	int fdt_offset;			/** Node in flat device tree */
+	int phy_i2c_bus;		/** I2C bus for reclocking chips */
+	int phy_i2c_addr;		/** I2C address of reclocking chip */
+	int num_vsc7224;	/** Number of Microsemi VSC7224 devices */
+	struct cvmx_vsc7224 *vsc7224;	/** Info for VSC7224 devices */
+	/** SFP/QSFP descriptor */
+	struct cvmx_fdt_sfp_info *sfp_info;
+	/** CS4343 slice information for SGMII/XFI.  This is NULL in XLAUI mode */
+	struct cvmx_cs4343_slice_info *cs4343_slice_info;
+	/** CS4343 mphy information for XLAUI */
+	struct cvmx_cs4343_info *cs4343_info;
 #endif
 	/** Pointer to function to return link information */
 	cvmx_helper_link_info_t (*link_function)(struct cvmx_phy_info *phy_info);
@@ -200,7 +312,8 @@ typedef struct cvmx_phy_info {
  * this pointer to a function before calling any cvmx-helper
  * operations.
  */
-extern CVMX_SHARED cvmx_helper_link_info_t(*cvmx_override_board_link_get) (int ipd_port);
+extern CVMX_SHARED cvmx_helper_link_info_t
+(*cvmx_override_board_link_get) (int ipd_port);
 
 /**
  * Return the MII PHY address associated with the given IPD
@@ -235,7 +348,9 @@ extern int cvmx_helper_board_get_mii_address(int ipd_port);
  *
  * @return Zero on success, negative on failure
  */
-int cvmx_helper_board_link_set_phy(int phy_addr, cvmx_helper_board_set_phy_link_flags_types_t link_flags, cvmx_helper_link_info_t link_info);
+int cvmx_helper_board_link_set_phy(int phy_addr,
+				   cvmx_helper_board_set_phy_link_flags_types_t link_flags,
+				   cvmx_helper_link_info_t link_info);
 
 /**
  * @INTERNAL
@@ -392,6 +507,38 @@ void __cvmx_update_link_led(int xiface, int index,
  * @parma check_time	True if we should bail out before the polling interval
  */
 void cvmx_update_rx_activity_led(int xiface, int index, bool check_time);
+
+/**
+ * @INTERNAL
+ * Figure out which mod_abs changed function to use based on the phy type
+ *
+ * @param	xiface	xinterface number
+ * @param	index	port index on interface
+ *
+ * @return	0 for success, -1 on error
+ *
+ * This function figures out the proper mod_abs_changed function to use and
+ * registers the appropriate function.  This should be called after the device
+ * tree has been fully parsed for the given port as well as after all SFP
+ * slots and any Microsemi VSC7224 devices have been parsed in the device tree.
+ */
+int cvmx_helper_phy_register_mod_abs_changed(int xiface, int index);
+
+/**
+ * @INTERNAL
+ * Return loss of signal
+ *
+ * @param	xiface	xinterface number
+ * @param	index	port index on interface
+ *
+ * @return	0 if signal present, 1 if loss of signal.
+ *
+ * @NOTE:	A result of 0 is possible in some cases where the signal is
+ *		not present.
+ *
+ * This is for use with __cvmx_qlm_rx_equilization
+ */
+int __cvmx_helper_get_los(int xiface, int index);
 
 #endif
 

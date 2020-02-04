@@ -42,7 +42,7 @@
  *
  * Small helper utilities.
  *
- * <hr>$Revision: 127654 $<hr>
+ * <hr>$Revision: 160838 $<hr>
  */
 
 #ifndef __CVMX_HELPER_UTIL_H__
@@ -67,6 +67,7 @@ typedef char cvmx_bpid_t;
 
 /* Maximum range for normalized (a.k.a. IPD) port numbers (12-bit field) */
 #define	CVMX_PKO3_IPD_NUM_MAX	0x1000	//FIXME- take it from someplace else ?
+#define	CVMX_PKO3_DQ_NUM_MAX	 0x400	// 78xx has 1024 queues
 
 #define CVMX_PKO3_IPD_PORT_NULL (CVMX_PKO3_IPD_NUM_MAX-1)
 #define CVMX_PKO3_IPD_PORT_LOOP 0
@@ -88,6 +89,25 @@ static inline struct cvmx_xport cvmx_helper_ipd_port_to_xport(int ipd_port)
 static inline int cvmx_helper_node_to_ipd_port(int node, int index)
 {
 	return (node << 12) + index;
+}
+
+struct cvmx_xdq {
+	int node;
+	int queue;
+};
+typedef struct cvmx_xdq cvmx_xdq_t;
+
+static inline struct cvmx_xdq cvmx_helper_queue_to_xdq(int queue)
+{
+	struct cvmx_xdq r;
+	r.queue = queue & (CVMX_PKO3_DQ_NUM_MAX - 1);
+	r.node = (queue >> 10) & CVMX_NODE_MASK;
+	return r;
+}
+
+static inline int cvmx_helper_node_to_dq(int node, int queue)
+{
+	return (node << 10) + queue;
 }
 
 struct cvmx_xiface {
@@ -422,4 +442,14 @@ extern void cvmx_helper_show_stats(int port);
  */
 #define	NUM_ELEMENTS(arr) (sizeof(arr)/sizeof((arr)[0]))
 
+#ifndef CVMX_BUILD_FOR_LINUX_KERNEL
+/**
+ * Prints out a buffer with the address, hex bytes, and ASCII
+ *
+ * @param	addr	Start address to print on the left
+ * @param[in]	buffer	array of bytes to print
+ * @param	count	Number of bytes to print
+ */
+void cvmx_print_buffer_u8(unsigned addr, const uint8_t *buffer, size_t count);
+#endif
 #endif /* __CVMX_HELPER_H__ */

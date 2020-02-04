@@ -159,8 +159,8 @@ extern int __cvmx_helper_bgx_sgmii_configure_loopback(int xipd_port,
  */
 extern int __cvmx_helper_bgx_xaui_enable(int xiface);
 
-extern CVMX_SHARED int(*cvmx_helper_bgx_override_autoneg)(int xiface);
-extern CVMX_SHARED int(*cvmx_helper_bgx_override_fec)(int xiface);
+extern CVMX_SHARED int(*cvmx_helper_bgx_override_autoneg)(int xiface, int index);
+extern CVMX_SHARED int(*cvmx_helper_bgx_override_fec)(int xiface, int index);
 
 /**
  * @INTERNAL
@@ -308,6 +308,31 @@ static inline bool cvmx_helper_bgx_is_rgmii(int xiface, int index)
 	cmr_config.u64 = cvmx_read_csr(CVMX_BGXX_CMRX_CONFIG(index, xiface));
 	return cmr_config.s.lmac_type == 5;
 }
+
+/**
+ * Enables or disables autonegotiation for an interface.
+ *
+ * @param	xiface	interface to set autonegotiation
+ * @param	index	port index
+ * @param	enable	true to enable autonegotiation, false to disable it
+ *
+ * @return	0 for success, -1 on error.
+ */
+int cvmx_helper_set_autonegotiation(int xiface, int index, bool enable);
+
+/**
+ * Enables or disables forward error correction
+ *
+ * @param	xiface	interface
+ * @param	index	port index
+ * @param	enable	set to true to enable FEC, false to disable
+ *
+ * @return	0 for success, -1 on error
+ *
+ * @NOTE:	If autonegotiation is enabled then autonegotiation will be
+ *		restarted for negotiating FEC.
+ */
+int cvmx_helper_set_fec(int xiface, int index, bool enable);
 
 #ifdef CVMX_DUMP_BGX
 /**

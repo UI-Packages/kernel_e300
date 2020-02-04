@@ -109,13 +109,17 @@ void cvmx_pki_reset(int node)
 	cvmx_pki_sft_rst_t sft_rst;
 
 	sft_rst.u64 = cvmx_read_csr_node(node, CVMX_PKI_SFT_RST);
-	while (sft_rst.s.active != 0)
-		sft_rst.u64 = cvmx_read_csr_node(node, CVMX_PKI_SFT_RST);
+	if (CVMX_WAIT_FOR_FIELD64_NODE(node, CVMX_PKI_SFT_RST,
+					cvmx_pki_sft_rst_t, active, ==, 0, 10000)) {
+		cvmx_dprintf("PKI_SFT_RST is not active\n");
+	}
 
 	sft_rst.s.rst = 1;
 	cvmx_write_csr_node(node, CVMX_PKI_SFT_RST, sft_rst.u64);
-	while (sft_rst.s.busy != 0)
-		sft_rst.u64 = cvmx_read_csr_node(node, CVMX_PKI_SFT_RST);
+	if (CVMX_WAIT_FOR_FIELD64_NODE(node, CVMX_PKI_SFT_RST,
+					cvmx_pki_sft_rst_t, busy, ==, 0, 10000)) {
+		cvmx_dprintf("PKI_SFT_RST is busy\n");
+	}
 }
 
 /**
@@ -152,6 +156,7 @@ void __cvmx_pki_free_ptr(int node)
 	/* Disable caching of any data and return all the prefetched buffers to FPA. */
 	buf_ctl.s.fpa_cac_dis = 1;
 	cvmx_write_csr_node(node, CVMX_PKI_BUF_CTL, buf_ctl.u64);
+	buf_ctl.u64 = cvmx_read_csr_node(node, CVMX_PKI_BUF_CTL);
 }
 
 /**
@@ -1341,9 +1346,9 @@ EXPORT_SYMBOL(cvmx_pki_get_stats);
  */
 void cvmx_pki_clear_port_stats(int node, uint64_t port)
 {
-	int iface = cvmx_helper_get_interface_num(port);
+	int xipd = cvmx_helper_node_to_ipd_port(node, port);
+	int xiface = cvmx_helper_get_interface_num(xipd);
 	int index = cvmx_helper_get_interface_index_num(port);
-	int xiface = cvmx_helper_node_interface_to_xiface(node, iface);
 	int pknd = cvmx_helper_get_pknd(xiface, index);
 
 	cvmx_pki_statx_stat0_t stat0;

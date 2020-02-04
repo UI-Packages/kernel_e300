@@ -1028,7 +1028,8 @@ void cvmx_pko_get_port_status(uint64_t ipd_port, uint64_t clear, cvmx_pko_port_s
 	int pko_port, port_base, port_limit;
 
 	if (octeon_has_feature(OCTEON_FEATURE_CN78XX_WQE)) {
-		cvmx_pko3_get_legacy_port_stats(ipd_port, clear, status);
+		int xipd = cvmx_helper_node_to_ipd_port(cvmx_get_node_num(), ipd_port);
+		cvmx_pko3_get_legacy_port_stats(xipd, clear, status);
 		return;
 	} else if (octeon_has_feature(OCTEON_FEATURE_PKND)) {
 		int interface = cvmx_helper_get_interface_num(ipd_port);

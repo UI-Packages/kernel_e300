@@ -2968,7 +2968,7 @@ reuse:
 			set_page_dirty_balance(dirty_page, page_mkwrite);
 			/* file_update_time outside page_lock */
 			if (vma->vm_file)
-				file_update_time(vma->vm_file);
+				vma_file_update_time(vma);
 		}
 		put_page(dirty_page);
 		if (page_mkwrite) {
@@ -3690,7 +3690,7 @@ static int __do_fault(struct mm_struct *mm, struct vm_area_struct *vma,
 
 		/* file_update_time outside page_lock */
 		if (vma->vm_file && !page_mkwrite)
-			file_update_time(vma->vm_file);
+			vma_file_update_time(vma);
 	} else {
 		unlock_page(vmf.page);
 		if (anon)
@@ -4117,8 +4117,18 @@ retry:
 	if (unlikely(pmd_none(*pmd)) &&
 	    unlikely(__pte_alloc(mm, vma, pmd, address)))
 		return VM_FAULT_OOM;
-	/* if an huge pmd materialized from under us just retry later */
-	if (unlikely(pmd_trans_huge(*pmd)))
+	/*
+	 * If a huge pmd materialized under us just retry later.  Use
+	 * pmd_trans_unstable() instead of pmd_trans_huge() to ensure the pmd
+	 * didn't become pmd_trans_huge under us and then back to pmd_none, as
+	 * a result of MADV_DONTNEED running immediately after a huge pmd fault
+	 * in a different thread of this mm, in turn leading to a misleading
+	 * pmd_trans_huge() retval.  All we have to ensure is that it is a
+	 * regular pmd that we can walk with pte_offset_map() and we can do that
+	 * through an atomic read in C, which is what pmd_trans_unstable()
+	 * provides.
+	 */
+	if (unlikely(pmd_trans_unstable(pmd)))
 		return 0;
 	/*
 	 * A regular pmd is established and it can't morph into a huge pmd

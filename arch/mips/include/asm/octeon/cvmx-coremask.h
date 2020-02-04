@@ -60,7 +60,7 @@
  * provide future compatibility if more cores are added to future processors
  * or more nodes are supported.
  *
- * <hr>$Revision: 125834 $<hr>
+ * <hr>$Revision: 156174 $<hr>
  *
  */
 
@@ -259,6 +259,10 @@ static inline int cvmx_coremask_set_core(cvmx_coremask_t *pcm, int core)
 	return 0;
 }
 
+#ifndef CVMX_BUILD_FOR_LINUX_HOST
+/* when run on HOST cvmx_get_core_num() is not applicable,
+ * so this func as well
+ */
 /**
  * Set ``current core'' in the coremask.
  *
@@ -269,6 +273,7 @@ static inline int cvmx_coremask_set_self(cvmx_coremask_t *pcm)
 {
 	return cvmx_coremask_set_core(pcm, (int)cvmx_get_core_num());
 }
+#endif
 
 /**
  * Clear ``core'' from the coremask.
@@ -288,6 +293,10 @@ static inline int cvmx_coremask_clear_core(cvmx_coremask_t *pcm, int core)
 	return 0;
 }
 
+#ifndef CVMX_BUILD_FOR_LINUX_HOST
+/* when run on HOST cvmx_get_core_num() is not applicable,
+ * so this func as well
+ */
 /**
  * Clear ``current core'' from the coremask.
  *
@@ -298,6 +307,7 @@ static inline int cvmx_coremask_clear_self(cvmx_coremask_t *pcm)
 {
 	return cvmx_coremask_clear_core(pcm, cvmx_get_core_num());
 }
+#endif
 
 /**
  * Toggle ``core'' in the coremask.
@@ -815,6 +825,22 @@ static inline void cvmx_coremask_dprint(const cvmx_coremask_t *pcm)
   (void)(pcm);
 #endif
 }
+
+/**
+ * Gets the 'avail_coremask' from the dedicated (BOOTINFO) named block
+ * @param[out] coremask pointer where to copy avail_coremask
+ * @return 0 on success, -1 otherwise
+ */
+extern int cvmx_get_avail_coremask(cvmx_coremask_t *coremask);
+
+
+/**
+ * Gets the 'hardware_coremask' from the dedicated (BOOTINFO) named block
+ * @param[out] coremask pointer where to copy hardware_coremask
+ * @return 0 on success, -1 otherwise
+ */
+extern  int cvmx_get_hardware_coremask(cvmx_coremask_t *coremask);
+
 
 #ifdef	__cplusplus
 /* *INDENT-OFF* */

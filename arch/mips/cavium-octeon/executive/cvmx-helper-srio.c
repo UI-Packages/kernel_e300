@@ -404,6 +404,7 @@ int __cvmx_helper_srio_enable(int xiface)
 			__func__, srio_port);
 	return 0;
 }
+EXPORT_SYMBOL(__cvmx_helper_srio_enable);
 
 /**
  * @INTERNAL

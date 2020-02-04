@@ -1254,3 +1254,40 @@ int cvmx_helper_get_interface_index_num(int ipd_port)
 	return -1;
 }
 EXPORT_SYMBOL(cvmx_helper_get_interface_index_num);
+
+#ifndef CVMX_BUILD_FOR_LINUX_KERNEL
+/**
+ * Prints out a buffer with the address, hex bytes, and ASCII
+ *
+ * @param	addr	Start address to print on the left
+ * @param[in]	buffer	array of bytes to print
+ * @param	count	Number of bytes to print
+ */
+void cvmx_print_buffer_u8(unsigned addr, const uint8_t *buffer, size_t count)
+{
+	uint i;
+
+	while (count) {
+		unsigned linelen = count < 16 ? count : 16;
+
+		cvmx_dprintf("%08x:", addr);
+
+		for (i = 0; i < linelen; i++)
+			cvmx_dprintf(" %0*x", 2, buffer[i]);
+
+		while (i++ < 17)
+			cvmx_dprintf("   ");
+
+		for (i = 0; i < linelen; i++) {
+			if (buffer[i] >= 0x20 && buffer[i] < 0x7f)
+				cvmx_dprintf("%c", buffer[i]);
+			else
+				cvmx_dprintf(".");
+		}
+		cvmx_dprintf("\n");
+		addr += linelen;
+		buffer += linelen;
+		count -= linelen;
+	}
+}
+#endif

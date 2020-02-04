@@ -42,7 +42,7 @@
  *
  * Helper utilities for qlm.
  *
- * <hr>$Revision: 143543 $<hr>
+ * <hr>$Revision: 147957 $<hr>
  */
 
 #ifndef __CVMX_QLM_H__
@@ -321,6 +321,8 @@ extern int __cvmx_qlm_rx_equalization(int node, int qlm, int lane);
  * @param lane	Lane to apply the errata
  */
 extern int cvmx_qlm_gser_errata_27882(int node, int qlm, int lane);
+
+extern void cvmx_qlm_gser_errata_25992(int node, int qlm);
 
 #ifdef CVMX_DUMP_GSER
 /**

@@ -11112,7 +11112,59 @@ union cvmx_pciercx_cfg554 {
 	uint32_t reserved_27_31               : 5;
 #endif
 	} s;
-	struct cvmx_pciercx_cfg554_s          cn73xx;
+	struct cvmx_pciercx_cfg554_cn73xx {
+#ifdef __BIG_ENDIAN_BITFIELD
+	uint32_t reserved_25_31               : 7;
+	uint32_t iif                          : 1;  /**< Include initial FOM. Include, or not, the FOM feedback from the initial preset evaluation
+                                                         performed in the EQ master, when finding the highest FOM among all preset evaluations. */
+	uint32_t prv                          : 16; /**< Preset request vector. Requesting of presets during the initial part of the EQ master
+                                                         phase. Encoding scheme as follows:
+                                                         Bit [15:0] = 0x0: No preset is requested and evaluated in the EQ master phase.
+                                                         Bit [i] = 1: Preset=i is requested and evaluated in the EQ master phase.
+                                                         _ 0b0000000000000000 = No preset req/evaluated in EQ master phase.
+                                                         _ 0b00000xxxxxxxxxx1 = Preset 0 req/evaluated in EQ master phase.
+                                                         _ 0b00000xxxxxxxxx1x = Preset 1 req/evaluated in EQ master phase.
+                                                         _ 0b00000xxxxxxxx1xx = Preset 2 req/evaluated in EQ master phase.
+                                                         _ 0b00000xxxxxxx1xxx = Preset 3 req/evaluated in EQ master phase.
+                                                         _ 0b00000xxxxxx1xxxx = Preset 4 req/evaluated in EQ master phase.
+                                                         _ 0b00000xxxxx1xxxxx = Preset 5 req/evaluated in EQ master phase.
+                                                         _ 0b00000xxxx1xxxxxx = Preset 6 req/evaluated in EQ master phase.
+                                                         _ 0b00000xxx1xxxxxxx = Preset 7 req/evaluated in EQ master phase.
+                                                         _ 0b00000xx1xxxxxxxx = Preset 8 req/evaluated in EQ master phase.
+                                                         _ 0b00000x1xxxxxxxxx = Preset 9 req/evaluated in EQ master phase.
+                                                         _ 0b000001xxxxxxxxxx = Preset 10 req/evaluated in EQ master phase.
+                                                         _ All other encodings = Reserved. */
+	uint32_t reserved_6_7                 : 2;
+	uint32_t p23td                        : 1;  /**< Phase2_3 2 ms timeout disable. Determine behavior in Phase2 for USP (Phase3 if DSP) when
+                                                         the PHY does not respond within 2 ms to the assertion of RxEqEval:
+                                                         0 = Abort the current evaluation; stop any attempt to modify the remote transmitter
+                                                         settings. Phase2 will be terminated by the 24 ms timeout.
+                                                         1 = Ignore the 2 ms timeout and continue as normal. This is used to support PHYs that
+                                                         require more than 2 ms to respond to the assertion of RxEqEval. */
+	uint32_t bt                           : 1;  /**< Behavior after 24 ms timeout (when optimal settings are not found).
+                                                         For a USP: determine the next LTSSM state from Phase2:
+                                                         0 = Recovery.Speed.
+                                                         1 = Recovry.Equalization.Phase3.
+                                                         For a DSP: determine the next LTSSM state from Phase3:
+                                                         0 = Recovery.Speed.
+                                                         1 = Recovry.Equalization.RcrLock.
+                                                         When optimal settings are not found:
+                                                         * Equalization phase 3 successful status bit is not set in the link status register.
+                                                         * Equalization phase 3 complete status bit is set in the link status register. */
+	uint32_t fm                           : 4;  /**< Feedback mode.
+                                                         0 = Direction of change (not supported).
+                                                         1 = Figure of merit.
+                                                         2-15 = Reserved. */
+#else
+	uint32_t fm                           : 4;
+	uint32_t bt                           : 1;
+	uint32_t p23td                        : 1;
+	uint32_t reserved_6_7                 : 2;
+	uint32_t prv                          : 16;
+	uint32_t iif                          : 1;
+	uint32_t reserved_25_31               : 7;
+#endif
+	} cn73xx;
 	struct cvmx_pciercx_cfg554_s          cn78xx;
 	struct cvmx_pciercx_cfg554_s          cn78xxp2;
 	struct cvmx_pciercx_cfg554_s          cnf75xx;

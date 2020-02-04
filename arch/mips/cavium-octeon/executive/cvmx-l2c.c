@@ -43,7 +43,7 @@
  * Implementation of the Level 2 Cache (L2C) control,
  * measurement, and debugging facilities.
  *
- * <hr>$Revision: 115982 $<hr>
+ * <hr>$Revision: 164971 $<hr>
  *
  */
 
@@ -1040,6 +1040,170 @@ uint32_t cvmx_l2c_address_to_index(uint64_t addr)
 	}
 	idx &= CVMX_L2C_IDX_MASK;
 	return idx;
+}
+
+/**
+ * Decodes TQD L2D single and double-bit errors to the appropriate cache index
+ * for the CVMX_CACHE_LTGL2I operation.
+ *
+ * @param	node	CPU node number
+ * @param	tad	TAD interface
+ *
+ * @return	index address to pass to the LTGL2I cache operation (3)
+ */
+uint64_t cvmx_l2c_tqdl2d_to_index_7xxx(int node, int tad)
+{
+	union cvmx_l2c_tqdx_err l2c_tqdx_err;
+	uint64_t cindex;
+
+	l2c_tqdx_err.u64 = cvmx_read_csr_node(node, CVMX_L2C_TQDX_ERR(tad));
+
+	/* Figure out the index to pass to the cache 3 instruction
+	 * Note that this is poorly documented and in many cases the HRM is
+	 * wrong.
+	 *
+	 * Also note that L2 index aliasing has no impact on this.
+	 *
+	 * Please see the comments for each chip model for the correct
+	 * mapping.
+	 */
+	if (OCTEON_IS_MODEL(OCTEON_CN78XX)) {
+		/* This applies to t88 as well.
+		 *
+		 * payload<24> = remote node
+		 * payload<23:20> = L2DIDX<10:7>   = way[3:0]
+		 * payload<19:13> = L2DIDX<6:0>    = index<12:6>
+		 * payload<12:11> = L2DIDX<12:11>  = index<5:4>
+		 * payload<10>    = QDNUM<2>       = index<3>
+		 * payload<9:7>   = TAD[2:0]       = index<0:2>
+		 */
+		cindex = (tad & 7) << 7;	/* 7:9 */
+		cindex |= ((l2c_tqdx_err.s.qdnum >> 2) & 1) << 10;
+		cindex |= ((l2c_tqdx_err.s.l2didx >> 11) & 3) << 11;
+		cindex |= (l2c_tqdx_err.s.l2didx & 0x7f) << 13;
+		cindex |= ((l2c_tqdx_err.s.l2didx >> 7) & 0xF) << 20;
+		if (cvmx_get_node_num() != (unsigned)node)
+			cindex |= 1 << 24;
+	} else if (OCTEON_IS_MODEL(OCTEON_CN70XX)) {
+		/* payload<24:22> = 0
+		 * payload<18:17> = L2DIDX<10:9> = way[1:0]
+		 * payload<16:8>  = L2DIDX<8:0>  = index<9:1>
+		 * payload<7>     = L2DIDX<12>   = index<0>
+		 */
+		cindex = ((l2c_tqdx_err.s.l2didx >> 12) & 1) << 7;
+		cindex |= (l2c_tqdx_err.s.l2didx & 0xfff) << 8;
+	} else {	/* CN73XX/CNF75XX */
+		/* payload<24:22> = 0
+		 * payload<21:18> = L2DIDX<10:7>  = way[3:0]
+		 * payload<17:11> = L2DIDX<6:0>   = index<10:4>
+		 * payload<10:9>  = L2DIDX<12:11> = index<3:2>
+		 * payload<8:7>   = TAD[1:0]      = index<0:1>
+		 */
+		cindex = (tad & 3) << 7;	/* 7:8 */
+		cindex |= (l2c_tqdx_err.s.l2didx & 0x1800) >> 2; /* 9:10 */
+		cindex |= (l2c_tqdx_err.s.l2didx & 0x7f) << 11;  /* 11:17 */
+		cindex |= (l2c_tqdx_err.s.l2didx & 0x780) << 11; /* 18:21 */
+	}
+	/* t81:
+	 * payload<24:21> = 0
+	 * payload<20:17> = L2DIDX<10:7>  = way[3:0]
+	 * payload<16:10> = L2DIDX<6:0>   = index<9:3>
+	 * payload<9:8>   = L2DIDX<12:11> = index<2:1>
+	 * payload<7>     = QDNUM<2>      = index<0>
+	 *
+	 * t83:
+	 * payload<24:23> = 0
+	 * payload<22:19> = L2DIDX<10:7>  = way[3:0]
+	 * payload<18:12> = L2DIDX<6:0>   = index<11:5>
+	 * payload<11:10> = L2DIDX<12:11> = index<4:3>
+	 * payload<9>     = QDNUM<2>      = index<2>
+	 * payload<8:7>   = TAD[1:0]      = index<1:0>
+	 */
+	return cindex;
+}
+
+/**
+ * Decodes TTG tag single and double-bit errors to the appropriate cache index
+ * for the CVMX_CACHE_LTGL2I operation.
+ *
+ * @param	node	CPU node number
+ * @param	tad	TAD interface
+ *
+ * @return	index address to pass to the LTGL2I cache operation (3)
+ */
+uint64_t cvmx_l2c_ttgx_to_index_7xxx(int node, int tad, bool remote)
+{
+	union cvmx_l2c_ttgx_err l2c_ttgx_err;
+	union cvmx_l2c_rtgx_err l2c_rtgx_err;
+	uint64_t cindex;
+
+	if (remote)
+		l2c_rtgx_err.u64 = cvmx_read_csr_node(node, CVMX_L2C_RTGX_ERR(tad));
+	else
+	l2c_ttgx_err.u64 = cvmx_read_csr_node(node, CVMX_L2C_TTGX_ERR(tad));
+
+	/* Figure out the index to pass to the cache 3 instruction
+	 * Note that this is poorly documented and in many cases the HRM is
+	 * wrong.
+	 *
+	 * Also note that L2 index aliasing has no impact on this.
+	 *
+	 * Please see the comments for each chip model for the correct
+	 * mapping.
+	 */
+	if (OCTEON_IS_MODEL(OCTEON_CN78XX)) {
+		/* This applies to t88 as well.
+		 *
+		 * payload<24> = remote node
+		 * payload<23:20> = L2DIDX<10:7>   = way[3:0]
+		 * payload<19:13> = L2DIDX<6:0>    = index<12:6>
+		 * payload<12:11> = L2DIDX<12:11>  = index<5:4>
+		 * payload<10>    = QDNUM<2>       = index<3>
+		 * payload<9:7>   = TAD[2:0]       = index<0:2> = addr<7:9?
+		 */
+
+		/* cindex = (tad & 7) << 7; */	/* 7:9 are the tad */
+		if (remote) {
+		cindex = l2c_rtgx_err.s.l2idx << 7;	/* 7:19 index */
+		cindex |= l2c_rtgx_err.s.way << 20;	/* 20:23 way */
+			cindex |= (1 << 24);			/* Remote tag */
+		} else {
+			cindex = l2c_ttgx_err.cn78xx.l2idx << 7;/* 7:19 index */
+			cindex |= l2c_ttgx_err.cn78xx.way << 20;/* 20:23 way */
+		}
+	} else if (OCTEON_IS_MODEL(OCTEON_CN70XX)) {
+		/* payload<24:22> = 0
+		 * payload<18:17> = L2DIDX<10:9> = way[1:0]
+		 * payload<16:8>  = L2DIDX<8:0>  = index<9:1>
+		 * payload<7>     = L2DIDX<12>   = index<0>
+		 */
+		cindex = l2c_ttgx_err.cn70xx.l2idx << 7;	/* 7:16 index */
+		cindex |= l2c_ttgx_err.cn70xx.way << 17;	/* 17:18 way */
+	} else {	/* CN73XX/CNF75XX */
+		/* payload<24:22> = 0
+		 * payload<18:17> = L2DIDX<10:9> = way[1:0]
+		 * payload<16:8>  = L2DIDX<8:0>  = index<9:1>
+		 * payload<7>     = L2DIDX<12>   = index<0>
+		 */
+		cindex = l2c_ttgx_err.cn73xx.l2idx << 7;	/* 7:19 index */
+		cindex |= l2c_ttgx_err.cn73xx.way << 20;	/* 20:23 way */
+	}
+	/* t81:
+	 * payload<24:21> = 0
+	 * payload<20:17> = L2DIDX<10:7>  = way[3:0]
+	 * payload<16:10> = L2DIDX<6:0>   = index<9:3>
+	 * payload<9:8>   = L2DIDX<12:11> = index<2:1>
+	 * payload<7>     = QDNUM<2>      = index<0>
+	 *
+	 * t83:
+	 * payload<24:23> = 0
+	 * payload<22:19> = L2DIDX<10:7>  = way[3:0]
+	 * payload<18:12> = L2DIDX<6:0>   = index<11:5>
+	 * payload<11:10> = L2DIDX<12:11> = index<4:3>
+	 * payload<9>     = QDNUM<2>      = index<2>
+	 * payload<8:7>   = TAD[1:0]      = index<1:0>
+	 */
+	return cindex;
 }
 
 int cvmx_l2c_get_cache_size_bytes(void)

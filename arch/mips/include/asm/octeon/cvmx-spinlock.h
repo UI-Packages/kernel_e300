@@ -42,7 +42,7 @@
  *
  * Implementation of spinlocks.
  *
- * <hr>$Revision: 115744 $<hr>
+ * <hr>$Revision: 156174 $<hr>
  */
 
 #ifndef __CVMX_SPINLOCK_H__
@@ -56,6 +56,13 @@ extern "C" {
 /* *INDENT-ON* */
 #endif
 
+/* NOTE: macros not expanded in inline ASM, so values hardcoded */
+#define  CVMX_SPINLOCK_UNLOCKED_VAL  0
+#define  CVMX_SPINLOCK_LOCKED_VAL    1
+
+#define CVMX_SPINLOCK_UNLOCKED_INITIALIZER  {CVMX_SPINLOCK_UNLOCKED_VAL}
+
+#if !defined(CVMX_BUILD_FOR_LINUX_HOST) && defined(__mips__)
 /* Spinlocks for Octeon */
 
 /* define these to enable recursive spinlock debugging */
@@ -68,11 +75,6 @@ typedef struct {
 	volatile uint32_t value;
 } cvmx_spinlock_t;
 
-/* NOTE: macros not expanded in inline ASM, so values hardcoded */
-#define  CVMX_SPINLOCK_UNLOCKED_VAL  0
-#define  CVMX_SPINLOCK_LOCKED_VAL    1
-
-#define CVMX_SPINLOCK_UNLOCKED_INITIALIZER  {CVMX_SPINLOCK_UNLOCKED_VAL}
 
 /**
  * Initialize a spinlock
@@ -391,6 +393,19 @@ static inline void cvmx_spinlock_rec_lock(cvmx_spinlock_rec_t * lock)
 #endif
 
 }
+
+#else
+
+#	define cvmx_spinlock_lock cvmx_atomic_spinlock_lock
+#	define cvmx_spinlock_unlock cvmx_atomic_spinlock_unlock
+	/* do not use spinlock when defined(CVMX_BUILD_FOR_LINUX_HOST)
+	 * but still define the structure for binary compatibility
+	 */
+	typedef struct { volatile uint32_t value; } cvmx_spinlock_t;
+
+#endif
+
+
 
 
 /*

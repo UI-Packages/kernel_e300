@@ -43,7 +43,7 @@
  * Interface to the Level 2 Cache (L2C) control, measurement, and debugging
  * facilities.
  *
- * <hr>$Revision: 115982 $<hr>
+ * <hr>$Revision: 158623 $<hr>
  *
  */
 
@@ -419,6 +419,31 @@ int cvmx_l2c_address_to_tad(uint64_t addr);
  * @return L2 cache index
  */
 uint32_t cvmx_l2c_address_to_index(uint64_t addr);
+
+/**
+ * Decodes TQD L2D single and double-bit errors to the appropriate cache index
+ * for the CVMX_CACHE_LTGL2I operation.
+ *
+ * @param	node	CPU node number
+ * @param	tad	TAD interface
+ *
+ * @return	index address to pass to the LTGL2I cache operation (3)
+ */
+uint64_t cvmx_l2c_tqdl2d_to_index_7xxx(int node, int tad);
+
+/**
+ * Decodes TTG tag single and double-bit errors to the appropriate cache index
+ * for the CVMX_CACHE_LTGL2I operation.
+ *
+ * @param	node	CPU node number
+ * @param	tad	TAD interface
+ * @param	remote	true for remote tag index (78XX only)
+ *
+ * @return	index address to pass to the LTGL2I cache operation (3)
+ *
+ * TODO: This code needs to be corrected or validated.
+ */
+uint64_t cvmx_l2c_ttgx_to_index_7xxx(int node, int tad, bool remote);
 
 /**
  * Returns the L2 tag that will be used for the given physical address

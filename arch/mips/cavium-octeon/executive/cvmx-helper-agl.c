@@ -142,7 +142,8 @@ int __cvmx_helper_agl_probe(int interface)
 	if (OCTEON_IS_MODEL(OCTEON_CN70XX)) {
 		bool tx_enable_bypass;
 		int tx_delay;
-		agl_prtx_ctl.s.refclk_sel = 0;
+		agl_prtx_ctl.s.refclk_sel =
+			cvmx_helper_get_agl_refclk_sel(interface, port);
 		agl_prtx_ctl.s.clkrx_set =
 			cvmx_helper_get_agl_rx_clock_skew(interface, port);
 		agl_prtx_ctl.s.clkrx_byp =

@@ -83,6 +83,35 @@
 #include <asm/octeon/cvmx-helper-pko.h>
 #include <asm/octeon/cvmx-helper-pko3.h>
 #include <asm/octeon/cvmx-helper-ipd.h>
+#elif defined(__U_BOOT__)
+#include <common.h>
+#include <asm/arch/cvmx.h>
+#include <asm/arch/cvmx-sysinfo.h>
+#include <asm/arch/cvmx-bootmem.h>
+#include <asm/arch/cvmx-version.h>
+#include <asm/arch/cvmx-gmx.h>
+#include <asm/arch/cvmx-error.h>
+
+#include <asm/arch/cvmx-fpa.h>
+#include <asm/arch/cvmx-pip.h>
+#include <asm/arch/cvmx-pko.h>
+#include <asm/arch/cvmx-pko3.h>
+#include <asm/arch/cvmx-ipd.h>
+#include <asm/arch/cvmx-qlm.h>
+#include <asm/arch/cvmx-spi.h>
+#include <asm/arch/cvmx-helper.h>
+#include <asm/arch/cvmx-helper-bgx.h>
+#include <asm/arch/cvmx-helper-board.h>
+#include <asm/arch/cvmx-helper-errata.h>
+#include <asm/arch/cvmx-helper-cfg.h>
+#include <asm/arch/cvmx-helper-pki.h>
+#include <asm/arch/cvmx-helper-fpa.h>
+#include <asm/arch/cvmx-pki.h>
+#include <asm/arch/cvmx-helper-pko.h>
+#include <asm/arch/cvmx-helper-pko3.h>
+#include <asm/arch/cvmx-helper-ipd.h>
+#include <asm/arch/cvmx-helper-fdt.h>
+#include <asm/arch/cvmx-helper-sfp.h>
 #else
 #include "cvmx.h"
 #include "cvmx-sysinfo.h"
@@ -109,6 +138,8 @@
 #include "cvmx-helper-pko.h"
 #include "cvmx-helper-pko3.h"
 #include "cvmx-helper-ipd.h"
+#include "libfdt/cvmx-helper-fdt.h"
+#include "cvmx-helper-sfp.h"
 #endif
 
 
@@ -1885,6 +1916,14 @@ int cvmx_helper_initialize_packet_io_node(unsigned int node)
 		result = cvmx_helper_pko_init();
 	}
 
+	/* Errata SSO-29000, Disabling power saving SSO conditional clocking */
+	if (octeon_has_feature(OCTEON_FEATURE_CN78XX_WQE)) {
+		cvmx_sso_ws_cfg_t cfg;
+		cfg.u64 = cvmx_read_csr_node(node, CVMX_SSO_WS_CFG);
+		cfg.s.sso_cclk_dis = 1;
+		cvmx_write_csr_node(node, CVMX_SSO_WS_CFG, cfg.u64);
+	}
+
 	if (result < 0)
 		return result;
 
@@ -2056,9 +2095,9 @@ int cvmx_helper_shutdown_packet_io_global_cn78xx(int node)
 	/* Retrieve all packets from the SSO and free them */
 	result = 0;
 	while ((work = cvmx_pow_work_request_sync(CVMX_POW_WAIT))) {
-            cvmx_wqe_pki_free(work);
             cvmx_helper_free_pki_pkt_data(work);
-	    result ++;
+		cvmx_wqe_pki_free(work);
+		result++;
 	}
 
 	if (result > 0)
@@ -2614,6 +2653,9 @@ cvmx_helper_link_info_t cvmx_helper_link_get(int xipd_port)
 	int xiface = cvmx_helper_get_interface_num(xipd_port);
 	int index = cvmx_helper_get_interface_index_num(xipd_port);
 	struct cvmx_xiface xi = cvmx_helper_xiface_to_node_interface(xiface);
+#ifndef CVMX_BUILD_FOR_LINUX_KERNEL
+	struct cvmx_fdt_sfp_info *sfp_info;
+#endif
 
 	/*
 	 * The default result will be a down link unless the code
@@ -2622,17 +2664,26 @@ cvmx_helper_link_info_t cvmx_helper_link_get(int xipd_port)
 	result.u64 = 0;
 
 	if (__cvmx_helper_xiface_is_null(xiface) || index == -1 ||
-	    index >= cvmx_helper_ports_on_interface(xiface))
+	    index >= cvmx_helper_ports_on_interface(xiface)) {
 		return result;
+	}
 
 	if (iface_node_ops[xi.node][xi.interface]->link_get)
 		result = iface_node_ops[xi.node][xi.interface]->link_get(xipd_port);
 
 #ifndef CVMX_BUILD_FOR_LINUX_KERNEL
-	if (xipd_port >= 0)
+	if (xipd_port >= 0) {
 		__cvmx_update_link_led(xiface, index, result);
-#endif
 
+		sfp_info = cvmx_helper_cfg_get_sfp_info(xiface, index);
+
+		if (sfp_info &&
+		    (!result.s.link_up ||
+		     (result.s.link_up && sfp_info->last_mod_abs)))
+			cvmx_sfp_check_mod_abs(sfp_info,
+					       sfp_info->mod_abs_data);
+	}
+#endif
 	return result;
 }
 EXPORT_SYMBOL(cvmx_helper_link_get);

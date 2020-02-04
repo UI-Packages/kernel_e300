@@ -64,8 +64,8 @@ struct octeon_srio_port {
 static struct octeon_srio_port srio_ports[MAX_SRIO_PORTS];
 
 /* Pool/aura used by the dma engine */
-static cvmx_fpa3_pool_t cmd_pool;
-static cvmx_fpa3_gaura_t cmd_aura;
+static int cmd_pool;
+static int cmd_aura;
 static void *cmd_pool_stack;
 static struct kmem_cache *cmd_pool_cache;
 
@@ -1106,8 +1106,8 @@ static int octeon_rio_dma_cmd_pool_init(void)
 	octeon_fpa3_init(node);
 	octeon_fpa3_pool_init(node, CVMX_FPA_OUTPUT_BUFFER_POOL, &cmd_pool,
 			      &cmd_pool_stack, 4096);
-	octeon_fpa3_aura_init(cmd_pool, CVMX_FPA_OUTPUT_BUFFER_POOL, &cmd_aura,
-			      128, 20480);
+	octeon_fpa3_aura_init(node, cmd_pool, CVMX_FPA_OUTPUT_BUFFER_POOL,
+			      &cmd_aura, 128, 20480);
 
 	cmd_pool_cache = kmem_cache_create("dma cmd",
 					   CVMX_FPA_OUTPUT_BUFFER_POOL_SIZE,
@@ -1115,7 +1115,7 @@ static int octeon_rio_dma_cmd_pool_init(void)
 	if (!cmd_pool_cache)
 		return -ENOMEM;
 
-	return octeon_mem_fill_fpa3(node, cmd_pool_cache, cmd_aura, 128);
+	return octeon_fpa3_mem_fill(node, cmd_pool_cache, cmd_aura, 128);
 }
 
 

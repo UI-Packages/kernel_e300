@@ -39,9 +39,12 @@
 #include <linux/rio_drv.h>
 #include <linux/rio_ids.h>
 #include <linux/net_tstamp.h>
+#include <linux/clocksource.h>
 #include <linux/ptp_clock_kernel.h>
 
 #include <asm/octeon/octeon.h>
+#include <asm/octeon/cvmx-helper.h>
+#include <asm/octeon/cvmx-helper-bgx.h>
 #include <asm/octeon/cvmx-helper-cfg.h>
 #include <asm/octeon/cvmx-helper-pko3.h>
 #include <asm/octeon/cvmx-helper-pki.h>
@@ -201,9 +204,13 @@ struct octeon3_ethernet {
 	struct net_device *netdev;
 	enum octeon3_mac_type mac_type;
 	struct octeon3_rx rx_cxt[MAX_RX_CONTEXTS];
+	struct ptp_clock_info ptp_info;
 	struct ptp_clock *ptp_clock;
+	struct cyclecounter cc;
+	struct timecounter tc;
+	spinlock_t ptp_lock;
 	int num_rx_cxt;
-	int pki_laura;
+	int pki_aura;
 	int pki_pkind;
 	int pko_queue;
 	int numa_node;
@@ -257,14 +264,14 @@ struct octeon3_ethernet_node {
 	bool napi_init_done;
 	int next_cpu_irq_affinity;
 	int numa_node;
-	cvmx_fpa3_pool_t  pki_packet_pool;
-	cvmx_fpa3_pool_t sso_pool;
-	cvmx_fpa3_pool_t pko_pool;
+	int pki_packet_pool;
+	int sso_pool;
+	int pko_pool;
 	void *sso_pool_stack;
 	void *pko_pool_stack;
 	void *pki_packet_pool_stack;
-	cvmx_fpa3_gaura_t sso_aura;
-	cvmx_fpa3_gaura_t pko_aura;
+	int sso_aura;
+	int pko_aura;
 	int tx_complete_grp;
 	int tx_irq;
 	cpumask_t tx_affinity_hint;
@@ -294,7 +301,7 @@ static int wait_pko_response;
 module_param(wait_pko_response, int, 0644);
 MODULE_PARM_DESC(use_tx_queues, "Wait for response after each pko command.");
 
-static int num_packet_buffers = 4096;
+static int num_packet_buffers = 768;
 module_param(num_packet_buffers, int, S_IRUGO);
 MODULE_PARM_DESC(num_packet_buffers, "Number of packet buffers to allocate per port.");
 
@@ -483,7 +490,7 @@ static int octeon3_eth_sso_init(unsigned int node, int aura)
 	max_grps = cvmx_sso_num_xgrp();
 	for (i = 0; i < max_grps; i++) {
 		u64 phys;
-		void *mem = cvmx_fpa3_alloc(__cvmx_fpa3_gaura(node, aura));
+		void *mem = octeon_fpa3_alloc(node, aura);
 		if (!mem) {
 			rv = -ENOMEM;
 			goto err;
@@ -555,7 +562,7 @@ static void octeon3_eth_sso_shutdown(unsigned int node)
 		addr = head.s.ptr;
 		addr <<= 7;
 		ptr = phys_to_virt(addr);
-		cvmx_fpa3_free(ptr, oen->sso_aura, 0);
+		octeon_fpa3_free(node, oen->sso_aura, ptr);
 
 		/* Clear pointers */
 		cvmx_write_csr_node(node, CVMX_SSO_XAQX_HEAD_PTR(i), 0);
@@ -676,9 +683,7 @@ static void octeon3_eth_replenish_rx(struct octeon3_ethernet *priv, int count)
 		}
 		buf = (void **)PTR_ALIGN(skb->head, 128);
 		buf[SKB_PTR_OFFSET] = skb;
-		cvmx_fpa3_free(buf,
-			__cvmx_fpa3_gaura(priv->numa_node, priv->pki_laura),
-			0);
+		octeon_fpa3_free(priv->numa_node, priv->pki_aura, buf);
 	}
 }
 
@@ -706,7 +711,7 @@ static int octeon3_eth_replenish_all(struct octeon3_ethernet_node *oen)
 	return pending;
 }
 
-static ktime_t octeon3_ptp_to_ktime(u64 ptptime)
+static ktime_t octeon3_ptp_to_ktime(struct octeon3_ethernet *priv, u64 ptptime)
 {
 	ktime_t ktimebase;
 	u64 ptpbase;
@@ -722,21 +727,24 @@ static ktime_t octeon3_ptp_to_ktime(u64 ptptime)
 	 * amount of time to reduce jitter
 	 */
 	ktimebase = ktime_get_real();
-	ptpbase = octeon_read_ptp_csr(CVMX_MIO_PTP_CLOCK_HI);
+	ptpbase = cvmx_read_csr_node(priv->numa_node, CVMX_MIO_PTP_CLOCK_HI);
 	local_irq_restore(flags);
 
 	return ktime_sub_ns(ktimebase, ptpbase - ptptime);
 }
 
-static int octeon3_eth_tx_complete_hwtstamp(struct sk_buff *skb)
+static int octeon3_eth_tx_complete_hwtstamp(struct octeon3_ethernet *priv,
+					    struct sk_buff *skb)
 {
 	struct skb_shared_hwtstamps	shts;
-	u64				ts;
+	u64				hwts;
+	u64				ns;
 
-	ts = *((u64 *)(skb->cb) + 1);
+	hwts = *((u64 *)(skb->cb) + 1);
+	ns = timecounter_cyc2time(&priv->tc, hwts);
 	memset(&shts, 0, sizeof(shts));
-	shts.hwtstamp = ns_to_ktime(ts);
-	shts.syststamp = octeon3_ptp_to_ktime(ts);
+	shts.hwtstamp = ns_to_ktime(ns);
+	shts.syststamp = octeon3_ptp_to_ktime(priv, hwts);
 	skb_tstamp_tx(skb, &shts);
 
 	return 0;
@@ -782,7 +790,7 @@ static int octeon3_eth_tx_complete_worker(void *data)
 				skb = container_of((void *)work, struct sk_buff, cb);
 				if (unlikely(tx_priv->tx_timestamp_hw) && 
 				    unlikely(skb_shinfo(skb)->tx_flags & SKBTX_IN_PROGRESS))
-					    octeon3_eth_tx_complete_hwtstamp(skb);
+					octeon3_eth_tx_complete_hwtstamp(tx_priv, skb);
 				dev_kfree_skb(skb);
 			}
 
@@ -864,19 +872,18 @@ static int octeon3_eth_global_init(unsigned int node)
 	if (rv)
 		goto done;
 
-	rv = octeon_fpa3_aura_init(oen->sso_pool, -1, &oen->sso_aura,
+	rv = octeon_fpa3_aura_init(node, oen->sso_pool, -1, &oen->sso_aura,
 				   num_packet_buffers, 20480);
 	if (rv)
 		goto done;
 
-	rv = octeon_fpa3_aura_init(oen->pko_pool, -1, &oen->pko_aura,
+	rv = octeon_fpa3_aura_init(node, oen->pko_pool, -1, &oen->pko_aura,
 				   num_packet_buffers, 20480);
 	if (rv)
 		goto done;
 
 	pr_err("octeon3_eth_global_init  SSO:%d:%d, PKO:%d:%d\n",
-	       oen->sso_pool.lpool, oen->sso_aura.laura,
-	       oen->pko_pool.lpool, oen->pko_aura.laura);
+	       oen->sso_pool, oen->sso_aura, oen->pko_pool, oen->pko_aura);
 
 	if (!octeon3_eth_sso_pko_cache) {
 		octeon3_eth_sso_pko_cache = kmem_cache_create("sso_pko", 4096, 128, 0, NULL);
@@ -886,18 +893,17 @@ static int octeon3_eth_global_init(unsigned int node)
 		}
 	}
 
-	rv = octeon_mem_fill_fpa3(node, octeon3_eth_sso_pko_cache,
+	rv = octeon_fpa3_mem_fill(node, octeon3_eth_sso_pko_cache,
 				  oen->sso_aura, 1024);
 	if (rv)
 		goto done;
 
-	rv = octeon_mem_fill_fpa3(node, octeon3_eth_sso_pko_cache,
+	rv = octeon_fpa3_mem_fill(node, octeon3_eth_sso_pko_cache,
 				   oen->pko_aura, 1024);
 	if (rv)
 		goto done;
 
-	BUG_ON(node != oen->sso_aura.node);
-	rv = octeon3_eth_sso_init(node, oen->sso_aura.laura);
+	rv = octeon3_eth_sso_init(node, oen->sso_aura);
 	if (rv)
 		goto done;
 
@@ -910,7 +916,7 @@ static int octeon3_eth_global_init(unsigned int node)
 		goto done;
 	}
 
-	rv = __cvmx_helper_pko3_init_global(node, oen->pko_aura.laura | (node << 10));
+	rv = __cvmx_helper_pko3_init_global(node, oen->pko_aura | (node << 10));
 	if (rv) {
 		pr_err("cvmx_helper_pko3_init_global failed\n");
 		rv = -ENODEV;
@@ -1289,14 +1295,24 @@ static int octeon3_eth_rx_one(struct octeon3_rx *rx, bool is_async,
 		skb_checksum_none_assert(skb);
 		if (unlikely(priv->rx_timestamp_hw)) {
 			/* The first 8 bytes are the timestamp */
-			u64 ts = *(u64 *)skb->data;
+			u64 hwts = *(u64 *)skb->data;
+			u64 ns;
 			struct skb_shared_hwtstamps *shts;
 
+			ns = timecounter_cyc2time(&priv->tc, hwts);
 			shts = skb_hwtstamps(skb);
-			shts->hwtstamp = ns_to_ktime(ts);
-			shts->syststamp = octeon3_ptp_to_ktime(ts);
+			memset(shts, 0, sizeof(*shts));
+			shts->hwtstamp = ns_to_ktime(ns);
+			shts->syststamp = octeon3_ptp_to_ktime(priv, hwts);
 			__skb_pull(skb, 8);
 		}
+
+#if IS_ENABLED(CONFIG_OCTEON3_ETHERNET_SRIO)
+		if (priv->mac_type == SRIO_MAC) {
+			__skb_pull(skb,
+				   sizeof(struct cvmx_srio_rx_message_header));
+		}
+#endif
 
 		skb->protocol = eth_type_trans(skb, priv->netdev);
 		skb->dev = priv->netdev;
@@ -1309,13 +1325,6 @@ static int octeon3_eth_rx_one(struct octeon3_rx *rx, bool is_async,
 				if (work->word2.err_code == 0)
 					skb->ip_summed = CHECKSUM_UNNECESSARY;
 		}
-
-#if IS_ENABLED(CONFIG_OCTEON3_ETHERNET_SRIO)
-		if (priv->mac_type == SRIO_MAC) {
-			__skb_pull(skb,
-				   sizeof(struct cvmx_srio_rx_message_header));
-		}
-#endif
 
 		if (unlikely(priv->intercept_cb)) {
 			enum cvm_oct_callback_result cb_result;
@@ -1599,9 +1608,9 @@ static int octeon3_eth_common_ndo_init(struct net_device	*netdev,
 	int ipd_port, node_dq;
 	int base_rx_grp[MAX_RX_CONTEXTS];
 	int first_skip, later_skip;
-	struct cvmx_xport xdq;
+	struct cvmx_xdq xdq;
 	int r, i;
-	cvmx_fpa3_gaura_t aura;
+	int aura;
 
 	netif_carrier_off(netdev);
 
@@ -1643,13 +1652,13 @@ static int octeon3_eth_common_ndo_init(struct net_device	*netdev,
 	}
 
 	node_dq = cvmx_pko3_get_queue_base(ipd_port);
-	xdq = cvmx_helper_ipd_port_to_xport(node_dq);
+	xdq = cvmx_helper_queue_to_xdq(node_dq);
 
-	priv->pko_queue = xdq.port;
-	octeon_fpa3_aura_init(oen->pki_packet_pool, -1, &aura,
+	priv->pko_queue = xdq.queue;
+	octeon_fpa3_aura_init(priv->numa_node, oen->pki_packet_pool, -1, &aura,
 			      num_packet_buffers, num_packet_buffers * 2);
-	priv->pki_laura = aura.laura;
-	aura2bufs_needed[priv->numa_node][priv->pki_laura] =
+	priv->pki_aura = aura;
+	aura2bufs_needed[priv->numa_node][priv->pki_aura] =
 		&priv->buffers_needed;
 
 	*base_rx_grp = -1;
@@ -1672,7 +1681,7 @@ static int octeon3_eth_common_ndo_init(struct net_device	*netdev,
 	priv->tx_complete_grp = oen->tx_complete_grp;
 	priv->pki_pkind = cvmx_helper_get_pknd(priv->xiface, priv->port_index);
 	dev_info(netdev->dev.parent, "rx sso grp:%d..%d aura:%d pknd:%d pko_queue:%d\n",
-		*base_rx_grp, *(base_rx_grp + priv->num_rx_cxt - 1), priv->pki_laura, priv->pki_pkind, priv->pko_queue);
+		*base_rx_grp, *(base_rx_grp + priv->num_rx_cxt - 1), priv->pki_aura, priv->pki_pkind, priv->pko_queue);
 
 	prt_schd = kzalloc(sizeof(*prt_schd), GFP_KERNEL);
 	if (!prt_schd) {
@@ -1683,7 +1692,7 @@ static int octeon3_eth_common_ndo_init(struct net_device	*netdev,
 	prt_schd->style = -1; /* Allocate net style per port */
 	prt_schd->qpg_base = -1;
 	prt_schd->aura_per_prt = true;
-	prt_schd->aura_num = priv->pki_laura;
+	prt_schd->aura_num = priv->pki_aura;
 	prt_schd->sso_grp_per_prt = true;
 	prt_schd->sso_grp = octeon3_eth_lgrp_to_ggrp(priv->numa_node, *base_rx_grp);
 	prt_schd->qpg_qos = CVMX_PKI_QPG_QOS_NONE;
@@ -1774,7 +1783,7 @@ static int octeon3_eth_common_ndo_init(struct net_device	*netdev,
 			    qpg_tbl.u64);
 	pki_aura_cfg.u64 = 0;
 	pki_aura_cfg.s.ena_red = 1;
-	cvmx_write_csr_node(priv->numa_node, CVMX_PKI_AURAX_CFG(priv->pki_laura), pki_aura_cfg.u64);
+	cvmx_write_csr_node(priv->numa_node, CVMX_PKI_AURAX_CFG(priv->pki_aura), pki_aura_cfg.u64);
 
 	cvmx_write_csr_node(priv->numa_node, CVMX_PKI_STATX_STAT0(priv->pki_pkind), 0);
 	priv->last_packets = 0;
@@ -1835,9 +1844,8 @@ static void octeon3_eth_ndo_uninit(struct net_device *netdev)
 	/* Shutdwon pki for this interface */
 	ipd_port = cvmx_helper_get_ipd_port(priv->xiface, priv->port_index);
 	cvmx_helper_pki_port_shutdown(ipd_port);
-	cvmx_fpa3_release_aura(__cvmx_fpa3_gaura(priv->numa_node,
-						 priv->pki_laura));
-	aura2bufs_needed[priv->numa_node][priv->pki_laura] = NULL;
+	octeon_fpa3_release_aura(priv->numa_node, priv->pki_aura);
+	aura2bufs_needed[priv->numa_node][priv->pki_aura] = NULL;
 
 	/* Shutdown pko for this interface */
 	cvmx_helper_pko3_shut_interface(priv->xiface);
@@ -1989,7 +1997,7 @@ static int octeon3_eth_common_ndo_stop(struct net_device *netdev)
 
 	/* Free the packet buffers */
 	for (;;) {
-		w = cvmx_fpa3_alloc(__cvmx_fpa3_gaura(priv->numa_node, priv->pki_laura));
+		w = octeon_fpa3_alloc(priv->numa_node, priv->pki_aura);
 		if (!w)
 			break;
 		skb = w[0];
@@ -2324,7 +2332,7 @@ static int octeon3_eth_ndo_start_xmit(struct sk_buff *skb, struct net_device *ne
 	void **work;
 	bool can_recycle_skb = false;
 	int gaura = 0;
-	void *buffers_needed = NULL;
+	atomic64_t *buffers_needed = NULL;
 	void **buf = NULL;
 	unsigned int mss;
 
@@ -2352,13 +2360,16 @@ static int octeon3_eth_ndo_start_xmit(struct sk_buff *skb, struct net_device *ne
 			int		node;
 			int		aura;
 
-			can_recycle_skb = true;
 			gaura = magic & 0xfff;
 			node = gaura >> 10;
 			aura = gaura & 0x3ff;
 			buffers_needed = aura2bufs_needed[node][aura];
+			/* Only allow aura overfill of up to 5 extra buffers. */
+			if (atomic64_read(buffers_needed) > -5) {
+				can_recycle_skb = true;
 			buf[SKB_AURA_OFFSET] = NULL;
 		}
+	}
 	}
 
 	/* SSO can only fall behind when the skb is not recycled */
@@ -2534,15 +2545,11 @@ static int octeon3_eth_ndo_start_xmit(struct sk_buff *skb, struct net_device *ne
 	if (likely(can_recycle_skb)) {
 		cvmx_pko_send_free_t	send_free;
 
-		/* Subtract 1 from buffers_needed. */
-		send_mem.u64 = 0;
-		send_mem.s.subdc4 = CVMX_PKO_SENDSUBDC_MEM;
-		send_mem.s.dsz = MEMDSZ_B64;
-		send_mem.s.alg = MEMALG_SUB;
-		send_mem.s.offset = 1;
-		send_mem.s.addr = virt_to_phys(buffers_needed);
-		cvmx_scratch_write64(scr_off, send_mem.u64);
-		scr_off += sizeof(buf_ptr);
+		/* Account for the recycled buffer now, so any backlog
+		 * in the PKO doesn't inadvertently increase the total
+		 * number of buffers in flight for the input port.
+		 */
+		atomic64_dec(buffers_needed);
 
 		/* Free buffer when finished with the packet */
 		send_free.u64 = 0;
@@ -2656,6 +2663,16 @@ static int octeon3_eth_set_mac_address(struct net_device *netdev, void *addr)
 	return 0;
 }
 
+static cycle_t octeon3_cyclecounter_read(const struct cyclecounter *cc)
+{
+	struct octeon3_ethernet	*priv;
+	cycle_t			count;
+
+	priv = container_of(cc, struct octeon3_ethernet, cc);
+	count = cvmx_read_csr_node(priv->numa_node, CVMX_MIO_PTP_CLOCK_HI);
+	return count;
+}
+
 static int octeon3_bgx_hwtstamp(struct net_device *netdev, int en)
 {
 	struct octeon3_ethernet		*priv = netdev_priv(netdev);
@@ -2664,7 +2681,7 @@ static int octeon3_bgx_hwtstamp(struct net_device *netdev, int en)
 	cvmx_bgxx_smux_rx_frm_ctl_t	xfrmctl;
 
 	xiface = cvmx_helper_xiface_to_node_interface(priv->xiface);
-	switch (cvmx_helper_interface_get_mode(priv->xiface)) {
+	switch (cvmx_helper_bgx_get_mode(priv->xiface, priv->port_index)) {
 	case CVMX_HELPER_INTERFACE_MODE_GMII:
 	case CVMX_HELPER_INTERFACE_MODE_RGMII:
 	case CVMX_HELPER_INTERFACE_MODE_SGMII:
@@ -2732,7 +2749,7 @@ static int octeon3_ioctl_hwtstamp(struct net_device *netdev,
 	}
 
 	/* The PTP block should be enabled */
-	ptp.u64 = octeon_read_ptp_csr(CVMX_MIO_PTP_CLOCK_CFG);
+	ptp.u64 = cvmx_read_csr_node(priv->numa_node, CVMX_MIO_PTP_CLOCK_CFG);
 	if (!ptp.s.ptp_en) {
 		netdev_err(netdev, "Error: PTP clock not enabled\n");
 		return -EOPNOTSUPP;
@@ -2784,7 +2801,107 @@ static int octeon3_ioctl_hwtstamp(struct net_device *netdev,
 	octeon3_bgx_hwtstamp(netdev, en);
 	octeon3_pki_hwtstamp(netdev, en);
 
+	priv->cc.read = octeon3_cyclecounter_read;
+	priv->cc.mask = CLOCKSOURCE_MASK(64);
+	/* Ptp counter is always in nsec */
+	priv->cc.mult = 1;
+	priv->cc.shift = 0;
+	timecounter_init(&priv->tc, &priv->cc, ktime_to_ns(ktime_get_real()));
+
 	return 0;
+}
+
+static int octeon3_adjfreq(struct ptp_clock_info *ptp, s32 ppb)
+{
+	struct octeon3_ethernet	*priv;
+	u64			comp;
+	u64			diff;
+	int			neg_ppb = 0;
+	static u64		base_comp;
+
+	priv = container_of(ptp, struct octeon3_ethernet, ptp_info);
+
+	/* Need to save the base frequency */
+	if (!base_comp) {
+		base_comp = cvmx_read_csr_node(priv->numa_node,
+					       CVMX_MIO_PTP_CLOCK_COMP);
+	}
+
+	if (ppb < 0) {
+		ppb = -ppb;
+		neg_ppb = 1;
+	}
+
+	/* The part per billion (ppb) is a delta from the base frequency */
+	comp = base_comp;
+
+	diff = comp;
+	diff *= ppb;
+	diff = div_u64(diff, 1000000000ULL);
+
+	comp = neg_ppb ? comp - diff : comp + diff;
+
+	cvmx_write_csr_node(priv->numa_node, CVMX_MIO_PTP_CLOCK_COMP, comp);
+
+	return 0;
+}
+
+static int octeon3_adjtime(struct ptp_clock_info *ptp, s64 delta)
+{
+	struct octeon3_ethernet	*priv;
+	s64			now;
+	unsigned long		flags;
+
+	priv = container_of(ptp, struct octeon3_ethernet, ptp_info);
+
+	spin_lock_irqsave(&priv->ptp_lock, flags);
+	now = timecounter_read(&priv->tc);
+	now += delta;
+	timecounter_init(&priv->tc, &priv->cc, now);
+	spin_unlock_irqrestore(&priv->ptp_lock, flags);
+
+	return 0;
+}
+
+static int octeon3_gettime(struct ptp_clock_info *ptp, struct timespec *ts)
+{
+	struct octeon3_ethernet	*priv;
+	u64			ns;
+	u32			remainder;
+	unsigned long		flags;
+
+	priv = container_of(ptp, struct octeon3_ethernet, ptp_info);
+
+	spin_lock_irqsave(&priv->ptp_lock, flags);
+	ns = timecounter_read(&priv->tc);
+	spin_unlock_irqrestore(&priv->ptp_lock, flags);
+	ts->tv_sec = div_u64_rem(ns, 1000000000ULL, &remainder);
+	ts->tv_nsec = remainder;
+
+	return 0;
+}
+
+static int octeon3_settime(struct ptp_clock_info *ptp,
+			   const struct timespec *ts)
+{
+	struct octeon3_ethernet	*priv;
+	u64			ns;
+	unsigned long		flags;
+
+	priv = container_of(ptp, struct octeon3_ethernet, ptp_info);
+	ns = timespec_to_ns(ts);
+
+	spin_lock_irqsave(&priv->ptp_lock, flags);
+	timecounter_init(&priv->tc, &priv->cc, ns);
+	spin_unlock_irqrestore(&priv->ptp_lock, flags);
+
+	return 0;
+}
+
+static int octeon3_enable(struct ptp_clock_info *ptp,
+			  struct ptp_clock_request *rq, int on)
+{
+	return -EOPNOTSUPP;
 }
 
 static int octeon3_ioctl(struct net_device *netdev, struct ifreq *ifr, int cmd)
@@ -2906,8 +3023,10 @@ static int octeon3_eth_srio_ndo_open(struct net_device *netdev)
 	}
 
 	rc = octeon3_eth_common_ndo_open(netdev);
-	if (rc == 0)
+	if (rc == 0) {
+		rc = __cvmx_helper_srio_enable(priv->xiface);
 		netif_carrier_on(netdev);
+	}
 
 	netdev->netdev_ops->ndo_change_mtu(netdev, netdev->mtu);
 
@@ -3107,6 +3226,22 @@ static int octeon3_eth_probe(struct platform_device *pdev)
 		list_del(&priv->list);
 		free_netdev(netdev);
 	}
+
+	spin_lock_init(&priv->ptp_lock);
+	priv->ptp_info.owner = THIS_MODULE;
+	snprintf(priv->ptp_info.name, 16, "octeon3 ptp");
+	priv->ptp_info.max_adj = 250000000;
+	priv->ptp_info.n_alarm = 0;
+	priv->ptp_info.n_ext_ts = 0;
+	priv->ptp_info.n_per_out = 0;
+	priv->ptp_info.pps = 0;
+	priv->ptp_info.adjfreq = octeon3_adjfreq;
+	priv->ptp_info.adjtime = octeon3_adjtime;
+	priv->ptp_info.gettime = octeon3_gettime;
+	priv->ptp_info.settime = octeon3_settime;
+	priv->ptp_info.enable = octeon3_enable;
+	priv->ptp_clock = ptp_clock_register(&priv->ptp_info, &pdev->dev);
+
 	netdev_info(netdev, "Registered\n");
 	return 0;
 }
@@ -3137,7 +3272,7 @@ static int octeon3_eth_global_exit(int node)
 
 	/* Shutdown pki */
 	cvmx_helper_pki_shutdown(node);
-	cvmx_fpa3_release_pool(oen->pki_packet_pool);
+	octeon_fpa3_release_pool(node, oen->pki_packet_pool);
 	kfree(oen->pki_packet_pool_stack);
 
 	/* Shutdown pko */
@@ -3145,13 +3280,13 @@ static int octeon3_eth_global_exit(int node)
 	for (;;) {
 		void **w;
 
-		w = cvmx_fpa3_alloc(oen->pko_aura);
+		w = octeon_fpa3_alloc(node, oen->pko_aura);
 		if (!w)
 			break;
 		kmem_cache_free(octeon3_eth_sso_pko_cache, w);
 	}
-	cvmx_fpa3_release_aura(oen->pko_aura);
-	cvmx_fpa3_release_pool(oen->pko_pool);
+	octeon_fpa3_release_aura(node, oen->pko_aura);
+	octeon_fpa3_release_pool(node, oen->pko_pool);
 	kfree(oen->pko_pool_stack);
 
 	/* Shutdown sso */
@@ -3160,13 +3295,13 @@ static int octeon3_eth_global_exit(int node)
 	for (;;) {
 		void **w;
 
-		w = cvmx_fpa3_alloc(oen->sso_aura);
+		w = octeon_fpa3_alloc(node, oen->sso_aura);
 		if (!w)
 			break;
 		kmem_cache_free(octeon3_eth_sso_pko_cache, w);
 	}
-	cvmx_fpa3_release_aura(oen->sso_aura);
-	cvmx_fpa3_release_pool(oen->sso_pool);
+	octeon_fpa3_release_aura(node, oen->sso_aura);
+	octeon_fpa3_release_pool(node, oen->sso_pool);
 	kfree(oen->sso_pool_stack);
 
 	return 0;
@@ -3178,8 +3313,11 @@ static int octeon3_eth_remove(struct platform_device *pdev)
 	struct octeon3_ethernet		*priv = netdev_priv(netdev);
 	int				node = priv->numa_node;
 	struct octeon3_ethernet_node	*oen = octeon3_eth_node + node;
+	struct mac_platform_data	*pd = dev_get_platdata(&pdev->dev);
 
+	ptp_clock_unregister(priv->ptp_clock);
 	unregister_netdev(netdev);
+	if (pd->mac_type == BGX_MAC)
 	bgx_port_set_netdev(pdev->dev.parent, NULL);
 	dev_set_drvdata(&pdev->dev, NULL);
 

@@ -42,7 +42,7 @@
  *
  * This module provides system/board/application information obtained by the bootloader.
  *
- * <hr>$Revision: 83018 $<hr>
+ * <hr>$Revision: 156174 $<hr>
  *
  */
 
@@ -108,6 +108,9 @@ struct cvmx_sysinfo *cvmx_sysinfo_get(void)
 	return &(state.sysinfo);
 }
 
+#ifndef CVMX_BUILD_FOR_LINUX_HOST
+/* when run on HOST these funcs are not applicable */
+
 void cvmx_sysinfo_add_self_to_core_mask(void)
 {
 	cvmx_spinlock_lock(&state.lock);
@@ -121,6 +124,8 @@ void cvmx_sysinfo_remove_self_from_core_mask(void)
 	cvmx_coremask_clear_self(&state.sysinfo.core_mask);
 	cvmx_spinlock_unlock(&state.lock);
 }
+
+#endif
 
 EXPORT_SYMBOL(cvmx_sysinfo_get);
 

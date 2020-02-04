@@ -45,6 +45,7 @@
 #ifdef CVMX_BUILD_FOR_LINUX_KERNEL
 #include <linux/module.h>
 #include <asm/octeon/cvmx.h>
+#include <asm/octeon/octeon.h>
 #include <asm/octeon/cvmx-pki-defs.h>
 #include <asm/octeon/cvmx-pki.h>
 #include <asm/octeon/cvmx-pow.h>
@@ -1105,28 +1106,44 @@ int cvmx_helper_pki_init_port(int ipd_port, struct cvmx_pki_prt_schd *prtsch)
 			qpg_cfg.grp_bad = qossch->sso_grp;
 			cvmx_pki_write_qpg_entry(xp.node, prtsch->qpg_base + qos, &qpg_cfg);
 			if (pki_helper_debug)
-				cvmx_dprintf("pki-helper:port-init: port %d qos %d has port_add %d aura %d grp %d\n",
+				cvmx_dprintf("%s: port %d qos %d "
+				"has port_add %d aura %d grp %d\n",
+				__func__,
 				ipd_port, qos, qossch->port_add,
 				qossch->aura_num, qossch->sso_grp);
-		}
-	} else
+		} /* for qos 0 ... num_qos */
+	} else {
 		qpg_cfg.port_add = 0;
 		qpg_cfg.aura_num = prtsch->aura_num;
 		qpg_cfg.grp_ok = prtsch->sso_grp;
 		qpg_cfg.grp_bad = prtsch->sso_grp;
 		cvmx_pki_write_qpg_entry(xp.node, prtsch->qpg_base, &qpg_cfg);
+
+		if (pki_helper_debug)
+			cvmx_dprintf("%s: non-qos port %d has aura %d grp %d\n",
+				__func__,
+				ipd_port, prtsch->aura_num, prtsch->sso_grp);
+	}
+
+	/* LR: The rest of code is common for qos and non-qos ports */
+
 		/* Allocate style here and map it to the port */
 		rs = cvmx_pki_style_alloc(xp.node, prtsch->style);
 		if (rs == CVMX_RESOURCE_ALREADY_RESERVED) {
-			cvmx_dprintf("pki-helper: INFO: style will be shared\n");
+		cvmx_dprintf("%s INFO: style will be shared\n",
+			__func__);
 		} else if (rs == CVMX_RESOURCE_ALLOC_FAILED) {
-			cvmx_dprintf("pki-helper: ERROR: style not available\n");
+		cvmx_dprintf("%s ERROR: style not available\n",
+			__func__);
 			return CVMX_RESOURCE_ALLOC_FAILED;
-		} else {
+	}
+
 			prtsch->style = rs;
 			if (pki_helper_debug)
-				cvmx_dprintf("pki-helper:port-init: port %d has style %d\n",
-					ipd_port, prtsch->style);
+		cvmx_dprintf("%s: port %d has style %d\n",
+		__func__, ipd_port, prtsch->style);
+
+	/* Config STYLE to above QPG table base entry */
 			style_cfg = pki_dflt_style[xp.node];
 			style_cfg.parm_cfg.qpg_qos = prtsch->qpg_qos;
 			style_cfg.parm_cfg.qpg_base = prtsch->qpg_base;
@@ -1135,8 +1152,10 @@ int cvmx_helper_pki_init_port(int ipd_port, struct cvmx_pki_prt_schd *prtsch)
 			style_cfg.parm_cfg.mbuff_size = mbuff_size;
 			cvmx_pki_write_style_config(xp.node, prtsch->style,
 				CVMX_PKI_CLUSTER_ALL, &style_cfg);
-		}
-		pknd = cvmx_helper_get_pknd(xiface, cvmx_helper_get_interface_index_num(ipd_port));
+
+	/* Update PKND with initial STYLE */
+	pknd = cvmx_helper_get_pknd(xiface,
+		cvmx_helper_get_interface_index_num(ipd_port));
 		cvmx_pki_read_pkind_config(xp.node, pknd, &pknd_cfg);
 		pknd_cfg.initial_style = prtsch->style;
 		pknd_cfg.fcs_pres = __cvmx_helper_get_has_fcs(xiface);
@@ -2031,7 +2050,6 @@ int cvmx_helper_pki_route_prt_dmac(int xipd_port, uint64_t mac_addr, uint64_t ma
 	}
 	st_cfg.parm_cfg.qpg_base = index;
 	cvmx_pki_write_style_config(node, new_style, CVMX_PKI_CLUSTER_ALL, &st_cfg);
-	cvmx_helper_pki_route_dmac(node, style, 0xffffffffffff, 0xffffffffffff, new_style);
-	cvmx_helper_pki_route_dmac(node, style, 0x0a0203040506, 0xffffffffffff, new_style);
+	cvmx_helper_pki_route_dmac(node, style, mac_addr, mac_addr_mask, new_style);
 	return new_style;
 }

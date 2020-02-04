@@ -43,7 +43,7 @@
  * Simple allocate only memory allocator.  Used to allocate memory at
  * application start time.
  *
- * <hr>$Revision: 127530 $<hr>
+ * <hr>$Revision: 156174 $<hr>
  *
  */
 
@@ -634,6 +634,7 @@ int cvmx_bootmem_free_named(const char *name)
 {
 	return cvmx_bootmem_phy_named_block_free(name, 0);
 }
+EXPORT_SYMBOL(cvmx_bootmem_free_named);
 #endif
 
 /**
@@ -647,8 +648,8 @@ int cvmx_bootmem_free_named(const char *name)
  * and is therefore not re-entrant.
  * Making this function re-entrant will break backward compatibility.
  */
-const cvmx_bootmem_named_block_desc_t *
-__cvmx_bootmem_find_named_block_flags(const char *name, uint32_t flags)
+const cvmx_bootmem_named_block_desc_t *__cvmx_bootmem_find_named_block_flags(
+	const char *name, uint32_t flags)
 {
 	static cvmx_bootmem_named_block_desc_t desc;
 	uint64_t named_addr = cvmx_bootmem_phy_named_block_find(name, flags);

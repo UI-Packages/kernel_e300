@@ -44,7 +44,7 @@
  *
  * Note: Currently on 7 bit device addresses are supported
  *
- * <hr>$Revision: 78551 $<hr>
+ * <hr>$Revision: 153454 $<hr>
  *
  */
 
@@ -299,6 +299,46 @@ static inline int cvmx_twsi_write8(uint8_t dev_addr, uint8_t internal_addr, uint
 {
 	return cvmx_twsix_write8(0, dev_addr, internal_addr, data);
 }
+
+/**
+ * Read up to 256 bytes to a TWSI device using an internal address.
+ *
+ * @param twsi_id   Which TWSI interface on Octeon to use
+ * @param dev_addr  TWSI device address (7 bit only)
+ * @param internal_addr
+ *                  TWSI internal address (8 or 16 bits)
+ * @param num_bytes Number of bytes to read (1-256)
+ * @param ia_width_bytes
+ *                  Internal address width, in bytes (1 or 2)
+ * @param data      Data to read. Data is read MSB first on the twsi bus,
+ *                  and only the higher "num_bytes" bytes of the argument are
+ *                  valid. (If a 2 byte read is done, only the high 2 bytes of
+ *                  the argument is used.
+ * @return          0 on success; -1 on error
+ */
+int cvmx_twsix_read_ia_llc(int twsi_id, uint8_t dev_addr,
+			   uint16_t internal_addr, int num_bytes,
+			   int ia_width_bytes, uint64_t *data);
+
+/**
+ * Write up to 256 bytes to a TWSI device using an internal address.
+ *
+ * @param twsi_id   Which TWSI interface on Octeon to use
+ * @param dev_addr  TWSI device address (7 bit only)
+ * @param internal_addr
+ *                  TWSI internal address (8 or 16 bits)
+ * @param num_bytes Number of bytes to write (1-256)
+ * @param ia_width_bytes
+ *                  Internal address width, in bytes (1 or 2)
+ * @param data      Data to write. Data is written MSB first on the twsi bus,
+ *                  and only the higher "num_bytes" bytes of the argument are
+ *                  valid. (If a 2 byte write is done, only the high 2 bytes of
+ *                  the argument is used.
+ * @return          0 on success; -1 on error
+ */
+int cvmx_twsix_write_ia_llc(int twsi_id, uint8_t dev_addr,
+			    uint16_t internal_addr, int num_bytes,
+			    int ia_width_bytes, uint64_t *data);
 
 #ifdef	__cplusplus
 /* *INDENT-OFF* */

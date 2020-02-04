@@ -161,7 +161,6 @@ int cvmx_app_hotplug_unplug_cores(int index, const struct cvmx_coremask *pcm,
 				  int wait);
 cvmx_app_hotplug_info_t *cvmx_app_hotplug_get_info(const struct cvmx_coremask *);
 int cvmx_app_hotplug_get_index(const struct cvmx_coremask *pcm);
-cvmx_app_hotplug_info_t *cvmx_app_hotplug_get_info_at_index(int index);
 int is_app_hotpluggable(int index);
 int cvmx_app_hotplug_call_add_cores_callback(int index);
 #ifndef CVMX_BUILD_FOR_LINUX_USER

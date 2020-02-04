@@ -406,8 +406,54 @@ int octeon_board_major_rev(void)
 const char *get_system_type(void)
 	__attribute__ ((alias("octeon_board_type_string")));
 
+/* Try for a DIDTO of about 250 mS */
+static unsigned int calc_didto(void)
+{
+	unsigned int bit = 0;
+	u64 clk = octeon_get_clock_rate();
+
+	clk >>= 2; /* cycles in 250mS */
+	do {
+		clk >>= 1;
+		if (clk)
+			bit++;
+	} while (clk);
+
+	if (bit > 31)
+		return 0;
+
+	if (OCTEON_IS_OCTEON1PLUS()) {
+		switch (bit) {
+		case 31:
+			return 0;
+		case 30:
+			return 1;
+		default:
+			return 2;
+		}
+	} else {
+		switch (bit) {
+		case 31:
+			return 0;
+		case 30:
+			return 1;
+		case 29:
+			return 2;
+		case 28:
+			return 4;
+		case 27:
+			return 5;
+		case 26:
+			return 6;
+		default:
+			return 7;
+		}
+	}
+}
+
 void octeon_user_io_init(void)
 {
+	unsigned int v;
 	union octeon_cvmemctl cvmmemctl;
 
 	/* Get the current settings for CP0_CVMMEMCTL_REG */
@@ -470,8 +516,9 @@ void octeon_user_io_init(void)
 	 * = 231, 1 = 230, 2 = 229, 3 = 214. Actual time-out is
 	 * between 1x and 2x this interval. For example, with
 	 * DIDTTO=3, expiration interval is between 16K and 32K. */
-	cvmmemctl.s.didtto = 0;
-	cvmmemctl.s.didtto2 = 0;
+	v = calc_didto();
+	cvmmemctl.s.didtto = v & 3;
+	cvmmemctl.s.didtto2 = (v >> 2) & 1;
 	/* R/W If set, the (mem) CSR clock never turns off. */
 	cvmmemctl.s.csrckalwys = 0;
 	/* R/W If set, mclk never turns off. */
@@ -1051,8 +1098,8 @@ void __init plat_mem_setup(void)
 
 	if (system_limit > max_memory)
 		system_limit = max_memory;
-	/* Try to get 256MB (or more) of 32-bit memory */
-	mem_32_size = system_limit <= (16ull * (1ull << 30)) ? 256 * (1 << 20) : 512 * (1 << 20);
+	/* Try to get 1024MB of 32-bit memory */
+	mem_32_size = 1024 * (1 << 20);
 
 	cvmx_bootmem_lock();
 	limit_max = 0xffffffffull;
@@ -1318,7 +1365,9 @@ static int __init edac_devinit(void)
 	struct platform_device *dev;
 	int i, err = 0;
 	int num_lmc;
+	int num_tad;
 	char *name;
+	int node;
 
 	if (disable_octeon_edac_p)
 		return 0;
@@ -1337,15 +1386,44 @@ static int __init edac_devinit(void)
 		((OCTEON_IS_MODEL(OCTEON_CN56XX)
 		  || OCTEON_IS_MODEL(OCTEON_CN73XX)
 		  || OCTEON_IS_MODEL(OCTEON_CNF75XX)) ? 2 : 1);
+	num_tad = OCTEON_IS_MODEL(OCTEON_CN78XX) ? 8 :
+			(OCTEON_IS_MODEL(OCTEON_CN68XX)
+			 || (OCTEON_IS_OCTEON3()
+			     && !OCTEON_IS_MODEL(OCTEON_CN70XX))) ? 4 : 1;
+
+	for_each_online_node(node) {
 	for (i = 0; i < num_lmc; i++) {
-		dev = platform_device_register_simple("octeon_lmc_edac",
-						      i, NULL, 0);
+			struct octeon_edac_lmc_data lmc_data;
+
+			lmc_data.node = node;
+			lmc_data.lmc = i;
+			dev = platform_device_register_data(NULL,
+							    "octeon_lmc_edac",
+							    node * num_lmc + i,
+							    &lmc_data,
+							    sizeof(lmc_data));
 		if (IS_ERR(dev)) {
 			pr_err("Registation of octeon_lmc_edac %d failed!\n", i);
 			err = PTR_ERR(dev);
 		}
 	}
+		for (i = 0; i < num_tad; i++) {
+			struct octeon_edac_l2c_data l2c_data;
 
+			l2c_data.node = node;
+			l2c_data.tad = i;
+			dev = platform_device_register_data(NULL,
+							    "octeon_l2c_edac",
+							    node * num_tad + i,
+							    &l2c_data,
+							    sizeof(l2c_data));
+			if (IS_ERR(dev)) {
+				pr_err("Registration of octeon_l2c_edac %d:%d failed!\n",
+				       node, i);
+				err = PTR_ERR(dev);
+			}
+		}
+	}
 	return err;
 }
 device_initcall(edac_devinit);

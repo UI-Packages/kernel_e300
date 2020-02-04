@@ -1,5 +1,5 @@
 /***********************license start***************
- * Copyright (c) 2003-2015  Cavium Inc. (support@cavium.com). All rights
+ * Copyright (c) 2003-2017  Cavium Inc. (support@cavium.com). All rights
  * reserved.
  *
  *
@@ -44,34 +44,53 @@
  *
  * <hr>$Revision: 0 $<hr>
  */
+
 #ifdef CVMX_BUILD_FOR_LINUX_KERNEL
-#include <linux/export.h>
-#include <asm/octeon/cvmx.h>
-#include <asm/octeon/cvmx-helper.h>
-#include <asm/octeon/cvmx-helper-board.h>
-#include <asm/octeon/cvmx-helper-util.h>
-#include <asm/octeon/cvmx-helper-cfg.h>
-#include <asm/octeon/cvmx-helper-ilk.h>
-#include <asm/octeon/cvmx-helper-bgx.h>
-#include <asm/octeon/cvmx-ilk.h>
-#include <asm/octeon/cvmx-range.h>
-#include <asm/octeon/cvmx-global-resources.h>
-#include <asm/octeon/cvmx-pko-internal-ports-range.h>
+# include <linux/export.h>
+# include <asm/octeon/cvmx.h>
+# include <asm/octeon/octeon.h>
+# include <asm/octeon/cvmx-helper.h>
+# include <asm/octeon/cvmx-helper-board.h>
+# include <asm/octeon/cvmx-helper-util.h>
+# include <asm/octeon/cvmx-helper-cfg.h>
+# include <asm/octeon/cvmx-helper-ilk.h>
+# include <asm/octeon/cvmx-helper-bgx.h>
+# include <asm/octeon/cvmx-ilk.h>
+# include <asm/octeon/cvmx-range.h>
+# include <asm/octeon/cvmx-global-resources.h>
+# include <asm/octeon/cvmx-pko-internal-ports-range.h>
+#elif defined(__U_BOOT__)
+# include <asm/arch/cvmx.h>
+# include <asm/arch/cvmx-bootmem.h>
+# include <asm/arch/cvmx-helper.h>
+# include <asm/arch/cvmx-helper-board.h>
+# include <asm/arch/cvmx-helper-util.h>
+# include <asm/arch/cvmx-helper-cfg.h>
+# include <asm/arch/cvmx-helper-ilk.h>
+# include <asm/arch/cvmx-helper-bgx.h>
+# include <asm/arch/cvmx-helper-fdt.h>
+# include <asm/arch/cvmx-ilk.h>
+# include <asm/arch/cvmx-adma.h>
+# include <asm/arch/cvmx-pip.h>
+# include <asm/arch/cvmx-range.h>
+# include <asm/arch/cvmx-global-resources.h>
+# include <asm/arch/cvmx-pko-internal-ports-range.h>
 #else
-#include "cvmx.h"
-#include "cvmx-bootmem.h"
-#include "cvmx-helper.h"
-#include "cvmx-helper-board.h"
-#include "cvmx-helper-util.h"
-#include "cvmx-helper-cfg.h"
-#include "cvmx-ilk.h"
-#include "cvmx-adma.h"
-#include "cvmx-helper-ilk.h"
-#include "cvmx-helper-bgx.h"
-#include "cvmx-pip.h"
-#include "cvmx-range.h"
-#include "cvmx-global-resources.h"
-#include "cvmx-pko-internal-ports-range.h"
+# include "cvmx.h"
+# include "cvmx-bootmem.h"
+# include "cvmx-helper.h"
+# include "cvmx-helper-board.h"
+# include "cvmx-helper-util.h"
+# include "cvmx-helper-cfg.h"
+# include "cvmx-ilk.h"
+# include "cvmx-adma.h"
+# include "cvmx-helper-ilk.h"
+# include "cvmx-helper-bgx.h"
+# include "cvmx-pip.h"
+# include "cvmx-range.h"
+# include "cvmx-global-resources.h"
+# include "cvmx-pko-internal-ports-range.h"
+# include "libfdt/cvmx-helper-fdt.h"
 #endif
 
 #if !defined(min)
@@ -79,7 +98,7 @@
 #endif
 
 int cvmx_npi_max_pknds;
-static bool port_cfg_data_initialized = false;
+static CVMX_SHARED bool port_cfg_data_initialized = false;
 
 CVMX_SHARED struct cvmx_cfg_port_param cvmx_cfg_port[CVMX_MAX_NODES][CVMX_HELPER_MAX_IFACE][CVMX_HELPER_CFG_MAX_PORT_PER_IFACE];
 /*
@@ -906,6 +925,24 @@ uint8_t cvmx_helper_get_agl_rx_clock_skew(int xiface, int index)
 }
 EXPORT_SYMBOL(cvmx_helper_get_agl_rx_clock_skew);
 
+void cvmx_helper_set_agl_refclk_sel(int xiface, int index, uint8_t value)
+{
+	struct cvmx_xiface xi = cvmx_helper_xiface_to_node_interface(xiface);
+	if (!port_cfg_data_initialized)
+		cvmx_init_port_cfg();
+	cvmx_cfg_port[xi.node][xi.interface][index].agl_refclk_sel = value;
+}
+EXPORT_SYMBOL(cvmx_helper_set_agl_refclk_sel);
+
+uint8_t cvmx_helper_get_agl_refclk_sel(int xiface, int index)
+{
+	struct cvmx_xiface xi = cvmx_helper_xiface_to_node_interface(xiface);
+	if (!port_cfg_data_initialized)
+		cvmx_init_port_cfg();
+	return cvmx_cfg_port[xi.node][xi.interface][index].agl_refclk_sel;
+}
+EXPORT_SYMBOL(cvmx_helper_get_agl_refclk_sel);
+
 void cvmx_helper_set_port_force_link_up(int xiface, int index, bool value)
 {
 	struct cvmx_xiface xi = cvmx_helper_xiface_to_node_interface(xiface);
@@ -945,10 +982,11 @@ EXPORT_SYMBOL(cvmx_helper_get_port_phy_present);
 int __cvmx_helper_init_port_valid(void)
 {
 #ifndef CVMX_BUILD_FOR_LINUX_KERNEL
-	int i, j, n;
+	int i, j, node;
 	bool valid;
 	static void *fdt_addr = 0;
 	int rc;
+	cvmx_coremask_t *pcm = &cvmx_sysinfo_get()->core_mask;
 
 	if (fdt_addr == 0)
 		fdt_addr = __cvmx_phys_addr_to_ptr(cvmx_sysinfo_get()->fdt_addr,
@@ -957,6 +995,8 @@ int __cvmx_helper_init_port_valid(void)
 		cvmx_init_port_cfg();
 	if (octeon_has_feature(OCTEON_FEATURE_BGX)) {
 		rc = __cvmx_helper_parse_bgx_dt(fdt_addr);
+		if (!rc)
+			rc = __cvmx_fdt_parse_vsc7224(fdt_addr);
 		if (!rc && octeon_has_feature(OCTEON_FEATURE_BGX_XCV))
 			rc = __cvmx_helper_parse_bgx_rgmii_dt(fdt_addr);
 
@@ -964,24 +1004,32 @@ int __cvmx_helper_init_port_valid(void)
 		 * clear them.
 		 *
 		 * Also clear any ports that are not defined in the device tree.
+		 * Apply this to each node.
 		 */
+		for (node = 0; node < CVMX_MAX_NODES; node++) {	
+			if (!cvmx_coremask_get64_node(pcm, node))
+				continue;
 		for (i = 0; i < CVMX_HELPER_MAX_GMX; i++) {
 			int j;
+				int xiface = cvmx_helper_node_interface_to_xiface(node, i
+);
 			for (j = 0; j < cvmx_helper_interface_enumerate(i); j++) {
 				cvmx_bgxx_cmrx_config_t cmr_config;
-				cmr_config.u64 = cvmx_read_csr(CVMX_BGXX_CMRX_CONFIG(j, i));
+					cmr_config.u64 = cvmx_read_csr_node(node, CVMX_BGXX_CMRX_CONFIG(j, i));
 #if defined(CVMX_BUILD_FOR_STANDALONE) || defined(CVMX_BUILD_FOR_LINUX_USER)
 				if (cmr_config.s.mix_en)
-					cvmx_helper_set_port_valid(i, j, false);
+						cvmx_helper_set_port_valid(xiface, j, false);
 				else 
 #endif
 				if ((cmr_config.s.lane_to_sds == 0xe4 &&
 				     cmr_config.s.lmac_type != 4 &&
 				     cmr_config.s.lmac_type != 1 &&
 				     cmr_config.s.lmac_type != 5) ||
-				    (cvmx_helper_get_port_fdt_node_offset(i, j) ==
-				     CVMX_HELPER_CFG_INVALID_VALUE))
-					cvmx_helper_set_port_valid(i, j, false);
+					     ((cvmx_sysinfo_get()->board_type != CVMX_BOARD_TYPE_SIM) &&
+						  (cvmx_helper_get_port_fdt_node_offset(xiface, j) ==
+						    CVMX_HELPER_CFG_INVALID_VALUE)))
+						cvmx_helper_set_port_valid(xiface, j, false);
+				}
 			}
 		}
 		return rc;
@@ -990,7 +1038,7 @@ int __cvmx_helper_init_port_valid(void)
 	/* TODO: Update this to behave more like 78XX */
 	for (i = 0; i < cvmx_helper_get_number_of_interfaces(); i++) {
 
-		n = cvmx_helper_interface_enumerate(i);
+		int n = cvmx_helper_interface_enumerate(i);
 		for (j = 0; j < n; j++) {
 			int ipd_port = cvmx_helper_get_ipd_port(i, j);
 			valid = (__cvmx_helper_board_get_port_from_dt(fdt_addr,
@@ -1119,6 +1167,10 @@ static void cvmx_init_port_cfg(void)
 				pcfg->phy_present = false;
 				pcfg->tx_clk_delay_bypass = false;
 				pcfg->rgmii_tx_clk_delay = 0;
+				pcfg->enable_fec = false;
+				pcfg->agl_refclk_sel = 0;
+				pcfg->sfp_of_offset = -1;
+				pcfg->vsc7224_chan = NULL;
 			}
 		}
 	}
@@ -1247,6 +1299,7 @@ int __cvmx_helper_init_port_config_data(int node)
 	}
 	return rv;
 }
+EXPORT_SYMBOL(__cvmx_helper_init_port_config_data);
 
 #ifndef CVMX_BUILD_FOR_LINUX_KERNEL
 /**
@@ -1283,6 +1336,41 @@ int cvmx_helper_get_port_fdt_node_offset(int xiface, int index)
 }
 
 /**
+ * Search for a port based on its FDT node offset
+ *
+ * @param	of_offset	Node offset of port to search for
+ * @param[out]	xiface		xinterface of match
+ * @param[out]	index		port index of match
+ *
+ * @return	0 if found, -1 if not found
+ */
+int cvmx_helper_cfg_get_xiface_index_by_fdt_node_offset(int of_offset,
+							int *xiface, int *index)
+{
+	int iface;
+	int i;
+	int node;
+	struct cvmx_cfg_port_param *pcfg = NULL;
+	*xiface = -1;
+	*index = -1;
+
+	for (node = 0; node < CVMX_MAX_NODES; node++) {
+		for (iface = 0; iface < CVMX_HELPER_MAX_IFACE; iface++) {
+			for (i = 0; i < CVMX_HELPER_CFG_MAX_PORT_PER_IFACE; i++) {
+				pcfg = &cvmx_cfg_port[node][iface][i];
+				if (pcfg->valid &&
+				    pcfg->port_fdt_node == of_offset) {
+					*xiface = cvmx_helper_node_interface_to_xiface(node, iface);
+					*index = i;
+					return 0;
+				}
+			}
+		}
+	}
+	return -1;
+}
+
+/**
  * @INTERNAL
  * Store the FDT node offset in the device tree of a phy
  *
@@ -1313,6 +1401,7 @@ int cvmx_helper_get_phy_fdt_node_offset(int xiface, int index)
 		cvmx_init_port_cfg();
 	return cvmx_cfg_port[xi.node][xi.interface][index].phy_fdt_node;
 }
+#endif /* !CVMX_BUILD_FOR_LINUX_KERNEL */
 
 /**
  * @INTERNAL
@@ -1330,7 +1419,7 @@ void cvmx_helper_set_port_autonegotiation(int xiface, int index, bool enable)
 		cvmx_init_port_cfg();
 	cvmx_cfg_port[xi.node][xi.interface][index].disable_an = !enable;
 }
-#endif /* !CVMX_BUILD_FOR_LINUX_KERNEL */
+EXPORT_SYMBOL(cvmx_helper_set_port_autonegotiation);
 
 /**
  * @INTERNAL
@@ -1347,6 +1436,39 @@ bool cvmx_helper_get_port_autonegotiation(int xiface, int index)
 	if (!port_cfg_data_initialized)
 		cvmx_init_port_cfg();
 	return !cvmx_cfg_port[xi.node][xi.interface][index].disable_an;
+}
+
+/**
+ * @INTERNAL
+ * Override default forward error correction for a port
+ *
+ * @param xiface	node and interface
+ * @param index		port index
+ * @param enable	true to enable fec, false to disable it
+ */
+void cvmx_helper_set_port_fec(int xiface, int index, bool enable)
+{
+	struct cvmx_xiface xi = cvmx_helper_xiface_to_node_interface(xiface);
+	if (!port_cfg_data_initialized)
+		cvmx_init_port_cfg();
+	cvmx_cfg_port[xi.node][xi.interface][index].enable_fec = enable;
+}
+
+/**
+ * @INTERNAL
+ * Returns if forward error correction is enabled or not.
+ *
+ * @param xiface	node and interface
+ * @param index		port index
+ *
+ * @return false if fec is disabled, true if enabled.
+ */
+bool cvmx_helper_get_port_fec(int xiface, int index)
+{
+	struct cvmx_xiface xi = cvmx_helper_xiface_to_node_interface(xiface);
+	if (!port_cfg_data_initialized)
+		cvmx_init_port_cfg();
+	return cvmx_cfg_port[xi.node][xi.interface][index].enable_fec;
 }
 
 /**
@@ -1465,4 +1587,106 @@ void cvmx_helper_cfg_get_rgmii_tx_clk_delay(int xiface, int index,
 
 	*clk_delay =
 		cvmx_cfg_port[xi.node][xi.interface][index].rgmii_tx_clk_delay;
+}
+
+/**
+ * @INTERNAL
+ * Retrieve the SFP node offset in the device tree
+ *
+ * @param xiface	node and interface
+ * @param index		port index
+ *
+ * @return offset in device tree or -1 if error or not defined.
+ */
+int cvmx_helper_cfg_get_sfp_fdt_offset(int xiface, int index)
+{
+	struct cvmx_xiface xi = cvmx_helper_xiface_to_node_interface(xiface);
+	if (!port_cfg_data_initialized)
+		cvmx_init_port_cfg();
+	return cvmx_cfg_port[xi.node][xi.interface][index].sfp_of_offset;
+}
+
+/**
+ * @INTERNAL
+ * Sets the SFP node offset
+ *
+ * @param xiface	node and interface
+ * @param index		port index
+ * @param sfp_of_offset	Offset of SFP node in device tree
+ */
+void cvmx_helper_cfg_set_sfp_fdt_offset(int xiface, int index,
+					int sfp_of_offset)
+{
+	struct cvmx_xiface xi = cvmx_helper_xiface_to_node_interface(xiface);
+	if (!port_cfg_data_initialized)
+		cvmx_init_port_cfg();
+	cvmx_cfg_port[xi.node][xi.interface][index].sfp_of_offset =
+							sfp_of_offset;
+}
+
+/**
+ * Get data structure defining the Microsemi VSC7224 channel info
+ * or NULL if not present
+ *
+ * @param xiface	node and interface
+ * @param index		port index
+ *
+ * @return pointer to vsc7224 data structure or NULL if not present
+ */
+struct cvmx_vsc7224_chan *cvmx_helper_cfg_get_vsc7224_chan_info(int xiface,
+								int index)
+{
+	struct cvmx_xiface xi = cvmx_helper_xiface_to_node_interface(xiface);
+	if (!port_cfg_data_initialized)
+		cvmx_init_port_cfg();
+	return cvmx_cfg_port[xi.node][xi.interface][index].vsc7224_chan;
+}
+
+/**
+ * Sets the Microsemi VSC7224 channel info data structure
+ *
+ * @param	xiface	node and interface
+ * @param	index	port index
+ * @param[in]	vsc7224_info	Microsemi VSC7224 data structure
+ */
+void cvmx_helper_cfg_set_vsc7224_chan_info(int xiface, int index,
+				struct cvmx_vsc7224_chan *vsc7224_chan_info)
+{
+	struct cvmx_xiface xi = cvmx_helper_xiface_to_node_interface(xiface);
+	if (!port_cfg_data_initialized)
+		cvmx_init_port_cfg();
+	cvmx_cfg_port[xi.node][xi.interface][index].vsc7224_chan =
+							vsc7224_chan_info;
+}
+
+/**
+ * Gets the SFP data associated with a port
+ *
+ * @param	xiface	node and interface
+ * @param	index	port index
+ *
+ * @return	pointer to SFP data structure or NULL if none
+ */
+struct cvmx_fdt_sfp_info *cvmx_helper_cfg_get_sfp_info(int xiface, int index)
+{
+	struct cvmx_xiface xi = cvmx_helper_xiface_to_node_interface(xiface);
+	if (!port_cfg_data_initialized)
+		cvmx_init_port_cfg();
+	return cvmx_cfg_port[xi.node][xi.interface][index].sfp_info;
+}
+
+/**
+ * Sets the SFP data associated with a port
+ *
+ * @param	xiface		node and interface
+ * @param	index		port index
+ * @param[in]	sfp_info	port SFP data or NULL for none
+ */
+void cvmx_helper_cfg_set_sfp_info(int xiface, int index,
+				  struct cvmx_fdt_sfp_info *sfp_info)
+{
+	struct cvmx_xiface xi = cvmx_helper_xiface_to_node_interface(xiface);
+	if (!port_cfg_data_initialized)
+		cvmx_init_port_cfg();
+	cvmx_cfg_port[xi.node][xi.interface][index].sfp_info = sfp_info;
 }

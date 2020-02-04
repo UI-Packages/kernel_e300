@@ -118,21 +118,21 @@ int cvmx_bch_initialize(void)
 		bch_pool, bch_pool_size, buf_cnt);
 	/* Setup the FPA */
 	if (octeon_has_feature(OCTEON_FEATURE_FPA3)) {
-		cvmx_fpa3_pool_t cmd_pool;
-		cvmx_fpa3_gaura_t cmd_aura;
+		int cmd_pool;
+		int cmd_aura;
 		struct kmem_cache *cmd_pool_cache;
 		void *cmd_pool_stack;
 		octeon_fpa3_init(0);
 		octeon_fpa3_pool_init(0, bch_pool, &cmd_pool, &cmd_pool_stack, 4096);
-		octeon_fpa3_aura_init(cmd_pool, bch_pool, &cmd_aura, buf_cnt, 20480);
-		bch_pool = cmd_aura.laura;
+		octeon_fpa3_aura_init(0, cmd_pool, bch_pool, &cmd_aura, buf_cnt, 20480);
+		bch_pool = cmd_aura;
 		cmd_pool_cache = kmem_cache_create("bch_cmd", bch_pool_size, 128, 0, NULL);
 		if (!cmd_pool_cache) {
 			printk("cvm_oct_alloc_fpa_pool(%d, %lld)\n",
 						bch_pool, bch_pool_size);
 		return -ENOMEM;
 		}
-		octeon_mem_fill_fpa3(0, cmd_pool_cache, cmd_aura, 128);
+		octeon_fpa3_mem_fill(0, cmd_pool_cache, cmd_aura, 128);
 	} else {
 		cvmx_fpa1_enable();
 

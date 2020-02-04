@@ -43,6 +43,8 @@ void arch_ftrace_update_code(int command)
  */
 static inline int in_kernel_space(unsigned long ip)
 {
+	if (IS_ENABLED(CONFIG_MAPPED_KERNEL))
+		return 1; /* For Mapped kernel everything has the kernel ABI */
 	if (ip >= (unsigned long)_stext &&
 	    ip <= (unsigned long)_etext)
 		return 1;

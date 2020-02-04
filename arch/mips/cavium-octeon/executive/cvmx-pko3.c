@@ -593,7 +593,9 @@ static int cvmx_pko_setup_macs(int node)
 		 * Non-BGX interfaces:
 		 * Each of these interfaces has a single MAC really.
 		 */
-		if (interface >= CVMX_HELPER_MAX_GMX)
+		if ((mode == CVMX_HELPER_INTERFACE_MODE_ILK) ||
+		    (mode == CVMX_HELPER_INTERFACE_MODE_NPI) ||
+		    (mode == CVMX_HELPER_INTERFACE_MODE_LOOP))
 			num_ports = 1;
 
 		for (port = 0; port < num_ports; port++) {
@@ -784,9 +786,6 @@ static int cvmx_pko_setup_macs(int node)
 		pko_ptgfx_cfg.s.size = fifo_group_cfg[fifo] ;
 		if( fifo_group_spd[fifo] >= 40 )
 			if( pko_ptgfx_cfg.s.size >= 3)
-        	if (OCTEON_IS_MODEL(OCTEON_CN78XX))
-				pko_ptgfx_cfg.s.rate = 4;	/* 100 Gbps */
-			else
 				pko_ptgfx_cfg.s.rate = 3;	/* 50 Gbps */
 			else
 				pko_ptgfx_cfg.s.rate = 2;	/* 25 Gbps */

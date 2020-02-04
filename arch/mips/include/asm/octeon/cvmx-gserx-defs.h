@@ -2473,6 +2473,105 @@ static inline uint64_t CVMX_GSERX_SCRATCH(unsigned long offset)
 #define CVMX_GSERX_SCRATCH(offset) (CVMX_ADD_IO_SEG(0x0001180090000020ull) + ((offset) & 15) * 0x1000000ull)
 #endif
 #if CVMX_ENABLE_CSR_ADDRESS_CHECKING
+static inline uint64_t CVMX_GSERX_SLICEX_CEI_6G_SR_MODE(unsigned long offset, unsigned long block_id)
+{
+	if (!(
+	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 1)) && ((block_id <= 6))))))
+		cvmx_warn("CVMX_GSERX_SLICEX_CEI_6G_SR_MODE(%lu,%lu) is invalid on this chip\n", offset, block_id);
+	return CVMX_ADD_IO_SEG(0x0001180090460268ull) + (((offset) & 1) + ((block_id) & 7) * 0x8ull) * 2097152;
+}
+#else
+#define CVMX_GSERX_SLICEX_CEI_6G_SR_MODE(offset, block_id) (CVMX_ADD_IO_SEG(0x0001180090460268ull) + (((offset) & 1) + ((block_id) & 7) * 0x8ull) * 2097152)
+#endif
+#if CVMX_ENABLE_CSR_ADDRESS_CHECKING
+static inline uint64_t CVMX_GSERX_SLICEX_KR_MODE(unsigned long offset, unsigned long block_id)
+{
+	if (!(
+	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 1)) && ((block_id <= 6))))))
+		cvmx_warn("CVMX_GSERX_SLICEX_KR_MODE(%lu,%lu) is invalid on this chip\n", offset, block_id);
+	return CVMX_ADD_IO_SEG(0x0001180090460250ull) + (((offset) & 1) + ((block_id) & 7) * 0x8ull) * 2097152;
+}
+#else
+#define CVMX_GSERX_SLICEX_KR_MODE(offset, block_id) (CVMX_ADD_IO_SEG(0x0001180090460250ull) + (((offset) & 1) + ((block_id) & 7) * 0x8ull) * 2097152)
+#endif
+#if CVMX_ENABLE_CSR_ADDRESS_CHECKING
+static inline uint64_t CVMX_GSERX_SLICEX_KX4_MODE(unsigned long offset, unsigned long block_id)
+{
+	if (!(
+	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 1)) && ((block_id <= 6))))))
+		cvmx_warn("CVMX_GSERX_SLICEX_KX4_MODE(%lu,%lu) is invalid on this chip\n", offset, block_id);
+	return CVMX_ADD_IO_SEG(0x0001180090460248ull) + (((offset) & 1) + ((block_id) & 7) * 0x8ull) * 2097152;
+}
+#else
+#define CVMX_GSERX_SLICEX_KX4_MODE(offset, block_id) (CVMX_ADD_IO_SEG(0x0001180090460248ull) + (((offset) & 1) + ((block_id) & 7) * 0x8ull) * 2097152)
+#endif
+#if CVMX_ENABLE_CSR_ADDRESS_CHECKING
+static inline uint64_t CVMX_GSERX_SLICEX_KX_MODE(unsigned long offset, unsigned long block_id)
+{
+	if (!(
+	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 1)) && ((block_id <= 6))))))
+		cvmx_warn("CVMX_GSERX_SLICEX_KX_MODE(%lu,%lu) is invalid on this chip\n", offset, block_id);
+	return CVMX_ADD_IO_SEG(0x0001180090460240ull) + (((offset) & 1) + ((block_id) & 7) * 0x8ull) * 2097152;
+}
+#else
+#define CVMX_GSERX_SLICEX_KX_MODE(offset, block_id) (CVMX_ADD_IO_SEG(0x0001180090460240ull) + (((offset) & 1) + ((block_id) & 7) * 0x8ull) * 2097152)
+#endif
+#if CVMX_ENABLE_CSR_ADDRESS_CHECKING
+static inline uint64_t CVMX_GSERX_SLICEX_PCIE1_MODE(unsigned long offset, unsigned long block_id)
+{
+	if (!(
+	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 1)) && ((block_id <= 6))))))
+		cvmx_warn("CVMX_GSERX_SLICEX_PCIE1_MODE(%lu,%lu) is invalid on this chip\n", offset, block_id);
+	return CVMX_ADD_IO_SEG(0x0001180090460228ull) + (((offset) & 1) + ((block_id) & 7) * 0x8ull) * 2097152;
+}
+#else
+#define CVMX_GSERX_SLICEX_PCIE1_MODE(offset, block_id) (CVMX_ADD_IO_SEG(0x0001180090460228ull) + (((offset) & 1) + ((block_id) & 7) * 0x8ull) * 2097152)
+#endif
+#if CVMX_ENABLE_CSR_ADDRESS_CHECKING
+static inline uint64_t CVMX_GSERX_SLICEX_PCIE2_MODE(unsigned long offset, unsigned long block_id)
+{
+	if (!(
+	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 1)) && ((block_id <= 6))))))
+		cvmx_warn("CVMX_GSERX_SLICEX_PCIE2_MODE(%lu,%lu) is invalid on this chip\n", offset, block_id);
+	return CVMX_ADD_IO_SEG(0x0001180090460230ull) + (((offset) & 1) + ((block_id) & 7) * 0x8ull) * 2097152;
+}
+#else
+#define CVMX_GSERX_SLICEX_PCIE2_MODE(offset, block_id) (CVMX_ADD_IO_SEG(0x0001180090460230ull) + (((offset) & 1) + ((block_id) & 7) * 0x8ull) * 2097152)
+#endif
+#if CVMX_ENABLE_CSR_ADDRESS_CHECKING
+static inline uint64_t CVMX_GSERX_SLICEX_PCIE3_MODE(unsigned long offset, unsigned long block_id)
+{
+	if (!(
+	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 1)) && ((block_id <= 6))))))
+		cvmx_warn("CVMX_GSERX_SLICEX_PCIE3_MODE(%lu,%lu) is invalid on this chip\n", offset, block_id);
+	return CVMX_ADD_IO_SEG(0x0001180090460238ull) + (((offset) & 1) + ((block_id) & 7) * 0x8ull) * 2097152;
+}
+#else
+#define CVMX_GSERX_SLICEX_PCIE3_MODE(offset, block_id) (CVMX_ADD_IO_SEG(0x0001180090460238ull) + (((offset) & 1) + ((block_id) & 7) * 0x8ull) * 2097152)
+#endif
+#if CVMX_ENABLE_CSR_ADDRESS_CHECKING
+static inline uint64_t CVMX_GSERX_SLICEX_QSGMII_MODE(unsigned long offset, unsigned long block_id)
+{
+	if (!(
+	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 1)) && ((block_id <= 6))))))
+		cvmx_warn("CVMX_GSERX_SLICEX_QSGMII_MODE(%lu,%lu) is invalid on this chip\n", offset, block_id);
+	return CVMX_ADD_IO_SEG(0x0001180090460260ull) + (((offset) & 1) + ((block_id) & 7) * 0x8ull) * 2097152;
+}
+#else
+#define CVMX_GSERX_SLICEX_QSGMII_MODE(offset, block_id) (CVMX_ADD_IO_SEG(0x0001180090460260ull) + (((offset) & 1) + ((block_id) & 7) * 0x8ull) * 2097152)
+#endif
+#if CVMX_ENABLE_CSR_ADDRESS_CHECKING
+static inline uint64_t CVMX_GSERX_SLICEX_RX_LDLL_CTRL(unsigned long offset, unsigned long block_id)
+{
+	if (!(
+	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 1)) && ((block_id <= 6))))))
+		cvmx_warn("CVMX_GSERX_SLICEX_RX_LDLL_CTRL(%lu,%lu) is invalid on this chip\n", offset, block_id);
+	return CVMX_ADD_IO_SEG(0x0001180090460218ull) + (((offset) & 1) + ((block_id) & 7) * 0x8ull) * 2097152;
+}
+#else
+#define CVMX_GSERX_SLICEX_RX_LDLL_CTRL(offset, block_id) (CVMX_ADD_IO_SEG(0x0001180090460218ull) + (((offset) & 1) + ((block_id) & 7) * 0x8ull) * 2097152)
+#endif
+#if CVMX_ENABLE_CSR_ADDRESS_CHECKING
 static inline uint64_t CVMX_GSERX_SLICEX_RX_SDLL_CTRL(unsigned long offset, unsigned long block_id)
 {
 	if (!(
@@ -2485,6 +2584,17 @@ static inline uint64_t CVMX_GSERX_SLICEX_RX_SDLL_CTRL(unsigned long offset, unsi
 }
 #else
 #define CVMX_GSERX_SLICEX_RX_SDLL_CTRL(offset, block_id) (CVMX_ADD_IO_SEG(0x0001180090460220ull) + (((offset) & 1) + ((block_id) & 15) * 0x8ull) * 2097152)
+#endif
+#if CVMX_ENABLE_CSR_ADDRESS_CHECKING
+static inline uint64_t CVMX_GSERX_SLICEX_SGMII_MODE(unsigned long offset, unsigned long block_id)
+{
+	if (!(
+	      (OCTEON_IS_MODEL(OCTEON_CN73XX) && (((offset <= 1)) && ((block_id <= 6))))))
+		cvmx_warn("CVMX_GSERX_SLICEX_SGMII_MODE(%lu,%lu) is invalid on this chip\n", offset, block_id);
+	return CVMX_ADD_IO_SEG(0x0001180090460258ull) + (((offset) & 1) + ((block_id) & 7) * 0x8ull) * 2097152;
+}
+#else
+#define CVMX_GSERX_SLICEX_SGMII_MODE(offset, block_id) (CVMX_ADD_IO_SEG(0x0001180090460258ull) + (((offset) & 1) + ((block_id) & 7) * 0x8ull) * 2097152)
 #endif
 #if CVMX_ENABLE_CSR_ADDRESS_CHECKING
 static inline uint64_t CVMX_GSERX_SLICE_CFG(unsigned long offset)
@@ -6735,23 +6845,16 @@ union cvmx_gserx_lanex_tx_cfg_0 {
 	uint64_t cfg_tx_swing                 : 5;  /**< TX output swing control.
                                                          Default swing encoding when GSER()_LANE()_TX_CFG_1[TX_SWING_OVRRD_EN] is
                                                          asserted.
-                                                         Recommended settings:
-                                                         When auto-negotiated link training is not present, including XFI and all
-                                                         protocols <= 6.25Gbaud except PCIe, the transmit swing should be manually
-                                                         over-ridden. GSER()_LANE()_TX_CFG_1[TX_SWING_OVRRD_EN] should be set
-                                                         and [CFG_TX_SWING] configures the swing. A transmit swing change should be
-                                                         followed by a control interface configuration over-ride to force the
-                                                         new setting - see GSER()_LANE()_PCS_CTLIFC_2[CTLIFC_OVRRD_REQ].
-                                                         [CFG_TX_SWING] should be derived from signal integrity simulations
-                                                         with the IBIS-AMI model supplied by Cavium when auto-negotiated link
-                                                         training is not present and link speed <= 6.25 Gbaud.
-                                                         <pre>
-                                                             Frequency          Possibly useful [CFG_TX_SWING] value
-                                                             --------------------------------------------------------
-                                                              6.25 Gbaud             0xa
-                                                              10.3125 Gbaud          0xd
-                                                              other                  0x7
-                                                         </pre> */
+                                                         It is recommended to not use the GSER()_LANE()_TX_CFG_0[CFG_TX_SWING],
+                                                         GSER()_LANE()_TX_CFG_1[TX_SWING_OVRRD_EN,TX_PREMPTAP_OVRRD_VAL], or
+                                                         GSER()_LANE()_TX_PRE_EMPHASIS[CFG_TX_PREMPTAP] override registers for 10BASE-KR
+                                                         or PCIe links in which the transmitter is adapted by the respective
+                                                         hardware-controlled link training protocols.
+                                                         The [CFG_TX_SWING] value for transmitter swing should be derived from
+                                                         signal integrity simulations with IBIS-AMI models supplied by Cavium.
+                                                         A transmit swing change should be followed by a control interface configuration
+                                                         over-ride to force the new setting - see
+                                                         GSER()_LANE()_PCS_CTLIFC_2[CTLIFC_OVRRD_REQ]. */
 	uint64_t fast_rdet_mode               : 1;  /**< Assert to enable fast RX detection. For simulation purposes only. */
 	uint64_t fast_tristate_mode           : 1;  /**< Assert to enable fast tristate power up. For simulation purposes only. */
 	uint64_t reserved_0_0                 : 1;
@@ -9901,6 +10004,580 @@ union cvmx_gserx_scratch {
 typedef union cvmx_gserx_scratch cvmx_gserx_scratch_t;
 
 /**
+ * cvmx_gser#_slice#_cei_6g_sr_mode
+ *
+ * These registers are for diagnostic use only.
+ * These registers are reset by hardware only during chip cold reset.
+ * The values of the CSR fields in these registers do not change during chip warm or soft resets.
+ *
+ * Slice 1 does not exist on GSER4, GSER5, or GSER6.
+ */
+union cvmx_gserx_slicex_cei_6g_sr_mode {
+	uint64_t u64;
+	struct cvmx_gserx_slicex_cei_6g_sr_mode_s {
+#ifdef __BIG_ENDIAN_BITFIELD
+	uint64_t reserved_15_63               : 49;
+	uint64_t slice_spare_1_0              : 2;  /**< Controls enable of pcs_sds_rx_div33 for lane 0 and 1 in the slice:
+                                                         Bit 13 controls enable for lane 0.
+                                                         Bit 14 controls enable for lane 1. */
+	uint64_t rx_ldll_isel                 : 2;  /**< Controls charge pump current for lane DLL:
+                                                         0x0 = 500 uA.
+                                                         0x1 = 1000 uA.
+                                                         0x2 = 250 uA.
+                                                         0x3 = 330 uA. */
+	uint64_t rx_sdll_isel                 : 2;  /**< Controls charge pump current for slice DLL:
+                                                         0x0 = 500 uA.
+                                                         0x1 = 1000 uA.
+                                                         0x2 = 250 uA.
+                                                         0x3 = 330 uA. */
+	uint64_t rx_pi_bwsel                  : 3;  /**< Controls PI different data rates:
+                                                         0x0 = 2.5 GHz.
+                                                         0x1 = 3.125 GHz.
+                                                         0x6 = 4 GHz.
+                                                         0x7 = 5.15625 GHz.
+                                                         All other values in this field are reserved. */
+	uint64_t rx_ldll_bwsel                : 3;  /**< Controls capacitors in delay line for different data rates; should be set
+                                                         based on the PLL clock frequency as follows:
+                                                         0x0 = 2.5 GHz.
+                                                         0x1 = 3.125 GHz.
+                                                         0x3 = 4 GHz.
+                                                         0x5 = 5.15625 GHz.
+                                                         0x6 = 5.65 GHz.
+                                                         0x7 = 6.25 GHz.
+                                                         All other values in this field are reserved. */
+	uint64_t rx_sdll_bwsel                : 3;  /**< Controls capacitors in delay line for different data rates; should be set
+                                                         based on the PLL clock frequency as follows:
+                                                         0x0 = 2.5 GHz.
+                                                         0x1 = 3.125 GHz.
+                                                         0x3 = 4 GHz.
+                                                         0x5 = 5.15625 GHz.
+                                                         0x6 = 5.65 GHz.
+                                                         0x7 = 6.25 GHz.
+                                                         All other values in this field are reserved. */
+#else
+	uint64_t rx_sdll_bwsel                : 3;
+	uint64_t rx_ldll_bwsel                : 3;
+	uint64_t rx_pi_bwsel                  : 3;
+	uint64_t rx_sdll_isel                 : 2;
+	uint64_t rx_ldll_isel                 : 2;
+	uint64_t slice_spare_1_0              : 2;
+	uint64_t reserved_15_63               : 49;
+#endif
+	} s;
+	struct cvmx_gserx_slicex_cei_6g_sr_mode_s cn73xx;
+};
+typedef union cvmx_gserx_slicex_cei_6g_sr_mode cvmx_gserx_slicex_cei_6g_sr_mode_t;
+
+/**
+ * cvmx_gser#_slice#_kr_mode
+ *
+ * These registers are for diagnostic use only.
+ * These registers are reset by hardware only during chip cold reset.
+ * The values of the CSR fields in these registers do not change during chip warm or soft resets.
+ *
+ * Slice 1 does not exist on GSER4, GSER5, or GSER6.
+ */
+union cvmx_gserx_slicex_kr_mode {
+	uint64_t u64;
+	struct cvmx_gserx_slicex_kr_mode_s {
+#ifdef __BIG_ENDIAN_BITFIELD
+	uint64_t reserved_15_63               : 49;
+	uint64_t slice_spare_1_0              : 2;  /**< Controls enable of pcs_sds_rx_div33 for lane 0 and 1 in the slice:
+                                                         Bit 13 controls enable for lane 0.
+                                                         Bit 14 controls enable for lane 1. */
+	uint64_t rx_ldll_isel                 : 2;  /**< Controls charge pump current for lane DLL:
+                                                         0x0 = 500 uA.
+                                                         0x1 = 1000 uA.
+                                                         0x2 = 250 uA.
+                                                         0x3 = 330 uA. */
+	uint64_t rx_sdll_isel                 : 2;  /**< Controls charge pump current for slice DLL:
+                                                         0x0 = 500 uA.
+                                                         0x1 = 1000 uA.
+                                                         0x2 = 250 uA.
+                                                         0x3 = 330 uA. */
+	uint64_t rx_pi_bwsel                  : 3;  /**< Controls PI different data rates:
+                                                         0x0 = 2.5 GHz.
+                                                         0x1 = 3.125 GHz.
+                                                         0x6 = 4 GHz.
+                                                         0x7 = 5.15625 GHz.
+                                                         All other values in this field are reserved. */
+	uint64_t rx_ldll_bwsel                : 3;  /**< Controls capacitors in delay line for different data rates; should be set
+                                                         based on the PLL clock frequency as follows:
+                                                         0x0 = 2.5 GHz.
+                                                         0x1 = 3.125 GHz.
+                                                         0x3 = 4 GHz.
+                                                         0x5 = 5.15625 GHz.
+                                                         0x6 = 5.65 GHz.
+                                                         0x7 = 6.25 GHz.
+                                                         All other values in this field are reserved. */
+	uint64_t rx_sdll_bwsel                : 3;  /**< Controls capacitors in delay line for different data rates; should be set
+                                                         based on the PLL clock frequency as follows:
+                                                         0x0 = 2.5 GHz.
+                                                         0x1 = 3.125 GHz.
+                                                         0x3 = 4 GHz.
+                                                         0x5 = 5.15625 GHz.
+                                                         0x6 = 5.65 GHz.
+                                                         0x7 = 6.25 GHz.
+                                                         All other values in this field are reserved. */
+#else
+	uint64_t rx_sdll_bwsel                : 3;
+	uint64_t rx_ldll_bwsel                : 3;
+	uint64_t rx_pi_bwsel                  : 3;
+	uint64_t rx_sdll_isel                 : 2;
+	uint64_t rx_ldll_isel                 : 2;
+	uint64_t slice_spare_1_0              : 2;
+	uint64_t reserved_15_63               : 49;
+#endif
+	} s;
+	struct cvmx_gserx_slicex_kr_mode_s    cn73xx;
+};
+typedef union cvmx_gserx_slicex_kr_mode cvmx_gserx_slicex_kr_mode_t;
+
+/**
+ * cvmx_gser#_slice#_kx4_mode
+ *
+ * These registers are for diagnostic use only.
+ * These registers are reset by hardware only during chip cold reset.
+ * The values of the CSR fields in these registers do not change during chip warm or soft resets.
+ *
+ * Slice 1 does not exist on GSER4, GSER5, or GSER6.
+ */
+union cvmx_gserx_slicex_kx4_mode {
+	uint64_t u64;
+	struct cvmx_gserx_slicex_kx4_mode_s {
+#ifdef __BIG_ENDIAN_BITFIELD
+	uint64_t reserved_15_63               : 49;
+	uint64_t slice_spare_1_0              : 2;  /**< Controls enable of pcs_sds_rx_div33 for lane 0 and 1 in the slice:
+                                                         Bit 13 controls enable for lane 0.
+                                                         Bit 14 controls enable for lane 1. */
+	uint64_t rx_ldll_isel                 : 2;  /**< Controls charge pump current for lane DLL:
+                                                         0x0 = 500 uA.
+                                                         0x1 = 1000 uA.
+                                                         0x2 = 250 uA.
+                                                         0x3 = 330 uA. */
+	uint64_t rx_sdll_isel                 : 2;  /**< Controls charge pump current for slice DLL:
+                                                         0x0 = 500 uA.
+                                                         0x1 = 1000 uA.
+                                                         0x2 = 250 uA.
+                                                         0x3 = 330 uA. */
+	uint64_t rx_pi_bwsel                  : 3;  /**< Controls PI different data rates:
+                                                         0x0 = 2.5 GHz.
+                                                         0x1 = 3.125 GHz.
+                                                         0x6 = 4 GHz.
+                                                         0x7 = 5.15625 GHz.
+                                                         All other values in this field are reserved. */
+	uint64_t rx_ldll_bwsel                : 3;  /**< Controls capacitors in delay line for different data rates; should be set
+                                                         based on the PLL clock frequency as follows:
+                                                         0x0 = 2.5 GHz.
+                                                         0x1 = 3.125 GHz.
+                                                         0x3 = 4 GHz.
+                                                         0x5 = 5.15625 GHz.
+                                                         0x6 = 5.65 GHz.
+                                                         0x7 = 6.25 GHz.
+                                                         All other values in this field are reserved. */
+	uint64_t rx_sdll_bwsel                : 3;  /**< Controls capacitors in delay line for different data rates; should be set
+                                                         based on the PLL clock frequency as follows:
+                                                         0x0 = 2.5 GHz.
+                                                         0x1 = 3.125 GHz.
+                                                         0x3 = 4 GHz.
+                                                         0x5 = 5.15625 GHz.
+                                                         0x6 = 5.65 GHz.
+                                                         0x7 = 6.25 GHz.
+                                                         All other values in this field are reserved. */
+#else
+	uint64_t rx_sdll_bwsel                : 3;
+	uint64_t rx_ldll_bwsel                : 3;
+	uint64_t rx_pi_bwsel                  : 3;
+	uint64_t rx_sdll_isel                 : 2;
+	uint64_t rx_ldll_isel                 : 2;
+	uint64_t slice_spare_1_0              : 2;
+	uint64_t reserved_15_63               : 49;
+#endif
+	} s;
+	struct cvmx_gserx_slicex_kx4_mode_s   cn73xx;
+};
+typedef union cvmx_gserx_slicex_kx4_mode cvmx_gserx_slicex_kx4_mode_t;
+
+/**
+ * cvmx_gser#_slice#_kx_mode
+ *
+ * These registers are for diagnostic use only.
+ * These registers are reset by hardware only during chip cold reset.
+ * The values of the CSR fields in these registers do not change during chip warm or soft resets.
+ *
+ * Slice 1 does not exist on GSER4, GSER5, or GSER6.
+ */
+union cvmx_gserx_slicex_kx_mode {
+	uint64_t u64;
+	struct cvmx_gserx_slicex_kx_mode_s {
+#ifdef __BIG_ENDIAN_BITFIELD
+	uint64_t reserved_15_63               : 49;
+	uint64_t slice_spare_1_0              : 2;  /**< Controls enable of pcs_sds_rx_div33 for lane 0 and 1 in the slice:
+                                                         Bit 13 controls enable for lane 0.
+                                                         Bit 14 controls enable for lane 1. */
+	uint64_t rx_ldll_isel                 : 2;  /**< Controls charge pump current for lane DLL:
+                                                         0x0 = 500 uA.
+                                                         0x1 = 1000 uA.
+                                                         0x2 = 250 uA.
+                                                         0x3 = 330 uA. */
+	uint64_t rx_sdll_isel                 : 2;  /**< Controls charge pump current for slice DLL:
+                                                         0x0 = 500 uA.
+                                                         0x1 = 1000 uA.
+                                                         0x2 = 250 uA.
+                                                         0x3 = 330 uA. */
+	uint64_t rx_pi_bwsel                  : 3;  /**< Controls PI different data rates:
+                                                         0x0 = 2.5 GHz.
+                                                         0x1 = 3.125 GHz.
+                                                         0x6 = 4 GHz.
+                                                         0x7 = 5.15625 GHz.
+                                                         All other values in this field are reserved. */
+	uint64_t rx_ldll_bwsel                : 3;  /**< Controls capacitors in delay line for different data rates; should be set
+                                                         based on the PLL clock frequency as follows:
+                                                         0x0 = 2.5 GHz.
+                                                         0x1 = 3.125 GHz.
+                                                         0x3 = 4 GHz.
+                                                         0x5 = 5.15625 GHz.
+                                                         0x6 = 5.65 GHz.
+                                                         0x7 = 6.25 GHz.
+                                                         All other values in this field are reserved. */
+	uint64_t rx_sdll_bwsel                : 3;  /**< Controls capacitors in delay line for different data rates; should be set
+                                                         based on the PLL clock frequency as follows:
+                                                         0x0 = 2.5 GHz.
+                                                         0x1 = 3.125 GHz.
+                                                         0x3 = 4 GHz.
+                                                         0x5 = 5.15625 GHz.
+                                                         0x6 = 5.65 GHz.
+                                                         0x7 = 6.25 GHz.
+                                                         All other values in this field are reserved. */
+#else
+	uint64_t rx_sdll_bwsel                : 3;
+	uint64_t rx_ldll_bwsel                : 3;
+	uint64_t rx_pi_bwsel                  : 3;
+	uint64_t rx_sdll_isel                 : 2;
+	uint64_t rx_ldll_isel                 : 2;
+	uint64_t slice_spare_1_0              : 2;
+	uint64_t reserved_15_63               : 49;
+#endif
+	} s;
+	struct cvmx_gserx_slicex_kx_mode_s    cn73xx;
+};
+typedef union cvmx_gserx_slicex_kx_mode cvmx_gserx_slicex_kx_mode_t;
+
+/**
+ * cvmx_gser#_slice#_pcie1_mode
+ *
+ * These registers are for diagnostic use only.
+ * These registers are reset by hardware only during chip cold reset.
+ * The values of the CSR fields in these registers do not change during chip warm or soft resets.
+ *
+ * Slice 1 does not exist on GSER4, GSER5, or GSER6.
+ */
+union cvmx_gserx_slicex_pcie1_mode {
+	uint64_t u64;
+	struct cvmx_gserx_slicex_pcie1_mode_s {
+#ifdef __BIG_ENDIAN_BITFIELD
+	uint64_t reserved_15_63               : 49;
+	uint64_t slice_spare_1_0              : 2;  /**< Controls enable of pcs_sds_rx_div33 for lane 0 and 1 in the slice:
+                                                         Bit 13 controls enable for lane 0.
+                                                         Bit 14 controls enable for lane 1. */
+	uint64_t rx_ldll_isel                 : 2;  /**< Controls charge pump current for lane DLL:
+                                                         0x0 = 500 uA.
+                                                         0x1 = 1000 uA.
+                                                         0x2 = 250 uA.
+                                                         0x3 = 330 uA. */
+	uint64_t rx_sdll_isel                 : 2;  /**< Controls charge pump current for slice DLL:
+                                                         0x0 = 500 uA.
+                                                         0x1 = 1000 uA.
+                                                         0x2 = 250 uA.
+                                                         0x3 = 330 uA. */
+	uint64_t rx_pi_bwsel                  : 3;  /**< Controls PI different data rates:
+                                                         0x0 = 2.5 GHz.
+                                                         0x1 = 3.125 GHz.
+                                                         0x6 = 4 GHz.
+                                                         0x7 = 5.15625 GHz.
+                                                         All other values in this field are reserved.
+                                                         In SATA Mode program RX_PI_BWSEL = 0x1. */
+	uint64_t rx_ldll_bwsel                : 3;  /**< Controls capacitors in delay line for different data rates; should be set
+                                                         based on the PLL clock frequency as follows:
+                                                         0x0 = 2.5 GHz.
+                                                         0x1 = 3.125 GHz.
+                                                         0x3 = 4 GHz.
+                                                         0x5 = 5.15625 GHz.
+                                                         0x6 = 5.65 GHz.
+                                                         0x7 = 6.25 GHz.
+                                                         All other values in this field are reserved.
+                                                         In SATA Mode program RX_LDLL_BWSEL = 0x1. */
+	uint64_t rx_sdll_bwsel                : 3;  /**< Controls capacitors in delay line for different data rates; should be set
+                                                         based on the PLL clock frequency as follows:
+                                                         0x0 = 2.5 GHz.
+                                                         0x1 = 3.125 GHz.
+                                                         0x3 = 4 GHz.
+                                                         0x5 = 5.15625 GHz.
+                                                         0x6 = 5.65 GHz.
+                                                         0x7 = 6.25 GHz.
+                                                         All other values in this field are reserved.
+                                                         In SATA Mode program RX_SDLL_BWSEL = 0x1. */
+#else
+	uint64_t rx_sdll_bwsel                : 3;
+	uint64_t rx_ldll_bwsel                : 3;
+	uint64_t rx_pi_bwsel                  : 3;
+	uint64_t rx_sdll_isel                 : 2;
+	uint64_t rx_ldll_isel                 : 2;
+	uint64_t slice_spare_1_0              : 2;
+	uint64_t reserved_15_63               : 49;
+#endif
+	} s;
+	struct cvmx_gserx_slicex_pcie1_mode_s cn73xx;
+};
+typedef union cvmx_gserx_slicex_pcie1_mode cvmx_gserx_slicex_pcie1_mode_t;
+
+/**
+ * cvmx_gser#_slice#_pcie2_mode
+ *
+ * These registers are for diagnostic use only.
+ * These registers are reset by hardware only during chip cold reset.
+ * The values of the CSR fields in these registers do not change during chip warm or soft resets.
+ *
+ * Slice 1 does not exist on GSER4, GSER5, or GSER6.
+ */
+union cvmx_gserx_slicex_pcie2_mode {
+	uint64_t u64;
+	struct cvmx_gserx_slicex_pcie2_mode_s {
+#ifdef __BIG_ENDIAN_BITFIELD
+	uint64_t reserved_15_63               : 49;
+	uint64_t slice_spare_1_0              : 2;  /**< Controls enable of pcs_sds_rx_div33 for lane 0 and 1 in the slice:
+                                                         Bit 13 controls enable for lane 0.
+                                                         Bit 14 controls enable for lane 1. */
+	uint64_t rx_ldll_isel                 : 2;  /**< Controls charge pump current for lane DLL:
+                                                         0x0 = 500 uA.
+                                                         0x1 = 1000 uA.
+                                                         0x2 = 250 uA.
+                                                         0x3 = 330 uA. */
+	uint64_t rx_sdll_isel                 : 2;  /**< Controls charge pump current for slice DLL:
+                                                         0x0 = 500 uA.
+                                                         0x1 = 1000 uA.
+                                                         0x2 = 250 uA.
+                                                         0x3 = 330 uA. */
+	uint64_t rx_pi_bwsel                  : 3;  /**< Controls PI different data rates:
+                                                         0x0 = 2.5 GHz.
+                                                         0x1 = 3.125 GHz.
+                                                         0x6 = 4 GHz.
+                                                         0x7 = 5.15625 GHz.
+                                                         All other values in this field are reserved.
+                                                         In SATA Mode program RX_PI_BWSEL = 0x1. */
+	uint64_t rx_ldll_bwsel                : 3;  /**< Controls capacitors in delay line for different data rates; should be set
+                                                         based on the PLL clock frequency as follows:
+                                                         0x0 = 2.5 GHz.
+                                                         0x1 = 3.125 GHz.
+                                                         0x3 = 4 GHz.
+                                                         0x5 = 5.15625 GHz.
+                                                         0x6 = 5.65 GHz.
+                                                         0x7 = 6.25 GHz.
+                                                         All other values in this field are reserved.
+                                                         In SATA Mode program RX_LDLL_BWSEL = 0x1. */
+	uint64_t rx_sdll_bwsel                : 3;  /**< Controls capacitors in delay line for different data rates; should be set
+                                                         based on the PLL clock frequency as follows:
+                                                         0x0 = 2.5 GHz.
+                                                         0x1 = 3.125 GHz.
+                                                         0x3 = 4 GHz.
+                                                         0x5 = 5.15625 GHz.
+                                                         0x6 = 5.65 GHz.
+                                                         0x7 = 6.25 GHz.
+                                                         All other values in this field are reserved.
+                                                         In SATA Mode program RX_SDLL_BWSEL = 0x1. */
+#else
+	uint64_t rx_sdll_bwsel                : 3;
+	uint64_t rx_ldll_bwsel                : 3;
+	uint64_t rx_pi_bwsel                  : 3;
+	uint64_t rx_sdll_isel                 : 2;
+	uint64_t rx_ldll_isel                 : 2;
+	uint64_t slice_spare_1_0              : 2;
+	uint64_t reserved_15_63               : 49;
+#endif
+	} s;
+	struct cvmx_gserx_slicex_pcie2_mode_s cn73xx;
+};
+typedef union cvmx_gserx_slicex_pcie2_mode cvmx_gserx_slicex_pcie2_mode_t;
+
+/**
+ * cvmx_gser#_slice#_pcie3_mode
+ *
+ * These registers are for diagnostic use only.
+ * These registers are reset by hardware only during chip cold reset.
+ * The values of the CSR fields in these registers do not change during chip warm or soft resets.
+ *
+ * Slice 1 does not exist on GSER4, GSER5, or GSER6.
+ */
+union cvmx_gserx_slicex_pcie3_mode {
+	uint64_t u64;
+	struct cvmx_gserx_slicex_pcie3_mode_s {
+#ifdef __BIG_ENDIAN_BITFIELD
+	uint64_t reserved_15_63               : 49;
+	uint64_t slice_spare_1_0              : 2;  /**< Controls enable of pcs_sds_rx_div33 for lane 0 and 1 in the slice:
+                                                         Bit 13 controls enable for lane 0.
+                                                         Bit 14 controls enable for lane 1. */
+	uint64_t rx_ldll_isel                 : 2;  /**< Controls charge pump current for lane DLL:
+                                                         0x0 = 500 uA.
+                                                         0x1 = 1000 uA.
+                                                         0x2 = 250 uA.
+                                                         0x3 = 330 uA. */
+	uint64_t rx_sdll_isel                 : 2;  /**< Controls charge pump current for slice DLL:
+                                                         0x0 = 500 uA.
+                                                         0x1 = 1000 uA.
+                                                         0x2 = 250 uA.
+                                                         0x3 = 330 uA. */
+	uint64_t rx_pi_bwsel                  : 3;  /**< Controls PI different data rates:
+                                                         0x0 = 2.5 GHz.
+                                                         0x1 = 3.125 GHz.
+                                                         0x6 = 4 GHz.
+                                                         0x7 = 5.15625 GHz.
+                                                         All other values in this field are reserved.
+                                                         In SATA Mode program RX_PI_BWSEL = 0x1. */
+	uint64_t rx_ldll_bwsel                : 3;  /**< Controls capacitors in delay line for different data rates; should be set
+                                                         based on the PLL clock frequency as follows:
+                                                         0x0 = 2.5 GHz.
+                                                         0x1 = 3.125 GHz.
+                                                         0x3 = 4 GHz.
+                                                         0x5 = 5.15625 GHz.
+                                                         0x6 = 5.65 GHz.
+                                                         0x7 = 6.25 GHz.
+                                                         All other values in this field are reserved.
+                                                         In SATA Mode program RX_LDLL_BWSEL = 0x1. */
+	uint64_t rx_sdll_bwsel                : 3;  /**< Controls capacitors in delay line for different data rates; should be set
+                                                         based on the PLL clock frequency as follows:
+                                                         0x0 = 2.5 GHz.
+                                                         0x1 = 3.125 GHz.
+                                                         0x3 = 4 GHz.
+                                                         0x5 = 5.15625 GHz.
+                                                         0x6 = 5.65 GHz.
+                                                         0x7 = 6.25 GHz.
+                                                         All other values in this field are reserved.
+                                                         In SATA Mode program RX_SDLL_BWSEL = 0x1. */
+#else
+	uint64_t rx_sdll_bwsel                : 3;
+	uint64_t rx_ldll_bwsel                : 3;
+	uint64_t rx_pi_bwsel                  : 3;
+	uint64_t rx_sdll_isel                 : 2;
+	uint64_t rx_ldll_isel                 : 2;
+	uint64_t slice_spare_1_0              : 2;
+	uint64_t reserved_15_63               : 49;
+#endif
+	} s;
+	struct cvmx_gserx_slicex_pcie3_mode_s cn73xx;
+};
+typedef union cvmx_gserx_slicex_pcie3_mode cvmx_gserx_slicex_pcie3_mode_t;
+
+/**
+ * cvmx_gser#_slice#_qsgmii_mode
+ *
+ * These registers are for diagnostic use only.
+ * These registers are reset by hardware only during chip cold reset.
+ * The values of the CSR fields in these registers do not change during chip warm or soft resets.
+ *
+ * Slice 1 does not exist on GSER4, GSER5, or GSER6.
+ */
+union cvmx_gserx_slicex_qsgmii_mode {
+	uint64_t u64;
+	struct cvmx_gserx_slicex_qsgmii_mode_s {
+#ifdef __BIG_ENDIAN_BITFIELD
+	uint64_t reserved_15_63               : 49;
+	uint64_t slice_spare_1_0              : 2;  /**< Controls enable of pcs_sds_rx_div33 for lane 0 and 1 in the slice:
+                                                         Bit 13 controls enable for lane 0.
+                                                         Bit 14 controls enable for lane 1. */
+	uint64_t rx_ldll_isel                 : 2;  /**< Controls charge pump current for lane DLL:
+                                                         0x0 = 500 uA.
+                                                         0x1 = 1000 uA.
+                                                         0x2 = 250 uA.
+                                                         0x3 = 330 uA. */
+	uint64_t rx_sdll_isel                 : 2;  /**< Controls charge pump current for slice DLL:
+                                                         0x0 = 500 uA.
+                                                         0x1 = 1000 uA.
+                                                         0x2 = 250 uA.
+                                                         0x3 = 330 uA. */
+	uint64_t rx_pi_bwsel                  : 3;  /**< Controls PI different data rates:
+                                                         0x0 = 2.5 GHz.
+                                                         0x1 = 3.125 GHz.
+                                                         0x6 = 4 GHz.
+                                                         0x7 = 5.15625 GHz.
+                                                         All other values in this field are reserved. */
+	uint64_t rx_ldll_bwsel                : 3;  /**< Controls capacitors in delay line for different data rates; should be set
+                                                         based on the PLL clock frequency as follows:
+                                                         0x0 = 2.5 GHz.
+                                                         0x1 = 3.125 GHz.
+                                                         0x3 = 4 GHz.
+                                                         0x5 = 5.15625 GHz.
+                                                         0x6 = 5.65 GHz.
+                                                         0x7 = 6.25 GHz.
+                                                         All other values in this field are reserved. */
+	uint64_t rx_sdll_bwsel                : 3;  /**< Controls capacitors in delay line for different data rates; should be set
+                                                         based on the PLL clock frequency as follows:
+                                                         0x0 = 2.5 GHz.
+                                                         0x1 = 3.125 GHz.
+                                                         0x3 = 4 GHz.
+                                                         0x5 = 5.15625 GHz.
+                                                         0x6 = 5.65 GHz.
+                                                         0x7 = 6.25 GHz.
+                                                         All other values in this field are reserved. */
+#else
+	uint64_t rx_sdll_bwsel                : 3;
+	uint64_t rx_ldll_bwsel                : 3;
+	uint64_t rx_pi_bwsel                  : 3;
+	uint64_t rx_sdll_isel                 : 2;
+	uint64_t rx_ldll_isel                 : 2;
+	uint64_t slice_spare_1_0              : 2;
+	uint64_t reserved_15_63               : 49;
+#endif
+	} s;
+	struct cvmx_gserx_slicex_qsgmii_mode_s cn73xx;
+};
+typedef union cvmx_gserx_slicex_qsgmii_mode cvmx_gserx_slicex_qsgmii_mode_t;
+
+/**
+ * cvmx_gser#_slice#_rx_ldll_ctrl
+ *
+ * These registers are for diagnostic use only.
+ * These registers are reset by hardware only during chip cold reset.
+ * The values of the CSR fields in these registers do not change during chip warm or soft resets.
+ *
+ * Slice 1 does not exist on GSER4, GSER5, or GSER6.
+ */
+union cvmx_gserx_slicex_rx_ldll_ctrl {
+	uint64_t u64;
+	struct cvmx_gserx_slicex_rx_ldll_ctrl_s {
+#ifdef __BIG_ENDIAN_BITFIELD
+	uint64_t reserved_8_63                : 56;
+	uint64_t pcs_sds_rx_ldll_tune         : 3;  /**< Tuning bits for the regulator and loop filter.
+                                                         Bit 7 controls the initial value of the regulator output,
+                                                         0 for 0.9V and 1 for 0.925V.
+                                                         Bits 6:5 are connected to the loop filter, to reduce
+                                                         its corner frequency (for testing purposes).
+                                                         This parameter is for debugging purposes and should not
+                                                         be written in normal operation. */
+	uint64_t pcs_sds_rx_ldll_swsel        : 4;  /**< DMON control, selects which signal is passed to the output
+                                                         of DMON:
+                                                         0x8 = vdda_int
+                                                         0x4 = pi clock (output of the PI)
+                                                         0x2 = dllout[1] (second output clock phase, out of 4 phases,
+                                                               of the Lane DLL)
+                                                         0x1 = dllout[0] (first output clock phase, out of 4 phases,
+                                                               of the Lane DLL).  Ensure that
+                                                               GSER()_SLICE_RX_SDLL_CTRL[PCS_SDS_RX_SDLL_SWSEL]=0x0 during
+                                                               this test.
+                                                         This parameter is for debugging purposes and should not
+                                                         be written in normal operation. */
+	uint64_t reserved_0_0                 : 1;
+#else
+	uint64_t reserved_0_0                 : 1;
+	uint64_t pcs_sds_rx_ldll_swsel        : 4;
+	uint64_t pcs_sds_rx_ldll_tune         : 3;
+	uint64_t reserved_8_63                : 56;
+#endif
+	} s;
+	struct cvmx_gserx_slicex_rx_ldll_ctrl_s cn73xx;
+};
+typedef union cvmx_gserx_slicex_rx_ldll_ctrl cvmx_gserx_slicex_rx_ldll_ctrl_t;
+
+/**
  * cvmx_gser#_slice#_rx_sdll_ctrl
  *
  * These registers are for diagnostic use only.
@@ -9974,6 +10651,71 @@ union cvmx_gserx_slicex_rx_sdll_ctrl {
 	struct cvmx_gserx_slicex_rx_sdll_ctrl_cn73xx cnf75xx;
 };
 typedef union cvmx_gserx_slicex_rx_sdll_ctrl cvmx_gserx_slicex_rx_sdll_ctrl_t;
+
+/**
+ * cvmx_gser#_slice#_sgmii_mode
+ *
+ * These registers are for diagnostic use only.
+ * These registers are reset by hardware only during chip cold reset.
+ * The values of the CSR fields in these registers do not change during chip warm or soft resets.
+ *
+ * Slice 1 does not exist on GSER4, GSER5, or GSER6.
+ */
+union cvmx_gserx_slicex_sgmii_mode {
+	uint64_t u64;
+	struct cvmx_gserx_slicex_sgmii_mode_s {
+#ifdef __BIG_ENDIAN_BITFIELD
+	uint64_t reserved_15_63               : 49;
+	uint64_t slice_spare_1_0              : 2;  /**< Controls enable of pcs_sds_rx_div33 for lane 0 and 1 in the slice:
+                                                         Bit 13 controls enable for lane 0.
+                                                         Bit 14 controls enable for lane 1. */
+	uint64_t rx_ldll_isel                 : 2;  /**< Controls charge pump current for lane DLL:
+                                                         0x0 = 500 uA.
+                                                         0x1 = 1000 uA.
+                                                         0x2 = 250 uA.
+                                                         0x3 = 330 uA. */
+	uint64_t rx_sdll_isel                 : 2;  /**< Controls charge pump current for slice DLL:
+                                                         0x0 = 500 uA.
+                                                         0x1 = 1000 uA.
+                                                         0x2 = 250 uA.
+                                                         0x3 = 330 uA. */
+	uint64_t rx_pi_bwsel                  : 3;  /**< Controls PI different data rates:
+                                                         0x0 = 2.5 GHz.
+                                                         0x1 = 3.125 GHz.
+                                                         0x6 = 4 GHz.
+                                                         0x7 = 5.15625 GHz.
+                                                         All other values in this field are reserved. */
+	uint64_t rx_ldll_bwsel                : 3;  /**< Controls capacitors in delay line for different data rates; should be set
+                                                         based on the PLL clock frequency as follows:
+                                                         0x0 = 2.5 GHz.
+                                                         0x1 = 3.125 GHz.
+                                                         0x3 = 4 GHz.
+                                                         0x5 = 5.15625 GHz.
+                                                         0x6 = 5.65 GHz.
+                                                         0x7 = 6.25 GHz.
+                                                         All other values in this field are reserved. */
+	uint64_t rx_sdll_bwsel                : 3;  /**< Controls capacitors in delay line for different data rates; should be set
+                                                         based on the PLL clock frequency as follows:
+                                                         0x0 = 2.5 GHz.
+                                                         0x1 = 3.125 GHz.
+                                                         0x3 = 4 GHz.
+                                                         0x5 = 5.15625 GHz.
+                                                         0x6 = 5.65 GHz.
+                                                         0x7 = 6.25 GHz.
+                                                         All other values in this field are reserved. */
+#else
+	uint64_t rx_sdll_bwsel                : 3;
+	uint64_t rx_ldll_bwsel                : 3;
+	uint64_t rx_pi_bwsel                  : 3;
+	uint64_t rx_sdll_isel                 : 2;
+	uint64_t rx_ldll_isel                 : 2;
+	uint64_t slice_spare_1_0              : 2;
+	uint64_t reserved_15_63               : 49;
+#endif
+	} s;
+	struct cvmx_gserx_slicex_sgmii_mode_s cn73xx;
+};
+typedef union cvmx_gserx_slicex_sgmii_mode cvmx_gserx_slicex_sgmii_mode_t;
 
 /**
  * cvmx_gser#_slice_cfg

@@ -65,24 +65,24 @@
 #endif
 
 /* Enable this define to see BGX error messages */
-//#define DEBUG_BGX
+/*#define DEBUG_BGX */
 
 /* Enable this variable to trace functions called for initializing BGX */
 static const int debug = 0;
 
-/*
- * cvmx_helper_bgx_override_autoneg(int xiface) is a function pointer
- * to override enabling/disabling of autonegotiation for 10G-KR or 40G-KR4
+/**
+ * cvmx_helper_bgx_override_autoneg(int xiface, int index) is a function pointer
+ * to override enabling/disabling of autonegotiation for SGMII, 10G-KR or 40G-KR4
  * interfaces. This function is called when interface is initialized.
  */
-CVMX_SHARED int(*cvmx_helper_bgx_override_autoneg)(int xiface) = NULL;
+CVMX_SHARED int(*cvmx_helper_bgx_override_autoneg)(int xiface, int index) = NULL;
 
 /*
  * cvmx_helper_bgx_override_fec(int xiface) is a function pointer
  * to override enabling/disabling of FEC for 10G interfaces. This function
  * is called when interface is initialized.
  */
-CVMX_SHARED int(*cvmx_helper_bgx_override_fec)(int xiface) = NULL;
+CVMX_SHARED int(*cvmx_helper_bgx_override_fec)(int xiface, int index) = NULL;
 
 /**
  * Delay after enabling an interface based on the mode.  Different modes take
@@ -114,6 +114,7 @@ __cvmx_helper_bgx_interface_enable_delay(cvmx_helper_interface_mode_t mode)
 		break;
 	}
 }
+EXPORT_SYMBOL(cvmx_helper_bgx_get_mode);
 
 /**
  * @INTERNAL
@@ -612,6 +613,7 @@ static int __cvmx_helper_bgx_sgmii_hardware_init_link(int xiface, int index)
 	struct cvmx_xiface xi = cvmx_helper_xiface_to_node_interface(xiface);
 	int interface = xi.interface;
 	int node = xi.node;
+	int autoneg = 0;
 
 	if (!cvmx_helper_is_port_valid(xiface, index))
 		return 0;
@@ -637,22 +639,20 @@ static int __cvmx_helper_bgx_sgmii_hardware_init_link(int xiface, int index)
 
 	cmr_config.u64 = cvmx_read_csr_node(node, CVMX_BGXX_CMRX_CONFIG(index, xi.interface));
 
-	if (cvmx_helper_get_port_phy_present(xiface, index)) {
-	/* Write GMP_PCS_MR*_CONTROL[RST_AN]=1 to ensure a fresh SGMII
-	   negotiation starts. */
 	gmp_control.u64 = cvmx_read_csr_node(node, CVMX_BGXX_GMP_PCS_MRX_CONTROL(index, xi.interface));
-	gmp_control.s.rst_an = 1;
-	gmp_control.s.an_en = (cmr_config.s.lmac_type != 5);
+	if (cvmx_helper_get_port_phy_present(xiface, index)) {
 	gmp_control.s.pwr_dn = 0;
-		cvmx_write_csr_node(node, CVMX_BGXX_GMP_PCS_MRX_CONTROL(index, xi.interface), gmp_control.u64);
 	} else {
-		gmp_control.u64 = cvmx_read_csr_node(node, CVMX_BGXX_GMP_PCS_MRX_CONTROL(index, xi.interface));
 		gmp_control.s.spdmsb = 1;
 		gmp_control.s.spdlsb = 0;
-		gmp_control.s.an_en = 0;
 		gmp_control.s.pwr_dn = 0;
-		cvmx_write_csr_node(node, CVMX_BGXX_GMP_PCS_MRX_CONTROL(index, xi.interface), gmp_control.u64);
 	}
+	/* Write GMP_PCS_MR*_CONTROL[RST_AN]=1 to ensure a fresh SGMII
+	   negotiation starts. */
+	autoneg = cvmx_helper_get_port_autonegotiation(xiface, index);
+	gmp_control.s.rst_an = 1;
+	gmp_control.s.an_en = (cmr_config.s.lmac_type != 5) && autoneg;
+	cvmx_write_csr_node(node, CVMX_BGXX_GMP_PCS_MRX_CONTROL(index, xi.interface), gmp_control.u64);
 
 	phy_mode = cvmx_helper_get_mac_phy_mode(xiface, index);
 	mode_1000x = cvmx_helper_get_1000x_mode(xiface, index);
@@ -662,7 +662,7 @@ static int __cvmx_helper_bgx_sgmii_hardware_init_link(int xiface, int index)
 	gmp_misc_ctl.s.mode = mode_1000x;
 	cvmx_write_csr_node(node, CVMX_BGXX_GMP_PCS_MISCX_CTL(index, xi.interface), gmp_misc_ctl.u64);
 
-	if (phy_mode)
+	if (phy_mode || !autoneg)
 		/* In PHY mode we can't query the link status so we just
 		   assume that the link is up */
 		return 0;
@@ -804,6 +804,170 @@ static int __cvmx_helper_bgx_sgmii_hardware_init_link_speed(int xiface,
 	cmr_config.s.data_pkt_rx_en = 1;
 	cvmx_write_csr_node(node, CVMX_BGXX_CMRX_CONFIG(index, xi.interface),
 			    cmr_config.u64);
+
+	return 0;
+}
+
+/**
+ * Enables or disables forward error correction
+ *
+ * @param	xiface	interface
+ * @param	index	port index
+ * @param	enable	set to true to enable FEC, false to disable
+ *
+ * @return	0 for success, -1 on error
+ *
+ * @NOTE:	If autonegotiation is enabled then autonegotiation will be
+ *		restarted for negotiating FEC.
+ */
+int cvmx_helper_set_fec(int xiface, int index, bool enable)
+{
+	cvmx_bgxx_spux_fec_control_t spu_fec_control;
+	struct cvmx_xiface xi = cvmx_helper_xiface_to_node_interface(xiface);
+	int interface = xi.interface;
+	int node = xi.node;
+	cvmx_helper_interface_mode_t mode;
+
+	if (debug)
+		cvmx_dprintf("%s: interface: %u:%d/%d: %sable\n",
+			     __func__, interface, node, index,
+	       enable ? "en" : "dis");
+	if (cvmx_sysinfo_get()->board_type == CVMX_BOARD_TYPE_SIM)
+		return 0;
+
+	mode = cvmx_helper_bgx_get_mode(xiface, index);
+
+	/* FEC is only supported for KR mode and XLAUI*/
+	if (mode != CVMX_HELPER_INTERFACE_MODE_10G_KR &&
+	    mode != CVMX_HELPER_INTERFACE_MODE_40G_KR4 &&
+	    mode != CVMX_HELPER_INTERFACE_MODE_XLAUI &&
+	    mode != CVMX_HELPER_INTERFACE_MODE_XFI)
+		return 0;
+
+	spu_fec_control.u64 =
+		cvmx_read_csr_node(node,
+				   CVMX_BGXX_SPUX_FEC_CONTROL(index, interface));
+
+	spu_fec_control.s.fec_en = enable;
+	cvmx_write_csr_node(node, CVMX_BGXX_SPUX_FEC_CONTROL(index, interface),
+			    spu_fec_control.u64);
+
+	cvmx_helper_set_port_fec(xiface, index, enable);
+
+	if (cvmx_helper_get_port_autonegotiation(xiface, index))
+		return cvmx_helper_set_autonegotiation(xiface, index, true);
+	else
+		return 0;
+}
+
+/**
+ * Enables or disables autonegotiation for an interface.
+ *
+ * @param	xiface	interface to set autonegotiation
+ * @param	index	port index
+ * @param	enable	true to enable autonegotiation, false to disable it
+ *
+ * @return	0 for success, -1 on error.
+ */
+int cvmx_helper_set_autonegotiation(int xiface, int index, bool enable)
+{
+	union cvmx_bgxx_gmp_pcs_mrx_control gmp_control;
+	union cvmx_bgxx_spux_an_control spu_an_control;
+	union cvmx_bgxx_spux_an_adv spu_an_adv;
+	union cvmx_bgxx_spux_fec_control spu_fec_control;
+	struct cvmx_xiface xi = cvmx_helper_xiface_to_node_interface(xiface);
+	int interface = xi.interface;
+	int node = xi.node;
+	cvmx_helper_interface_mode_t mode;
+
+	if (debug)
+		cvmx_dprintf("%s: interface: %u:%d/%d: %sable\n",
+			     __func__, interface, node, index,
+			     enable ? "en" : "dis");
+	if (cvmx_sysinfo_get()->board_type == CVMX_BOARD_TYPE_SIM)
+		return 0;
+
+	mode = cvmx_helper_bgx_get_mode(xiface, index);
+
+	switch (mode) {
+	case CVMX_HELPER_INTERFACE_MODE_RGMII:
+		enable = false;
+	case CVMX_HELPER_INTERFACE_MODE_SGMII:
+		gmp_control.u64 =
+			cvmx_read_csr_node(node,
+					   CVMX_BGXX_GMP_PCS_MRX_CONTROL(index,
+									 interface));
+		gmp_control.s.an_en = enable;
+		gmp_control.s.rst_an = enable;
+		cvmx_write_csr_node(node,
+				    CVMX_BGXX_GMP_PCS_MRX_CONTROL(index, interface),
+				    gmp_control.u64);
+		if (enable &&
+		    CVMX_WAIT_FOR_FIELD64_NODE(node,
+					       CVMX_BGXX_GMP_PCS_MRX_STATUS(index,
+									    interface),
+					       cvmx_bgxx_gmp_pcs_mrx_status_t,
+					       an_cpt, ==, 1, 10000)) {
+			cvmx_dprintf("SGMII%d: Port %d link timeout\n",
+				     interface, index);
+			return -1;
+		}
+		break;
+	case CVMX_HELPER_INTERFACE_MODE_XAUI:
+	case CVMX_HELPER_INTERFACE_MODE_XFI:
+	case CVMX_HELPER_INTERFACE_MODE_10G_KR:
+	case CVMX_HELPER_INTERFACE_MODE_XLAUI:
+	case CVMX_HELPER_INTERFACE_MODE_40G_KR4:
+		spu_an_adv.u64 =
+		cvmx_read_csr_node(node,
+				   CVMX_BGXX_SPUX_AN_ADV(index, interface));
+		spu_an_adv.s.fec_req = spu_fec_control.s.fec_en;
+		spu_an_adv.s.fec_able = 1;
+		spu_an_adv.s.a100g_cr10 = 0;
+		spu_an_adv.s.a40g_cr4 = 0;
+		spu_an_adv.s.a40g_kr4 =
+				(mode == CVMX_HELPER_INTERFACE_MODE_40G_KR4);
+		spu_an_adv.s.a10g_kr =
+				(mode == CVMX_HELPER_INTERFACE_MODE_10G_KR);
+		spu_an_adv.s.a10g_kx4 = 0;
+		spu_an_adv.s.a1g_kx = 0;
+		spu_an_adv.s.xnp_able = 0;
+		spu_an_adv.s.rf = 0;
+		cvmx_write_csr_node(node,
+				    CVMX_BGXX_SPUX_AN_ADV(index, interface),
+				    spu_an_adv.u64);
+		spu_fec_control.u64 =
+			cvmx_read_csr_node(node,
+					   CVMX_BGXX_SPUX_FEC_CONTROL(index,
+								      interface));
+		spu_an_control.u64 =
+			cvmx_read_csr_node(node,
+					   CVMX_BGXX_SPUX_AN_CONTROL(index,
+								     interface));
+		spu_an_control.s.an_en = enable;
+		spu_an_control.s.xnp_en = 0;
+		spu_an_control.s.an_restart = enable;
+		cvmx_write_csr_node(node,
+				    CVMX_BGXX_SPUX_AN_CONTROL(index, interface),
+				    spu_an_control.u64);
+
+		if (enable &&
+		    CVMX_WAIT_FOR_FIELD64_NODE(node,
+					       CVMX_BGXX_SPUX_AN_STATUS(index,
+									interface),
+					       cvmx_bgxx_spux_an_status_t,
+					       an_complete, ==, 1, 10000)) {
+			cvmx_dprintf("XAUI/XLAUI/XFI%d: Port %d link timeout\n",
+				     interface, index);
+			return -1;
+		}
+		break;
+	default:
+		break;
+	}
+
+	cvmx_helper_set_port_autonegotiation(xiface, index, enable);
+
 
 	return 0;
 }
@@ -1082,9 +1246,11 @@ static int __cvmx_helper_bgx_xaui_init(int index, int xiface)
 	    || mode == CVMX_HELPER_INTERFACE_MODE_40G_KR4) {
 		kr_mode = 1;
 		if (cvmx_helper_bgx_override_autoneg)
-			use_auto_neg = cvmx_helper_bgx_override_autoneg(xiface);
+			use_auto_neg = cvmx_helper_bgx_override_autoneg(xiface,
+									index);
 		else
-		use_auto_neg = 1;
+			use_auto_neg = cvmx_helper_get_port_autonegotiation(xiface,
+									    index);
 	}
 
 	/* NOTE: This code was moved first, out of order compared to the HRM
@@ -1174,9 +1340,11 @@ static int __cvmx_helper_bgx_xaui_init(int index, int xiface)
 		to disable it by default */
 		spu_fec_control.u64 = cvmx_read_csr_node(node, CVMX_BGXX_SPUX_FEC_CONTROL(index, xi.interface));
 		if (cvmx_helper_bgx_override_fec)
-			spu_fec_control.s.fec_en = cvmx_helper_bgx_override_fec(xiface);
+			spu_fec_control.s.fec_en =
+				cvmx_helper_bgx_override_fec(xiface, index);
 		else
-		spu_fec_control.s.fec_en = 0;
+			spu_fec_control.s.fec_en =
+				cvmx_helper_get_port_fec(xiface, index);
 		cvmx_write_csr_node(node, CVMX_BGXX_SPUX_FEC_CONTROL(index, xi.interface), spu_fec_control.u64);
 
 		/* 4f. If Auto-Negotiation is desired, configure and enable
@@ -1481,6 +1649,7 @@ static int __cvmx_helper_bgx_xaui_link_init(int index, int xiface)
 	int node = xi.node;
 	cvmx_bgxx_spux_status1_t spu_status1;
 	cvmx_bgxx_spux_status2_t spu_status2;
+	cvmx_bgxx_spux_br_status2_t br_status2;
 	cvmx_bgxx_spux_int_t spu_int;
 	cvmx_bgxx_spux_misc_control_t spu_misc_control;
 	cvmx_bgxx_cmrx_config_t cmr_config;
@@ -1488,6 +1657,7 @@ static int __cvmx_helper_bgx_xaui_link_init(int index, int xiface)
 	int use_training = 0;
 	int rgmii_first = 0;
 	int qlm = cvmx_qlm_lmac(xiface, index);
+	int use_ber = 0;
 
 	if (debug)
 		cvmx_dprintf("%s: interface %u:%d/%d\n",
@@ -1499,6 +1669,13 @@ static int __cvmx_helper_bgx_xaui_link_init(int index, int xiface)
 	if (mode == CVMX_HELPER_INTERFACE_MODE_10G_KR
 	    || mode == CVMX_HELPER_INTERFACE_MODE_40G_KR4)
 		use_training = 1;
+
+	if ((mode == CVMX_HELPER_INTERFACE_MODE_XFI
+	     || mode == CVMX_HELPER_INTERFACE_MODE_XLAUI
+	     || mode == CVMX_HELPER_INTERFACE_MODE_10G_KR
+	     || mode == CVMX_HELPER_INTERFACE_MODE_40G_KR4)
+	     && (cvmx_sysinfo_get()->board_type != CVMX_BOARD_TYPE_SIM))
+		use_ber = 1;
 
 	/* Disable packet reception, CMR as well as SPU block */
 	cmr_config.u64 = cvmx_read_csr_node(node, CVMX_BGXX_CMRX_CONFIG(index, xi.interface));
@@ -1609,7 +1786,7 @@ static int __cvmx_helper_bgx_xaui_link_init(int index, int xiface)
 			if (control1.s.loopbck) {
 				/* Skip RX equalization when in loopback */
 			} else if (mode == CVMX_HELPER_INTERFACE_MODE_XLAUI
-			    || mode == CVMX_HELPER_INTERFACE_MODE_XAUI) { // XLAUI/DXAUI
+				   || mode == CVMX_HELPER_INTERFACE_MODE_XAUI) {
 				lane = -1;
 				if (__cvmx_qlm_rx_equalization(node, qlm, lane)) {
 #ifdef DEBUG_BGX
@@ -1672,10 +1849,7 @@ static int __cvmx_helper_bgx_xaui_link_init(int index, int xiface)
 			return -1;
 		}
 
-		if (mode == CVMX_HELPER_INTERFACE_MODE_XFI
-		    || mode == CVMX_HELPER_INTERFACE_MODE_XLAUI
-		    || mode == CVMX_HELPER_INTERFACE_MODE_10G_KR
-		    || mode == CVMX_HELPER_INTERFACE_MODE_40G_KR4) {
+		if (use_ber) {
 			if (CVMX_WAIT_FOR_FIELD64_NODE(node, CVMX_BGXX_SPUX_BR_STATUS1(index, xi.interface),
 					  cvmx_bgxx_spux_br_status1_t, blk_lock, ==, 1, 10000)) {
 #ifdef DEBUG_BGX
@@ -1704,6 +1878,16 @@ static int __cvmx_helper_bgx_xaui_link_init(int index, int xiface)
 #endif
 				return -1;
 			}
+		}
+
+		if (use_ber) {
+			/* Set the BGXX_SPUX_BR_STATUS2.latched_lock bit (latching low).
+			   This will be checked prior to enabling packet tx and rx,
+			   ensuring block lock is sustained throughout the BGX link-up
+			   procedure */
+			br_status2.u64 = cvmx_read_csr_node(node, CVMX_BGXX_SPUX_BR_STATUS2(index, xi.interface));
+			br_status2.s.latched_lock = 1;
+			cvmx_write_csr_node(node, CVMX_BGXX_SPUX_BR_STATUS2(index, xi.interface), br_status2.u64);
 		}
 
 		/* Clear rcvflt bit (latching high) and read it back */
@@ -1773,6 +1957,35 @@ static int __cvmx_helper_bgx_xaui_link_init(int index, int xiface)
 		}
 	}
 
+	if (use_ber) {
+		/* Clear out the BGX error counters/bits. These errors are expected
+		   as part of the BGX link up procedure */
+		/* BIP_ERR counters clear as part of this read */
+		cvmx_read_csr_node(node, CVMX_BGXX_SPUX_BR_BIP_ERR_CNT(index, xi.interface));
+		/* BER_CNT and ERR_BLKs clear as part of this read */
+		br_status2.u64 = cvmx_read_csr_node(node, CVMX_BGXX_SPUX_BR_STATUS2(index, xi.interface));
+		/* Checking that latched BLOCK_LOCK is still set (Block Lock never lost) */
+		if (!br_status2.s.latched_lock) {
+			cvmx_dprintf("ERROR: %d:BGX%d:%d: BASE-R PCS block lock lost, need to retry\n", node, xi.interface, index);
+			return -1;
+		}
+
+		/* If set, clear the LATCHED_BER by writing it to a one.  */
+		if (br_status2.s.latched_ber)
+			cvmx_write_csr_node(node, CVMX_BGXX_SPUX_BR_STATUS2(index, xi.interface), br_status2.u64);
+
+		/* Complete a BER test. If latched_ber = 1, then BER >= 10e^4 */
+		/* The BER detection time window is 125us for 10GBASE-R (1250us for 40G). */
+		cvmx_wait_usec(1500);
+		br_status2.u64 = cvmx_read_csr_node(node, CVMX_BGXX_SPUX_BR_STATUS2(index, xi.interface));
+		if (br_status2.s.latched_ber) {
+#ifdef DEBUG_BGX
+			cvmx_dprintf("ERROR: %d:BGX%d:%d: BER test failed, BER >= 10e^4, need to retry\n", node, xi.interface, index);
+#endif
+			return -1;
+		}
+	}
+
 	/* (7) Enable packet transmit and receive */
 	spu_misc_control.u64 = cvmx_read_csr_node(node, CVMX_BGXX_SPUX_MISC_CONTROL(index, xi.interface));
 	spu_misc_control.s.rx_packet_dis = 0;
@@ -1799,9 +2012,9 @@ int __cvmx_helper_bgx_xaui_enable(int xiface)
 		int xipd_port = cvmx_helper_get_ipd_port(xiface, index);
 		int phy_pres;
 		struct cvmx_xiface xi = cvmx_helper_xiface_to_node_interface(xiface);
-		static int count[CVMX_MAX_NODES][CVMX_HELPER_MAX_IFACE][CVMX_HELPER_CFG_MAX_PORT_PER_IFACE] = 
-			{[0 ... CVMX_MAX_NODES - 1][0 ... CVMX_HELPER_MAX_IFACE - 1] = 
-				{[0 ... CVMX_HELPER_CFG_MAX_PORT_PER_IFACE - 1] = 0 }};
+		static int count[CVMX_MAX_NODES][CVMX_HELPER_MAX_IFACE][CVMX_HELPER_CFG_MAX_PORT_PER_IFACE] = {
+			[0 ... CVMX_MAX_NODES - 1][0 ... CVMX_HELPER_MAX_IFACE - 1] = {
+				[0 ... CVMX_HELPER_CFG_MAX_PORT_PER_IFACE - 1] = 0 } };
 
 		mode = cvmx_helper_bgx_get_mode(xiface, index);
 
@@ -2033,9 +2246,9 @@ int __cvmx_helper_bgx_mixed_enable(int xiface)
 		} else {
 			int res;
 					struct cvmx_xiface xi = cvmx_helper_xiface_to_node_interface(xiface);
-			static int count[CVMX_MAX_NODES][CVMX_HELPER_MAX_IFACE][CVMX_HELPER_CFG_MAX_PORT_PER_IFACE] = 
-				{[0 ... CVMX_MAX_NODES - 1][0 ... CVMX_HELPER_MAX_IFACE - 1] = 
-					{[0 ... CVMX_HELPER_CFG_MAX_PORT_PER_IFACE - 1] = 0 }};
+			static int count[CVMX_MAX_NODES][CVMX_HELPER_MAX_IFACE][CVMX_HELPER_CFG_MAX_PORT_PER_IFACE] = {
+				[0 ... CVMX_MAX_NODES - 1][0 ... CVMX_HELPER_MAX_IFACE - 1] = {
+					[0 ... CVMX_HELPER_CFG_MAX_PORT_PER_IFACE - 1] = 0 } };
 
 retry_link:
 			res = __cvmx_helper_bgx_xaui_link_init(index, xiface);

@@ -43,7 +43,7 @@
  * File defining different Octeon model IDs and macros to
  * compare them.
  *
- * <hr>$Revision: 135195 $<hr>
+ * <hr>$Revision: 153840 $<hr>
  */
 
 #ifndef __OCTEON_MODEL_H__
@@ -107,6 +107,7 @@ extern "C" {
 #define OCTEON_CN73XX_PASS1_0   0x000d9700
 #define OCTEON_CN73XX_PASS1_1   0x000d9701
 #define OCTEON_CN73XX_PASS1_2   0x000d9702
+#define OCTEON_CN73XX_PASS1_3   0x000d9703
 #define OCTEON_CN73XX           (OCTEON_CN73XX_PASS1_0 | OM_IGNORE_REVISION)
 #define OCTEON_CN73XX_PASS1_X   (OCTEON_CN73XX_PASS1_0 | OM_IGNORE_MINOR_REVISION)
 
@@ -114,6 +115,7 @@ extern "C" {
 
 #define OCTEON_CN23XX		OCTEON_CN73XX
 #define OCTEON_CN23XX_PASS1_2	OCTEON_CN73XX_PASS1_2
+#define OCTEON_CN23XX_PASS1_3	OCTEON_CN73XX_PASS1_3
 
 #define OCTEON_CN70XX_PASS1_0   0x000d9600
 #define OCTEON_CN70XX_PASS1_1   0x000d9601

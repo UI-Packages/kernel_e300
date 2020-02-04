@@ -28,6 +28,8 @@ show up in /proc/sys/kernel:
 - core_pattern
 - core_pipe_limit
 - core_uses_pid
+- core_ignore_rlimit
+- core_disabled
 - ctrl-alt-del
 - dmesg_restrict
 - domainname
@@ -228,6 +230,21 @@ core_uses_pid to 1, the coredump filename becomes core.PID.
 If core_pattern does not include "%p" (default does not)
 and core_uses_pid is set, then .PID will be appended to
 the filename.
+
+==============================================================
+
+core_ignore_rlimit:
+
+This sysctl is only applicable when core_pattern is configured to
+save core to a file. If core_ignore_rlimit is set to 1 then
+core dump will be written regardless of the applicable max
+core file size.
+
+==============================================================
+
+core_disabled:
+
+If core_disabled is set to 1 then core dump will not be created.
 
 ==============================================================
 

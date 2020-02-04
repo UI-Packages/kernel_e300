@@ -1,5 +1,5 @@
 /***********************license start***************
- * Copyright (c) 2003-2013  Cavium Inc. (support@cavium.com). All rights
+ * Copyright (c) 2003-2016  Cavium Inc. (support@cavium.com). All rights
  * reserved.
  *
  *
@@ -41,7 +41,7 @@
  * @file
  * Header file for simple executive application initialization.  This defines
  * part of the ABI between the bootloader and the application.
- * <hr>$Revision: 139216 $<hr>
+ * <hr>$Revision: 160974 $<hr>
  *
  */
 
@@ -221,7 +221,6 @@ typedef struct cvmx_bootinfo cvmx_bootinfo_t;
  * once from the bootloader and will be only read from others
  */
 #define CVMX_COMMON_BOOTINFO_MAGIC	0x1234567887654321
-	/* NOTE: this constant is endian agnostic (same for LE and BE) */
 #define CVMX_COMMON_BOOTINFO_VERSION	1	/* 1 based */
 #define CVMX_APP_COMMON_BOOTINFO_NAME	"__common_bootinfo"
 #define CVMX_APP_COMMON_BOOTINFO_SIZE	sizeof(cvmx_cores_common_bootinfo_t)
@@ -322,7 +321,10 @@ enum cvmx_board_types_enum {
 	CVMX_BOARD_TYPE_EBB7504 = 81,
 	CVMX_BOARD_TYPE_RAINIER = 82,
 	CVMX_BOARD_TYPE_NIC125E = 83,
+	CVMX_BOARD_TYPE_NICX40E = 84,
 	CVMX_BOARD_TYPE_NIC23 = 85,	/* Same as NIC73 */
+	CVMX_BOARD_TYPE_EBB7500 = 87,
+	CVMX_BOARD_TYPE_COPPERHEAD = 89,
 	CVMX_BOARD_TYPE_MAX,
 	/* NOTE:  256-257 are being used by a customer. */
 
@@ -477,7 +479,10 @@ static inline const char *cvmx_board_type_to_string(enum cvmx_board_types_enum t
 		ENUM_BRD_TYPE_CASE(CVMX_BOARD_TYPE_EBB7504)
 		ENUM_BRD_TYPE_CASE(CVMX_BOARD_TYPE_RAINIER)
 		ENUM_BRD_TYPE_CASE(CVMX_BOARD_TYPE_NIC125E)
+		ENUM_BRD_TYPE_CASE(CVMX_BOARD_TYPE_NICX40E)
 		ENUM_BRD_TYPE_CASE(CVMX_BOARD_TYPE_NIC23)
+		ENUM_BRD_TYPE_CASE(CVMX_BOARD_TYPE_EBB7500)
+		ENUM_BRD_TYPE_CASE(CVMX_BOARD_TYPE_COPPERHEAD)
 		ENUM_BRD_TYPE_CASE(CVMX_BOARD_TYPE_MAX)
 
 		/* Customer boards listed here */

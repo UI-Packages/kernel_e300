@@ -875,7 +875,8 @@ retry:
 
 #ifndef CVMX_BUILD_FOR_LINUX_KERNEL
 	/* Enable error interrupts, now link is up */
-	cvmx_error_enable_group(CVMX_ERROR_GROUP_ILK, 0);
+	cvmx_error_enable_group(CVMX_ERROR_GROUP_ILK,
+			node | (interface << 2) | (lane_mask << 4));
 #endif
 
 	result.s.link_up = 1;

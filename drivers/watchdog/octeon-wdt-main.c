@@ -1,7 +1,7 @@
 /*
  * Octeon Watchdog driver
  *
- * Copyright (C) 2007 - 2012 Cavium, Inc.
+ * Copyright (C) 2007 - 2016 Cavium, Inc.
  *
  * Some parts derived from wdt.c
  *
@@ -74,11 +74,12 @@
 #include <asm/octeon/octeon.h>
 #include <asm/octeon/cvmx-boot-vector.h>
 #include <asm/octeon/cvmx-ciu2-defs.h>
+#include <asm/octeon/cvmx-gserx-defs.h>
 
 /* Watchdog interrupt major block number (8 MSBs of intsn) */
 #define WD_BLOCK_NUMBER		0x01
 
-static int counter_shift;
+static int counter;
 
 /* The count needed to achieve timeout_sec. */
 static unsigned int timeout_cnt;
@@ -281,6 +282,31 @@ void octeon_wdt_nmi_stage3(u64 reg[32])
 	}
 
 	octeon_wdt_write_string("*** Chip soft reset soon ***\r\n");
+
+	/*
+	 * G-30204: We must trigger a soft reset before watchdog
+	 * does an incomplete job of doing it.
+	 */
+	if (OCTEON_IS_OCTEON3() && !OCTEON_IS_MODEL(OCTEON_CN70XX)) {
+		u64 scr;
+		unsigned int node = cvmx_get_node_num();
+		unsigned int lcore = cvmx_get_local_core_num();
+		union cvmx_ciu_wdogx ciu_wdog;
+
+		/*
+		 * Wait for other cores to print out information, but
+		 * not too long.  Do the soft reset before watchdog
+		 * can trigger it.
+		 */
+		do {
+			ciu_wdog.u64 = cvmx_read_csr_node(node, CVMX_CIU_WDOGX(lcore));
+		} while (ciu_wdog.s.cnt > 0x10000);
+
+		scr = cvmx_read_csr_node(0, CVMX_GSERX_SCRATCH(0));
+		scr |= 1 << 11; /* Indicate watchdog in bit 11 */
+		cvmx_write_csr_node(0, CVMX_GSERX_SCRATCH(0), scr);
+		cvmx_write_csr_node(0, CVMX_RST_SOFT_RST, 1);
+	}
 }
 
 static int octeon_wdt_cpu_to_irq(int cpu)
@@ -445,7 +471,7 @@ static void octeon_wdt_calc_parameters(int t)
 
 	countdown_reset = periods > 2 ? periods - 2 : 0;
 	heartbeat = t;
-	timeout_cnt = ((octeon_get_io_clock_rate() >> counter_shift) * timeout_sec) >> 8;
+	timeout_cnt = ((octeon_get_io_clock_rate() / counter) * timeout_sec) >> 8;
 }
 
 static int octeon_wdt_set_heartbeat(int t)
@@ -643,16 +669,16 @@ static int __init octeon_wdt_init(void)
 	}
 
 	if (OCTEON_IS_MODEL(OCTEON_CN68XX))
-		counter_shift = 9;
-	else if (octeon_has_feature(OCTEON_FEATURE_CIU3))
-		counter_shift = 10;
+		counter = (0x1 << 9);
+	else if (OCTEON_IS_MODEL(OCTEON_CN78XX))
+		counter = 0x400;
 	else
-		counter_shift = 8;
+		counter = (0x1 << 8);
 
 	/*
 	 * Watchdog time expiration length = The 16 bits of LEN
 	 * represent the most significant bits of a 24 bit decrementer
-	 * that decrements every 2^counter_shift cycles.
+	 * that decrements every counter cycles.
 	 *
 	 * Try for a timeout of 5 sec, if that fails a smaller number
 	 * of even seconds,
@@ -660,7 +686,7 @@ static int __init octeon_wdt_init(void)
 	max_timeout_sec = 6;
 	do {
 		max_timeout_sec--;
-		timeout_cnt = ((octeon_get_io_clock_rate() >> counter_shift) * max_timeout_sec) >> 8;
+		timeout_cnt = ((octeon_get_io_clock_rate() / counter) * max_timeout_sec) >> 8;
 	} while (timeout_cnt > 65535);
 
 	BUG_ON(timeout_cnt == 0);

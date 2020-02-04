@@ -42,7 +42,7 @@
  *
  * This module provides system/board information obtained by the bootloader.
  *
- * <hr>$Revision: 87487 $<hr>
+ * <hr>$Revision: 156174 $<hr>
  *
  */
 
@@ -148,6 +148,11 @@ typedef struct cvmx_sysinfo cvmx_sysinfo_t;
 
 extern struct cvmx_sysinfo *cvmx_sysinfo_get(void);
 
+#ifndef CVMX_BUILD_FOR_LINUX_HOST
+/* when run on HOST cvmx_get_core_num() is nat applicable,
+ * so this func as well
+ */
+
 /*
  * This function determines if the current core is the initial boot core
  * for the application, which may not necesarily be the numerically lowest
@@ -175,6 +180,8 @@ static inline int cvmx_is_init_core(void)
 		return -1;
 #endif
 }
+
+#endif
 
 /**
  * This function adds the current cpu to sysinfo coremask

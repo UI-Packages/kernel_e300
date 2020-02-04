@@ -122,6 +122,8 @@ enum cvmx_helper_cfg_option {
 typedef enum cvmx_helper_cfg_option cvmx_helper_cfg_option_t;
 
 struct cvmx_phy_info;
+struct cvmx_fdt_sfp_info;
+struct cvmx_vsc7224_chan;
 
 /*
  * Per physical port
@@ -145,9 +147,16 @@ struct cvmx_cfg_port_param {
 	bool disable_an:1;		/** true to disable autonegotiation */
 	bool link_down_pwr_dn:1;	/** Power PCS off when link is down */
 	bool phy_present:1;		/** true if PHY is present */
-	bool tx_clk_delay_bypass;	/** True to bypass the TX clock delay */
+	bool tx_clk_delay_bypass:1;	/** True to bypass the TX clock delay */
+	bool enable_fec:1;		/** True to enable FEC for 10/40G links */
+	uint8_t agl_refclk_sel;		/** RGMII refclk select to use */
 	/** Set if local (non-PHY) LEDs are used */
 	struct cvmx_phy_gpio_leds *gpio_leds;
+	struct cvmx_fdt_sfp_info *sfp_info;	/** SFP+/QSFP info for port */
+	/** Offset of SFP/SFP+/QSFP slot in device tree */
+	int sfp_of_offset;
+	/** Microsemi VSC7224 channel info data structure */
+	struct cvmx_vsc7224_chan *vsc7224_chan;
 };
 
 /*
@@ -526,6 +535,9 @@ extern void cvmx_helper_set_port_phy_present(int xiface, int index,
 extern uint8_t cvmx_helper_get_agl_rx_clock_skew(int interface, int index);
 extern void cvmx_helper_set_agl_rx_clock_skew(int interface, int index,
 					      uint8_t value);
+extern uint8_t cvmx_helper_get_agl_refclk_sel(int interface, int index);
+extern void cvmx_helper_set_agl_refclk_sel(int interface, int index,
+					      uint8_t value);
 
 #ifndef CVMX_BUILD_FOR_LINUX_KERNEL
 /**
@@ -593,6 +605,27 @@ extern void cvmx_helper_set_port_autonegotiation(int xiface, int index,
  * @return 0 if autonegotiation is disabled, 1 if enabled.
  */
 extern bool cvmx_helper_get_port_autonegotiation(int xiface, int index);
+
+/**
+ * @INTERNAL
+ * Returns if forward error correction is enabled or not.
+ *
+ * @param xiface	node and interface
+ * @param index		port index
+ *
+ * @return 0 if fec is disabled, 1 if enabled.
+ */
+extern bool cvmx_helper_get_port_fec(int xiface, int index);
+
+/**
+ * @INTERNAL
+ * Override default forward error correction for a port
+ *
+ * @param xiface	node and interface
+ * @param index		port index
+ * @param enable	true to enable fec, false to disable.
+ */
+extern void cvmx_helper_set_port_fec(int xiface, int index, bool enable);
 
 /**
  * @INTERNAL
@@ -667,6 +700,91 @@ void cvmx_helper_cfg_set_rgmii_tx_clk_delay( int xiface, int index,
 void cvmx_helper_cfg_get_rgmii_tx_clk_delay(int xiface, int index,
 					    bool *bypass,
 					    int *clk_delay);
+
+/**
+ * @INTERNAL
+ * Retrieve the SFP node offset in the device tree
+ *
+ * @param xiface	node and interface
+ * @param index		port index
+ *
+ * @return offset in device tree or -1 if error or not defined.
+ */
+int cvmx_helper_cfg_get_sfp_fdt_offset(int xiface, int index);
+
+/**
+ * Search for a port based on its FDT node offset
+ *
+ * @param	of_offset	Node offset of port to search for
+ *
+ * @return	ipd_port or -1 if not found
+ */
+int cvmx_helper_cfg_get_ipd_port_by_fdt_node_offset(int of_offset);
+
+/**
+ * @INTERNAL
+ * Sets the SFP node offset
+ *
+ * @param xiface	node and interface
+ * @param index		port index
+ * @param sfp_of_offset	Offset of SFP node in device tree
+ */
+void cvmx_helper_cfg_set_sfp_fdt_offset(int xiface, int index,
+					int sfp_of_offset);
+
+/**
+ * Search for a port based on its FDT node offset
+ *
+ * @param	of_offset	Node offset of port to search for
+ * @param[out]	xiface		xinterface of match
+ * @param[out]	index		port index of match
+ *
+ * @return	0 if found, -1 if not found
+ */
+int cvmx_helper_cfg_get_xiface_index_by_fdt_node_offset(int of_offset,
+							int *xiface, int *index);
+
+/**
+ * Get data structure defining the Microsemi VSC7224 channel info
+ * or NULL if not present
+ *
+ * @param xiface	node and interface
+ * @param index		port index
+ *
+ * @return pointer to vsc7224 data structure or NULL if not present
+ */
+struct cvmx_vsc7224_chan *cvmx_helper_cfg_get_vsc7224_chan_info(int xiface,
+								int index);
+
+/**
+ * Sets the Microsemi VSC7224 channel data structure
+ *
+ * @param	xiface	node and interface
+ * @param	index	port index
+ * @param[in]	vsc7224_info	Microsemi VSC7224 data structure
+ */
+void cvmx_helper_cfg_set_vsc7224_chan_info(int xiface, int index,
+				struct cvmx_vsc7224_chan *vsc7224_chan_info);
+
+/**
+ * Gets the SFP data associated with a port
+ *
+ * @param	xiface	node and interface
+ * @param	index	port index
+ *
+ * @return	pointer to SFP data structure or NULL if none
+ */
+struct cvmx_fdt_sfp_info *cvmx_helper_cfg_get_sfp_info(int xiface, int index);
+
+/**
+ * Sets the SFP data associated with a port
+ *
+ * @param	xiface		node and interface
+ * @param	index		port index
+ * @param[in]	sfp_info	port SFP data or NULL for none
+ */
+void cvmx_helper_cfg_set_sfp_info(int xiface, int index,
+				  struct cvmx_fdt_sfp_info *sfp_info);
 
 /*
  * Initializes cvmx with user specified config info.

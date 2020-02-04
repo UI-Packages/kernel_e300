@@ -100,7 +100,8 @@ int rx_napi_weight = 32;
 module_param(rx_napi_weight, int, 0444);
 MODULE_PARM_DESC(rx_napi_weight, "The NAPI WEIGHT parameter.");
 
-static int disable_lockless_pko;
+/* Disable lockless PKO because it is causing packet reordering */
+static int disable_lockless_pko = 1;
 module_param(disable_lockless_pko, int, S_IRUGO);
 MODULE_PARM_DESC(disable_lockless_pko, "Disable lockless PKO access (use locking for queues instead).");
 
@@ -1013,6 +1014,14 @@ static int cvm_oct_probe(struct platform_device *pdev)
 				continue;
 			pip_prt_tagx.u64 = cvmx_read_csr(CVMX_PIP_PRT_TAGX(port));
 			pip_prt_tagx.s.grp = pow_receive_group;
+
+			/* Enable atomic tags for IPv4 packets to eliminate packet reordering */
+			pip_prt_tagx.s.ip4_tag_type  = (cvmx_pow_tag_type_t)CVMX_POW_TAG_TYPE_ATOMIC;
+			pip_prt_tagx.s.ip4_src_flag  = 1;
+			pip_prt_tagx.s.ip4_dst_flag  = 1;
+			pip_prt_tagx.s.ip4_sprt_flag = 1;
+			pip_prt_tagx.s.ip4_dprt_flag = 1;
+
 			cvmx_write_csr(CVMX_PIP_PRT_TAGX(port), pip_prt_tagx.u64);
 		}
 	}

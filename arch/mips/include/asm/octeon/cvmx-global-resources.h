@@ -79,11 +79,13 @@
 	(((uint64_t)(A) & 0xff) << 56) | (((uint64_t)(B) & 0xff) << 48) | (((uint64_t)(C) & 0xff) << 40)  | (((uint64_t)(D) & 0xff) << 32) | \
 	(((uint64_t)(E) & 0xff) << 24) | (((uint64_t)(F) & 0xff) << 16) | (((uint64_t)(G) & 0xff) << 8)   | (((uint64_t)(H) & 0xff)))
 
+#ifndef CVMX_BUILD_FOR_LINUX_KERNEL
 struct global_resource_tag
 {
 	uint64_t lo;
 	uint64_t hi;
 };
+#endif
 
 enum cvmx_resource_err
 {

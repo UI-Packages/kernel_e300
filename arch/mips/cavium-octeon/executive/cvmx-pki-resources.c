@@ -45,6 +45,7 @@
 #ifdef CVMX_BUILD_FOR_LINUX_KERNEL
 #include <linux/module.h>
 #include <asm/octeon/cvmx.h>
+#include <asm/octeon/octeon.h>
 #include <asm/octeon/cvmx-pki-defs.h>
 #include <asm/octeon/cvmx-pki.h>
 #include "asm/octeon/cvmx-global-resources.h"

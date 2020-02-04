@@ -43,6 +43,7 @@
 extern int xkphys_usermem_read(long);
 extern int xkphys_usermem_write(long, int);
 extern int arm_timer(long, long);
+extern int disarm_timer(long, long);
 #endif
 
 /*
@@ -241,6 +242,9 @@ SYSCALL_DEFINE3(sysmips, long, cmd, long, arg1, long, arg2)
 #ifdef CONFIG_CAVIUM_OCTEON_SOC
 	case MIPS_CAVIUM_ARM_TIMER:
 		return arm_timer(arg1, arg2);
+
+	case MIPS_CAVIUM_DISARM_TIMER:
+		return disarm_timer(arg1, arg2);
 #endif
 
 #endif

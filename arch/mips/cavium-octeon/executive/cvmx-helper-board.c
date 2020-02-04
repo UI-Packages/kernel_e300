@@ -46,39 +46,50 @@
  */
 
 #ifdef CVMX_BUILD_FOR_LINUX_KERNEL
-#include <linux/module.h>
-#include <asm/octeon/cvmx.h>
-#include <asm/octeon/cvmx-app-init.h>
-#include <asm/octeon/cvmx-smix-defs.h>
-#include <asm/octeon/cvmx-gmxx-defs.h>
-#include <asm/octeon/cvmx-asxx-defs.h>
-#include <asm/octeon/cvmx-mdio.h>
-#include <asm/octeon/cvmx-helper.h>
-#include <asm/octeon/cvmx-helper-util.h>
-#include <asm/octeon/cvmx-helper-board.h>
-#include <asm/octeon/cvmx-helper-cfg.h>
-#include <asm/octeon/cvmx-twsi.h>
-#else
-#include "cvmx.h"
-#include "cvmx-app-init.h"
-#include "cvmx-sysinfo.h"
-#include "cvmx-twsi.h"
-#include "cvmx-mdio.h"
-#include "cvmx-helper.h"
-#include "cvmx-helper-util.h"
-#include "cvmx-helper-board.h"
-#include "cvmx-helper-cfg.h"
-#include "cvmx-gpio.h"
-#include "cvmx-qlm.h"
-#include "octeon_mem_map.h"
-#include "cvmx-bootmem.h"
-
-#ifdef __U_BOOT__
-# include <malloc.h>
-# include "cvmx-helper-fdt.h"
-#else
+# include <linux/module.h>
+# include <asm/octeon/cvmx.h>
+# include <asm/octeon/cvmx-app-init.h>
+# include <asm/octeon/cvmx-smix-defs.h>
+# include <asm/octeon/cvmx-gmxx-defs.h>
+# include <asm/octeon/cvmx-asxx-defs.h>
+# include <asm/octeon/cvmx-mdio.h>
+# include <asm/octeon/cvmx-helper.h>
+# include <asm/octeon/cvmx-helper-util.h>
+# include <asm/octeon/cvmx-helper-board.h>
+# include <asm/octeon/cvmx-helper-cfg.h>
+# include <asm/octeon/cvmx-twsi.h>
+#elif !defined(__U_BOOT__)
+# include "cvmx.h"
+# include "cvmx-app-init.h"
+# include "cvmx-sysinfo.h"
+# include "cvmx-twsi.h"
+# include "cvmx-mdio.h"
+# include "cvmx-helper.h"
+# include "cvmx-helper-util.h"
+# include "cvmx-helper-board.h"
+# include "cvmx-helper-cfg.h"
 # include "libfdt/cvmx-helper-fdt.h"
-#endif
+# include "cvmx-gpio.h"
+# include "cvmx-qlm.h"
+# include "octeon_mem_map.h"
+# include "cvmx-bootmem.h"
+#else
+# include <common.h>
+# include <malloc.h>
+# include <i2c.h>
+# include <asm/arch/cvmx.h>
+# include <asm/arch/cvmx-sysinfo.h>
+# include <asm/arch/cvmx-twsi.h>
+# include <asm/arch/cvmx-mdio.h>
+# include <asm/arch/cvmx-helper.h>
+# include <asm/arch/cvmx-helper-util.h>
+# include <asm/arch/cvmx-helper-board.h>
+# include <asm/arch/cvmx-helper-cfg.h>
+# include <asm/arch/cvmx-helper-fdt.h>
+# include <asm/arch/cvmx-gpio.h>
+# include <asm/arch/cvmx-qlm.h>
+# include <asm/arch/octeon_mem_map.h>
+# include <asm/arch/cvmx-bootmem.h>
 #endif
 
 /**
@@ -154,6 +165,17 @@ static cvmx_helper_link_info_t
 __get_broadcom_phy_link_state(cvmx_phy_info_t *phy_info);
 
 #ifndef CVMX_BUILD_FOR_LINUX_KERNEL
+/**
+ * Return the MII PHY address associated with the given IPD
+ * port. The phy address is obtained from the device tree.
+ *
+ * @param[out] phy_info - PHY information data structure updated
+ * @param ipd_port Octeon IPD port to get the MII address for.
+ *
+ * @return MII PHY address and bus number, -1 on error, -2 if PHY info missing (OK).
+ */
+int __get_phy_info_from_dt(cvmx_phy_info_t *phy_info, int ipd_port);
+
 /**
  * @INTERNAL
  * Get link state of generic gigabit PHY
@@ -511,101 +533,593 @@ static void __cvmx_mdio_addr_to_node_bus(uint64_t addr, int *node, int *bus)
 	}
 }
 
-#if 0
-static int __cvmx_helper_dt_process_mdio_mux(void *fdt_addr, int mdio_offset,
-					     int mux_offset,
-					     struct cvmx_phydev_mux_info *mux_info)
+/**
+ * Writes to a Microsemi VSC7224 16-bit register
+ *
+ * @param[in]	i2c_bus	i2c bus data structure (must be enabled)
+ * @param	addr	Address of VSC7224 on the i2c bus
+ * @param	reg	8-bit register number to write to
+ * @param	val	16-bit value to write
+ *
+ * @return	0 for success
+ */
+static int cvmx_write_vsc7224_reg(const struct cvmx_fdt_i2c_bus_info *i2c_bus,
+				  uint8_t addr, uint8_t reg, uint16_t val)
 {
-	int phandle;
-	uint32_t *pgpio_handle;
-	int smi_offset;
-	int gpio_offset;
-	uint64_t *smi_addrp;
-	uint64_t smi_addr;
-	uint64_t mdio_base;
-	int len;
-	int gpio_count;
-	uint32_t *prop_val;
-	int offset;
-	const char *prop_name;
-	int gpio_value;
-	int node = 0;
-	int bus = 0;
+	int bus = cvmx_fdt_i2c_get_root_bus(i2c_bus);
+#ifdef __U_BOOT__
+	uint8_t buffer[2];
 
-	memset(mux_info, 0, sizeof(*mux_info));
-	mux_info->gpio_value = cvmx_fdt_get_int(fdt_addr, mdio_offset, "reg", -1);
-	if (mux_info->gpio_value < 0) {
-		cvmx_printf("Could not get register value from muxed MDIO bus from DT\n");
-		return -1;
-	}
-	mux_info->direct_connect = 0;
-
-	smi_offset = (fdt_addr, mux_offset,
-					     "mdio-parent-bus");
-	if (smi_offset < 0) {
-		cvmx_printf("Could not get parent mdio bus\n");
-		return -1;
-	}
-	/* Now have address of SMI controller, use to get node and MDIO
-	 * controller number
-	 */
-	smi_addr = cvmx_fdt_get_uint64(fdt_addr, smi_offset, "reg", 0);
-	if (smi_addr)
-		smi_addr = cvmx_fdt_translate_address(fdt_addr, smi_offset,
-						      smi_addr);
-
-	ret = fdt_node_check_compatible(fdt_addr, parent,
-					"cavium,octeon-3860-mdio");
-	if (!ret) {
-		mdio_base = cvmx_fdt_get_uint64_t(fdt_addr, parent, "reg", 0);
-		if (!mdio_base) {
-			cvmx_printf("ERROR: Unable to get reg property in PHY MDIO\n");
-			return -1;
-		}
-		mdio_base = cvmx_fdt_translate_address(fdt_addr, parent,
-						       mdio_base);
-		if (mdio_base == FDT_ADDR_T_NONE) {
-			cvmx_printf("ERROR: Unable to get reg property in PHY MDIO\n");
-			return -1;
-		}
-		__cvmx_mdio_addr_to_node_bus(mdio_base, &node, &bus);
-		if (device_tree_dbg)
-			cvmx_dprintf("%s: phy parent: %s, reg base: 0x%08x, node: %d, bus: %d\n",
-				     __func__,
-				     fdt_get_name(fdt_addr, parent, NULL),
-				     mdio_base, node, bus);
-	}
-
-}
-
-static int __cvmx_helper_dt_add_phy(void *fdt_addr, int phy_node)
-{
-	const char *compat_str;
-	int len;
-	int parent, mdio_parent;
-	int ret;
-
-	compat_str = (const char *)fdt_getprop(fdt_addr, phy_node,
-					       "compatible", NULL);
-	if (!compat_str) {
-		cvmx_printf("Error: PHY entry in device tree missing compatible string\n");
-		return -1;
-	}
-
-	parent = fdt_parent_offset(fdt_addr, phy_node);
-	/* For multi-phy devices and devices ona  MUX go to the parent */
-	if (!fdt_node_check_compatible(fdt_addr, parent, "ethernet-phy-nexus"))
-		parent = fdt_parent_offset(fdt_addr, parent);
-
-	/* Check for a muxed MDIO parent */
-	mdio_parent = fdt_parent_offset(fdt_addr, parent);
-	if (!fdt_node_check_compatible(fdt_addr, mdio_parent,
-				       "cavium,mdio-mux")) {
-		ret = __cvmx_helper_dt_process_mdio_mux(fdt_addr, parent,
-							mdio_parent);
-	}
-}
+	i2c_set_bus_num(bus);
+	buffer[0] = val >> 8;
+	buffer[1] = val & 0xff;
+	i2c_write(addr, reg, 1, buffer, 2);
+#else
+	cvmx_twsix_write_ia(bus, addr, reg, 2, 1, (uint64_t)val);
 #endif
+	return 0;
+}
+
+/**
+ * Writes to a Microsemi VSC7224 16-bit register
+ *
+ * @param[in]	i2c_bus	i2c bus data structure (must be enabled)
+ * @param	addr	Address of VSC7224 on the i2c bus
+ * @param	reg	8-bit register number to write to
+ *
+ * @return	16-bit value or error if < 0
+ */
+static int cvmx_read_vsc7224_reg(const struct cvmx_fdt_i2c_bus_info *i2c_bus,
+				 uint8_t addr, uint8_t reg)
+{
+	int bus = cvmx_fdt_i2c_get_root_bus(i2c_bus);
+#ifdef __U_BOOT__
+	uint8_t buffer[2];
+
+	i2c_set_bus_num(bus);
+	if (i2c_read(addr, reg, 1, buffer, 2))
+		return -1;
+	else
+		return (buffer[0] << 8) | buffer[1];
+#else
+	uint64_t data;
+
+	if (cvmx_twsix_read_ia(bus, addr, reg, 2, 1, &data) < 0)
+		return -1;
+	else
+		return data & 0xffff;
+#endif
+	return 0;
+}
+
+/**
+ * @INTERNAL
+ * Return loss of signal
+ *
+ * @param	xiface	xinterface number
+ * @param	index	port index on interface
+ *
+ * @return	0 if signal present, 1 if loss of signal.
+ *
+ * @NOTE:	A result of 0 is possible in some cases where the signal is
+ *		not present.
+ *
+ * This is for use with __cvmx_qlm_rx_equilization
+ */
+int __cvmx_helper_get_los(int xiface, int index)
+{
+	struct cvmx_fdt_sfp_info *sfp;
+	struct cvmx_vsc7224_chan *vsc7224_chan;
+	struct cvmx_vsc7224 *vsc7224;
+	int los = 0;
+	int val;
+
+	sfp = cvmx_helper_cfg_get_sfp_info(xiface, index);
+
+	/* Check all SFP slots in the group
+	 * NOTE: Usually there is only one SFP or QSFP slot except in the case
+	 *	 where multiple SFP+ slots are grouped together for XLAUI mode.
+	 */
+	while (sfp && sfp->check_mod_abs) {
+		los = sfp->check_mod_abs(sfp, sfp->mod_abs_data);
+		if (los || los < 0) {
+			if (device_tree_dbg)
+				cvmx_dprintf("%s(0x%x, %d): los detected (mod_abs) los: %d\n",
+					     __func__, xiface, index, los);
+			return 1;
+	}
+		vsc7224_chan = sfp->vsc7224_chan;
+		while (vsc7224_chan) {
+			uint64_t done;
+			int channel_num = vsc7224_chan->lane;
+			int los_bit = 1 << channel_num;
+			int lol_bit = 0x10 << channel_num;
+
+			/* We only care about receive channels so skip rx.
+			 * Also, in XFI mode we don't care about different
+			 * XFI ports so skip those.
+			 */
+			if (vsc7224_chan->is_tx ||
+			    vsc7224_chan->index != index ||
+			    vsc7224_chan->xiface != xiface) {
+				vsc7224_chan = vsc7224_chan->next;
+				continue;
+			}
+
+			vsc7224 = vsc7224_chan->vsc7224;
+			/* Poll for LoS/LoL for 2ms */
+			cvmx_fdt_enable_i2c_bus(vsc7224->i2c_bus, true);
+			cvmx_write_vsc7224_reg(vsc7224->i2c_bus,
+					       vsc7224->i2c_addr, 0x7f, 0x40);
+			done = cvmx_clock_get_count(CVMX_CLOCK_CORE) +
+				2000 * cvmx_clock_get_rate(CVMX_CLOCK_CORE) / 1000000;
+			do {
+				val = cvmx_read_vsc7224_reg(vsc7224->i2c_bus,
+							    vsc7224->i2c_addr,
+							    0xc0);
+				val &= (los_bit | lol_bit);
+				if (val) {
+					if (device_tree_dbg)
+						cvmx_dprintf("%s(0x%x, %d): LOS/LOL detected from VSC7224: 0x%x\n",
+							     __func__, xiface,
+							     index, val);
+					return 1;
+				}
+			} while (cvmx_clock_get_count(CVMX_CLOCK_CORE) < done);
+			/* Move to the next channel */
+			vsc7224_chan = vsc7224_chan->next;
+		}
+		/* Move to the next SFP+ slot */
+		sfp = sfp->next;
+	}
+	if (device_tree_dbg)
+		cvmx_dprintf("%s(0x%x, %d): los: 0\n", __func__, xiface, index);
+	return 0;
+}
+
+/**
+ * Function called whenever mod_abs/mod_prs has changed for Microsemi VSC7224
+ *
+ * @param	sfp	pointer to SFP data structure
+ * @param	val	1 if absent, 0 if present, otherwise not set
+ * @param	data	user-defined data
+ *
+ * @return	0 for success, -1 on error
+	 */
+int cvmx_sfp_vsc7224_mod_abs_changed(struct cvmx_fdt_sfp_info *sfp, int val,
+				     void *data)
+{
+	int err;
+	struct cvmx_sfp_mod_info *mod_info;
+	int length;
+	struct cvmx_vsc7224 *vsc7224;
+	struct cvmx_vsc7224_chan *vsc7224_chan;
+	struct cvmx_vsc7224_tap *taps, *match = NULL;
+	const int dbg = device_tree_dbg;
+	int i;
+
+	if (dbg)
+		cvmx_dprintf("%s(%s, %d, %p): Module %s\n", __func__,
+			     sfp->name, val, data, val ? "absent" : "present");
+	if (val)
+		return 0;
+
+	/* We're here if we detect that the module is now present */
+	err = cvmx_sfp_read_i2c_eeprom(sfp);
+	if (err) {
+		cvmx_dprintf("%s: Error reading the SFP module eeprom for %s\n",
+			     __func__, sfp->name);
+		return err;
+	}
+	mod_info = &sfp->sfp_info;
+
+	if (!mod_info->valid || !sfp->valid) {
+		if (dbg)
+			cvmx_dprintf("%s: Module data is invalid\n", __func__);
+			return -1;
+		}
+
+	vsc7224_chan = sfp->vsc7224_chan;
+	while (vsc7224_chan) {
+		/* We don't do any rx tuning */
+		if (!vsc7224_chan->is_tx) {
+			vsc7224_chan = vsc7224_chan->next;
+			continue;
+		}
+
+		/* Walk through all the channels */
+		taps = vsc7224_chan->taps;
+		if (mod_info->limiting)
+			length = 0;
+		else
+			length = mod_info->max_copper_cable_len;
+		if (dbg)
+			cvmx_dprintf("%s: limiting: %d, length: %d\n", __func__,
+				     mod_info->limiting, length);
+
+		/* Find a matching length in the taps table */
+		for (i = 0; i < vsc7224_chan->num_taps; i++) {
+			if (length >= taps->len)
+				match = taps;
+			taps++;
+		}
+		if (!match) {
+			cvmx_dprintf("%s(%s, %d, %p): Error: no matching tap for length %d\n",
+				     __func__, sfp->name, val, data, length);
+			return -1;
+		}
+		if (dbg)
+			cvmx_dprintf("%s(%s): Applying %cx taps to vsc7224 %s:%d for cable length %d+\n",
+				     __func__, sfp->name,
+				     vsc7224_chan->is_tx ? 't' : 'r',
+				     vsc7224_chan->vsc7224->name,
+				     vsc7224_chan->lane,
+				     match->len);
+		/* Program the taps */
+		vsc7224 = vsc7224_chan->vsc7224;
+		cvmx_fdt_enable_i2c_bus(vsc7224->i2c_bus, true);
+		cvmx_write_vsc7224_reg(vsc7224->i2c_bus, vsc7224->i2c_addr,
+				       0x7f, vsc7224_chan->lane);
+		if (!vsc7224_chan->maintap_disable)
+			cvmx_write_vsc7224_reg(vsc7224->i2c_bus,
+					       vsc7224->i2c_addr,
+					       0x99, match->main_tap);
+		if (!vsc7224_chan->pretap_disable)
+			cvmx_write_vsc7224_reg(vsc7224->i2c_bus,
+					       vsc7224->i2c_addr,
+					       0x9a, match->pre_tap);
+		if (!vsc7224_chan->posttap_disable)
+			cvmx_write_vsc7224_reg(vsc7224->i2c_bus,
+					       vsc7224->i2c_addr,
+					       0x9b, match->post_tap);
+
+		/* Re-use val and disable taps if needed */
+		if (vsc7224_chan->maintap_disable ||
+		    vsc7224_chan->pretap_disable  ||
+		    vsc7224_chan->posttap_disable) {
+			val = cvmx_read_vsc7224_reg(vsc7224->i2c_bus,
+						    vsc7224->i2c_addr, 0x97);
+			if (vsc7224_chan->maintap_disable)
+				val |= 0x800;
+			if (vsc7224_chan->pretap_disable)
+				val |= 0x1000;
+			if (vsc7224_chan->posttap_disable)
+				val |= 0x400;
+			cvmx_write_vsc7224_reg(vsc7224->i2c_bus,
+					       vsc7224->i2c_addr, 0x97, val);
+		}
+		cvmx_fdt_enable_i2c_bus(vsc7224->i2c_bus, false);
+		vsc7224_chan = vsc7224_chan->next;
+	}
+
+	return err;
+}
+#define CS4224_PP_LINE_SDS_COMMON_STX0_TX_OUTPUT_CTRLA	0x108F
+#define CS4224_PP_LINE_SDS_COMMON_STX0_TX_OUTPUT_CTRLB	0x1090
+#define CS4224_PP_LINE_SDS_DSP_MSEQ_SPARE22_LSB		0x12AC
+#define CS4224_PP_LINE_SDS_DSP_MSEQ_SPARE22_MSB		0x12AD
+#define CS4224_PP_LINE_SDS_DSP_MSEQ_SPARE24_LSB		0x12B0
+#define CS4224_PP_HOST_SDS_DSP_MSEQ_SPARE22_LSB		0x1AAC
+#define CS4224_PP_HOST_SDS_DSP_MSEQ_SPARE22_MSB		0x1AAD
+#define CS4224_PP_HOST_SDS_DSP_MSEQ_SPARE24_LSB		0x1AB0
+
+/**
+ * Changes the mode the CS4343 operates in as well as the equalization
+ *
+ * @param[in]	phy_info	Pointer to phy data structure
+ * @param	reg		slice number of phy
+ * @param[in]	sfp		pointer to sfp information
+ *
+ * @return	0 for success, otherwise error
+ */
+static int cvmx_cs4343_set_slice_mode(const struct cvmx_phy_info *phy_info,
+				      int reg,
+				      const struct cvmx_fdt_sfp_info *sfp)
+{
+	const struct cvmx_sfp_mod_info *mod_info = &sfp->sfp_info;
+	struct cvmx_cs4343_slice_info *slice = &phy_info->cs4343_info->slice[reg];
+	int offset = slice->reg_offset;
+	int err;
+	uint32_t phy_addr = phy_info->phy_addr;
+	int val;
+
+	if (mod_info->rate == CVMX_SFP_RATE_1G) {	/* 1000Base-X */
+		if (device_tree_dbg)
+			cvmx_dprintf("%s: Setting slice %d to 1000Base-x mode for SFP slot %s\n",
+				     __func__, reg, sfp->name);
+		err = 0;
+		err |= cvmx_mdio_45_write(phy_addr >> 8, phy_addr & 0xff, 0,
+					  offset + CS4224_PP_LINE_SDS_DSP_MSEQ_SPARE22_MSB,
+					  0);
+		err |= cvmx_mdio_45_write(phy_addr >> 8, phy_addr & 0xff, 0,
+					  offset + CS4224_PP_LINE_SDS_DSP_MSEQ_SPARE24_LSB,
+					  9);
+		cvmx_wait_usec(10000);
+		err |= cvmx_mdio_45_write(phy_addr >> 8, phy_addr & 0xff, 0,
+					  offset + CS4224_PP_HOST_SDS_DSP_MSEQ_SPARE22_MSB,
+					  0);
+		err |= cvmx_mdio_45_write(phy_addr >> 8, phy_addr & 0xff, 0,
+					  offset + CS4224_PP_HOST_SDS_DSP_MSEQ_SPARE24_LSB,
+					  9);
+		cvmx_wait_usec(10000);
+		err |= cvmx_mdio_45_write(phy_addr >> 8, phy_addr & 0xff, 0,
+					  offset + CS4224_PP_LINE_SDS_DSP_MSEQ_SPARE22_MSB,
+					  0x8000);
+		val = cvmx_mdio_45_read(phy_addr >> 8, phy_addr & 0xff, 0,
+					offset + CS4224_PP_LINE_SDS_DSP_MSEQ_SPARE22_LSB);
+		err |= cvmx_mdio_45_write(phy_addr >> 8, phy_addr & 0xff, 0,
+					  offset + CS4224_PP_LINE_SDS_DSP_MSEQ_SPARE24_LSB,
+					  val);
+		cvmx_wait_usec(10000);
+		err |= cvmx_mdio_45_write(phy_addr >> 8, phy_addr & 0xff, 0,
+					  offset + CS4224_PP_HOST_SDS_DSP_MSEQ_SPARE22_MSB,
+					  0x8000);
+		val = cvmx_mdio_45_read(phy_addr >> 8, phy_addr & 0xff, 0,
+					offset + CS4224_PP_HOST_SDS_DSP_MSEQ_SPARE22_LSB);
+		err |= cvmx_mdio_45_write(phy_addr >> 8, phy_addr & 0xff, 0,
+					  offset + CS4224_PP_HOST_SDS_DSP_MSEQ_SPARE24_LSB,
+					  val);
+		cvmx_wait_usec(10000);
+		val = ((slice->basex_stx_cmode_res & 7) << 12)     |
+		      ((slice->basex_stx_drv_lower_cm & 0xf) << 8) |
+		      (slice->basex_stx_level & 0x3f);
+		err |= cvmx_mdio_45_write(phy_addr >> 8, phy_addr & 0xff, 0,
+					  offset + CS4224_PP_LINE_SDS_COMMON_STX0_TX_OUTPUT_CTRLA,
+					  val);
+		val = cvmx_mdio_45_read(phy_addr >> 8, phy_addr & 0xff, 0,
+					offset + CS4224_PP_LINE_SDS_COMMON_STX0_TX_OUTPUT_CTRLB);
+		val &= 0xC000;
+		val |= (slice->basex_stx_pre_peak << 8) & 0x1f;
+		val |= (slice->basex_stx_muxsubrate_sel << 7) & 0x80;
+		val |= slice->basex_stx_post_peak & 0x3f;
+		cvmx_mdio_45_write(phy_addr >> 8, phy_addr & 0xff, 0,
+				   offset + CS4224_PP_LINE_SDS_COMMON_STX0_TX_OUTPUT_CTRLB,
+				   val);
+		cvmx_wait_usec(10000);
+	} else if (mod_info->limiting) {	/* SR type */
+		if (device_tree_dbg)
+			cvmx_dprintf("%s: Setting slice %d to SR mode for SFP slot %s\n",
+				     __func__, reg, sfp->name);
+		err = 0;
+		err |= cvmx_mdio_45_write(phy_addr >> 8, phy_addr & 0xff, 0,
+					  offset + CS4224_PP_LINE_SDS_DSP_MSEQ_SPARE22_MSB,
+					  0);
+		err |= cvmx_mdio_45_write(phy_addr >> 8, phy_addr & 0xff, 0,
+					  offset + CS4224_PP_LINE_SDS_DSP_MSEQ_SPARE24_LSB,
+					  9);
+		cvmx_wait_usec(10000);
+		err |= cvmx_mdio_45_write(phy_addr >> 8, phy_addr & 0xff, 0,
+					  offset + CS4224_PP_HOST_SDS_DSP_MSEQ_SPARE22_MSB,
+					  0);
+		err |= cvmx_mdio_45_write(phy_addr >> 8, phy_addr & 0xff, 0,
+					  offset + CS4224_PP_HOST_SDS_DSP_MSEQ_SPARE24_LSB,
+					  9);
+		cvmx_wait_usec(10000);
+		val = ((slice->sr_stx_cmode_res & 7) << 12)     |
+		      ((slice->sr_stx_drv_lower_cm & 0xf) << 8) |
+		      (slice->sr_stx_level & 0x3f);
+		err |= cvmx_mdio_45_write(phy_addr >> 8, phy_addr & 0xff, 0,
+					  offset + CS4224_PP_LINE_SDS_COMMON_STX0_TX_OUTPUT_CTRLA,
+					  val);
+		val = cvmx_mdio_45_read(phy_addr >> 8, phy_addr & 0xff, 0,
+					offset + CS4224_PP_LINE_SDS_COMMON_STX0_TX_OUTPUT_CTRLB);
+		val &= 0xC000;
+		val |= (slice->sr_stx_pre_peak << 8) & 0x1f;
+		val |= (slice->sr_stx_muxsubrate_sel << 7) & 0x80;
+		val |= slice->sr_stx_post_peak & 0x3f;
+		cvmx_mdio_45_write(phy_addr >> 8, phy_addr & 0xff, 0,
+				   offset + CS4224_PP_LINE_SDS_COMMON_STX0_TX_OUTPUT_CTRLB,
+				   val);
+		cvmx_wait_usec(10000);
+	} else {				/* CX type */
+		if (device_tree_dbg)
+			cvmx_dprintf("%s: Setting slice %d to CX mode for SFP slot %s\n",
+				     __func__, reg, sfp->name);
+		err = 0;
+		err |= cvmx_mdio_45_write(phy_addr >> 8, phy_addr & 0xff, 0,
+					  offset + CS4224_PP_LINE_SDS_DSP_MSEQ_SPARE22_MSB,
+					  0);
+		err |= cvmx_mdio_45_write(phy_addr >> 8, phy_addr & 0xff, 0,
+					  offset + CS4224_PP_LINE_SDS_DSP_MSEQ_SPARE24_LSB,
+					  5);
+		cvmx_wait_usec(10000);
+		err |= cvmx_mdio_45_write(phy_addr >> 8, phy_addr & 0xff, 0,
+					  offset + CS4224_PP_HOST_SDS_DSP_MSEQ_SPARE22_MSB,
+					  0);
+		err |= cvmx_mdio_45_write(phy_addr >> 8, phy_addr & 0xff, 0,
+					  offset + CS4224_PP_HOST_SDS_DSP_MSEQ_SPARE24_LSB,
+					  5);
+		cvmx_wait_usec(10000);
+		val = ((slice->cx_stx_cmode_res & 7) << 12)     |
+		      ((slice->cx_stx_drv_lower_cm & 0xf) << 8) |
+		      (slice->cx_stx_level & 0x3f);
+		err |= cvmx_mdio_45_write(phy_addr >> 8, phy_addr & 0xff, 0,
+					  offset + CS4224_PP_LINE_SDS_COMMON_STX0_TX_OUTPUT_CTRLA,
+					  val);
+		val = cvmx_mdio_45_read(phy_addr >> 8, phy_addr & 0xff, 0,
+					offset + CS4224_PP_LINE_SDS_COMMON_STX0_TX_OUTPUT_CTRLB);
+		val &= 0xC000;
+		val |= (slice->cx_stx_pre_peak << 8) & 0x1f;
+		val |= (slice->cx_stx_muxsubrate_sel << 7) & 0x80;
+		val |= slice->cx_stx_post_peak & 0x3f;
+		cvmx_mdio_45_write(phy_addr >> 8, phy_addr & 0xff, 0,
+				   offset + CS4224_PP_LINE_SDS_COMMON_STX0_TX_OUTPUT_CTRLB,
+				   val);
+		cvmx_wait_usec(10000);
+	}
+	return err;
+}
+
+/**
+ * Function called whenever mod_abs/mod_prs has changed for the Inphi CS4343
+ *
+ * @param	sfp	pointer to SFP data structure
+ * @param	val	1 if absent, 0 if present, otherwise not set
+ * @param	data	user-defined data
+ *
+ * @return	0 for success, -1 on error
+ */
+int cvmx_sfp_cs4343_mod_abs_changed(struct cvmx_fdt_sfp_info *sfp, int val,
+				    void *data)
+{
+	const int dbg = device_tree_dbg;
+	struct cvmx_phy_info *phy_info;
+	struct cvmx_sfp_mod_info *mod_info;
+	int err = -1;
+	int i;
+
+	if (dbg)
+		cvmx_dprintf("%s(%s, %d, %p): Module %s\n", __func__,
+			     sfp->name, val, data, val ? "absent" : "present");
+	/* Ignore unplug */
+	if (val)
+		return 0;
+
+	/* We're here if we detect that the module is now present */
+	err = cvmx_sfp_read_i2c_eeprom(sfp);
+	if (err) {
+		cvmx_dprintf("%s: Error reading the SFP module eeprom for %s\n",
+			     __func__, sfp->name);
+		return err;
+	}
+	mod_info = &sfp->sfp_info;
+
+	if (!mod_info->valid || !sfp->valid) {
+		if (dbg)
+			cvmx_dprintf("%s: Module data is invalid\n", __func__);
+		return -1;
+	}
+
+	phy_info = cvmx_helper_get_port_phy_info(sfp->xiface, sfp->index);
+	if (!phy_info || !phy_info->cs4343_info) {
+		cvmx_dprintf("%s: Error: missing phy info or cs4343 info for xiface 0x%x, index %d\n",
+			     __func__, sfp->xiface, sfp->index);
+		return -1;
+	}
+	if (sfp->is_qsfp) {
+		for (i = 0; i < 4; i++)
+			err |= cvmx_cs4343_set_slice_mode(phy_info, i, sfp);
+	} else {
+		err = cvmx_cs4343_set_slice_mode(phy_info, phy_info->phy_sub_addr,
+						 sfp);
+	}
+
+	if (err && device_tree_dbg)
+		cvmx_dprintf("%s: Error setting slice mode for SFP %s\n",
+			     __func__, sfp->name);
+	return err;
+
+}
+
+static const char *cortina_compat_list_1[] = {
+	"cortina,cs4343",
+	"inphi,cs4343",
+	"cortina,cs4223",
+	"inphi,cs4223",
+	NULL
+};
+
+static const char *cortina_compat_list_2[] = {
+	"cortina,cs4343-slice",
+	"inphi,cs4343-slice",
+	"cortina,cs4223-slice",
+	"inphi,cs4223-slice",
+	NULL
+};
+
+/**
+ * Return if the phy device is a Cortina multi-slice phy or a single slice
+ *
+ * @param[in]	phy_info	Pointer to phy information
+ *
+ * @return	1 for multi-slice, 2 for single slice, 0 for non-cs4343 device
+ */
+static int cvmx_is_cortina(const struct cvmx_phy_info *phy_info)
+{
+	static const void *fdt_addr;
+
+	if (!fdt_addr)
+		fdt_addr = __cvmx_phys_addr_to_ptr(cvmx_sysinfo_get()->fdt_addr,
+						   OCTEON_FDT_MAX_SIZE);
+	if (!cvmx_fdt_node_check_compatible_list(fdt_addr, phy_info->fdt_offset,
+						 cortina_compat_list_1))
+		return 1;
+	if (!cvmx_fdt_node_check_compatible_list(fdt_addr, phy_info->fdt_offset,
+						 cortina_compat_list_2))
+		return 2;
+	return 0;
+}
+
+/**
+ * @INTERNAL
+ * Figure out which mod_abs changed function to use based on the phy type
+ *
+ * @param	xiface	xinterface number
+ * @param	index	port index on interface
+ *
+ * @return	0 for success, -1 on error
+ *
+ * This function figures out the proper mod_abs_changed function to use and
+ * registers the appropriate function.  This should be called after the device
+ * tree has been fully parsed for the given port as well as after all SFP
+ * slots and any Microsemi VSC7224 devices have been parsed in the device tree.
+ */
+int cvmx_helper_phy_register_mod_abs_changed(int xiface, int index)
+{
+	struct cvmx_vsc7224_chan *vsc7224_chan;
+	struct cvmx_phy_info *phy_info;
+	struct cvmx_fdt_sfp_info *sfp_info;
+	int cortina_type;
+
+	if (device_tree_dbg)
+		cvmx_dprintf("%s(0x%x, %d)\n", __func__, xiface, index);
+	sfp_info = cvmx_helper_cfg_get_sfp_info(xiface, index);
+	/* Don't return an error if no SFP module is registered */
+	if (!sfp_info) {
+		if (device_tree_dbg)
+			cvmx_dprintf("%s: No SFP associated with 0x%x:%d\n",
+				     __func__, xiface, index);
+		return 0;
+	}
+
+	/* See if the Microsemi VSC7224 reclocking chip has been used */
+	vsc7224_chan = cvmx_helper_cfg_get_vsc7224_chan_info(xiface, index);
+	if (vsc7224_chan) {
+		if (device_tree_dbg)
+			cvmx_dprintf("%s: Registering VSC7224 handler\n",
+				     __func__);
+		cvmx_sfp_register_mod_abs_changed(sfp_info,
+						  &cvmx_sfp_vsc7224_mod_abs_changed,
+						  NULL);
+		return 0;
+	}
+
+	/* Check which phy is used, i.e. Inphi CS4343 */
+	phy_info = cvmx_helper_get_port_phy_info(xiface, index);
+	if (!phy_info) {
+		if (device_tree_dbg)
+			cvmx_dprintf("%s: No phy associated with 0x%x:%d\n",
+				     __func__, xiface, index);
+		return 0;
+	}
+
+	cortina_type = cvmx_is_cortina(phy_info);
+	switch (cortina_type) {
+	case 1:
+	case 2:
+		if (device_tree_dbg)
+			cvmx_dprintf("%s: Registering CS4343 handler\n",
+				     __func__);
+		cvmx_sfp_register_mod_abs_changed(sfp_info,
+						  &cvmx_sfp_cs4343_mod_abs_changed,
+						  NULL);
+		return 0;
+	default:
+		cvmx_dprintf("%s(0x%x, %d): Unknown phy type, mod_abs changed not registered\n",
+			     __func__, xiface, index);
+		return -1;
+	}
+}
 
 /** NOTE: Quick hack! */
 int __cvmx_helper_78xx_parse_phy(struct cvmx_phy_info *phy_info, int ipd_port)
@@ -620,6 +1134,8 @@ int __cvmx_helper_78xx_parse_phy(struct cvmx_phy_info *phy_info, int ipd_port)
 	int index = cvmx_helper_get_interface_index_num(ipd_port);
 	int xiface = cvmx_helper_get_interface_num(ipd_port);
 	int compat_len = 0;
+	const int dbg = device_tree_dbg;
+	int err;
 
 	if (fdt_addr == NULL)
 		fdt_addr = __cvmx_phys_addr_to_ptr(cvmx_sysinfo_get()->fdt_addr,
@@ -630,6 +1146,9 @@ int __cvmx_helper_78xx_parse_phy(struct cvmx_phy_info *phy_info, int ipd_port)
 			     __func__, phy_info, ipd_port);
 
 	phy = cvmx_helper_get_phy_fdt_node_offset(xiface, index);
+	if (dbg)
+		cvmx_dprintf("%s: xiface: 0x%x, index: %d, ipd_port: %d, phy fdt offset: %d\n",
+			     __func__, xiface, index, ipd_port, phy);
 	if (phy < 0) {
 		/* If this is the first time through we need to first parse the
 		 * device tree to get the node offsets.
@@ -638,6 +1157,10 @@ int __cvmx_helper_78xx_parse_phy(struct cvmx_phy_info *phy_info, int ipd_port)
 			cvmx_dprintf("No config present, calling __cvmx_helper_parse_bgx_dt\n");
 		if (__cvmx_helper_parse_bgx_dt(fdt_addr)) {
 			cvmx_printf("Error: could not parse BGX device tree\n");
+			return -1;
+		}
+		if (__cvmx_fdt_parse_vsc7224(fdt_addr)) {
+			cvmx_dprintf("Error: could not parse Microsemi VSC7224 in DT\n");
 			return -1;
 		}
 		if (octeon_has_feature(OCTEON_FEATURE_BGX_XCV) &&
@@ -652,6 +1175,9 @@ int __cvmx_helper_78xx_parse_phy(struct cvmx_phy_info *phy_info, int ipd_port)
 					     __func__, ipd_port, xiface, index);
 			return -1;
 		}
+		if (dbg)
+			cvmx_dprintf("%s: phy: %d (%s)\n", __func__, phy,
+				     fdt_get_name(fdt_addr, phy, NULL));
 	}
 
 	compat = (const char *)fdt_getprop(fdt_addr, phy, "compatible",
@@ -661,16 +1187,17 @@ int __cvmx_helper_78xx_parse_phy(struct cvmx_phy_info *phy_info, int ipd_port)
 		return -1;
 	}
 
-	if (device_tree_dbg)
+	if (dbg)
 		cvmx_dprintf("  compatible: %s\n", compat);
 
+	phy_info->fdt_offset = phy;
 	phy_addr = cvmx_fdt_get_int(fdt_addr, phy, "reg", -1);
 	if (phy_addr == -1) {
 		cvmx_printf("Error: %d:%d:could not get PHY address\n",
 			    xiface, index);
 		return -1;
 	}
-	if (device_tree_dbg)
+	if (dbg)
 		cvmx_dprintf("  PHY address: %d, compat: %s\n", phy_addr, compat);
 
 	if (!memcmp("marvell", compat, strlen("marvell"))) {
@@ -719,7 +1246,7 @@ int __cvmx_helper_78xx_parse_phy(struct cvmx_phy_info *phy_info, int ipd_port)
 		parent = fdt_parent_offset(fdt_addr, parent);
 	}
 
-	if (device_tree_dbg) {
+	if (dbg) {
 		cvmx_dprintf("  Parent: %s\n",
 			     fdt_get_name(fdt_addr, parent, NULL));
 	}
@@ -756,9 +1283,33 @@ int __cvmx_helper_78xx_parse_phy(struct cvmx_phy_info *phy_info, int ipd_port)
 		cvmx_printf("%s: Error: incompatible MDIO bus %s for IPD port %d\n",
 			    __func__,
 			    (const char *)fdt_get_name(fdt_addr, parent, NULL), ipd_port);
+		return -1;
 	}
-	if (device_tree_dbg)
+	if (!fdt_node_check_compatible(fdt_addr, phy, "cortina,cs4343") ||
+	    !fdt_node_check_compatible(fdt_addr, phy, "cortina,cs4343-slice")) {
+		if (dbg)
+			cvmx_dprintf("%s: Parsing cs4343 at 0x%x:%d\n",
+				     __func__, xiface, index);
+			err = cvmx_fdt_parse_cs4343(fdt_addr, phy, phy_info);
+		if (err) {
+			cvmx_dprintf("%s: Error parsing cs4343 phy in device tree\n",
+				     __func__);
+			return -1;
+		}
+		if (dbg)
+			cvmx_dprintf("%s: Registering mod_abs changed function\n",
+				     __func__);
+		err = cvmx_helper_phy_register_mod_abs_changed(xiface, index);
+		if (err) {
+			cvmx_dprintf("%s: Error registering mod_abs changed handler for 0x%x:%d\n",
+				     __func__, xiface, index);
+			return -1;
+		}
+	}
+
+	if (dbg)
 		cvmx_dprintf("%s: EXIT 0\n", __func__);
+
 	return 0;
 }
 
@@ -893,7 +1444,7 @@ static int __get_led_gpio(void *fdt_addr, int led_node,
  *		not used.
  */
 struct cvmx_phy_gpio_leds *
-__cvmx_helper_parse_gpio_leds(void *fdt_addr, int port_node)
+__cvmx_helper_parse_gpio_leds(void *fdt_addr, int port_node, bool is_xiface)
 {
 	struct cvmx_phy_gpio_leds *leds = NULL;
 	int led_node;
@@ -995,6 +1546,7 @@ __cvmx_helper_parse_gpio_leds(void *fdt_addr, int port_node)
 		leds->error_gpio |= (cpu_node << 8);
 	}
 	if (leds) {
+		leds->interface_leds = is_xiface;
 		if (leds->rx_activity_hz > 0 && leds->rx_gpio_timer >= 0)
 			/* Set the GPIO frequency and select the timer used */
 			cvmx_gpio_set_freq(leds->rx_activity_gpio >> 8,
@@ -1032,7 +1584,7 @@ __cvmx_helper_parse_gpio_leds(void *fdt_addr, int port_node)
 int __cvmx_helper_parse_bgx_dt(void *fdt_addr)
 {
 	int port_index;
-	int dbg = device_tree_dbg;
+	const int dbg = device_tree_dbg;
 	struct cvmx_xiface xi;
 	int fdt_port_node = -1;
 	int fdt_interface_node;
@@ -1040,7 +1592,18 @@ int __cvmx_helper_parse_bgx_dt(void *fdt_addr)
 	uint64_t reg_addr;
 	int xiface;
 	struct cvmx_phy_gpio_leds *gpio_leds = NULL;
+	struct cvmx_fdt_sfp_info *sfp_info = NULL;
+	struct cvmx_phy_info *phy_info;
+	int sfp_node;
+	static bool parsed;
+	int err;
+	int ipd_port;
 
+	if (parsed) {
+		if (dbg)
+			cvmx_dprintf("%s: Already parsed\n", __func__);
+		return 0;
+	}
 	while ((fdt_port_node = fdt_node_offset_by_compatible(fdt_addr, fdt_port_node,
 					"cavium,octeon-7890-bgx-port")) >= 0) {
 		/* Get the port number */
@@ -1093,6 +1656,32 @@ int __cvmx_helper_parse_bgx_dt(void *fdt_addr)
 						     fdt_port_node);
 		cvmx_helper_set_port_valid(xiface, port_index, true);
 
+
+		cvmx_helper_set_port_fdt_node_offset(xiface, port_index,
+						     fdt_port_node);
+		if (fdt_getprop(fdt_addr, fdt_port_node, "cavium,sgmii-mac-phy-mode",
+			NULL))
+			cvmx_helper_set_mac_phy_mode(xiface, port_index, true);
+		else
+			cvmx_helper_set_mac_phy_mode(xiface, port_index, false);
+
+		if (fdt_getprop(fdt_addr, fdt_port_node, "cavium,force-link-up", NULL))
+			cvmx_helper_set_port_force_link_up(xiface, port_index, true);
+		else
+			cvmx_helper_set_port_force_link_up(xiface, port_index, false);
+
+		if (fdt_getprop(fdt_addr, fdt_port_node,
+				"cavium,sgmii-mac-1000x-mode", NULL))
+			cvmx_helper_set_1000x_mode(xiface, port_index, true);
+		else
+			cvmx_helper_set_1000x_mode(xiface, port_index, false);
+
+		if (fdt_getprop(fdt_addr, fdt_port_node,
+				"cavium,disable-autonegotiation", NULL))
+			cvmx_helper_set_port_autonegotiation(xiface, port_index, false);
+		else
+			cvmx_helper_set_port_autonegotiation(xiface, port_index, true);
+
 		fdt_phy_node = cvmx_fdt_lookup_phandle(fdt_addr, fdt_port_node,
 						       "phy-handle");
 		if (fdt_phy_node >= 0) {
@@ -1108,19 +1697,127 @@ int __cvmx_helper_parse_bgx_dt(void *fdt_addr)
 							  fdt_phy_node, NULL));
 			}
 			cvmx_helper_set_port_phy_present(xiface, port_index, true);
+			ipd_port = cvmx_helper_get_ipd_port(xiface, port_index);
+			if (ipd_port >= 0) {
+				if (dbg)
+					cvmx_dprintf("%s: Allocating phy info for 0x%x:%d\n",
+						     __func__, xiface,
+						     port_index);
+				phy_info = (cvmx_phy_info_t *)
+					cvmx_bootmem_alloc(sizeof(*phy_info), 0);
+				if (!phy_info) {
+					cvmx_dprintf("%s: Out of memory\n",
+						     __func__);
+					return -1;
+				}
+				memset(phy_info, 0, sizeof(*phy_info));
+				phy_info->phy_addr = -1;
+				err = __get_phy_info_from_dt(phy_info, ipd_port);
+				if (err) {
+					cvmx_dprintf("%s: Error parsing phy info for ipd port %d\n",
+						     __func__, ipd_port);
+					return -1;
+				}
+				cvmx_helper_set_port_phy_info(xiface, port_index,
+							      phy_info);
+				if (dbg)
+					cvmx_dprintf("%s: Saved phy info\n",
+						     __func__);
+			}
 		} else {
 			cvmx_helper_set_phy_fdt_node_offset(xiface, port_index,
 							    -1);
 			if (dbg)
 				cvmx_dprintf("%s: No PHY fdt node offset for interface 0x%x, port %d to %d\n",
-					     __func__, xiface, port_index, fdt_phy_node);
-			cvmx_helper_set_port_phy_present(xiface, port_index, false);
+					     __func__, xiface, port_index,
+					     fdt_phy_node);
+			cvmx_helper_set_port_phy_present(xiface, port_index,
+							 false);
+
 		}
-		gpio_leds = __cvmx_helper_parse_gpio_leds(fdt_addr, fdt_port_node);
-		if (gpio_leds)
+		gpio_leds = __cvmx_helper_parse_gpio_leds(fdt_addr,
+							  fdt_port_node, false);
+		if (gpio_leds) {
 			cvmx_helper_set_port_phy_leds(xiface, port_index,
 						      gpio_leds);
+		} else {
+			gpio_leds = __cvmx_helper_parse_gpio_leds(fdt_addr,
+								  fdt_interface_node,
+								  true);
+			if (gpio_leds)
+				cvmx_helper_set_port_phy_leds(xiface,
+							      port_index,
+							      gpio_leds);
+		}
+		sfp_node = cvmx_fdt_lookup_phandle(fdt_addr, fdt_port_node,
+						   "qsfp-slot");
+		if (sfp_node > 0) {
+			/* We have a QSFP slot */
+			sfp_info = cvmx_helper_fdt_parse_sfp_info(fdt_addr,
+								  sfp_node);
+			if (dbg)
+				cvmx_dprintf("%s: Got QSFP slot node %d, info at %p\n",
+					     __func__, sfp_node, sfp_info);
+			sfp_info->xiface = xiface;
+			sfp_info->index = port_index;
+
+			cvmx_helper_cfg_set_sfp_info(xiface, port_index,
+						     sfp_info);
+			cvmx_helper_phy_register_mod_abs_changed(xiface,
+								 port_index);
+		} else {
+			int i;
+			uint32_t *phandles;
+			int len;
+			int sfp_node;
+
+			/* Check for one or more SFP slots */
+			phandles = (uint32_t *)fdt_getprop(fdt_addr,
+							   fdt_port_node,
+							   "sfp-slot", &len);
+			if (phandles) {
+				struct cvmx_fdt_sfp_info *first_sfp, *last_sfp;
+				first_sfp = NULL;
+				last_sfp = NULL;
+				/* Get number of phandles */
+				len /= sizeof(uint32_t);
+				if (dbg)
+					cvmx_dprintf("%s: Found %d sfp phandles\n",
+						     __func__, len);
+				for (i = 0; i < len; i++) {
+					sfp_node = fdt_node_offset_by_phandle(fdt_addr,
+									      fdt32_to_cpu(phandles[i]));
+					if (sfp_node < 0)
+						continue;
+					sfp_info = cvmx_helper_fdt_parse_sfp_info(fdt_addr,
+										  sfp_node);
+					if (dbg)
+						cvmx_dprintf("%s: SFP node %d at offset %d, sfp_info at %p\n",
+							     __func__, i,
+							     sfp_node,
+							     sfp_info);
+					/* Link them together */
+					if (sfp_info) {
+						if (!first_sfp)
+							first_sfp = sfp_info;
+						if (last_sfp)
+							last_sfp->next = sfp_info;
+						sfp_info->prev = last_sfp;
+						sfp_info->xiface = xiface;
+						sfp_info->index = port_index;
+					}
+				}
+				cvmx_helper_cfg_set_sfp_info(xiface, port_index,
+							     first_sfp);
+				cvmx_helper_phy_register_mod_abs_changed(xiface,
+									 port_index);
+			} else if (dbg) {
+				cvmx_dprintf("%s: No SFP slots found\n",
+					     __func__);
+			}
 	}
+	}
+	parsed = true;
 	return 0;
 }
 
@@ -1260,17 +1957,25 @@ int __cvmx_helper_board_get_port_from_dt(void *fdt_addr, int ipd_port)
 	struct cvmx_xiface xi = cvmx_helper_xiface_to_node_interface(xiface);
 	uint32_t val;
 	int phy_node_offset;
+	int parse_bgx_dt_err;
+	int parse_vsc7224_err;
 
+	if (dbg)
+		cvmx_dprintf("%s(%p, %d)\n", __func__, fdt_addr, ipd_port);
 	if (octeon_has_feature(OCTEON_FEATURE_BGX)) {
 		static int fdt_ports_initialized = 0;
 
 		port_index = cvmx_helper_get_interface_index_num(ipd_port);
 
 		if (!fdt_ports_initialized) {
-			if (octeon_has_feature(OCTEON_FEATURE_BGX_XCV))
+			if (octeon_has_feature(OCTEON_FEATURE_BGX_XCV)) {
 				if (!__cvmx_helper_parse_bgx_rgmii_dt(fdt_addr))
 					fdt_ports_initialized = 1;
-			if (!__cvmx_helper_parse_bgx_dt(fdt_addr)) {
+				parse_bgx_dt_err =
+					__cvmx_helper_parse_bgx_dt(fdt_addr);
+				parse_vsc7224_err =
+					__cvmx_fdt_parse_vsc7224(fdt_addr);
+				if (!parse_bgx_dt_err && !parse_vsc7224_err)
 				fdt_ports_initialized = 1;
 			} else {
 				cvmx_dprintf("%s: Error parsing FDT\n",
@@ -1392,6 +2097,9 @@ int __cvmx_helper_board_get_port_from_dt(void *fdt_addr, int ipd_port)
 		cvmx_helper_cfg_set_rgmii_tx_clk_delay(xiface,
 						       port_index,
 						       tx_bypass, val);
+
+		val = cvmx_fdt_get_int(fdt_addr, eth, "cavium,refclk-sel", 0);
+		cvmx_helper_set_agl_refclk_sel(xiface, port_index, val);
 	}
 
 	return (eth >= 0);
@@ -1439,6 +2147,7 @@ int __get_phy_info_from_dt(cvmx_phy_info_t *phy_info, int ipd_port)
 	phy_info->gpio_parent_mux_twsi = -1;
 	phy_info->gpio_parent_mux_select = -1;
 	phy_info->link_function = NULL;
+	phy_info->fdt_offset = -1;
 	if (!fdt_addr) {
 		cvmx_dprintf("No device tree found.\n");
 		return -1;
@@ -1494,6 +2203,7 @@ int __get_phy_info_from_dt(cvmx_phy_info_t *phy_info, int ipd_port)
 	if (dbg)
 		cvmx_dprintf("Checking compatible string \"%s\" for ipd port %d\n",
 			     phy_compatible_str, ipd_port);
+	phy_info->fdt_offset = phy;
 	if (!memcmp("marvell", phy_compatible_str, strlen("marvell"))) {
 		if (dbg)
 			cvmx_dprintf("Marvell PHY detected for ipd_port %d\n",
@@ -2649,14 +3359,14 @@ void __cvmx_update_link_led(int xiface, int index,
 			    cvmx_helper_link_info_t result)
 {
 	struct cvmx_phy_gpio_leds *gpio_leds;
-	uint32_t mask;
+	uint64_t mask;
 	int node;
 
 	/* Set link status LEDs if present */
 	gpio_leds = cvmx_helper_get_port_phy_leds(xiface, index);
 	if (gpio_leds && gpio_leds->link_status_gpio >= 0) {
 		node = gpio_leds->link_status_gpio >> 8;
-		mask = 1 << gpio_leds->link_status_gpio & 0xff;
+		mask = 1ULL << (gpio_leds->link_status_gpio & 0xff);
 		if (result.s.link_up) {
 			if (gpio_leds->link_status_active_low)
 				cvmx_gpio_clear_node(node, mask);
@@ -2753,6 +3463,8 @@ cvmx_helper_link_info_t __cvmx_helper_board_link_get_from_dt(int ipd_port)
 	cvmx_phy_info_t local_phy_info;
 	int xiface = 0, index = 0;
 	bool use_inband = false;
+	struct cvmx_fdt_sfp_info *sfp_info;
+	const int dbg = device_tree_dbg;
 
 	result.u64 = 0;
 
@@ -2804,25 +3516,45 @@ cvmx_helper_link_info_t __cvmx_helper_board_link_get_from_dt(int ipd_port)
 			}
 #ifndef CVMX_BUILD_FOR_LINUX_KERNEL
 			__cvmx_update_link_led(xiface, index, result);
+			sfp_info = cvmx_helper_cfg_get_sfp_info(xiface, index);
+				/* If the link is down or the link is up but we still register
+				 * the module as being absent, re-check mod_abs.
+				 */
+			if (sfp_info && (!result.s.link_up ||
+			     (result.s.link_up && sfp_info->last_mod_abs))) {
+					if (dbg)
+						cvmx_dprintf("%s(%d): checking mod_abs\n",
+							     __func__, ipd_port);
+					cvmx_sfp_check_mod_abs(sfp_info,
+							       sfp_info->mod_abs_data);
+				}
 #endif
 			return result;
 		}
 		phy_info = cvmx_helper_get_port_phy_info(xiface, index);
 		if (!phy_info) {
+			if (device_tree_dbg)
+				cvmx_dprintf("%s: phy info not saved in config, allocating for 0x%x:%d\n",
+					     __func__, xiface, index);
+
 #ifdef CVMX_BUILD_FOR_LINUX_KERNEL
 			phy_info = (cvmx_phy_info_t *)kmalloc(sizeof(*phy_info),
 							      GFP_KERNEL);
 #else
 			phy_info = cvmx_bootmem_alloc(sizeof(*phy_info), 0);
 #endif
-			memset(phy_info, 0, sizeof(*phy_info));
-			phy_info->phy_addr = -1;
-		}
 		if (!phy_info) {
-			cvmx_printf("%s: Out of memory\n", __func__);
+				cvmx_dprintf("%s: Out of memory\n", __func__);
 			return result;
 		}
-		cvmx_helper_set_port_phy_info(xiface, index, phy_info);
+			memset(phy_info, 0, sizeof(*phy_info));
+			phy_info->phy_addr = -1;
+			if (dbg)
+				cvmx_dprintf("%s: Setting phy info for 0x%x:%d to %p\n",
+					     __func__, xiface, index, phy_info);
+				cvmx_helper_set_port_phy_info(xiface, index,
+							      phy_info);
+		}
 	} else {
 		/* For management ports we don't store the PHY information
 		 * so we use a local copy instead.
@@ -2890,6 +3622,20 @@ cvmx_helper_link_info_t __cvmx_helper_board_link_get_from_dt(int ipd_port)
 	if (ipd_port >= 0)
 		__cvmx_update_link_led(xiface, index, result);
 #endif
+	sfp_info = cvmx_helper_cfg_get_sfp_info(xiface, index);
+	if (sfp_info)
+		/* If the link is down or the link is up but we still register
+		 * the module as being absent, re-check mod_abs.
+		 */
+		if (!result.s.link_up ||
+		    (result.s.link_up && sfp_info->last_mod_abs)) {
+			if (dbg)
+				cvmx_dprintf("%s(%d): checking mod_abs\n",
+					     __func__, ipd_port);
+			cvmx_sfp_check_mod_abs(sfp_info,
+					       sfp_info->mod_abs_data);
+		}
+
 	return result;
 
 }

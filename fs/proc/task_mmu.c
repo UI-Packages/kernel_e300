@@ -181,7 +181,7 @@ static void *m_start(struct seq_file *m, loff_t *pos)
 	if (!priv->task)
 		return ERR_PTR(-ESRCH);
 
-	mm = mm_access(priv->task, PTRACE_MODE_READ);
+	mm = mm_access(priv->task, PTRACE_MODE_READ_FSCREDS);
 	if (!mm || IS_ERR(mm))
 		return mm;
 	down_read(&mm->mmap_sem);
@@ -282,7 +282,10 @@ show_map_vma(struct seq_file *m, struct vm_area_struct *vma, int is_pid)
 	const char *name = NULL;
 
 	if (file) {
-		struct inode *inode = file_inode(vma->vm_file);
+		struct inode *inode;
+
+		file = vma_pr_or_file(vma);
+		inode = file_inode(file);
 		dev = inode->i_sb->s_dev;
 		ino = inode->i_ino;
 		pgoff = ((loff_t)vma->vm_pgoff) << PAGE_SHIFT;
@@ -1065,7 +1068,7 @@ static ssize_t pagemap_read(struct file *file, char __user *buf,
 	if (!pm.buffer)
 		goto out_task;
 
-	mm = mm_access(task, PTRACE_MODE_READ);
+	mm = mm_access(task, PTRACE_MODE_READ_FSCREDS);
 	ret = PTR_ERR(mm);
 	if (!mm || IS_ERR(mm))
 		goto out_free;
@@ -1315,6 +1318,7 @@ static int show_numa_map(struct seq_file *m, void *v, int is_pid)
 	seq_printf(m, "%08lx %s", vma->vm_start, buffer);
 
 	if (file) {
+		file = vma_pr_or_file(vma);
 		seq_printf(m, " file=");
 		seq_path(m, &file->f_path, "\n\t\\= ");
 	} else if (vma->vm_start <= mm->brk && vma->vm_end >= mm->start_brk) {

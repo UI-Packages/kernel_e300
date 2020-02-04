@@ -336,6 +336,20 @@ struct octeon_ciu_chip_data {
 	int trigger_type;
 };
 
+struct octeon_edac_lmc_data {
+	uint8_t node;		/** CPU node number */
+	uint8_t lmc;		/** LMC interface number on node */
+};
+
+struct edac_device_ctl_info;
+
+struct octeon_edac_l2c_data {
+	struct edac_device_ctl_info *ed;
+	struct platform_device *pdev;
+	uint8_t node;		/** CPU node number */
+	uint8_t tad;		/** L2C TAD number */
+};
+
 extern void octeon_write_lcd(const char *s);
 extern void octeon_check_cpu_bist(void);
 extern int octeon_get_boot_debug_flag(void);
@@ -491,15 +505,35 @@ void octeon_mult_restore3_end(void);
 void octeon_mult_restore2(void);
 void octeon_mult_restore2_end(void);
 
+/*
+ * This definition must be kept in sync with the one in
+ * cvmx-global-resources.c
+ */
+struct global_resource_tag {
+	uint64_t lo;
+	uint64_t hi;
+};
+
+void res_mgr_free(struct global_resource_tag tag, int inst);
+void res_mgr_free_range(struct global_resource_tag tag, int *inst, int req_cnt);
+int res_mgr_alloc(struct global_resource_tag tag, int req_inst,
+		  bool use_last_avail);
+int res_mgr_alloc_range(struct global_resource_tag tag, int req_inst,
+			int req_cnt, bool use_last_avail, int *inst);
+int res_mgr_create_resource(struct global_resource_tag tag, int inst_cnt);
+
 #if IS_ENABLED(CONFIG_OCTEON_FPA3)
 int octeon_fpa3_init(int node);
-int octeon_fpa3_pool_init(int node, int pool_num, cvmx_fpa3_pool_t *pool,
-			  void **pool_stack, int num_ptrs);
-int octeon_fpa3_aura_init(cvmx_fpa3_pool_t pool, int aura_num,
-			  cvmx_fpa3_gaura_t *aura, int num_bufs,
-			  unsigned int limit);
-int octeon_mem_fill_fpa3(int node, struct kmem_cache *cache,
-			  cvmx_fpa3_gaura_t aura, int num_bufs);
+int octeon_fpa3_pool_init(int node, int pool_num, int *pool, void **pool_stack,
+			  int num_ptrs);
+int octeon_fpa3_aura_init(int node, int pool, int aura_num, int *aura,
+			  int num_bufs, unsigned int limit);
+int octeon_fpa3_mem_fill(int node, struct kmem_cache *cache, int aura,
+			 int num_bufs);
+void octeon_fpa3_free(u64 node, int aura, const void *buf);
+void *octeon_fpa3_alloc(u64 node, int aura);
+void octeon_fpa3_release_pool(int node, int pool);
+void octeon_fpa3_release_aura(int node, int aura);
 #endif
 
 #endif /* __ASM_OCTEON_OCTEON_H */

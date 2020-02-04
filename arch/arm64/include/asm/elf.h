@@ -152,6 +152,7 @@ do {						\
 	clear_thread_flag(TIF_32BIT);		\
 } while (0)
 
+/* update AT_VECTOR_SIZE_ARCH if the number of NEW_AUX_ENT entries changes */
 #define ARCH_DLINFO							\
 do {									\
 	NEW_AUX_ENT(AT_SYSINFO_EHDR,					\

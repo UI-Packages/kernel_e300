@@ -45,6 +45,7 @@
 
 #ifdef CVMX_BUILD_FOR_LINUX_KERNEL
 #include <linux/types.h>
+#include <asm/octeon/octeon.h>
 #include <linux/export.h>
 #include "asm/octeon/cvmx-global-resources.h"
 #include "asm/octeon/cvmx-bootmem.h"

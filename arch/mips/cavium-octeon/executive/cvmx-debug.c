@@ -965,7 +965,7 @@ static cvmx_debug_command_t cvmx_debug_process_packet(const char *packet)
 
 			switch (bp_type) {
 			case 'i':	// Instruction hardware breakpoint
-				if (num > 4) {
+				if (num >= 4) {
 					cvmx_debug_printf("Z packet corrupt: %s\n", &packet[1]);
 					goto error_packet;
 				}
@@ -980,7 +980,7 @@ static cvmx_debug_command_t cvmx_debug_process_packet(const char *packet)
 				{
 					uint64_t dbc = 0xff0 | BE | TE;
 					uint64_t dbm;
-					if (num > 4 || *buf++ != ',' || !cvmx_debug_hexToLong(&buf, &size)
+					if (num >= 4 || *buf++ != ',' || !cvmx_debug_hexToLong(&buf, &size)
 					    || *buf++ != ',' || !cvmx_debug_hexToLong(&buf, &type)
 					    || type > WP_ACCESS || type < WP_LOAD) {
 						cvmx_debug_printf("Z packet corrupt: %s\n", &packet[1]);
@@ -1014,7 +1014,7 @@ static cvmx_debug_command_t cvmx_debug_process_packet(const char *packet)
 			char bp_type = *buf++;
 			volatile cvmx_debug_core_context_t *context = cvmx_debug_core_context();
 
-			if (!cvmx_debug_hexToLong(&buf, &num) || num > 4) {
+			if (!cvmx_debug_hexToLong(&buf, &num) || num >= 4) {
 				cvmx_debug_printf("z packet corrupt: %s\n", buf);
 				goto error_packet;
 			}

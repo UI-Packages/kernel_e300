@@ -410,7 +410,6 @@ int __cvmx_import_app_config(void)
 	const cvmx_bootmem_named_block_desc_t *block_desc;
 	int pko_cfg_sz;
 	int64_t app_config_addr;
-	int res = 0, dbg = 0;
 
 	/* find named block */
 	block_desc = cvmx_bootmem_find_named_block(cvmx_appcfg_transport_block_name);
@@ -431,12 +430,7 @@ int __cvmx_import_app_config(void)
 	/* read fpa pool config from named block */
 	__cvmx_import_fpa_config(app_config_addr);
 
-	/* import is done, now delete the named block */
-	res = cvmx_bootmem_free_named(cvmx_appcfg_transport_block_name);
-	if (dbg)
-		cvmx_dprintf("free transport config block res=%d\n", res);
-
-	return !res;
+	return 0;
 }
 
 /**

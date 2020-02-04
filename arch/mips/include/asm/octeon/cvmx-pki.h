@@ -1,5 +1,5 @@
 /***********************license start***************
- * Copyright (c) 2003-2010  Cavium Inc. (support@cavium.com). All rights
+ * Copyright (c) 2003-2017  Cavium Inc. (support@cavium.com). All rights
  * reserved.
  *
  *
@@ -538,6 +538,8 @@ struct cvmx_pki_global_config {
 #define CVMX_PKI_PCAM_TERM_E_L2_CUSTOM_M 0x2
 #define CVMX_PKI_PCAM_TERM_E_HIGIGD_M    0x4
 #define CVMX_PKI_PCAM_TERM_E_HIGIG_M     0x5
+#define CVMX_PKI_PCAM_TERM_E_SMACH_M     0x8
+#define CVMX_PKI_PCAM_TERM_E_SMACL_M     0x9
 #define CVMX_PKI_PCAM_TERM_E_DMACH_M     0xA
 #define CVMX_PKI_PCAM_TERM_E_DMACL_M     0xB
 #define CVMX_PKI_PCAM_TERM_E_GLORT_M     0x12
@@ -547,9 +549,19 @@ struct cvmx_pki_global_config {
 #define CVMX_PKI_PCAM_TERM_E_ETHTYPE2_M  0x1A
 #define CVMX_PKI_PCAM_TERM_E_ETHTYPE3_M  0x1B
 #define CVMX_PKI_PCAM_TERM_E_MPLS0_M     0x1E
+#define CVMX_PKI_PCAM_TERM_E_L3_SIPHH_M  0x1F
+#define CVMX_PKI_PCAM_TERM_E_L3_SIPMH_M  0x20
+#define CVMX_PKI_PCAM_TERM_E_L3_SIPML_M  0x21
+#define CVMX_PKI_PCAM_TERM_E_L3_SIPLL_M  0x22
 #define CVMX_PKI_PCAM_TERM_E_L3_FLAGS_M  0x23
+#define CVMX_PKI_PCAM_TERM_E_L3_DIPHH_M  0x24
+#define CVMX_PKI_PCAM_TERM_E_L3_DIPMH_M  0x25
+#define CVMX_PKI_PCAM_TERM_E_L3_DIPML_M  0x26
+#define CVMX_PKI_PCAM_TERM_E_L3_DIPLL_M  0x27
 #define CVMX_PKI_PCAM_TERM_E_LD_VNI_M    0x28
 #define CVMX_PKI_PCAM_TERM_E_IL3_FLAGS_M 0x2B
+#define CVMX_PKI_PCAM_TERM_E_LF_SPI_M    0x2E
+#define CVMX_PKI_PCAM_TERM_E_L4_SPORT_M  0x2f
 #define CVMX_PKI_PCAM_TERM_E_L4_PORT_M   0x30
 #define CVMX_PKI_PCAM_TERM_E_LG_CUSTOM_M 0x39
 
@@ -558,6 +570,8 @@ enum cvmx_pki_term {
 	CVMX_PKI_PCAM_TERM_L2_CUSTOM = CVMX_PKI_PCAM_TERM_E_L2_CUSTOM_M,
 	CVMX_PKI_PCAM_TERM_HIGIGD    = CVMX_PKI_PCAM_TERM_E_HIGIGD_M,
 	CVMX_PKI_PCAM_TERM_HIGIG     = CVMX_PKI_PCAM_TERM_E_HIGIG_M,
+	CVMX_PKI_PCAM_TERM_SMACH     = CVMX_PKI_PCAM_TERM_E_SMACH_M,
+	CVMX_PKI_PCAM_TERM_SMACL     = CVMX_PKI_PCAM_TERM_E_SMACL_M,
 	CVMX_PKI_PCAM_TERM_DMACH     = CVMX_PKI_PCAM_TERM_E_DMACH_M,
 	CVMX_PKI_PCAM_TERM_DMACL     = CVMX_PKI_PCAM_TERM_E_DMACL_M,
 	CVMX_PKI_PCAM_TERM_GLORT     = CVMX_PKI_PCAM_TERM_E_GLORT_M,
@@ -567,10 +581,20 @@ enum cvmx_pki_term {
 	CVMX_PKI_PCAM_TERM_ETHTYPE2  = CVMX_PKI_PCAM_TERM_E_ETHTYPE2_M,
 	CVMX_PKI_PCAM_TERM_ETHTYPE3  = CVMX_PKI_PCAM_TERM_E_ETHTYPE3_M,
 	CVMX_PKI_PCAM_TERM_MPLS0     = CVMX_PKI_PCAM_TERM_E_MPLS0_M,
+	CVMX_PKI_PCAM_TERM_L3_SIPHH  = CVMX_PKI_PCAM_TERM_E_L3_SIPHH_M,
+	CVMX_PKI_PCAM_TERM_L3_SIPMH  = CVMX_PKI_PCAM_TERM_E_L3_SIPMH_M,
+	CVMX_PKI_PCAM_TERM_L3_SIPML  = CVMX_PKI_PCAM_TERM_E_L3_SIPML_M,
+	CVMX_PKI_PCAM_TERM_L3_SIPLL  = CVMX_PKI_PCAM_TERM_E_L3_SIPLL_M,
 	CVMX_PKI_PCAM_TERM_L3_FLAGS  = CVMX_PKI_PCAM_TERM_E_L3_FLAGS_M,
+	CVMX_PKI_PCAM_TERM_L3_DIPHH  = CVMX_PKI_PCAM_TERM_E_L3_DIPHH_M,
+	CVMX_PKI_PCAM_TERM_L3_DIPMH  = CVMX_PKI_PCAM_TERM_E_L3_DIPMH_M,
+	CVMX_PKI_PCAM_TERM_L3_DIPML  = CVMX_PKI_PCAM_TERM_E_L3_DIPML_M,
+	CVMX_PKI_PCAM_TERM_L3_DIPLL  = CVMX_PKI_PCAM_TERM_E_L3_DIPLL_M,
 	CVMX_PKI_PCAM_TERM_LD_VNI    = CVMX_PKI_PCAM_TERM_E_LD_VNI_M,
 	CVMX_PKI_PCAM_TERM_IL3_FLAGS = CVMX_PKI_PCAM_TERM_E_IL3_FLAGS_M,
+	CVMX_PKI_PCAM_TERM_LF_SPI    = CVMX_PKI_PCAM_TERM_E_LF_SPI_M,
 	CVMX_PKI_PCAM_TERM_L4_PORT   = CVMX_PKI_PCAM_TERM_E_L4_PORT_M,
+	CVMX_PKI_PCAM_TERM_L4_SPORT  = CVMX_PKI_PCAM_TERM_E_L4_SPORT_M,
 	CVMX_PKI_PCAM_TERM_LG_CUSTOM = CVMX_PKI_PCAM_TERM_E_LG_CUSTOM_M
 };
 
@@ -821,9 +845,10 @@ void cvmx_pki_get_stats(int node, int index, struct cvmx_pki_port_stats *status)
 static inline void cvmx_pki_get_port_stats(int node, uint64_t port,
 	struct cvmx_pki_port_stats *status)
 {
-	int interface = cvmx_helper_get_interface_num(port);
+	int xipd = cvmx_helper_node_to_ipd_port(node, port);
+	int xiface = cvmx_helper_get_interface_num(xipd);
 	int index = cvmx_helper_get_interface_index_num(port);
-	int pknd = cvmx_helper_get_pknd(interface, index);
+	int pknd = cvmx_helper_get_pknd(xiface, index);
 	cvmx_pki_get_stats(node, pknd, status);
 }
 

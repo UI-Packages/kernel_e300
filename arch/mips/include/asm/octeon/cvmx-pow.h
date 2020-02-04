@@ -2119,14 +2119,6 @@ static inline void cvmx_pow_tag_sw_nocheck(uint32_t tag, cvmx_pow_tag_type_t tag
 	 */
 	tag_req.u64 = 0;
 	if (octeon_has_feature(OCTEON_FEATURE_CN78XX_WQE)) {
-		cvmx_wqe_t *wqp = cvmx_pow_get_current_wqp();
-		if (wqp == NULL) {
-			cvmx_dprintf("ERROR: Failed to get WQE, %s\n", __func__);
-			return;
-		}
-		wqp->word1.cn78xx.tag = tag;
-		wqp->word1.cn78xx.tag_type = tag_type;
-		CVMX_SYNCWS;
 		tag_req.s_cn78xx_other.op   = CVMX_POW_TAG_OP_SWTAG;
 		tag_req.s_cn78xx_other.type = tag_type;
 	} else if (octeon_has_feature(OCTEON_FEATURE_CN68XX_WQE)) {
@@ -2213,6 +2205,7 @@ static inline void cvmx_pow_tag_sw_full_nocheck(cvmx_wqe_t * wqp, uint32_t tag,
 	union cvmx_pow_tag_req_addr ptr;
 	cvmx_pow_tag_req_t tag_req;
 	unsigned node = cvmx_get_node_num();
+	uint64_t wqp_phys = cvmx_ptr_to_phys(wqp);
 
 	if (CVMX_ENABLE_POW_CHECKS) {
 		cvmx_pow_tag_info_t current_tag;
@@ -2238,11 +2231,12 @@ static inline void cvmx_pow_tag_sw_full_nocheck(cvmx_wqe_t * wqp, uint32_t tag,
 	tag_req.u64 = 0;
 	if (octeon_has_feature(OCTEON_FEATURE_CN78XX_WQE)) {
 		unsigned xgrp;
-		uint64_t wqp_phys;
 
-		wqp_phys = cvmx_ptr_to_phys(wqp);
 		if(wqp_phys!= 0x80) {
-			/* If WQE is valid, use its XGRP.  WQE GRP is 10 bits, includes node # */
+			/* If WQE is valid, use its XGRP:
+			 * WQE GRP is 10 bits, and is mapped
+			 * to legacy GRP + QoS, includes node number.
+			 */
 			xgrp = wqp->word1.cn78xx.grp;
 			/* Use XGRP[node] too */
 			node = xgrp >> 8;
@@ -2250,10 +2244,6 @@ static inline void cvmx_pow_tag_sw_full_nocheck(cvmx_wqe_t * wqp, uint32_t tag,
 			xgrp &= ~0xf8;
 			xgrp |= 0xf8 & (group << 3);
 
-			wqp->word1.cn78xx.grp = xgrp;
-			wqp->word1.cn78xx.tag = tag;
-			wqp->word1.cn78xx.tag_type = tag_type;
-			CVMX_SYNCWS;
 		} else {
 			/* If no WQE, build XGRP with QoS=0 and current node */
 			xgrp = group << 3;
@@ -2287,7 +2277,7 @@ static inline void cvmx_pow_tag_sw_full_nocheck(cvmx_wqe_t * wqp, uint32_t tag,
 		ptr.s.mem_region = CVMX_IO_SEG;
 		ptr.s.is_io = 1;
 		ptr.s.did = CVMX_OCT_DID_TAG_SWTAG;
-		ptr.s.addr = cvmx_ptr_to_phys(wqp);
+		ptr.s.addr = wqp_phys;
 	}
 	/* Once this store arrives at POW, it will attempt the switch
 	   software must wait for the switch to complete separately */

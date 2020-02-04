@@ -42,7 +42,7 @@
  *
  * Helper functions for common, but complicated tasks.
  *
- * <hr>$Revision: 129707 $<hr>
+ * <hr>$Revision: 153454 $<hr>
  */
 
 #ifndef __CVMX_HELPER_H__
@@ -138,7 +138,7 @@ typedef enum {
 	CVMX_HELPER_INTERFACE_MODE_MIXED,
 } cvmx_helper_interface_mode_t;
 
-typedef union {
+typedef union cvmx_helper_link_info {
 	uint64_t u64;
 	struct {
 		uint64_t reserved_20_63:44;
